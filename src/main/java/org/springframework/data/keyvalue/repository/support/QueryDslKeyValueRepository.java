@@ -29,6 +29,7 @@ import org.springframework.data.querydsl.QueryDslPredicateExecutor;
 import org.springframework.data.querydsl.SimpleEntityPathResolver;
 import org.springframework.data.repository.core.EntityInformation;
 import org.springframework.util.Assert;
+import org.springframework.util.ObjectUtils;
 
 import com.mysema.query.collections.CollQuery;
 import com.mysema.query.support.ProjectableQuery;
@@ -138,6 +139,23 @@ public class QueryDslKeyValueRepository<T, ID extends Serializable> extends Simp
 
 	/*
 	 * (non-Javadoc)
+	 * @see org.springframework.data.querydsl.QueryDslPredicateExecutor#findAll(com.mysema.query.types.OrderSpecifier[])
+	 */
+	@Override
+	public Iterable<T> findAll(OrderSpecifier<?>... orders) {
+
+		if (ObjectUtils.isEmpty(orders)) {
+			return findAll();
+		}
+
+		ProjectableQuery<?> query = prepareQuery(null);
+		query.orderBy(orders);
+
+		return query.list(builder);
+	}
+
+	/*
+	 * (non-Javadoc)
 	 * @see org.springframework.data.querydsl.QueryDslPredicateExecutor#count(com.mysema.query.types.Predicate)
 	 */
 	@Override
@@ -156,8 +174,10 @@ public class QueryDslKeyValueRepository<T, ID extends Serializable> extends Simp
 		CollQuery query = new CollQuery();
 
 		query.from(builder, findAll());
-		query.where(predicate);
-
+		if (predicate != null) {
+			query.where(predicate);
+		}
 		return query;
 	}
+
 }

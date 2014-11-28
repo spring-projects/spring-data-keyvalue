@@ -122,6 +122,32 @@ public class QueryDslMapRepositoryUnitTests extends SimpleKeyValueRepositoryUnit
 		assertThat(result, contains(JAIME, CERSEI));
 	}
 
+	/**
+	 * @see DATAKV-90
+	 */
+	@Test
+	public void findAllWithOrderSpecifierWorksCorrectly() {
+
+		repository.save(LENNISTERS);
+
+		Iterable<Person> result = getQPersonRepo().findAll(new QSort(QPerson.person.firstname.desc()));
+
+		assertThat(result, contains(TYRION, JAIME, CERSEI));
+	}
+
+	/**
+	 * @see DATAKV-90
+	 */
+	@Test
+	public void findAllShouldIgnoreNullOrderSpecifier() {
+
+		repository.save(LENNISTERS);
+
+		Iterable<Person> result = getQPersonRepo().findAll((QSort) null);
+
+		assertThat(result, containsInAnyOrder(TYRION, JAIME, CERSEI));
+	}
+
 	@Override
 	protected Class<? extends PersonRepository> getRepositoryClass() {
 		return QPersonRepository.class;
