@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.springframework.data.keyvalue.repository.config;
+package org.springframework.data.map.repository.config;
 
 import java.lang.annotation.Annotation;
 
@@ -21,12 +21,11 @@ import org.springframework.data.repository.config.RepositoryBeanDefinitionRegist
 import org.springframework.data.repository.config.RepositoryConfigurationExtension;
 
 /**
- * KeyValue specific {@link org.springframework.context.annotation.ImportBeanDefinitionRegistrar}
+ * Map specific {@link RepositoryBeanDefinitionRegistrarSupport} implementation.
  * 
  * @author Christoph Strobl
- * @since 1.10
  */
-public class KeyValueRepositoriesRegistrar extends RepositoryBeanDefinitionRegistrarSupport {
+public class MapRepositoriesRegistrar extends RepositoryBeanDefinitionRegistrarSupport {
 
 	/*
 	 * (non-Javadoc)
@@ -34,7 +33,7 @@ public class KeyValueRepositoriesRegistrar extends RepositoryBeanDefinitionRegis
 	 */
 	@Override
 	protected Class<? extends Annotation> getAnnotation() {
-		return EnableKeyValueRepositories.class;
+		return EnableMapRepositories.class;
 	}
 
 	/*
@@ -43,6 +42,6 @@ public class KeyValueRepositoriesRegistrar extends RepositoryBeanDefinitionRegis
 	 */
 	@Override
 	protected RepositoryConfigurationExtension getExtension() {
-		return new KeyValueRepositoryConfigurationExtension();
+		return new MapRepositoryConfigurationExtension();
 	}
 }

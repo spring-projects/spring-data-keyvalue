@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.springframework.data.keyvalue.repository.config;
+package org.springframework.data.map.repository.config;
 
 import static org.hamcrest.core.IsNull.*;
 import static org.junit.Assert.*;
@@ -23,40 +23,34 @@ import java.util.List;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.annotation.Id;
-import org.springframework.data.keyvalue.core.KeyValueOperations;
-import org.springframework.data.keyvalue.core.KeyValueTemplate;
-import org.springframework.data.map.MapKeyValueAdapter;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 /**
+ * Integration tests for {@link MapRepositoriesRegistrar} with complete defaulting.
+ * 
  * @author Christoph Strobl
  */
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration
-public class KeyValueRepositoryRegistrarIntegrationTests {
+public class MapRepositoryRegistrarWithFullDefaultingIntegrationTests {
 
 	@Configuration
-	@EnableKeyValueRepositories(considerNestedRepositories = true)
+	@EnableMapRepositories(considerNestedRepositories = true)
 	static class Config {
 
-		@Bean
-		public KeyValueOperations keyValueTemplate() {
-			return new KeyValueTemplate(new MapKeyValueAdapter());
-		}
 	}
 
 	@Autowired PersonRepository repo;
 
 	/**
-	 * @see DATACMNS-525
+	 * @see DATAKV-86
 	 */
 	@Test
-	public void shouldEnableKeyValueRepositoryCorrectly() {
+	public void shouldEnableMapRepositoryCorrectly() {
 		assertThat(repo, notNullValue());
 	}
 
@@ -88,5 +82,4 @@ public class KeyValueRepositoryRegistrarIntegrationTests {
 		List<Person> findByFirstname(String firstname);
 
 	}
-
 }
