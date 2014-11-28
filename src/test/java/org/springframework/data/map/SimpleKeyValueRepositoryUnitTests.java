@@ -36,7 +36,6 @@ import org.springframework.data.keyvalue.Person;
 import org.springframework.data.keyvalue.core.KeyValueTemplate;
 import org.springframework.data.keyvalue.repository.KeyValueRepository;
 import org.springframework.data.keyvalue.repository.support.KeyValueRepositoryFactory;
-import org.springframework.data.map.MapKeyValueAdapter;
 import org.springframework.data.repository.CrudRepository;
 
 /**
