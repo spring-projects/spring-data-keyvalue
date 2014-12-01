@@ -32,7 +32,6 @@ import org.springframework.data.repository.config.AnnotationRepositoryConfigurat
 import org.springframework.data.repository.config.RepositoryConfigurationExtension;
 import org.springframework.data.repository.config.RepositoryConfigurationExtensionSupport;
 import org.springframework.data.repository.config.RepositoryConfigurationSource;
-import org.springframework.util.ObjectUtils;
 
 /**
  * {@link RepositoryConfigurationExtension} for {@link KeyValueRepository}.
@@ -40,11 +39,10 @@ import org.springframework.util.ObjectUtils;
  * @author Christoph Strobl
  * @author Oliver Gierke
  */
-public class KeyValueRepositoryConfigurationExtension extends RepositoryConfigurationExtensionSupport {
+public abstract class KeyValueRepositoryConfigurationExtension extends RepositoryConfigurationExtensionSupport {
 
 	protected static final String MAPPING_CONTEXT_BEAN_NAME = "keyValueMappingContext";
-	protected static final String KEY_VALUE_TEMPLATE_BEAN_NAME = "keyValueTemplate";
-	protected static final String Key_VALUE_TEMPLATE_BEAN_NAME_CONFIG_ATTRIBUTE = KEY_VALUE_TEMPLATE_BEAN_NAME + "Ref";
+	protected static final String KEY_VALUE_TEMPLATE_BEAN_REF_ATTRIBUTE = "keyValueTemplateRef";
 
 	/*
 	 * (non-Javadoc)
@@ -91,8 +89,7 @@ public class KeyValueRepositoryConfigurationExtension extends RepositoryConfigur
 
 		AnnotationAttributes attributes = config.getAttributes();
 
-		builder.addPropertyReference("keyValueOperations",
-				attributes.getString(Key_VALUE_TEMPLATE_BEAN_NAME_CONFIG_ATTRIBUTE));
+		builder.addPropertyReference("keyValueOperations", attributes.getString(KEY_VALUE_TEMPLATE_BEAN_REF_ATTRIBUTE));
 		builder.addPropertyValue("queryCreator", getQueryCreatorType(config));
 		builder.addPropertyReference("mappingContext", MAPPING_CONTEXT_BEAN_NAME);
 	}
@@ -127,33 +124,22 @@ public class KeyValueRepositoryConfigurationExtension extends RepositoryConfigur
 
 		super.registerBeansForRoot(registry, configurationSource);
 
-		potentiallyRegisterMappingContext(registry, configurationSource);
-		potentiallyRegisterKeyValueTemplate(registry, configurationSource);
-	}
-
-	private void potentiallyRegisterKeyValueTemplate(BeanDefinitionRegistry registry,
-			RepositoryConfigurationSource configurationSource) {
-
-		if (ObjectUtils.nullSafeEquals(configurationSource.getAttribute(Key_VALUE_TEMPLATE_BEAN_NAME_CONFIG_ATTRIBUTE),
-				KEY_VALUE_TEMPLATE_BEAN_NAME)) {
-
-			RootBeanDefinition defaultKeyValueTemplateBeanDefinition = getDefaultKeyValueTemplateBeanDefinition();
-
-			if (defaultKeyValueTemplateBeanDefinition != null) {
-				registerIfNotAlreadyRegistered(defaultKeyValueTemplateBeanDefinition, registry, KEY_VALUE_TEMPLATE_BEAN_NAME,
-						configurationSource);
-			}
-		}
-	}
-
-	private void potentiallyRegisterMappingContext(BeanDefinitionRegistry registry,
-			RepositoryConfigurationSource configurationSource) {
-
 		RootBeanDefinition mappingContextDefinition = new RootBeanDefinition(KeyValueMappingContext.class);
 		mappingContextDefinition.setSource(configurationSource.getSource());
-		registry.registerBeanDefinition(MAPPING_CONTEXT_BEAN_NAME, mappingContextDefinition);
 
 		registerIfNotAlreadyRegistered(mappingContextDefinition, registry, MAPPING_CONTEXT_BEAN_NAME, configurationSource);
+
+		String keyValueTemplateName = configurationSource.getAttribute(KEY_VALUE_TEMPLATE_BEAN_REF_ATTRIBUTE);
+
+		// No custom template reference configured
+		if (getDefaultKeyValueTemplateRef().equals(keyValueTemplateName)) {
+
+			RootBeanDefinition beanDefinition = getDefaultKeyValueTemplateBeanDefinition();
+
+			if (beanDefinition != null) {
+				registerIfNotAlreadyRegistered(beanDefinition, registry, keyValueTemplateName, configurationSource.getSource());
+			}
+		}
 	}
 
 	/**
@@ -164,4 +150,6 @@ public class KeyValueRepositoryConfigurationExtension extends RepositoryConfigur
 	protected RootBeanDefinition getDefaultKeyValueTemplateBeanDefinition() {
 		return null;
 	}
+
+	protected abstract String getDefaultKeyValueTemplateRef();
 }

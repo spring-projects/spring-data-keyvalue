@@ -44,6 +44,15 @@ public class MapRepositoryConfigurationExtension extends KeyValueRepositoryConfi
 		return "map";
 	}
 
+	/* 
+	 * (non-Javadoc)
+	 * @see org.springframework.data.keyvalue.repository.config.KeyValueRepositoryConfigurationExtension#getDefaultKeyValueTemplateRef()
+	 */
+	@Override
+	protected String getDefaultKeyValueTemplateRef() {
+		return "mapKeyValueTemplate";
+	}
+
 	/*
 	 * (non-Javadoc)
 	 * @see org.springframework.data.keyvalue.repository.config.KeyValueRepositoryConfigurationExtension#getDefaultKeyValueTemplateBeanDefinition()

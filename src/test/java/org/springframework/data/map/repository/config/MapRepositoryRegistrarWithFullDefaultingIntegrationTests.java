@@ -80,6 +80,5 @@ public class MapRepositoryRegistrarWithFullDefaultingIntegrationTests {
 	static interface PersonRepository extends CrudRepository<Person, String> {
 
 		List<Person> findByFirstname(String firstname);
-
 	}
 }

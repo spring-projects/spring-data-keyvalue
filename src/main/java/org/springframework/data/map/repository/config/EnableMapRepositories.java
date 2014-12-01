@@ -114,7 +114,7 @@ public @interface EnableMapRepositories {
 	 * 
 	 * @return
 	 */
-	String keyValueTemplateRef() default "keyValueTemplate";
+	String keyValueTemplateRef() default "mapKeyValueTemplate";
 
 	/**
 	 * Configures whether nested repository-interfaces (e.g. defined as inner classes) should be discovered by the
