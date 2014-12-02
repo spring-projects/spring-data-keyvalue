@@ -21,6 +21,8 @@ import java.lang.annotation.Inherited;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 import org.springframework.beans.factory.FactoryBean;
 import org.springframework.context.annotation.ComponentScan.Filter;
@@ -121,4 +123,11 @@ public @interface EnableMapRepositories {
 	 * repositories infrastructure.
 	 */
 	boolean considerNestedRepositories() default false;
+
+	/**
+	 * Configures the {@link Map} structure used for data storage. Defaults to {@link ConcurrentHashMap}. Will be ignored
+	 * in favor of existing {@link KeyValueOperations} definition.
+	 */
+	@SuppressWarnings("rawtypes")
+	Class<? extends Map> mapType() default ConcurrentHashMap.class;
 }
