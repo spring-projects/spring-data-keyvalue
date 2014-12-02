@@ -97,7 +97,7 @@ template.findAllOf(User.class);   <2>
 Query execution is managed by the `QueryEngine`. As mentioned before it is possible to instruct the `KeyValueAdapter` to use an implementation specific `QueryEngine` that allows access to native functionality.
 When used without further customization queries are be executed using a `SpELQueryEngine`.
 
-NOTE: For performance reasons, we highly recommend to have at least Spring 4.1.2 or better to make use of link:{spring-framework-docs}/expressions.html#expressions-spel-compilation[compiled SpEL Expressions].
+NOTE: For performance reasons, we highly recommend to have at least Spring 4.1.2 or better to make use of link:{spring-framework-docs}/expressions.html#expressions-spel-compilation[compiled SpEL Expressions]. Please use the `-Dspring.expression.compiler.mode=IMMEDIATE` switch to turn it on.
 
 [source, java]
 ----
@@ -122,21 +122,16 @@ List<Person> targaryens = template.find(query, Person.class);
 
 WARNING: Please note that you need to have getters/setters present to sort using SpEL.
 
-[[key-value.repositories]]
-== Key Value Repositories
+[[key-value.repositories.map]]
+== Map Repositories
 
-KeyValue repositories reside on top of the `KeyValaueTemplate`. Using the default `SpelQueryCreator` allows deriving query and sort expressions from the given methodname.
+Map repositories reside on top of the `KeyValaueTemplate`. Using the default `SpelQueryCreator` allows deriving query and sort expressions from the given methodname.
 
 [source, java]
 ----
 @Configuration
-@EnableKeyValueRepositories
+@EnableMapRepositories
 class KeyValueConfig {
-
-    @Bean
-    public KeyValueOperations keyValueTemplate() {
-        return new KeyValueTemplate(new MapKeyValueAdapter());
-    }
 
 }
 
