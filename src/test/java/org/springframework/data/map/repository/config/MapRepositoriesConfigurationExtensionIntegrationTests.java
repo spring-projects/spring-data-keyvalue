@@ -23,13 +23,14 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentSkipListMap;
 
 import org.junit.Test;
-import org.mockito.Mockito;
+import org.springframework.context.ApplicationContext;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.data.keyvalue.core.KeyValueAdapter;
 import org.springframework.data.keyvalue.core.KeyValueTemplate;
+import org.springframework.data.map.MapKeyValueAdapter;
+import org.springframework.test.util.ReflectionTestUtils;
 
 /**
  * Integration tests for {@link MapRepositoryConfigurationExtension}.
@@ -70,56 +71,27 @@ public class MapRepositoriesConfigurationExtensionIntegrationTests {
 	 * @see DATAKV-87
 	 */
 	@Test
-	public void registeresMapKeyValueAdapterFactoryWithDefaultMapTypeWhenIsNotCostomized() {
-
-		ConfigurableApplicationContext context = new AnnotationConfigApplicationContext(Config.class);
-
-		assertThat(context.getBeanFactory().getBeanDefinition("mapKeyValueAdapterFactory").getConstructorArgumentValues()
-				.getGenericArgumentValue(Class.class).getValue().equals(ConcurrentHashMap.class), is(true));
-
-		context.close();
+	public void considersMapTypeConfiguredOnAnnotation() {
+		assertKeyValueTemplateWithAdapterFor(ConcurrentSkipListMap.class, new AnnotationConfigApplicationContext(
+				ConfigWithCustomizedMapType.class));
 	}
 
 	/**
 	 * @see DATAKV-87
 	 */
 	@Test
-	public void registeresMapKeyValueAdapterFactoryWithGivenMapTypeWhenIsCostomized() {
-
-		ConfigurableApplicationContext context = new AnnotationConfigApplicationContext(ConfigWithCustomizedMapType.class);
-
-		assertThat(context.getBeanFactory().getBeanDefinition("mapKeyValueAdapterFactory").getConstructorArgumentValues()
-				.getGenericArgumentValue(Class.class).getValue().equals(ConcurrentSkipListMap.class), is(true));
-
-		context.close();
+	public void doesNotConsiderMapConfiguredIfTemplateIsPresent() {
+		assertKeyValueTemplateWithAdapterFor(ConcurrentHashMap.class, new AnnotationConfigApplicationContext(
+				ConfigWithCustomizedMapTypeAndExplicitDefinitionOfKeyValueTemplate.class));
 	}
 
-	/**
-	 * @see DATAKV-87
-	 */
-	@Test
-	public void doesNotRegisterMapKeyValueAdapterFactoryWhenKeyValueTemplateIsCustomized() {
+	private static void assertKeyValueTemplateWithAdapterFor(Class<?> mapType, ApplicationContext context) {
 
-		ConfigurableApplicationContext context = new AnnotationConfigApplicationContext(
-				ConfigWithCustomizedMapTypeAndExplicitDefinitionOfKeyValueTemplate.class);
+		KeyValueTemplate template = context.getBean(KeyValueTemplate.class);
+		Object adapter = ReflectionTestUtils.getField(template, "adapter");
 
-		assertThat(Arrays.asList(context.getBeanDefinitionNames()), not(hasItem("mapKeyValueAdapterFactory")));
-
-		context.close();
-	}
-
-	/**
-	 * @see DATAKV-87
-	 */
-	@Test
-	public void doesNotRegisterMapKeyValueAdapterFactoryWhenTemplateReferenceIsCustomized() {
-
-		ConfigurableApplicationContext context = new AnnotationConfigApplicationContext(
-				ConfigWithCustomTemplateReference.class);
-
-		assertThat(Arrays.asList(context.getBeanDefinitionNames()), not(hasItem("mapKeyValueAdapterFactory")));
-
-		context.close();
+		assertThat(adapter, is(instanceOf(MapKeyValueAdapter.class)));
+		assertThat(ReflectionTestUtils.getField(adapter, "store"), is(instanceOf(mapType)));
 	}
 
 	@Configuration
@@ -140,8 +112,7 @@ public class MapRepositoriesConfigurationExtensionIntegrationTests {
 
 		@Bean
 		public KeyValueTemplate mapKeyValueTemplate() {
-			return new KeyValueTemplate(Mockito.mock(KeyValueAdapter.class));
+			return new KeyValueTemplate(new MapKeyValueAdapter());
 		}
 	}
-
 }

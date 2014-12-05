@@ -17,17 +17,14 @@ package org.springframework.data.map.repository.config;
 
 import java.util.Map;
 
-import org.springframework.beans.factory.config.AutowireCapableBeanFactory;
 import org.springframework.beans.factory.config.BeanDefinition;
-import org.springframework.beans.factory.config.ConstructorArgumentValues;
-import org.springframework.beans.factory.support.BeanDefinitionRegistry;
-import org.springframework.beans.factory.support.GenericBeanDefinition;
-import org.springframework.beans.factory.support.RootBeanDefinition;
+import org.springframework.beans.factory.support.AbstractBeanDefinition;
+import org.springframework.beans.factory.support.BeanDefinitionBuilder;
 import org.springframework.core.type.AnnotationMetadata;
+import org.springframework.data.config.ParsingUtils;
 import org.springframework.data.keyvalue.core.KeyValueTemplate;
 import org.springframework.data.keyvalue.repository.config.KeyValueRepositoryConfigurationExtension;
 import org.springframework.data.map.MapKeyValueAdapter;
-import org.springframework.data.map.MapKeyValueAdapterFactory;
 import org.springframework.data.repository.config.RepositoryConfigurationSource;
 
 /**
@@ -67,43 +64,24 @@ public class MapRepositoryConfigurationExtension extends KeyValueRepositoryConfi
 	 * @see org.springframework.data.keyvalue.repository.config.KeyValueRepositoryConfigurationExtension#getDefaultKeyValueTemplateBeanDefinition()
 	 */
 	@Override
-	protected RootBeanDefinition getDefaultKeyValueTemplateBeanDefinition(
+	protected AbstractBeanDefinition getDefaultKeyValueTemplateBeanDefinition(
 			RepositoryConfigurationSource configurationSource) {
 
-		ConstructorArgumentValues constructorArgumentValues = new ConstructorArgumentValues();
+		BeanDefinitionBuilder adapterBuilder = BeanDefinitionBuilder.rootBeanDefinition(MapKeyValueAdapter.class);
+		adapterBuilder.addConstructorArgValue(getMapTypeToUse(configurationSource));
 
-		GenericBeanDefinition referencingMapKeyValueAdapterBeanDefintion = new GenericBeanDefinition();
-		referencingMapKeyValueAdapterBeanDefintion.setBeanClass(MapKeyValueAdapter.class);
-		referencingMapKeyValueAdapterBeanDefintion.setAutowireMode(AutowireCapableBeanFactory.AUTOWIRE_BY_TYPE);
+		BeanDefinitionBuilder builder = BeanDefinitionBuilder.rootBeanDefinition(KeyValueTemplate.class);
+		builder
+				.addConstructorArgValue(ParsingUtils.getSourceBeanDefinition(adapterBuilder, configurationSource.getSource()));
+		builder.setRole(BeanDefinition.ROLE_SUPPORT);
 
-		constructorArgumentValues.addGenericArgumentValue(referencingMapKeyValueAdapterBeanDefintion);
-
-		RootBeanDefinition keyValueTemplateDefinition = new RootBeanDefinition(KeyValueTemplate.class);
-		keyValueTemplateDefinition.setConstructorArgumentValues(constructorArgumentValues);
-		keyValueTemplateDefinition.setRole(BeanDefinition.ROLE_APPLICATION);
-
-		return keyValueTemplateDefinition;
+		return ParsingUtils.getSourceBeanDefinition(builder, configurationSource.getSource());
 	}
 
-	@Override
 	@SuppressWarnings({ "unchecked", "rawtypes" })
-	protected void registerTemplateInfrastructure(BeanDefinitionRegistry registry,
-			RepositoryConfigurationSource configurationSource) {
+	private static Class<? extends Map> getMapTypeToUse(RepositoryConfigurationSource source) {
 
-		Class<? extends Map> type = (Class<? extends Map>) ((AnnotationMetadata) configurationSource.getSource())
-				.getAnnotationAttributes(EnableMapRepositories.class.getName()).get("mapType");
-
-		ConstructorArgumentValues mapAdapterFactoryArgs = new ConstructorArgumentValues();
-		mapAdapterFactoryArgs.addGenericArgumentValue(type);
-		RootBeanDefinition mapAdapterFactory = new RootBeanDefinition(MapKeyValueAdapterFactory.class,
-				mapAdapterFactoryArgs, null);
-
-		registry.registerBeanDefinition("mapKeyValueAdapterFactory", mapAdapterFactory);
-
-		RootBeanDefinition mapKeyValueAdapter = new RootBeanDefinition(MapKeyValueAdapter.class);
-		mapKeyValueAdapter.setFactoryBeanName("mapKeyValueAdapterFactory");
-		mapKeyValueAdapter.setFactoryMethodName("getAdapter");
-
-		registry.registerBeanDefinition("mapKeyValueAdapter", mapAdapterFactory);
+		return (Class<? extends Map>) ((AnnotationMetadata) source.getSource()).getAnnotationAttributes(
+				EnableMapRepositories.class.getName()).get("mapType");
 	}
 }

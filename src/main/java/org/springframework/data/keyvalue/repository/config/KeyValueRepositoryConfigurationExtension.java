@@ -19,12 +19,12 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.Map;
 
+import org.springframework.beans.factory.support.AbstractBeanDefinition;
 import org.springframework.beans.factory.support.BeanDefinitionBuilder;
 import org.springframework.beans.factory.support.BeanDefinitionRegistry;
 import org.springframework.beans.factory.support.RootBeanDefinition;
 import org.springframework.core.annotation.AnnotationAttributes;
 import org.springframework.core.type.AnnotationMetadata;
-import org.springframework.data.keyvalue.core.KeyValueAdapter;
 import org.springframework.data.keyvalue.core.mapping.context.KeyValueMappingContext;
 import org.springframework.data.keyvalue.repository.KeyValueRepository;
 import org.springframework.data.keyvalue.repository.query.SpelQueryCreator;
@@ -136,8 +136,7 @@ public abstract class KeyValueRepositoryConfigurationExtension extends Repositor
 		if (getDefaultKeyValueTemplateRef().equals(keyValueTemplateName)
 				&& !registry.containsBeanDefinition(keyValueTemplateName)) {
 
-			registerTemplateInfrastructure(registry, configurationSource);
-			RootBeanDefinition beanDefinition = getDefaultKeyValueTemplateBeanDefinition(configurationSource);
+			AbstractBeanDefinition beanDefinition = getDefaultKeyValueTemplateBeanDefinition(configurationSource);
 
 			if (beanDefinition != null) {
 				registerIfNotAlreadyRegistered(beanDefinition, registry, keyValueTemplateName, configurationSource.getSource());
@@ -146,22 +145,11 @@ public abstract class KeyValueRepositoryConfigurationExtension extends Repositor
 	}
 
 	/**
-	 * Register infrastructure components such as {@link KeyValueAdapter} required for default template.
-	 * 
-	 * @param registry
-	 * @param configurationSource
-	 */
-	protected void registerTemplateInfrastructure(BeanDefinitionRegistry registry,
-			RepositoryConfigurationSource configurationSource) {
-		// nothing to register by default
-	}
-
-	/**
 	 * Get the default {@link RootBeanDefinition} for {@link org.springframework.data.keyvalue.core.KeyValueTemplate}.
 	 * 
 	 * @return {@literal null} to explicitly not register a template.
 	 */
-	protected RootBeanDefinition getDefaultKeyValueTemplateBeanDefinition(
+	protected AbstractBeanDefinition getDefaultKeyValueTemplateBeanDefinition(
 			RepositoryConfigurationSource configurationSource) {
 		return null;
 	}

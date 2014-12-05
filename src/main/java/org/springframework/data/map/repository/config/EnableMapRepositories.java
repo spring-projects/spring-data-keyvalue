@@ -25,9 +25,11 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 import org.springframework.beans.factory.FactoryBean;
+import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.ComponentScan.Filter;
 import org.springframework.context.annotation.Import;
 import org.springframework.data.keyvalue.core.KeyValueOperations;
+import org.springframework.data.keyvalue.core.KeyValueTemplate;
 import org.springframework.data.keyvalue.repository.config.QueryCreatorType;
 import org.springframework.data.keyvalue.repository.query.SpelQueryCreator;
 import org.springframework.data.keyvalue.repository.support.KeyValueRepositoryFactoryBean;
@@ -126,7 +128,9 @@ public @interface EnableMapRepositories {
 
 	/**
 	 * Configures the {@link Map} structure used for data storage. Defaults to {@link ConcurrentHashMap}. Will be ignored
-	 * in favor of existing {@link KeyValueOperations} definition.
+	 * in case an explicit bean for the {@link KeyValueTemplate} is available in the {@link ApplicationContext}.
+	 * 
+	 * @see #keyValueTemplateRef()
 	 */
 	@SuppressWarnings("rawtypes")
 	Class<? extends Map> mapType() default ConcurrentHashMap.class;

@@ -34,30 +34,51 @@ import org.springframework.util.ClassUtils;
  */
 public class MapKeyValueAdapter extends AbstractKeyValueAdapter {
 
-	private final Map<Serializable, Map<Serializable, Object>> data;
-
 	@SuppressWarnings("rawtypes")//
-	private final Class<? extends Map> mapType;
+	private final Class<? extends Map> keySpaceMapType;
+	private final Map<Serializable, Map<Serializable, Object>> store;
 
 	/**
-	 * Create new instance of {@link MapKeyValueAdapter} using {@link ConcurrentHashMap}.
+	 * Create new {@link MapKeyValueAdapter} using {@link ConcurrentHashMap} as backing store type.
 	 */
 	public MapKeyValueAdapter() {
-		this(new ConcurrentHashMap<Serializable, Map<Serializable, Object>>());
+		this(ConcurrentHashMap.class);
+	}
+
+	/**
+	 * Creates a new {@link MapKeyValueAdapter} using the given {@link Map} as backing store.
+	 * 
+	 * @param mapType must not be {@literal null}.
+	 */
+	@SuppressWarnings("rawtypes")
+	public MapKeyValueAdapter(Class<? extends Map> mapType) {
+		this(CollectionFactory.<Serializable, Map<Serializable, Object>> createMap(mapType, 100), mapType);
 	}
 
 	/**
 	 * Create new instance of {@link MapKeyValueAdapter} using given dataStore for persistence.
 	 * 
-	 * @param dataStore must not be {@literal null}.
+	 * @param store must not be {@literal null}.
 	 */
 	@SuppressWarnings({ "rawtypes", "unchecked" })
-	public MapKeyValueAdapter(Map<Serializable, Map<Serializable, Object>> dataStore) {
+	public MapKeyValueAdapter(Map<Serializable, Map<Serializable, Object>> store) {
+		this(store, (Class<? extends Map>) ClassUtils.getUserClass(store));
+	}
 
-		Assert.notNull(dataStore, "Cannot initilalize adapter with 'null' datastore.");
+	/**
+	 * Creates a new {@link MapKeyValueAdapter} with the given store and type to be used when creating key spaces.
+	 * 
+	 * @param store must not be {@literal null}.
+	 * @param keySpaceMapType must not be {@literal null}.
+	 */
+	@SuppressWarnings("rawtypes")
+	private MapKeyValueAdapter(Map<Serializable, Map<Serializable, Object>> store, Class<? extends Map> keySpaceMapType) {
 
-		this.data = dataStore;
-		this.mapType = (Class<? extends Map>) ClassUtils.getUserClass(dataStore);
+		Assert.notNull(store, "Store must not be null.");
+		Assert.notNull(keySpaceMapType, "Map type to be used for key spaces must not be null!");
+
+		this.store = store;
+		this.keySpaceMapType = keySpaceMapType;
 	}
 
 	/*
@@ -67,8 +88,8 @@ public class MapKeyValueAdapter extends AbstractKeyValueAdapter {
 	@Override
 	public Object put(Serializable id, Object item, Serializable keyspace) {
 
-		Assert.notNull(id, "Cannot add item with 'null' id.");
-		Assert.notNull(keyspace, "Cannot add item for 'null' collection.");
+		Assert.notNull(id, "Cannot add item with null id.");
+		Assert.notNull(keyspace, "Cannot add item for null collection.");
 
 		return getKeySpaceMap(keyspace).put(id, item);
 	}
@@ -89,7 +110,7 @@ public class MapKeyValueAdapter extends AbstractKeyValueAdapter {
 	@Override
 	public Object get(Serializable id, Serializable keyspace) {
 
-		Assert.notNull(id, "Cannot get item with 'null' id.");
+		Assert.notNull(id, "Cannot get item with null id.");
 		return getKeySpaceMap(keyspace).get(id);
 	}
 
@@ -100,7 +121,7 @@ public class MapKeyValueAdapter extends AbstractKeyValueAdapter {
 	@Override
 	public Object delete(Serializable id, Serializable keyspace) {
 
-		Assert.notNull(id, "Cannot delete item with 'null' id.");
+		Assert.notNull(id, "Cannot delete item with null id.");
 		return getKeySpaceMap(keyspace).remove(id);
 	}
 
@@ -128,7 +149,7 @@ public class MapKeyValueAdapter extends AbstractKeyValueAdapter {
 	 */
 	@Override
 	public void clear() {
-		data.clear();
+		store.clear();
 	}
 
 	/*
@@ -148,19 +169,19 @@ public class MapKeyValueAdapter extends AbstractKeyValueAdapter {
 	 */
 	protected Map<Serializable, Object> getKeySpaceMap(Serializable keyspace) {
 
-		Assert.notNull(keyspace, "Collection must not be 'null' for lookup.");
+		Assert.notNull(keyspace, "Collection must not be null for lookup.");
 
-		Map<Serializable, Object> map = data.get(keyspace);
+		Map<Serializable, Object> map = store.get(keyspace);
 
 		if (map != null) {
 			return map;
 		}
 
 		addMapForKeySpace(keyspace);
-		return data.get(keyspace);
+		return store.get(keyspace);
 	}
 
 	private void addMapForKeySpace(Serializable keyspace) {
-		data.put(keyspace, CollectionFactory.<Serializable, Object> createMap(mapType, 1000));
+		store.put(keyspace, CollectionFactory.<Serializable, Object> createMap(keySpaceMapType, 1000));
 	}
 }
