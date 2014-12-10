@@ -42,7 +42,6 @@ import org.springframework.util.StringUtils;
  * 
  * @author Christoph Strobl
  * @author Oliver Gierke
- * @since 1.10
  */
 public class KeyValueTemplate implements KeyValueOperations {
 

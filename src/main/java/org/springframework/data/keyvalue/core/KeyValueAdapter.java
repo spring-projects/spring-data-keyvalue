@@ -25,7 +25,6 @@ import org.springframework.data.keyvalue.core.query.KeyValueQuery;
  * {@link KeyValueAdapter} unifies access and shields the underlying key/value specific implementation.
  * 
  * @author Christoph Strobl
- * @since 1.10
  */
 public interface KeyValueAdapter extends DisposableBean {
 

@@ -26,7 +26,6 @@ import org.springframework.data.util.TypeInformation;
 
 /**
  * @author Christoph Strobl
- * @since 1.10
  */
 public class KeyValueMappingContext extends
 		AbstractMappingContext<BasicPersistentEntity<?, KeyValuePersistentProperty>, KeyValuePersistentProperty> {

@@ -25,7 +25,6 @@ import org.springframework.util.Assert;
  * 
  * @author Christoph Strobl
  * @author Oliver Gierke
- * @since 1.10
  */
 class SpelCriteriaAccessor implements CriteriaAccessor<SpelExpression> {
 

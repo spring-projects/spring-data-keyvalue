@@ -42,7 +42,6 @@ import com.mysema.query.types.path.PathBuilder;
  * {@link KeyValueRepository} implementation capable of executing {@link Predicate}s using {@link CollQuery}.
  * 
  * @author Christoph Strobl
- * @since 1.10
  * @param <T>
  * @param <ID>
  */

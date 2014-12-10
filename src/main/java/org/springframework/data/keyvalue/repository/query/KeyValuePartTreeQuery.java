@@ -41,7 +41,6 @@ import org.springframework.util.CollectionUtils;
  * 
  * @author Christoph Strobl
  * @author Oliver Gierke
- * @since 1.10
  */
 public class KeyValuePartTreeQuery implements RepositoryQuery {
 

@@ -25,7 +25,6 @@ import org.springframework.data.keyvalue.core.query.KeyValueQuery;
  * {@literal count} execution to.
  * 
  * @author Christoph Strobl
- * @since 1.10
  */
 public abstract class AbstractKeyValueAdapter implements KeyValueAdapter {
 

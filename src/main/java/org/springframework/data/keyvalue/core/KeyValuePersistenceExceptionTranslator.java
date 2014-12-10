@@ -26,7 +26,6 @@ import org.springframework.dao.support.PersistenceExceptionTranslator;
  * exception to an appropriate exception from the {@code org.springframework.dao} hierarchy.
  * 
  * @author Christoph Strobl
- * @since 1.10
  */
 public class KeyValuePersistenceExceptionTranslator implements PersistenceExceptionTranslator {
 

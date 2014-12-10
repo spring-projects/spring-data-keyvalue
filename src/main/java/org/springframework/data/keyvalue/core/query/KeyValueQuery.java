@@ -19,7 +19,6 @@ import org.springframework.data.domain.Sort;
 
 /**
  * @author Christoph Strobl
- * @since 1.10
  * @param <T> Criteria type
  */
 public class KeyValueQuery<T> {

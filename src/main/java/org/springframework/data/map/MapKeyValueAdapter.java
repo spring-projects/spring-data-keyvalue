@@ -30,7 +30,6 @@ import org.springframework.util.ClassUtils;
  * {@link KeyValueAdapter} implementation for {@link Map}.
  * 
  * @author Christoph Strobl
- * @since 1.10
  */
 public class MapKeyValueAdapter extends AbstractKeyValueAdapter {
 

@@ -29,7 +29,6 @@ import org.springframework.data.repository.query.parser.AbstractQueryCreator;
  * {@link org.springframework.beans.factory.FactoryBean} to create {@link KeyValueRepository}.
  * 
  * @author Christoph Strobl
- * @since 1.10
  */
 public class KeyValueRepositoryFactoryBean<T extends Repository<S, ID>, S, ID extends Serializable> extends
 		RepositoryFactoryBeanSupport<T, S, ID> {

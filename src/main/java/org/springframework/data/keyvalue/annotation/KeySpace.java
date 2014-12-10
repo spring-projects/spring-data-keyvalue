@@ -54,7 +54,6 @@ import org.springframework.data.annotation.Persistent;
  * </pre>
  * 
  * @author Christoph Strobl
- * @since 1.10
  */
 @Documented
 @Retention(RetentionPolicy.RUNTIME)

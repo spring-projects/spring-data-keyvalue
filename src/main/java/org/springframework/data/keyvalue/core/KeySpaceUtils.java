@@ -42,7 +42,6 @@ abstract class KeySpaceUtils {
 	 * Looks up {@link Persistent} when used as meta annotation to find the {@link KeySpace} attribute.
 	 * 
 	 * @return
-	 * @since 1.10
 	 */
 	public static Object getKeySpace(Class<?> type) {
 

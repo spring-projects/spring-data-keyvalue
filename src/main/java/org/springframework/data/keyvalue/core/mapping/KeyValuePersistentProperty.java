@@ -28,7 +28,6 @@ import org.springframework.data.mapping.model.SimpleTypeHolder;
  * Most trivial implementation of {@link PersistentProperty}.
  * 
  * @author Christoph Strobl
- * @since 1.10
  */
 public class KeyValuePersistentProperty extends AnnotationBasedPersistentProperty<KeyValuePersistentProperty> {
 

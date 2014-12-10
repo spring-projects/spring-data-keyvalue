@@ -19,7 +19,6 @@ import org.springframework.dao.UncategorizedDataAccessException;
 
 /**
  * @author Christoph Strobl
- * @since 1.10
  */
 public class UncategorizedKeyValueException extends UncategorizedDataAccessException {
 

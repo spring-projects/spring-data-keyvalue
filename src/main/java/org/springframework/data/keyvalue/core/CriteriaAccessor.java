@@ -21,7 +21,6 @@ import org.springframework.data.keyvalue.core.query.KeyValueQuery;
  * Resolves the criteria object from given {@link KeyValueQuery}.
  * 
  * @author Christoph Strobl
- * @since 1.10
  * @param <T>
  */
 public interface CriteriaAccessor<T> {

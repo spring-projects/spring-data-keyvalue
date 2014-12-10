@@ -28,7 +28,6 @@ import org.springframework.data.mapping.context.MappingContext;
  * Interface that specifies a basic set of key/value operations. Implemented by {@link KeyValueTemplate}.
  * 
  * @author Christoph Strobl
- * @since 1.10
  */
 public interface KeyValueOperations extends DisposableBean {
 

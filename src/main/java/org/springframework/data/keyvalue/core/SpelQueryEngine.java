@@ -33,7 +33,6 @@ import org.springframework.expression.spel.standard.SpelExpressionParser;
  * 
  * @author Christoph Strobl
  * @author Oliver Gierke
- * @since 1.10
  * @param <T>
  */
 class SpelQueryEngine<T extends KeyValueAdapter> extends QueryEngine<KeyValueAdapter, SpelExpression, Comparator<?>> {

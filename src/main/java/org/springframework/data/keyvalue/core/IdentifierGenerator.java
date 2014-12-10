@@ -22,7 +22,6 @@ import org.springframework.data.util.TypeInformation;
  * 
  * @author Christoph Strobl
  * @author Oliver Gierke
- * @since 1.10
  */
 public interface IdentifierGenerator {
 

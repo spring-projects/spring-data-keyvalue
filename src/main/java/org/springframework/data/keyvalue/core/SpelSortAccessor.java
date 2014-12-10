@@ -30,7 +30,6 @@ import org.springframework.util.comparator.CompoundComparator;
  * 
  * @author Christoph Strobl
  * @author Oliver Gierke
- * @since 1.10
  */
 class SpelSortAccessor implements SortAccessor<Comparator<?>> {
 

@@ -21,7 +21,6 @@ import org.springframework.data.repository.PagingAndSortingRepository;
 
 /**
  * @author Christoph Strobl
- * @since 1.10
  * @param <T>
  * @param <ID>
  */

@@ -20,7 +20,6 @@ package org.springframework.data.keyvalue.core;
  * delegating code that needs to work closely on the underlying key/value store implementation.
  * 
  * @author Christoph Strobl
- * @since 1.10
  * @param <T>
  */
 public interface KeyValueCallback<T> {

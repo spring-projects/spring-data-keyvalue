@@ -34,7 +34,6 @@ import org.springframework.expression.spel.standard.SpelExpressionParser;
  * 
  * @author Christoph Strobl
  * @author Oliver Gierke
- * @since 1.10
  */
 public class SpelQueryCreator extends AbstractQueryCreator<KeyValueQuery<SpelExpression>, String> {
 

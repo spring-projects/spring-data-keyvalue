@@ -23,7 +23,6 @@ import org.springframework.data.keyvalue.core.query.KeyValueQuery;
  * representation that can be used by the {@link QueryEngine} implementation.
  * 
  * @author Christoph Strobl
- * @since 1.10
  * @param <T>
  */
 public interface SortAccessor<T> {

@@ -45,7 +45,6 @@ import org.springframework.util.ClassUtils;
  * {@link org.springframework.data.keyvalue.repository.KeyValueRepository}.
  * 
  * @author Christoph Strobl
- * @since 1.10
  */
 public class KeyValueRepositoryFactory extends RepositoryFactorySupport {
 
@@ -145,7 +144,6 @@ public class KeyValueRepositoryFactory extends RepositoryFactorySupport {
 	/**
 	 * @author Christoph Strobl
 	 * @author Oliver Gierke
-	 * @since 1.10
 	 */
 	private static class KeyValueQueryLookupStrategy implements QueryLookupStrategy {
 

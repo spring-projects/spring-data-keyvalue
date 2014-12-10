@@ -31,7 +31,6 @@ import org.springframework.util.Assert;
 /**
  * @author Christoph Strobl
  * @author Oliver Gierke
- * @since 1.10
  * @param <T>
  * @param <ID>
  */

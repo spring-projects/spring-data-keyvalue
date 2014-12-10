@@ -24,7 +24,6 @@ import org.springframework.data.keyvalue.core.query.KeyValueQuery;
  * Base implementation for accessing and executing {@link KeyValueQuery} against a {@link KeyValueAdapter}.
  * 
  * @author Christoph Strobl
- * @since 1.10
  * @param <ADAPTER>
  * @param <CRITERIA>
  * @param <SORT>
