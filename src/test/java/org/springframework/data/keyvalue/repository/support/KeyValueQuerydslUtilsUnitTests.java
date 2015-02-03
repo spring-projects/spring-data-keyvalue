@@ -1,5 +1,5 @@
 /*
- * Copyright 2014 the original author or authors.
+ * Copyright 2014-2015 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,7 +17,7 @@ package org.springframework.data.keyvalue.repository.support;
 
 import static org.hamcrest.collection.IsArrayWithSize.*;
 import static org.junit.Assert.*;
-import static org.springframework.data.keyvalue.repository.support.KeyValueQueryDslUtils.*;
+import static org.springframework.data.keyvalue.repository.support.KeyValueQuerydslUtils.*;
 
 import org.hamcrest.collection.IsArrayContainingInOrder;
 import org.junit.Before;
@@ -34,10 +34,13 @@ import com.mysema.query.types.OrderSpecifier;
 import com.mysema.query.types.path.PathBuilder;
 
 /**
+ * Unit tests for {@link KeyValueQuerydslUtils}.
+ * 
  * @author Christoph Strobl
  * @author Thomas Darimont
+ * @author Oliver Gierke
  */
-public class QueryDslUtilsUnitTests {
+public class KeyValueQuerydslUtilsUnitTests {
 
 	private EntityPath<Person> path;
 	private PathBuilder<Person> builder;

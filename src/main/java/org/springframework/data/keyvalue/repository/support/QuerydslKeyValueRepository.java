@@ -1,5 +1,5 @@
 /*
- * Copyright 2014 the original author or authors.
+ * Copyright 2014-2015 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,7 +15,7 @@
  */
 package org.springframework.data.keyvalue.repository.support;
 
-import static org.springframework.data.keyvalue.repository.support.KeyValueQueryDslUtils.*;
+import static org.springframework.data.keyvalue.repository.support.KeyValueQuerydslUtils.*;
 
 import java.io.Serializable;
 
@@ -42,10 +42,11 @@ import com.mysema.query.types.path.PathBuilder;
  * {@link KeyValueRepository} implementation capable of executing {@link Predicate}s using {@link CollQuery}.
  * 
  * @author Christoph Strobl
- * @param <T>
- * @param <ID>
+ * @author Oliver Gierke
+ * @param <T> the domain type to manage
+ * @param <ID> the identififer type of the domain type
  */
-public class QueryDslKeyValueRepository<T, ID extends Serializable> extends SimpleKeyValueRepository<T, ID> implements
+public class QuerydslKeyValueRepository<T, ID extends Serializable> extends SimpleKeyValueRepository<T, ID> implements
 		QueryDslPredicateExecutor<T> {
 
 	private static final EntityPathResolver DEFAULT_ENTITY_PATH_RESOLVER = SimpleEntityPathResolver.INSTANCE;
@@ -54,25 +55,25 @@ public class QueryDslKeyValueRepository<T, ID extends Serializable> extends Simp
 	private final PathBuilder<T> builder;
 
 	/**
-	 * Creates a new {@link QueryDslKeyValueRepository} for the given {@link EntityInformation} and
+	 * Creates a new {@link QuerydslKeyValueRepository} for the given {@link EntityInformation} and
 	 * {@link KeyValueOperations}.
 	 * 
 	 * @param entityInformation must not be {@literal null}.
 	 * @param operations must not be {@literal null}.
 	 */
-	public QueryDslKeyValueRepository(EntityInformation<T, ID> entityInformation, KeyValueOperations operations) {
+	public QuerydslKeyValueRepository(EntityInformation<T, ID> entityInformation, KeyValueOperations operations) {
 		this(entityInformation, operations, DEFAULT_ENTITY_PATH_RESOLVER);
 	}
 
 	/**
-	 * Creates a new {@link QueryDslKeyValueRepository} for the given {@link EntityInformation},
+	 * Creates a new {@link QuerydslKeyValueRepository} for the given {@link EntityInformation},
 	 * {@link KeyValueOperations} and {@link EntityPathResolver}.
 	 * 
 	 * @param entityInformation must not be {@literal null}.
 	 * @param operations must not be {@literal null}.
 	 * @param resolver must not be {@literal null}.
 	 */
-	public QueryDslKeyValueRepository(EntityInformation<T, ID> entityInformation, KeyValueOperations operations,
+	public QuerydslKeyValueRepository(EntityInformation<T, ID> entityInformation, KeyValueOperations operations,
 			EntityPathResolver resolver) {
 
 		super(entityInformation, operations);
@@ -160,6 +161,15 @@ public class QueryDslKeyValueRepository<T, ID extends Serializable> extends Simp
 	@Override
 	public long count(Predicate predicate) {
 		return prepareQuery(predicate).count();
+	}
+
+	/* 
+	 * (non-Javadoc)
+	 * @see org.springframework.data.querydsl.QueryDslPredicateExecutor#exists(com.mysema.query.types.Predicate)
+	 */
+	@Override
+	public boolean exists(Predicate predicate) {
+		return prepareQuery(predicate).exists();
 	}
 
 	/**

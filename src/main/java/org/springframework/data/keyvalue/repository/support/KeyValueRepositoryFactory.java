@@ -1,5 +1,5 @@
 /*
- * Copyright 2014 the original author or authors.
+ * Copyright 2014-2015 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -45,6 +45,7 @@ import org.springframework.util.ClassUtils;
  * {@link org.springframework.data.keyvalue.repository.KeyValueRepository}.
  * 
  * @author Christoph Strobl
+ * @author Oliver Gierke
  */
 public class KeyValueRepositoryFactory extends RepositoryFactorySupport {
 
@@ -106,7 +107,7 @@ public class KeyValueRepositoryFactory extends RepositoryFactorySupport {
 		EntityInformation<?, Serializable> entityInformation = getEntityInformation(metadata.getDomainType());
 
 		if (ClassUtils.isAssignable(QueryDslPredicateExecutor.class, metadata.getRepositoryInterface())) {
-			return new QueryDslKeyValueRepository(entityInformation, keyValueOperations);
+			return new QuerydslKeyValueRepository(entityInformation, keyValueOperations);
 		}
 
 		return new SimpleKeyValueRepository(entityInformation, keyValueOperations);
@@ -118,7 +119,7 @@ public class KeyValueRepositoryFactory extends RepositoryFactorySupport {
 	 */
 	@Override
 	protected Class<?> getRepositoryBaseClass(RepositoryMetadata metadata) {
-		return isQueryDslRepository(metadata.getRepositoryInterface()) ? QueryDslKeyValueRepository.class
+		return isQueryDslRepository(metadata.getRepositoryInterface()) ? QuerydslKeyValueRepository.class
 				: SimpleKeyValueRepository.class;
 	}
 

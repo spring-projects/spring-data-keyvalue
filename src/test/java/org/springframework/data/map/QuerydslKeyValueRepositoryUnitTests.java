@@ -1,5 +1,5 @@
 /*
- * Copyright 2014 the original author or authors.
+ * Copyright 2014-2015 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -27,13 +27,19 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort.Direction;
 import org.springframework.data.keyvalue.Person;
 import org.springframework.data.keyvalue.QPerson;
+import org.springframework.data.keyvalue.repository.support.KeyValueRepositoryFactory;
+import org.springframework.data.keyvalue.repository.support.QuerydslKeyValueRepository;
+import org.springframework.data.map.QuerydslKeyValueRepositoryUnitTests.QPersonRepository;
 import org.springframework.data.querydsl.QSort;
 import org.springframework.data.querydsl.QueryDslPredicateExecutor;
 
 /**
+ * Unit tests for {@link QuerydslKeyValueRepository}.
+ * 
  * @author Christoph Strobl
+ * @author Oliver Gierke
  */
-public class QueryDslMapRepositoryUnitTests extends SimpleKeyValueRepositoryUnitTests {
+public class QuerydslKeyValueRepositoryUnitTests extends AbstractRepositoryUnitTests<QPersonRepository> {
 
 	/**
 	 * @see DATACMNS-525
@@ -43,7 +49,7 @@ public class QueryDslMapRepositoryUnitTests extends SimpleKeyValueRepositoryUnit
 
 		repository.save(LENNISTERS);
 
-		Person result = getQPersonRepo().findOne(QPerson.person.firstname.eq(CERSEI.getFirstname()));
+		Person result = repository.findOne(QPerson.person.firstname.eq(CERSEI.getFirstname()));
 		assertThat(result, is(CERSEI));
 	}
 
@@ -55,7 +61,7 @@ public class QueryDslMapRepositoryUnitTests extends SimpleKeyValueRepositoryUnit
 
 		repository.save(LENNISTERS);
 
-		Iterable<Person> result = getQPersonRepo().findAll(QPerson.person.age.eq(CERSEI.getAge()));
+		Iterable<Person> result = repository.findAll(QPerson.person.age.eq(CERSEI.getAge()));
 		assertThat(result, containsInAnyOrder(CERSEI, JAIME));
 	}
 
@@ -66,7 +72,7 @@ public class QueryDslMapRepositoryUnitTests extends SimpleKeyValueRepositoryUnit
 	public void findWithPaginationWorksCorrectly() {
 
 		repository.save(LENNISTERS);
-		Page<Person> page1 = getQPersonRepo().findAll(QPerson.person.age.eq(CERSEI.getAge()), new PageRequest(0, 1));
+		Page<Person> page1 = repository.findAll(QPerson.person.age.eq(CERSEI.getAge()), new PageRequest(0, 1));
 
 		assertThat(page1.getTotalElements(), is(2L));
 		assertThat(page1.getContent(), hasSize(1));
@@ -88,7 +94,7 @@ public class QueryDslMapRepositoryUnitTests extends SimpleKeyValueRepositoryUnit
 
 		repository.save(LENNISTERS);
 
-		Iterable<Person> result = getQPersonRepo().findAll(QPerson.person.age.eq(CERSEI.getAge()),
+		Iterable<Person> result = repository.findAll(QPerson.person.age.eq(CERSEI.getAge()),
 				QPerson.person.firstname.desc());
 
 		assertThat(result, contains(JAIME, CERSEI));
@@ -102,8 +108,8 @@ public class QueryDslMapRepositoryUnitTests extends SimpleKeyValueRepositoryUnit
 
 		repository.save(LENNISTERS);
 
-		Iterable<Person> result = getQPersonRepo().findAll(QPerson.person.age.eq(CERSEI.getAge()),
-				new PageRequest(0, 10, Direction.DESC, "firstname"));
+		Iterable<Person> result = repository.findAll(QPerson.person.age.eq(CERSEI.getAge()), new PageRequest(0, 10,
+				Direction.DESC, "firstname"));
 
 		assertThat(result, contains(JAIME, CERSEI));
 	}
@@ -116,8 +122,8 @@ public class QueryDslMapRepositoryUnitTests extends SimpleKeyValueRepositoryUnit
 
 		repository.save(LENNISTERS);
 
-		Iterable<Person> result = getQPersonRepo().findAll(QPerson.person.age.eq(CERSEI.getAge()),
-				new PageRequest(0, 10, new QSort(QPerson.person.firstname.desc())));
+		Iterable<Person> result = repository.findAll(QPerson.person.age.eq(CERSEI.getAge()), new PageRequest(0, 10,
+				new QSort(QPerson.person.firstname.desc())));
 
 		assertThat(result, contains(JAIME, CERSEI));
 	}
@@ -130,7 +136,7 @@ public class QueryDslMapRepositoryUnitTests extends SimpleKeyValueRepositoryUnit
 
 		repository.save(LENNISTERS);
 
-		Iterable<Person> result = getQPersonRepo().findAll(new QSort(QPerson.person.firstname.desc()));
+		Iterable<Person> result = repository.findAll(new QSort(QPerson.person.firstname.desc()));
 
 		assertThat(result, contains(TYRION, JAIME, CERSEI));
 	}
@@ -143,22 +149,31 @@ public class QueryDslMapRepositoryUnitTests extends SimpleKeyValueRepositoryUnit
 
 		repository.save(LENNISTERS);
 
-		Iterable<Person> result = getQPersonRepo().findAll((QSort) null);
+		Iterable<Person> result = repository.findAll((QSort) null);
 
 		assertThat(result, containsInAnyOrder(TYRION, JAIME, CERSEI));
 	}
 
+	/**
+	 * @see DATAKV-95
+	 */
+	@Test
+	public void executesExistsCorrectly() {
+
+		repository.save(LENNISTERS);
+
+		assertThat(repository.exists(QPerson.person.age.eq(CERSEI.getAge())), is(true));
+	}
+
+	/* 
+	 * (non-Javadoc)
+	 * @see org.springframework.data.map.SimpleKeyValueRepositoryUnitTests#getRepository(org.springframework.data.keyvalue.repository.support.KeyValueRepositoryFactory)
+	 */
 	@Override
-	protected Class<? extends PersonRepository> getRepositoryClass() {
-		return QPersonRepository.class;
+	protected QPersonRepository getRepository(KeyValueRepositoryFactory factory) {
+		return factory.getRepository(QPersonRepository.class);
 	}
 
-	QPersonRepository getQPersonRepo() {
-		return ((QPersonRepository) repository);
-	}
-
-	static interface QPersonRepository extends PersonRepository, QueryDslPredicateExecutor<Person> {
-
-	}
-
+	static interface QPersonRepository extends org.springframework.data.map.AbstractRepositoryUnitTests.PersonRepository,
+			QueryDslPredicateExecutor<Person> {}
 }
