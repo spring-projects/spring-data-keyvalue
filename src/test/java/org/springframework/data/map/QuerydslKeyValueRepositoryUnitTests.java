@@ -15,15 +15,15 @@
  */
 package org.springframework.data.map;
 
-import static org.hamcrest.collection.IsCollectionWithSize.*;
-import static org.hamcrest.collection.IsIterableContainingInAnyOrder.*;
-import static org.hamcrest.collection.IsIterableContainingInOrder.*;
-import static org.hamcrest.core.Is.*;
+import static org.hamcrest.Matchers.*;
 import static org.junit.Assert.*;
+
+import java.util.List;
 
 import org.junit.Test;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.domain.Sort.Direction;
 import org.springframework.data.keyvalue.Person;
 import org.springframework.data.keyvalue.QPerson;
@@ -33,11 +33,14 @@ import org.springframework.data.map.QuerydslKeyValueRepositoryUnitTests.QPersonR
 import org.springframework.data.querydsl.QSort;
 import org.springframework.data.querydsl.QueryDslPredicateExecutor;
 
+import com.google.common.collect.Lists;
+
 /**
  * Unit tests for {@link QuerydslKeyValueRepository}.
  * 
  * @author Christoph Strobl
  * @author Oliver Gierke
+ * @author Thomas Darimont
  */
 public class QuerydslKeyValueRepositoryUnitTests extends AbstractRepositoryUnitTests<QPersonRepository> {
 
@@ -163,6 +166,22 @@ public class QuerydslKeyValueRepositoryUnitTests extends AbstractRepositoryUnitT
 		repository.save(LENNISTERS);
 
 		assertThat(repository.exists(QPerson.person.age.eq(CERSEI.getAge())), is(true));
+	}
+
+	/**
+	 * @see DATAKV-96
+	 */
+	@Test
+	public void shouldSupportFindAllWithPredicateAndSort() {
+
+		repository.save(LENNISTERS);
+
+		List<Person> users = Lists.newArrayList(repository.findAll(person.age.gt(0), new Sort(Direction.ASC, "firstname")));
+
+		assertThat(users, hasSize(3));
+		assertThat(users.get(0).getFirstname(), is(CERSEI.getFirstname()));
+		assertThat(users.get(2).getFirstname(), is(TYRION.getFirstname()));
+		assertThat(users, hasItems(CERSEI, JAIME, TYRION));
 	}
 
 	/* 
