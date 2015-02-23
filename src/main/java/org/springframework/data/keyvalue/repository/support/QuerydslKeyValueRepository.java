@@ -22,6 +22,7 @@ import java.io.Serializable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.keyvalue.core.KeyValueOperations;
 import org.springframework.data.keyvalue.repository.KeyValueRepository;
 import org.springframework.data.querydsl.EntityPathResolver;
@@ -43,6 +44,7 @@ import com.mysema.query.types.path.PathBuilder;
  * 
  * @author Christoph Strobl
  * @author Oliver Gierke
+ * @author Thomas Darimont
  * @param <T> the domain type to manage
  * @param <ID> the identififer type of the domain type
  */
@@ -113,6 +115,15 @@ public class QuerydslKeyValueRepository<T, ID extends Serializable> extends Simp
 		query.orderBy(orders);
 
 		return query.list(builder);
+	}
+
+	/* 
+	 * (non-Javadoc)
+	 * @see org.springframework.data.querydsl.QueryDslPredicateExecutor#findAll(com.mysema.query.types.Predicate, org.springframework.data.domain.Sort)
+	 */
+	@Override
+	public Iterable<T> findAll(Predicate predicate, Sort sort) {
+		return findAll(predicate, toOrderSpecifier(sort, builder));
 	}
 
 	/*
@@ -188,5 +199,4 @@ public class QuerydslKeyValueRepository<T, ID extends Serializable> extends Simp
 		}
 		return query;
 	}
-
 }

@@ -30,6 +30,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.domain.Sort.Direction;
 import org.springframework.data.keyvalue.Person;
+import org.springframework.data.keyvalue.QPerson;
 import org.springframework.data.keyvalue.core.KeyValueOperations;
 import org.springframework.data.keyvalue.core.KeyValueTemplate;
 import org.springframework.data.keyvalue.repository.KeyValueRepository;
@@ -41,6 +42,7 @@ import org.springframework.data.repository.CrudRepository;
  * 
  * @author Christoph Strobl
  * @author Oliver Gierke
+ * @author Thomas Darimont
  */
 public abstract class AbstractRepositoryUnitTests<T extends AbstractRepositoryUnitTests.PersonRepository> {
 
@@ -49,6 +51,8 @@ public abstract class AbstractRepositoryUnitTests<T extends AbstractRepositoryUn
 	protected static final Person TYRION = new Person("tyrion", 17);
 
 	protected static List<Person> LENNISTERS = Arrays.asList(CERSEI, JAIME, TYRION);
+
+	protected final QPerson person = QPerson.person;
 
 	protected T repository;
 	protected KeyValueRepositoryFactory factory;
