@@ -5,7 +5,7 @@
 
 	<groupId>org.springframework.data</groupId>
 	<artifactId>spring-data-keyvalue</artifactId>
-	<version>0.1.0.BUILD-SNAPSHOT</version>
+	<version>0.1.0.DATAKV-96-SNAPSHOT</version>
 
 	<name>Spring Data KeyValue</name>
 
@@ -18,7 +18,7 @@
 
 	<properties>
 		<dist.key>DATAKV</dist.key>
-		<springdata.commons>1.10.0.BUILD-SNAPSHOT</springdata.commons>
+		<springdata.commons>1.10.0.DATACMNS-554-SNAPSHOT</springdata.commons>
 	</properties>
 
 	<dependencies>
