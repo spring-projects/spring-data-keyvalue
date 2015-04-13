@@ -1,5 +1,5 @@
 /*
- * Copyright 2014 the original author or authors.
+ * Copyright 2014-2015 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -28,6 +28,7 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.HashSet;
 
 import org.junit.Before;
 import org.junit.Rule;
@@ -37,12 +38,19 @@ import org.junit.runner.RunWith;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
+import org.springframework.context.ApplicationContext;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.dao.InvalidDataAccessApiUsageException;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.annotation.Persistent;
 import org.springframework.data.annotation.TypeAlias;
 import org.springframework.data.keyvalue.annotation.KeySpace;
+import org.springframework.data.keyvalue.core.event.KeyValueEvent;
+import org.springframework.data.keyvalue.core.event.KeyValueEvent.DeleteEvent;
+import org.springframework.data.keyvalue.core.event.KeyValueEvent.DropKeyspaceEvent;
+import org.springframework.data.keyvalue.core.event.KeyValueEvent.InsertEvent;
+import org.springframework.data.keyvalue.core.event.KeyValueEvent.Type;
+import org.springframework.data.keyvalue.core.event.KeyValueEvent.UpdateEvent;
 import org.springframework.data.keyvalue.core.query.KeyValueQuery;
 import org.springframework.util.ObjectUtils;
 
@@ -63,10 +71,12 @@ public class KeyValueTemplateUnitTests {
 
 	private @Mock KeyValueAdapter adapterMock;
 	private KeyValueTemplate template;
+	private @Mock ApplicationContext ctxMock;
 
 	@Before
 	public void setUp() throws InstantiationException, IllegalAccessException {
 		this.template = new KeyValueTemplate(adapterMock);
+		this.template.setApplicationContext(ctxMock);
 	}
 
 	/**
@@ -418,6 +428,188 @@ public class KeyValueTemplateUnitTests {
 	@Test(expected = IllegalArgumentException.class)
 	public void setttingNullPersistenceExceptionTranslatorShouldThrowException() {
 		template.setExceptionTranslator(null);
+	}
+
+	/**
+	 * @see DATAKV-91
+	 */
+	@Test
+	public void shouldNotPublishEventWhenNoApplicationContextSet() {
+
+		template.setApplicationContext(null);
+		template.setEventTypesToPublish(new HashSet<KeyValueEvent.Type>(Arrays.asList(KeyValueEvent.Type.AFTER_DELETE,
+				KeyValueEvent.Type.AFTER_INSERT, KeyValueEvent.Type.AFTER_UPDATE, KeyValueEvent.Type.BEFORE_DELETE,
+				KeyValueEvent.Type.BEFORE_INSERT, KeyValueEvent.Type.BEFORE_UPDATE)));
+
+		template.insert("1", FOO_ONE);
+
+		verifyZeroInteractions(ctxMock);
+	}
+
+	/**
+	 * @see DATAKV-91
+	 */
+	@Test
+	public void shouldNotPublishEventWhenNotExplicitlySetForPublication() {
+
+		template.setEventTypesToPublish(new HashSet<KeyValueEvent.Type>(Arrays.asList(KeyValueEvent.Type.AFTER_DELETE)));
+
+		template.insert("1", FOO_ONE);
+
+		verifyZeroInteractions(ctxMock);
+	}
+
+	/**
+	 * @see DATAKV-91
+	 */
+	@Test
+	@SuppressWarnings("rawtypes")
+	public void shouldPublishBeforeInsertEventCorrectly() {
+
+		template.setEventTypesToPublish(new HashSet<KeyValueEvent.Type>(Arrays.asList(KeyValueEvent.Type.BEFORE_INSERT)));
+
+		template.insert("1", FOO_ONE);
+
+		ArgumentCaptor<InsertEvent> captor = ArgumentCaptor.forClass(InsertEvent.class);
+
+		verify(ctxMock, times(1)).publishEvent(captor.capture());
+		verifyNoMoreInteractions(ctxMock);
+
+		assertThat(captor.getValue().getType(), is(Type.BEFORE_INSERT));
+		assertThat(captor.getValue().getId(), is((Serializable) "1"));
+		assertThat(captor.getValue().getKeyspace(), is(Foo.class.getName()));
+		assertThat(captor.getValue().getValue(), is((Object) FOO_ONE));
+	}
+
+	/**
+	 * @see DATAKV-91
+	 */
+	@Test
+	@SuppressWarnings("rawtypes")
+	public void shouldPublishAfterInsertEventCorrectly() {
+
+		template.setEventTypesToPublish(new HashSet<KeyValueEvent.Type>(Arrays.asList(KeyValueEvent.Type.AFTER_INSERT)));
+
+		template.insert("1", FOO_ONE);
+
+		ArgumentCaptor<InsertEvent> captor = ArgumentCaptor.forClass(InsertEvent.class);
+
+		verify(ctxMock, times(1)).publishEvent(captor.capture());
+		verifyNoMoreInteractions(ctxMock);
+
+		assertThat(captor.getValue().getType(), is(Type.AFTER_INSERT));
+		assertThat(captor.getValue().getId(), is((Serializable) "1"));
+		assertThat(captor.getValue().getKeyspace(), is(Foo.class.getName()));
+		assertThat(captor.getValue().getValue(), is((Object) FOO_ONE));
+	}
+
+	/**
+	 * @see DATAKV-91
+	 */
+	@Test
+	@SuppressWarnings("rawtypes")
+	public void shouldPublishBeforeUpdateEventCorrectly() {
+
+		template.setEventTypesToPublish(new HashSet<KeyValueEvent.Type>(Arrays.asList(KeyValueEvent.Type.BEFORE_UPDATE)));
+
+		template.update("1", FOO_ONE);
+
+		ArgumentCaptor<UpdateEvent> captor = ArgumentCaptor.forClass(UpdateEvent.class);
+
+		verify(ctxMock, times(1)).publishEvent(captor.capture());
+		verifyNoMoreInteractions(ctxMock);
+
+		assertThat(captor.getValue().getType(), is(Type.BEFORE_UPDATE));
+		assertThat(captor.getValue().getId(), is((Serializable) "1"));
+		assertThat(captor.getValue().getKeyspace(), is(Foo.class.getName()));
+		assertThat(captor.getValue().getValue(), is((Object) FOO_ONE));
+	}
+
+	/**
+	 * @see DATAKV-91
+	 */
+	@Test
+	@SuppressWarnings("rawtypes")
+	public void shouldPublishAfterUpdateEventCorrectly() {
+
+		template.setEventTypesToPublish(new HashSet<KeyValueEvent.Type>(Arrays.asList(KeyValueEvent.Type.AFTER_UPDATE)));
+
+		template.update("1", FOO_ONE);
+
+		ArgumentCaptor<UpdateEvent> captor = ArgumentCaptor.forClass(UpdateEvent.class);
+
+		verify(ctxMock, times(1)).publishEvent(captor.capture());
+		verifyNoMoreInteractions(ctxMock);
+
+		assertThat(captor.getValue().getType(), is(Type.AFTER_UPDATE));
+		assertThat(captor.getValue().getId(), is((Serializable) "1"));
+		assertThat(captor.getValue().getKeyspace(), is(Foo.class.getName()));
+		assertThat(captor.getValue().getValue(), is((Object) FOO_ONE));
+	}
+
+	/**
+	 * @see DATAKV-91
+	 */
+	@Test
+	@SuppressWarnings("rawtypes")
+	public void shouldPublishBeforeDeleteEventCorrectly() {
+
+		template.setEventTypesToPublish(new HashSet<KeyValueEvent.Type>(Arrays.asList(KeyValueEvent.Type.BEFORE_DELETE)));
+
+		template.delete("1", FOO_ONE.getClass());
+
+		ArgumentCaptor<DeleteEvent> captor = ArgumentCaptor.forClass(DeleteEvent.class);
+
+		verify(ctxMock, times(1)).publishEvent(captor.capture());
+		verifyNoMoreInteractions(ctxMock);
+
+		assertThat(captor.getValue().getType(), is(Type.BEFORE_DELETE));
+		assertThat(captor.getValue().getId(), is((Serializable) "1"));
+		assertThat(captor.getValue().getKeyspace(), is(Foo.class.getName()));
+		assertThat(captor.getValue().getValue(), nullValue());
+	}
+
+	/**
+	 * @see DATAKV-91
+	 */
+	@Test
+	@SuppressWarnings("rawtypes")
+	public void shouldPublishAfterDeleteEventCorrectly() {
+
+		template.setEventTypesToPublish(new HashSet<KeyValueEvent.Type>(Arrays.asList(KeyValueEvent.Type.AFTER_DELETE)));
+		when(adapterMock.delete(eq("1"), eq(FOO_ONE.getClass().getName()))).thenReturn(FOO_ONE);
+
+		template.delete("1", FOO_ONE.getClass());
+
+		ArgumentCaptor<DeleteEvent> captor = ArgumentCaptor.forClass(DeleteEvent.class);
+
+		verify(ctxMock, times(1)).publishEvent(captor.capture());
+		verifyNoMoreInteractions(ctxMock);
+
+		assertThat(captor.getValue().getType(), is(Type.AFTER_DELETE));
+		assertThat(captor.getValue().getId(), is((Serializable) "1"));
+		assertThat(captor.getValue().getKeyspace(), is(Foo.class.getName()));
+		assertThat(captor.getValue().getValue(), is((Object) FOO_ONE));
+	}
+
+	/**
+	 * @see DATAKV-91
+	 */
+	@Test
+	@SuppressWarnings("rawtypes")
+	public void shouldPublishDropKeyspaceEventCorrectly() {
+
+		template.setEventTypesToPublish(new HashSet<KeyValueEvent.Type>(Arrays.asList(KeyValueEvent.Type.AFTER_DELETE)));
+
+		template.delete(FOO_ONE.getClass());
+
+		ArgumentCaptor<DropKeyspaceEvent> captor = ArgumentCaptor.forClass(DropKeyspaceEvent.class);
+
+		verify(ctxMock, times(1)).publishEvent(captor.capture());
+		verifyNoMoreInteractions(ctxMock);
+
+		assertThat(captor.getValue().getType(), is(Type.AFTER_DELETE));
+		assertThat(captor.getValue().getKeyspace(), is(Foo.class.getName()));
 	}
 
 	static class Foo {
