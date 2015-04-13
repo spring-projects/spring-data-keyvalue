@@ -1,5 +1,5 @@
 /*
- * Copyright 2014 the original author or authors.
+ * Copyright 2014-2015 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,14 +20,22 @@ import static org.springframework.data.keyvalue.core.KeySpaceUtils.*;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
+import org.springframework.beans.BeansException;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.ApplicationContextAware;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.dao.DataAccessException;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.dao.InvalidDataAccessApiUsageException;
 import org.springframework.dao.support.PersistenceExceptionTranslator;
 import org.springframework.data.domain.Sort;
+import org.springframework.data.keyvalue.core.event.KeyValueEvent;
 import org.springframework.data.keyvalue.core.mapping.context.KeyValueMappingContext;
 import org.springframework.data.keyvalue.core.query.KeyValueQuery;
 import org.springframework.data.mapping.PersistentEntity;
@@ -35,6 +43,7 @@ import org.springframework.data.mapping.PersistentProperty;
 import org.springframework.data.mapping.context.MappingContext;
 import org.springframework.util.Assert;
 import org.springframework.util.ClassUtils;
+import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 
 /**
@@ -42,8 +51,9 @@ import org.springframework.util.StringUtils;
  * 
  * @author Christoph Strobl
  * @author Oliver Gierke
+ * @author Thomas Darimont
  */
-public class KeyValueTemplate implements KeyValueOperations {
+public class KeyValueTemplate implements KeyValueOperations, ApplicationContextAware {
 
 	private static final PersistenceExceptionTranslator DEFAULT_PERSISTENCE_EXCEPTION_TRANSLATOR = new KeyValuePersistenceExceptionTranslator();
 
@@ -51,6 +61,8 @@ public class KeyValueTemplate implements KeyValueOperations {
 	private final ConcurrentHashMap<Class<?>, String> keySpaceCache = new ConcurrentHashMap<Class<?>, String>();
 	private final MappingContext<? extends PersistentEntity<?, ? extends PersistentProperty<?>>, ? extends PersistentProperty<?>> mappingContext;
 	private final IdentifierGenerator identifierGenerator;
+	private ApplicationEventPublisher eventPublisher;
+	private final Set<KeyValueEvent.Type> eventTypesToPublish = new HashSet<KeyValueEvent.Type>(4);
 	private PersistenceExceptionTranslator exceptionTranslator = DEFAULT_PERSISTENCE_EXCEPTION_TRANSLATOR;
 
 	/**
@@ -109,22 +121,26 @@ public class KeyValueTemplate implements KeyValueOperations {
 		Assert.notNull(id, "Id for object to be inserted must not be null!");
 		Assert.notNull(objectToInsert, "Object to be inserted must not be null!");
 
+		final String keyspace = resolveKeySpace(objectToInsert.getClass());
+
+		potentiallyPublishEvent(KeyValueEvent.beforeInsert(this, keyspace, id, objectToInsert));
+
 		execute(new KeyValueCallback<Void>() {
 
 			@Override
 			public Void doInKeyValue(KeyValueAdapter adapter) {
 
-				String typeKey = resolveKeySpace(objectToInsert.getClass());
-
-				if (adapter.contains(id, typeKey)) {
+				if (adapter.contains(id, keyspace)) {
 					throw new DuplicateKeyException(String.format(
 							"Cannot insert existing object with id %s!. Please use update.", id));
 				}
 
-				adapter.put(id, objectToInsert, typeKey);
+				adapter.put(id, objectToInsert, keyspace);
 				return null;
 			}
 		});
+
+		potentiallyPublishEvent(KeyValueEvent.afterInsert(this, keyspace, id, objectToInsert));
 	}
 
 	/*
@@ -156,14 +172,20 @@ public class KeyValueTemplate implements KeyValueOperations {
 		Assert.notNull(id, "Id for object to be inserted must not be null!");
 		Assert.notNull(objectToUpdate, "Object to be updated must not be null!");
 
+		final String keyspace = resolveKeySpace(objectToUpdate.getClass());
+
+		potentiallyPublishEvent(KeyValueEvent.beforeUpdate(this, keyspace, id, objectToUpdate));
+
 		execute(new KeyValueCallback<Void>() {
 
 			@Override
 			public Void doInKeyValue(KeyValueAdapter adapter) {
-				adapter.put(id, objectToUpdate, resolveKeySpace(objectToUpdate.getClass()));
+				adapter.put(id, objectToUpdate, keyspace);
 				return null;
 			}
 		});
+
+		potentiallyPublishEvent(KeyValueEvent.afterUpdate(this, keyspace, id, objectToUpdate));
 	}
 
 	/*
@@ -209,13 +231,17 @@ public class KeyValueTemplate implements KeyValueOperations {
 		Assert.notNull(id, "Id for object to be inserted must not be null!");
 		Assert.notNull(type, "Type to fetch must not be null!");
 
-		return execute(new KeyValueCallback<T>() {
+		final String keyspace = resolveKeySpace(type);
+
+		potentiallyPublishEvent(KeyValueEvent.beforeGet(this, keyspace, id));
+
+		T result = execute(new KeyValueCallback<T>() {
 
 			@SuppressWarnings("unchecked")
 			@Override
 			public T doInKeyValue(KeyValueAdapter adapter) {
 
-				Object result = adapter.get(id, resolveKeySpace(type));
+				Object result = adapter.get(id, keyspace);
 
 				if (result == null || getKeySpace(type) == null || typeCheck(type, result)) {
 					return (T) result;
@@ -224,6 +250,10 @@ public class KeyValueTemplate implements KeyValueOperations {
 				return null;
 			}
 		});
+
+		potentiallyPublishEvent(KeyValueEvent.afterGet(this, keyspace, id, result));
+
+		return result;
 	}
 
 	/*
@@ -235,17 +265,21 @@ public class KeyValueTemplate implements KeyValueOperations {
 
 		Assert.notNull(type, "Type to delete must not be null!");
 
-		final String typeKey = resolveKeySpace(type);
+		final String keyspace = resolveKeySpace(type);
+
+		potentiallyPublishEvent(KeyValueEvent.beforeDelete(this, keyspace));
 
 		execute(new KeyValueCallback<Void>() {
 
 			@Override
 			public Void doInKeyValue(KeyValueAdapter adapter) {
 
-				adapter.deleteAllOf(typeKey);
+				adapter.deleteAllOf(keyspace);
 				return null;
 			}
 		});
+
+		potentiallyPublishEvent(KeyValueEvent.afterDelete(this, keyspace));
 	}
 
 	/*
@@ -272,14 +306,22 @@ public class KeyValueTemplate implements KeyValueOperations {
 		Assert.notNull(id, "Id for object to be inserted must not be null!");
 		Assert.notNull(type, "Type to delete must not be null!");
 
-		return execute(new KeyValueCallback<T>() {
+		final String keyspace = resolveKeySpace(type);
+
+		potentiallyPublishEvent(KeyValueEvent.beforeDelete(this, keyspace, id));
+
+		T result = execute(new KeyValueCallback<T>() {
 
 			@SuppressWarnings("unchecked")
 			@Override
 			public T doInKeyValue(KeyValueAdapter adapter) {
-				return (T) adapter.delete(id, resolveKeySpace(type));
+				return (T) adapter.delete(id, keyspace);
 			}
 		});
+
+		potentiallyPublishEvent(KeyValueEvent.afterDelete(this, keyspace, id, result));
+
+		return result;
 	}
 
 	/*
@@ -416,14 +458,37 @@ public class KeyValueTemplate implements KeyValueOperations {
 		this.exceptionTranslator = exceptionTranslator;
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * @see org.springframework.context.ApplicationContextAware#setApplicationContext(org.springframework.context.ApplicationContext)
+	 */
+	@Override
+	public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
+		eventPublisher = applicationContext;
+	}
+
+	/**
+	 * Define the event types to publish via {@link ApplicationEventPublisher}.
+	 * 
+	 * @param eventTypesToPublish use {@literal null} or {@link Collections#emptySet()} to disable publishing.
+	 */
+	public void setEventTypesToPublish(Set<KeyValueEvent.Type> eventTypesToPublish) {
+
+		this.eventTypesToPublish.clear();
+
+		if (!CollectionUtils.isEmpty(eventTypesToPublish)) {
+			this.eventTypesToPublish.addAll(eventTypesToPublish);
+		}
+	}
+
 	protected String resolveKeySpace(Class<?> type) {
 
 		Class<?> userClass = ClassUtils.getUserClass(type);
 
-		String potentialAlias = keySpaceCache.get(userClass);
+		String potentialKeySpace = keySpaceCache.get(userClass);
 
-		if (potentialAlias != null) {
-			return potentialAlias;
+		if (potentialKeySpace != null) {
+			return potentialKeySpace;
 		}
 
 		String keySpaceString = null;
@@ -449,5 +514,16 @@ public class KeyValueTemplate implements KeyValueOperations {
 
 		DataAccessException translatedException = exceptionTranslator.translateExceptionIfPossible(e);
 		return translatedException != null ? translatedException : e;
+	}
+
+	private void potentiallyPublishEvent(KeyValueEvent event) {
+		
+		if (eventPublisher == null) {
+			return;
+		}
+
+		if (eventTypesToPublish.contains(event.getType()) || eventTypesToPublish.contains(KeyValueEvent.Type.ANY)) {
+			eventPublisher.publishEvent(event);
+		}
 	}
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright 2014 the original author or authors.
+ * Copyright 2014-2015 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -101,4 +101,12 @@ public interface KeyValueAdapter extends DisposableBean {
 	 * @return
 	 */
 	long count(KeyValueQuery<?> query, Serializable keyspace);
+
+	/**
+	 * Check if values from the given keyspace are contained in the underlying key-value store.
+	 * 
+	 * @param keyspace
+	 * @return true if {@literal keyspace} already present in adapter.
+	 */
+	boolean hasKeyspace(Serializable keyspace);
 }
