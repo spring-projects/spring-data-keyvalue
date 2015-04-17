@@ -5,7 +5,7 @@
 
 	<groupId>org.springframework.data</groupId>
 	<artifactId>spring-data-keyvalue</artifactId>
-	<version>0.1.0.DATAKV-91-SNAPSHOT</version>
+	<version>0.1.0.DATAKV-91-KAFKA-SNAPSHOT</version>
 
 	<name>Spring Data KeyValue</name>
 
@@ -51,6 +51,13 @@
 			<artifactId>joda-time</artifactId>
 			<version>2.5</version>
 			<scope>test</scope>
+		</dependency>
+		
+		<dependency>
+		    <groupId>org.apache.kafka</groupId>
+		    <artifactId>kafka-clients</artifactId>
+		    <version>0.8.2.1</version>
+		    <optional>true</optional>
 		</dependency>
 
 	</dependencies>
