@@ -101,4 +101,10 @@ public interface KeyValueAdapter extends DisposableBean {
 	 * @return
 	 */
 	long count(KeyValueQuery<?> query, Serializable keyspace);
+
+	/**
+	 * @param keyspace
+	 * @return true if {@literal keyspace} already present in adapter.
+	 */
+	boolean hasKeyspace(Serializable keyspace);
 }

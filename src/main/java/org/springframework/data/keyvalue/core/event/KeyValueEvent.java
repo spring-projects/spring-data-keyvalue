@@ -32,7 +32,7 @@ public class KeyValueEvent<T> extends ApplicationEvent {
 	private static final long serialVersionUID = -7128527253428193044L;
 
 	public enum Type {
-		BEFORE_INSERT, AFTER_INSERT, BEFORE_UPDATE, AFTER_UPDATE, BEFORE_DELETE, AFTER_DELETE
+		ANY, BEFORE_INSERT, AFTER_INSERT, BEFORE_UPDATE, AFTER_UPDATE, BEFORE_DELETE, AFTER_DELETE, BEFORE_GET, AFTER_GET
 	}
 
 	private final Type type;
@@ -74,6 +74,25 @@ public class KeyValueEvent<T> extends ApplicationEvent {
 	 */
 	public Object getValue() {
 		return value;
+	}
+
+	@Override
+	@SuppressWarnings("unchecked")
+	public T getSource() {
+		return (T) super.getSource();
+	}
+
+	@Override
+	public String toString() {
+		return "KeyValueEvent [type=" + type + ", keyspace=" + keyspace + ", id=" + id + "]";
+	}
+
+	public static <T> GetEvent<T> beforeGet(T source, String keyspace, Serializable id) {
+		return new GetEvent<T>(source, Type.BEFORE_GET, keyspace, id, null);
+	}
+
+	public static <T> GetEvent<T> afterGet(T source, String keyspace, Serializable id, Object value) {
+		return new GetEvent<T>(source, Type.AFTER_GET, keyspace, id, value);
 	}
 
 	public static <T> InsertEvent<T> beforeInsert(T source, String keyspace, Serializable id, Object value) {
@@ -146,6 +165,17 @@ public class KeyValueEvent<T> extends ApplicationEvent {
 		DropKeyspaceEvent(T source, Type type, String keyspace) {
 			super(source, type, keyspace, null, null);
 		}
+	}
+
+	public static class GetEvent<T> extends KeyValueEvent<T> {
+
+		private static final long serialVersionUID = -1;
+
+		protected GetEvent(T source, org.springframework.data.keyvalue.core.event.KeyValueEvent.Type type, String keyspace,
+				Serializable id, Object value) {
+			super(source, type, keyspace, id, value);
+		}
+
 	}
 
 }

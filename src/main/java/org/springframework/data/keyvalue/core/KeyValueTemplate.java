@@ -230,13 +230,17 @@ public class KeyValueTemplate implements KeyValueOperations, ApplicationContextA
 		Assert.notNull(id, "Id for object to be inserted must not be null!");
 		Assert.notNull(type, "Type to fetch must not be null!");
 
+		final String keyspace = resolveKeySpace(type);
+
+		potentiallyPublishEvent(KeyValueEvent.beforeGet(this, keyspace, id));
+
 		return execute(new KeyValueCallback<T>() {
 
 			@SuppressWarnings("unchecked")
 			@Override
 			public T doInKeyValue(KeyValueAdapter adapter) {
 
-				Object result = adapter.get(id, resolveKeySpace(type));
+				Object result = adapter.get(id, keyspace);
 
 				if (result == null || getKeySpace(type) == null || typeCheck(type, result)) {
 					return (T) result;
@@ -509,7 +513,8 @@ public class KeyValueTemplate implements KeyValueOperations, ApplicationContextA
 
 	private void potentiallyPublishEvent(KeyValueEvent<?> event) {
 
-		if (eventPublisher != null && eventTypesToPublish.contains(event.getType())) {
+		if (eventPublisher != null
+				&& (eventTypesToPublish.contains(event.getType()) || eventTypesToPublish.contains(KeyValueEvent.Type.ANY))) {
 			eventPublisher.publishEvent(event);
 		}
 	}

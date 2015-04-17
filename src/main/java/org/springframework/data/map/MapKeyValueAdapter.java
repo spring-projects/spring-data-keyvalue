@@ -144,6 +144,17 @@ public class MapKeyValueAdapter extends AbstractKeyValueAdapter {
 
 	/*
 	 * (non-Javadoc)
+	 * @see org.springframework.data.keyvalue.core.KeyValueAdapter#hasKeyspace(java.io.Serializable)
+	 */
+	@Override
+	public boolean hasKeyspace(Serializable keyspace) {
+
+		Assert.notNull(keyspace, "Collection must not be null for lookup.");
+		return store.containsKey(keyspace);
+	}
+
+	/*
+	 * (non-Javadoc)
 	 * @see org.springframework.data.keyvalue.core.KeyValueAdapter#clear()
 	 */
 	@Override
