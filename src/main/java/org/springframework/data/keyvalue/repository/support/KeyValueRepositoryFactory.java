@@ -28,6 +28,7 @@ import org.springframework.data.mapping.context.MappingContext;
 import org.springframework.data.querydsl.QueryDslPredicateExecutor;
 import org.springframework.data.repository.core.EntityInformation;
 import org.springframework.data.repository.core.NamedQueries;
+import org.springframework.data.repository.core.RepositoryInformation;
 import org.springframework.data.repository.core.RepositoryMetadata;
 import org.springframework.data.repository.core.support.PersistentEntityInformation;
 import org.springframework.data.repository.core.support.RepositoryFactorySupport;
@@ -38,7 +39,6 @@ import org.springframework.data.repository.query.QueryMethod;
 import org.springframework.data.repository.query.RepositoryQuery;
 import org.springframework.data.repository.query.parser.AbstractQueryCreator;
 import org.springframework.util.Assert;
-import org.springframework.util.ClassUtils;
 
 /**
  * {@link RepositoryFactorySupport} specific of handing
@@ -101,16 +101,10 @@ public class KeyValueRepositoryFactory extends RepositoryFactorySupport {
 	 * @see org.springframework.data.repository.core.support.RepositoryFactorySupport#getTargetRepository(org.springframework.data.repository.core.RepositoryMetadata)
 	 */
 	@Override
-	@SuppressWarnings({ "unchecked", "rawtypes" })
-	protected Object getTargetRepository(RepositoryMetadata metadata) {
+	protected Object getTargetRepository(RepositoryInformation repositoryInformation) {
 
-		EntityInformation<?, Serializable> entityInformation = getEntityInformation(metadata.getDomainType());
-
-		if (ClassUtils.isAssignable(QueryDslPredicateExecutor.class, metadata.getRepositoryInterface())) {
-			return new QuerydslKeyValueRepository(entityInformation, keyValueOperations);
-		}
-
-		return new SimpleKeyValueRepository(entityInformation, keyValueOperations);
+		EntityInformation<?, Serializable> entityInformation = getEntityInformation(repositoryInformation.getDomainType());
+		return super.getTargetRepositoryViaReflection(repositoryInformation, entityInformation, keyValueOperations);
 	}
 
 	/*
