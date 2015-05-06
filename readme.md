@@ -16,9 +16,20 @@ Download the jar though Maven:
 ```xml
 <dependency>
   <groupId>org.springframework.data</groupId>
-  <artifactId>spring-data-key-value</artifactId>
+  <artifactId>spring-data-keyvalue</artifactId>
   <version>0.1.0.BUILD-SNAPSHOT</version>
 </dependency>
+```
+
+For snapshot versions, make sure you include the spring snapshots repository:
+
+```xml
+<repositories>
+  <repository>
+    <id>spring-libs-snapshot</id>
+    <url>http://repo.spring.io/libs-snapshot</url>
+  </repository>
+</repositories>
 ```
 
 The `ConcurrentHashMap` based default configuration looks like this: 
