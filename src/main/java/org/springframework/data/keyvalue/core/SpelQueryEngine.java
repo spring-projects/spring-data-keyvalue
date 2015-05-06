@@ -29,13 +29,13 @@ import org.springframework.expression.spel.standard.SpelExpressionParser;
 
 /**
  * {@link QueryEngine} implementation specific for executing {@link SpelExpression} based {@link KeyValueQuery} against
- * {@link KeyValueAdapter}.
+ * {@link KeyValueAccessor}.
  * 
  * @author Christoph Strobl
  * @author Oliver Gierke
  * @param <T>
  */
-class SpelQueryEngine<T extends KeyValueAdapter> extends QueryEngine<KeyValueAdapter, SpelExpression, Comparator<?>> {
+class SpelQueryEngine<T extends KeyValueAccessor> extends QueryEngine<KeyValueAccessor, SpelExpression, Comparator<?>> {
 
 	private static final SpelExpressionParser PARSER = new SpelExpressionParser();
 

@@ -16,7 +16,7 @@
 package org.springframework.data.keyvalue.core;
 
 /**
- * Generic callback interface for code that operates on a {@link KeyValueAdapter}. This is particularly useful for
+ * Generic callback interface for code that operates on a {@link KeyValueAccessor}. This is particularly useful for
  * delegating code that needs to work closely on the underlying key/value store implementation.
  * 
  * @author Christoph Strobl
@@ -31,5 +31,5 @@ public interface KeyValueCallback<T> {
 	 * @param adapter
 	 * @return
 	 */
-	T doInKeyValue(KeyValueAdapter adapter);
+	T doInKeyValue(KeyValueAccessor adapter);
 }

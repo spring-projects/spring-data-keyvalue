@@ -29,7 +29,7 @@ import org.springframework.context.annotation.AnnotationConfigApplicationContext
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.keyvalue.core.KeyValueTemplate;
-import org.springframework.data.map.MapKeyValueAdapter;
+import org.springframework.data.map.MapKeyValueAccessor;
 import org.springframework.test.util.ReflectionTestUtils;
 
 /**
@@ -88,10 +88,10 @@ public class MapRepositoriesConfigurationExtensionIntegrationTests {
 	private static void assertKeyValueTemplateWithAdapterFor(Class<?> mapType, ApplicationContext context) {
 
 		KeyValueTemplate template = context.getBean(KeyValueTemplate.class);
-		Object adapter = ReflectionTestUtils.getField(template, "adapter");
+		Object accessor = ReflectionTestUtils.getField(template, "accessor");
 
-		assertThat(adapter, is(instanceOf(MapKeyValueAdapter.class)));
-		assertThat(ReflectionTestUtils.getField(adapter, "store"), is(instanceOf(mapType)));
+		assertThat(accessor, is(instanceOf(MapKeyValueAccessor.class)));
+		assertThat(ReflectionTestUtils.getField(accessor, "store"), is(instanceOf(mapType)));
 	}
 
 	@Configuration
@@ -112,7 +112,7 @@ public class MapRepositoriesConfigurationExtensionIntegrationTests {
 
 		@Bean
 		public KeyValueTemplate mapKeyValueTemplate() {
-			return new KeyValueTemplate(new MapKeyValueAdapter());
+			return new KeyValueTemplate(new MapKeyValueAccessor());
 		}
 	}
 }

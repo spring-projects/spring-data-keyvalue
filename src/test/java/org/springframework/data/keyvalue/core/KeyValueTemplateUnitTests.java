@@ -71,7 +71,7 @@ public class KeyValueTemplateUnitTests {
 
 	private static final KeyValueQuery<String> STRING_QUERY = new KeyValueQuery<String>("foo == 'two'");
 
-	private @Mock KeyValueAdapter adapterMock;
+	private @Mock KeyValueAccessor adapterMock;
 	private KeyValueTemplate template;
 	private @Mock ApplicationContext ctxMock;
 

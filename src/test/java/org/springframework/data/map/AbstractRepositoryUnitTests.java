@@ -60,7 +60,7 @@ public abstract class AbstractRepositoryUnitTests<T extends AbstractRepositoryUn
 	@Before
 	public void setup() {
 
-		KeyValueOperations operations = new KeyValueTemplate(new MapKeyValueAdapter());
+		KeyValueOperations operations = new KeyValueTemplate(new MapKeyValueAccessor());
 		KeyValueRepositoryFactory keyValueRepositoryFactory = new KeyValueRepositoryFactory(operations);
 
 		this.repository = getRepository(keyValueRepositoryFactory);

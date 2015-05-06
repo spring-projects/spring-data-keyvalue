@@ -22,11 +22,11 @@ import org.springframework.beans.factory.DisposableBean;
 import org.springframework.data.keyvalue.core.query.KeyValueQuery;
 
 /**
- * {@link KeyValueAdapter} unifies access and shields the underlying key/value specific implementation.
+ * {@link KeyValueAccessor} unifies access and shields the underlying key/value specific implementation.
  * 
  * @author Christoph Strobl
  */
-public interface KeyValueAdapter extends DisposableBean {
+public interface KeyValueAccessor extends DisposableBean {
 
 	/**
 	 * Add object with given id to keyspace.

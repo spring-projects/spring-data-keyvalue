@@ -21,14 +21,14 @@ import java.util.Collection;
 import org.springframework.data.keyvalue.core.query.KeyValueQuery;
 
 /**
- * Base implementation for accessing and executing {@link KeyValueQuery} against a {@link KeyValueAdapter}.
+ * Base implementation for accessing and executing {@link KeyValueQuery} against a {@link KeyValueAccessor}.
  * 
  * @author Christoph Strobl
  * @param <ADAPTER>
  * @param <CRITERIA>
  * @param <SORT>
  */
-public abstract class QueryEngine<ADAPTER extends KeyValueAdapter, CRITERIA, SORT> {
+public abstract class QueryEngine<ADAPTER extends KeyValueAccessor, CRITERIA, SORT> {
 
 	private final CriteriaAccessor<CRITERIA> criteriaAccessor;
 	private final SortAccessor<SORT> sortAccessor;
@@ -87,7 +87,7 @@ public abstract class QueryEngine<ADAPTER extends KeyValueAdapter, CRITERIA, SOR
 	public abstract long count(CRITERIA criteria, Serializable keyspace);
 
 	/**
-	 * Get the {@link KeyValueAdapter} used.
+	 * Get the {@link KeyValueAccessor} used.
 	 * 
 	 * @return
 	 */
@@ -99,7 +99,7 @@ public abstract class QueryEngine<ADAPTER extends KeyValueAdapter, CRITERIA, SOR
 	 * @param adapter
 	 */
 	@SuppressWarnings("unchecked")
-	public void registerAdapter(KeyValueAdapter adapter) {
+	public void registerAdapter(KeyValueAccessor adapter) {
 
 		if (this.adapter == null) {
 			this.adapter = (ADAPTER) adapter;

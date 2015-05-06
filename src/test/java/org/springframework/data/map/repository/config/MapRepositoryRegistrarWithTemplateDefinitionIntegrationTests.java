@@ -28,7 +28,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.keyvalue.core.KeyValueOperations;
 import org.springframework.data.keyvalue.core.KeyValueTemplate;
-import org.springframework.data.map.MapKeyValueAdapter;
+import org.springframework.data.map.MapKeyValueAccessor;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
@@ -48,7 +48,7 @@ public class MapRepositoryRegistrarWithTemplateDefinitionIntegrationTests {
 
 		@Bean
 		public KeyValueOperations keyValueTemplate() {
-			return new KeyValueTemplate(new MapKeyValueAdapter());
+			return new KeyValueTemplate(new MapKeyValueAccessor());
 		}
 	}
 

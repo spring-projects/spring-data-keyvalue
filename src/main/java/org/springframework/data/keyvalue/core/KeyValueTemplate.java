@@ -57,7 +57,7 @@ public class KeyValueTemplate implements KeyValueOperations, ApplicationContextA
 
 	private static final PersistenceExceptionTranslator DEFAULT_PERSISTENCE_EXCEPTION_TRANSLATOR = new KeyValuePersistenceExceptionTranslator();
 
-	private final KeyValueAdapter adapter;
+	private final KeyValueAccessor accessor;
 	private final ConcurrentHashMap<Class<?>, String> keySpaceCache = new ConcurrentHashMap<Class<?>, String>();
 	private final MappingContext<? extends PersistentEntity<?, ? extends PersistentProperty<?>>, ? extends PersistentProperty<?>> mappingContext;
 	private final IdentifierGenerator identifierGenerator;
@@ -66,30 +66,30 @@ public class KeyValueTemplate implements KeyValueOperations, ApplicationContextA
 	private PersistenceExceptionTranslator exceptionTranslator = DEFAULT_PERSISTENCE_EXCEPTION_TRANSLATOR;
 
 	/**
-	 * Create new {@link KeyValueTemplate} using the given {@link KeyValueAdapter} with a default
+	 * Create new {@link KeyValueTemplate} using the given {@link KeyValueAccessor} with a default
 	 * {@link KeyValueMappingContext}.
 	 * 
-	 * @param adapter must not be {@literal null}.
+	 * @param accessor must not be {@literal null}.
 	 */
-	public KeyValueTemplate(KeyValueAdapter adapter) {
-		this(adapter, new KeyValueMappingContext());
+	public KeyValueTemplate(KeyValueAccessor accessor) {
+		this(accessor, new KeyValueMappingContext());
 	}
 
 	/**
-	 * Create new {@link KeyValueTemplate} using the given {@link KeyValueAdapter} and {@link MappingContext}.
+	 * Create new {@link KeyValueTemplate} using the given {@link KeyValueAccessor} and {@link MappingContext}.
 	 * 
-	 * @param adapter must not be {@literal null}.
+	 * @param accessor must not be {@literal null}.
 	 * @param mappingContext must not be {@literal null}.
 	 */
 	@SuppressWarnings("rawtypes")
 	public KeyValueTemplate(
-			KeyValueAdapter adapter,
+			KeyValueAccessor accessor,
 			MappingContext<? extends PersistentEntity<?, ? extends PersistentProperty>, ? extends PersistentProperty<?>> mappingContext) {
 
-		Assert.notNull(adapter, "Adapter must not be null!");
+		Assert.notNull(accessor, "Adapter must not be null!");
 		Assert.notNull(mappingContext, "MappingContext must not be null!");
 
-		this.adapter = adapter;
+		this.accessor = accessor;
 		this.mappingContext = mappingContext;
 		this.identifierGenerator = DefaultIdentifierGenerator.INSTANCE;
 	}
@@ -128,7 +128,7 @@ public class KeyValueTemplate implements KeyValueOperations, ApplicationContextA
 		execute(new KeyValueCallback<Void>() {
 
 			@Override
-			public Void doInKeyValue(KeyValueAdapter adapter) {
+			public Void doInKeyValue(KeyValueAccessor adapter) {
 
 				if (adapter.contains(id, keyspace)) {
 					throw new DuplicateKeyException(String.format(
@@ -179,7 +179,7 @@ public class KeyValueTemplate implements KeyValueOperations, ApplicationContextA
 		execute(new KeyValueCallback<Void>() {
 
 			@Override
-			public Void doInKeyValue(KeyValueAdapter adapter) {
+			public Void doInKeyValue(KeyValueAccessor adapter) {
 				adapter.put(id, objectToUpdate, keyspace);
 				return null;
 			}
@@ -201,7 +201,7 @@ public class KeyValueTemplate implements KeyValueOperations, ApplicationContextA
 
 			@SuppressWarnings("unchecked")
 			@Override
-			public List<T> doInKeyValue(KeyValueAdapter adapter) {
+			public List<T> doInKeyValue(KeyValueAccessor adapter) {
 
 				Collection<?> x = adapter.getAllOf(resolveKeySpace(type));
 
@@ -239,7 +239,7 @@ public class KeyValueTemplate implements KeyValueOperations, ApplicationContextA
 
 			@SuppressWarnings("unchecked")
 			@Override
-			public T doInKeyValue(KeyValueAdapter adapter) {
+			public T doInKeyValue(KeyValueAccessor adapter) {
 
 				Object result = adapter.get(id, keyspace);
 
@@ -272,7 +272,7 @@ public class KeyValueTemplate implements KeyValueOperations, ApplicationContextA
 		execute(new KeyValueCallback<Void>() {
 
 			@Override
-			public Void doInKeyValue(KeyValueAdapter adapter) {
+			public Void doInKeyValue(KeyValueAccessor adapter) {
 
 				adapter.deleteAllOf(keyspace);
 				return null;
@@ -314,7 +314,7 @@ public class KeyValueTemplate implements KeyValueOperations, ApplicationContextA
 
 			@SuppressWarnings("unchecked")
 			@Override
-			public T doInKeyValue(KeyValueAdapter adapter) {
+			public T doInKeyValue(KeyValueAccessor adapter) {
 				return (T) adapter.delete(id, keyspace);
 			}
 		});
@@ -345,7 +345,7 @@ public class KeyValueTemplate implements KeyValueOperations, ApplicationContextA
 		Assert.notNull(action, "KeyValueCallback must not be null!");
 
 		try {
-			return action.doInKeyValue(this.adapter);
+			return action.doInKeyValue(this.accessor);
 		} catch (RuntimeException e) {
 			throw resolveExceptionIfPossible(e);
 		}
@@ -362,7 +362,7 @@ public class KeyValueTemplate implements KeyValueOperations, ApplicationContextA
 
 			@SuppressWarnings("unchecked")
 			@Override
-			public List<T> doInKeyValue(KeyValueAdapter adapter) {
+			public List<T> doInKeyValue(KeyValueAccessor adapter) {
 
 				Collection<?> result = adapter.find(query, resolveKeySpace(type));
 
@@ -423,10 +423,15 @@ public class KeyValueTemplate implements KeyValueOperations, ApplicationContextA
 		return execute(new KeyValueCallback<Long>() {
 
 			@Override
-			public Long doInKeyValue(KeyValueAdapter adapter) {
+			public Long doInKeyValue(KeyValueAccessor adapter) {
 				return adapter.count(query, resolveKeySpace(type));
 			}
 		});
+	}
+
+	@Override
+	public <K extends Serializable, V> KeyValueStore<K, V> getKeyValueStore(Serializable keyspace) {
+		return new KeyValueStore<K, V>(accessor, keyspace);
 	}
 
 	/*
@@ -444,7 +449,7 @@ public class KeyValueTemplate implements KeyValueOperations, ApplicationContextA
 	 */
 	@Override
 	public void destroy() throws Exception {
-		this.adapter.clear();
+		this.accessor.clear();
 	}
 
 	/**
@@ -517,7 +522,7 @@ public class KeyValueTemplate implements KeyValueOperations, ApplicationContextA
 	}
 
 	private void potentiallyPublishEvent(KeyValueEvent event) {
-		
+
 		if (eventPublisher == null) {
 			return;
 		}
@@ -526,4 +531,5 @@ public class KeyValueTemplate implements KeyValueOperations, ApplicationContextA
 			eventPublisher.publishEvent(event);
 		}
 	}
+
 }

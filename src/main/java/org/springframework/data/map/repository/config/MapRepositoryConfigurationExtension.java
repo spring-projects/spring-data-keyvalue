@@ -24,7 +24,7 @@ import org.springframework.core.type.AnnotationMetadata;
 import org.springframework.data.config.ParsingUtils;
 import org.springframework.data.keyvalue.core.KeyValueTemplate;
 import org.springframework.data.keyvalue.repository.config.KeyValueRepositoryConfigurationExtension;
-import org.springframework.data.map.MapKeyValueAdapter;
+import org.springframework.data.map.MapKeyValueAccessor;
 import org.springframework.data.repository.config.RepositoryConfigurationSource;
 
 /**
@@ -67,7 +67,7 @@ public class MapRepositoryConfigurationExtension extends KeyValueRepositoryConfi
 	protected AbstractBeanDefinition getDefaultKeyValueTemplateBeanDefinition(
 			RepositoryConfigurationSource configurationSource) {
 
-		BeanDefinitionBuilder adapterBuilder = BeanDefinitionBuilder.rootBeanDefinition(MapKeyValueAdapter.class);
+		BeanDefinitionBuilder adapterBuilder = BeanDefinitionBuilder.rootBeanDefinition(MapKeyValueAccessor.class);
 		adapterBuilder.addConstructorArgValue(getMapTypeToUse(configurationSource));
 
 		BeanDefinitionBuilder builder = BeanDefinitionBuilder.rootBeanDefinition(KeyValueTemplate.class);

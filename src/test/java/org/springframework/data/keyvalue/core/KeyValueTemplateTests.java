@@ -38,7 +38,7 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.annotation.Persistent;
 import org.springframework.data.keyvalue.annotation.KeySpace;
 import org.springframework.data.keyvalue.core.query.KeyValueQuery;
-import org.springframework.data.map.MapKeyValueAdapter;
+import org.springframework.data.map.MapKeyValueAccessor;
 import org.springframework.util.ObjectUtils;
 
 /**
@@ -59,7 +59,7 @@ public class KeyValueTemplateTests {
 
 	@Before
 	public void setUp() throws InstantiationException, IllegalAccessException {
-		this.operations = new KeyValueTemplate(new MapKeyValueAdapter());
+		this.operations = new KeyValueTemplate(new MapKeyValueAccessor());
 	}
 
 	@After

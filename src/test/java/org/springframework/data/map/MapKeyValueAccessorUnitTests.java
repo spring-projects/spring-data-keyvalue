@@ -23,13 +23,13 @@ import static org.junit.Assert.*;
 
 import org.junit.Before;
 import org.junit.Test;
-import org.springframework.data.map.MapKeyValueAdapter;
+import org.springframework.data.map.MapKeyValueAccessor;
 import org.springframework.util.ObjectUtils;
 
 /**
  * @author Christoph Strobl
  */
-public class MapKeyValueAdapterUnitTests {
+public class MapKeyValueAccessorUnitTests {
 
 	private static final String COLLECTION_1 = "collection-1";
 	private static final String COLLECTION_2 = "collection-2";
@@ -38,11 +38,11 @@ public class MapKeyValueAdapterUnitTests {
 	private Object object1 = new SimpleObject("one");
 	private Object object2 = new SimpleObject("two");
 
-	private MapKeyValueAdapter adapter;
+	private MapKeyValueAccessor accessor;
 
 	@Before
 	public void setUp() {
-		this.adapter = new MapKeyValueAdapter();
+		this.accessor = new MapKeyValueAccessor();
 	}
 
 	/**
@@ -50,7 +50,7 @@ public class MapKeyValueAdapterUnitTests {
 	 */
 	@Test(expected = IllegalArgumentException.class)
 	public void putShouldThrowExceptionWhenAddingNullId() {
-		adapter.put(null, object1, COLLECTION_1);
+		accessor.put(null, object1, COLLECTION_1);
 	}
 
 	/**
@@ -58,7 +58,7 @@ public class MapKeyValueAdapterUnitTests {
 	 */
 	@Test(expected = IllegalArgumentException.class)
 	public void putShouldThrowExceptionWhenCollectionIsNullValue() {
-		adapter.put("1", object1, null);
+		accessor.put("1", object1, null);
 	}
 
 	/**
@@ -66,7 +66,7 @@ public class MapKeyValueAdapterUnitTests {
 	 */
 	@Test
 	public void putReturnsNullWhenNoObjectForIdPresent() {
-		assertThat(adapter.put("1", object1, COLLECTION_1), nullValue());
+		assertThat(accessor.put("1", object1, COLLECTION_1), nullValue());
 	}
 
 	/**
@@ -75,8 +75,8 @@ public class MapKeyValueAdapterUnitTests {
 	@Test
 	public void putShouldReturnPreviousObjectForIdWhenAddingNewOneWithSameIdPresent() {
 
-		adapter.put("1", object1, COLLECTION_1);
-		assertThat(adapter.put("1", object2, COLLECTION_1), equalTo(object1));
+		accessor.put("1", object1, COLLECTION_1);
+		assertThat(accessor.put("1", object2, COLLECTION_1), equalTo(object1));
 	}
 
 	/**
@@ -84,7 +84,7 @@ public class MapKeyValueAdapterUnitTests {
 	 */
 	@Test(expected = IllegalArgumentException.class)
 	public void containsShouldThrowExceptionWhenIdIsNull() {
-		adapter.contains(null, COLLECTION_1);
+		accessor.contains(null, COLLECTION_1);
 	}
 
 	/**
@@ -92,7 +92,7 @@ public class MapKeyValueAdapterUnitTests {
 	 */
 	@Test(expected = IllegalArgumentException.class)
 	public void containsShouldThrowExceptionWhenTypeIsNull() {
-		adapter.contains("", null);
+		accessor.contains("", null);
 	}
 
 	/**
@@ -100,7 +100,7 @@ public class MapKeyValueAdapterUnitTests {
 	 */
 	@Test
 	public void containsShouldReturnFalseWhenNoElementsPresent() {
-		assertThat(adapter.contains("1", COLLECTION_1), is(false));
+		assertThat(accessor.contains("1", COLLECTION_1), is(false));
 	}
 
 	/**
@@ -109,8 +109,8 @@ public class MapKeyValueAdapterUnitTests {
 	@Test
 	public void containShouldReturnTrueWhenElementWithIdPresent() {
 
-		adapter.put("1", object1, COLLECTION_1);
-		assertThat(adapter.contains("1", COLLECTION_1), is(true));
+		accessor.put("1", object1, COLLECTION_1);
+		assertThat(accessor.contains("1", COLLECTION_1), is(true));
 	}
 
 	/**
@@ -118,7 +118,7 @@ public class MapKeyValueAdapterUnitTests {
 	 */
 	@Test
 	public void getShouldReturnNullWhenNoElementWithIdPresent() {
-		assertThat(adapter.get("1", COLLECTION_1), nullValue());
+		assertThat(accessor.get("1", COLLECTION_1), nullValue());
 	}
 
 	/**
@@ -127,8 +127,8 @@ public class MapKeyValueAdapterUnitTests {
 	@Test
 	public void getShouldReturnElementWhenMatchingIdPresent() {
 
-		adapter.put("1", object1, COLLECTION_1);
-		assertThat(adapter.get("1", COLLECTION_1), is(object1));
+		accessor.put("1", object1, COLLECTION_1);
+		assertThat(accessor.get("1", COLLECTION_1), is(object1));
 	}
 
 	/**
@@ -136,7 +136,7 @@ public class MapKeyValueAdapterUnitTests {
 	 */
 	@Test(expected = IllegalArgumentException.class)
 	public void getShouldThrowExceptionWhenIdIsNull() {
-		adapter.get(null, COLLECTION_1);
+		accessor.get(null, COLLECTION_1);
 	}
 
 	/**
@@ -144,7 +144,7 @@ public class MapKeyValueAdapterUnitTests {
 	 */
 	@Test(expected = IllegalArgumentException.class)
 	public void getShouldThrowExceptionWhenTypeIsNull() {
-		adapter.get("1", null);
+		accessor.get("1", null);
 	}
 
 	/**
@@ -153,11 +153,11 @@ public class MapKeyValueAdapterUnitTests {
 	@Test
 	public void getAllOfShouldReturnAllValuesOfGivenCollection() {
 
-		adapter.put("1", object1, COLLECTION_1);
-		adapter.put("2", object2, COLLECTION_1);
-		adapter.put("3", STRING_1, COLLECTION_2);
+		accessor.put("1", object1, COLLECTION_1);
+		accessor.put("2", object2, COLLECTION_1);
+		accessor.put("3", STRING_1, COLLECTION_2);
 
-		assertThat(adapter.getAllOf(COLLECTION_1), containsInAnyOrder(object1, object2));
+		assertThat(accessor.getAllOf(COLLECTION_1), containsInAnyOrder(object1, object2));
 	}
 
 	/**
@@ -165,7 +165,7 @@ public class MapKeyValueAdapterUnitTests {
 	 */
 	@Test(expected = IllegalArgumentException.class)
 	public void getAllOfShouldThrowExceptionWhenTypeIsNull() {
-		adapter.getAllOf(null);
+		accessor.getAllOf(null);
 	}
 
 	/**
@@ -173,7 +173,7 @@ public class MapKeyValueAdapterUnitTests {
 	 */
 	@Test
 	public void deleteShouldReturnNullWhenGivenIdThatDoesNotExist() {
-		assertThat(adapter.delete("1", COLLECTION_1), nullValue());
+		assertThat(accessor.delete("1", COLLECTION_1), nullValue());
 	}
 
 	/**
@@ -182,8 +182,8 @@ public class MapKeyValueAdapterUnitTests {
 	@Test
 	public void deleteShouldReturnDeletedObject() {
 
-		adapter.put("1", object1, COLLECTION_1);
-		assertThat(adapter.delete("1", COLLECTION_1), is(object1));
+		accessor.put("1", object1, COLLECTION_1);
+		assertThat(accessor.delete("1", COLLECTION_1), is(object1));
 	}
 
 	static class SimpleObject {

@@ -174,4 +174,6 @@ public interface KeyValueOperations extends DisposableBean {
 	 * @return mapping context in use.
 	 */
 	MappingContext<?, ?> getMappingContext();
+
+	<K extends Serializable, V> KeyValueStore<K, V> getKeyValueStore(Serializable keyspace);
 }

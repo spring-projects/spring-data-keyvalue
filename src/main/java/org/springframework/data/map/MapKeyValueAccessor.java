@@ -21,57 +21,57 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 import org.springframework.core.CollectionFactory;
-import org.springframework.data.keyvalue.core.AbstractKeyValueAdapter;
-import org.springframework.data.keyvalue.core.KeyValueAdapter;
+import org.springframework.data.keyvalue.core.AbstractKeyValueAccessor;
+import org.springframework.data.keyvalue.core.KeyValueAccessor;
 import org.springframework.util.Assert;
 import org.springframework.util.ClassUtils;
 
 /**
- * {@link KeyValueAdapter} implementation for {@link Map}.
+ * {@link KeyValueAccessor} implementation for {@link Map}.
  * 
  * @author Christoph Strobl
  */
-public class MapKeyValueAdapter extends AbstractKeyValueAdapter {
+public class MapKeyValueAccessor extends AbstractKeyValueAccessor {
 
 	@SuppressWarnings("rawtypes")//
 	private final Class<? extends Map> keySpaceMapType;
 	private final Map<Serializable, Map<Serializable, Object>> store;
 
 	/**
-	 * Create new {@link MapKeyValueAdapter} using {@link ConcurrentHashMap} as backing store type.
+	 * Create new {@link MapKeyValueAccessor} using {@link ConcurrentHashMap} as backing store type.
 	 */
-	public MapKeyValueAdapter() {
+	public MapKeyValueAccessor() {
 		this(ConcurrentHashMap.class);
 	}
 
 	/**
-	 * Creates a new {@link MapKeyValueAdapter} using the given {@link Map} as backing store.
+	 * Creates a new {@link MapKeyValueAccessor} using the given {@link Map} as backing store.
 	 * 
 	 * @param mapType must not be {@literal null}.
 	 */
 	@SuppressWarnings("rawtypes")
-	public MapKeyValueAdapter(Class<? extends Map> mapType) {
+	public MapKeyValueAccessor(Class<? extends Map> mapType) {
 		this(CollectionFactory.<Serializable, Map<Serializable, Object>> createMap(mapType, 100), mapType);
 	}
 
 	/**
-	 * Create new instance of {@link MapKeyValueAdapter} using given dataStore for persistence.
+	 * Create new instance of {@link MapKeyValueAccessor} using given dataStore for persistence.
 	 * 
 	 * @param store must not be {@literal null}.
 	 */
 	@SuppressWarnings({ "rawtypes", "unchecked" })
-	public MapKeyValueAdapter(Map<Serializable, Map<Serializable, Object>> store) {
+	public MapKeyValueAccessor(Map<Serializable, Map<Serializable, Object>> store) {
 		this(store, (Class<? extends Map>) ClassUtils.getUserClass(store));
 	}
 
 	/**
-	 * Creates a new {@link MapKeyValueAdapter} with the given store and type to be used when creating key spaces.
+	 * Creates a new {@link MapKeyValueAccessor} with the given store and type to be used when creating key spaces.
 	 * 
 	 * @param store must not be {@literal null}.
 	 * @param keySpaceMapType must not be {@literal null}.
 	 */
 	@SuppressWarnings("rawtypes")
-	private MapKeyValueAdapter(Map<Serializable, Map<Serializable, Object>> store, Class<? extends Map> keySpaceMapType) {
+	private MapKeyValueAccessor(Map<Serializable, Map<Serializable, Object>> store, Class<? extends Map> keySpaceMapType) {
 
 		Assert.notNull(store, "Store must not be null.");
 		Assert.notNull(keySpaceMapType, "Map type to be used for key spaces must not be null!");
