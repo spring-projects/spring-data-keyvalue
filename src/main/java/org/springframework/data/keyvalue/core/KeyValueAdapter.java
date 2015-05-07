@@ -25,6 +25,7 @@ import org.springframework.data.keyvalue.core.query.KeyValueQuery;
  * {@link KeyValueAdapter} unifies access and shields the underlying key/value specific implementation.
  * 
  * @author Christoph Strobl
+ * @author Thomas Darimont
  */
 public interface KeyValueAdapter extends DisposableBean {
 
@@ -71,6 +72,14 @@ public interface KeyValueAdapter extends DisposableBean {
 	 * @return empty {@link Collection} if nothing found.
 	 */
 	Collection<?> getAllOf(Serializable keyspace);
+
+	/**
+	 * Returns a {@link KeyValueIterator} that iterates over all entries. 
+	 * 
+	 * @param keyspace
+	 * @return
+	 */
+	KeyValueIterator<? extends Serializable, ?> entries(Serializable keyspace);
 
 	/**
 	 * Remove all objects of given type.

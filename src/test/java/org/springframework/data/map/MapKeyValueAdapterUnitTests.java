@@ -20,10 +20,13 @@ import static org.hamcrest.core.Is.*;
 import static org.hamcrest.core.IsEqual.*;
 import static org.hamcrest.core.IsNull.*;
 import static org.junit.Assert.*;
+import static org.springframework.data.keyvalue.test.util.IsEntry.*;
+
+import java.io.Serializable;
 
 import org.junit.Before;
 import org.junit.Test;
-import org.springframework.data.map.MapKeyValueAdapter;
+import org.springframework.data.keyvalue.core.KeyValueIterator;
 import org.springframework.util.ObjectUtils;
 
 /**
@@ -184,6 +187,45 @@ public class MapKeyValueAdapterUnitTests {
 
 		adapter.put("1", object1, COLLECTION_1);
 		assertThat(adapter.delete("1", COLLECTION_1), is(object1));
+	}
+
+	/**
+	 * @see DATAKV-99
+	 */
+	@Test
+	public void scanShouldIterateOverAvailableEntries() {
+
+		adapter.put("1", object1, COLLECTION_1);
+		adapter.put("2", object2, COLLECTION_1);
+
+		KeyValueIterator<Serializable, ?> iterator = adapter.entries(COLLECTION_1);
+
+		assertThat(iterator.next(), isEntry("1", object1));
+		assertThat(iterator.next(), isEntry("2", object2));
+		assertThat(iterator.hasNext(), is(false));
+	}
+
+	/**
+	 * @see DATAKV-99
+	 */
+	@Test
+	public void scanShouldReturnEmptyIteratorWhenNoElementsAvailable() {
+		assertThat(adapter.entries(COLLECTION_1).hasNext(), is(false));
+	}
+
+	/**
+	 * @see DATAKV-99
+	 */
+	@Test
+	public void scanDoesNotMixResultsFromMultipleKeyspaces() {
+
+		adapter.put("1", object1, COLLECTION_1);
+		adapter.put("2", object2, COLLECTION_2);
+
+		KeyValueIterator<Serializable, ?> iterator = adapter.entries(COLLECTION_1);
+
+		assertThat(iterator.next(), isEntry("1", object1));
+		assertThat(iterator.hasNext(), is(false));
 	}
 
 	static class SimpleObject {
