@@ -20,7 +20,6 @@ import static org.hamcrest.core.IsNull.*;
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
 
-import java.io.IOException;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.NoSuchElementException;
@@ -32,11 +31,13 @@ import org.mockito.runners.MockitoJUnitRunner;
 
 /**
  * @author Christoph Strobl
+ * @author Thomas Darimont
  */
 @RunWith(MockitoJUnitRunner.class)
-public class ForwardingIteratorUnitTests<K, V> {
+public class ForwardingCloseableIteratorUnitTests<K, V> {
 
 	@Mock Iterator<Map.Entry<K, V>> iteratorMock;
+	@Mock Runnable closeActionMock;
 
 	/**
 	 * @see DATAKV-99
@@ -46,7 +47,7 @@ public class ForwardingIteratorUnitTests<K, V> {
 
 		when(iteratorMock.hasNext()).thenReturn(true);
 
-		assertThat(new ForwardingKeyValueIterator<K, V>(iteratorMock).hasNext(), is(true));
+		assertThat(new ForwardingCloseableIterator<K, V>(iteratorMock).hasNext(), is(true));
 
 		verify(iteratorMock, times(1)).hasNext();
 	}
@@ -59,7 +60,7 @@ public class ForwardingIteratorUnitTests<K, V> {
 
 		when(iteratorMock.next()).thenReturn((Map.Entry<K, V>) mock(Map.Entry.class));
 
-		assertThat(new ForwardingKeyValueIterator<K, V>(iteratorMock).next(), notNullValue());
+		assertThat(new ForwardingCloseableIterator<K, V>(iteratorMock).next(), notNullValue());
 
 		verify(iteratorMock, times(1)).next();
 	}
@@ -72,18 +73,28 @@ public class ForwardingIteratorUnitTests<K, V> {
 
 		when(iteratorMock.next()).thenThrow(new NoSuchElementException());
 
-		new ForwardingKeyValueIterator<K, V>(iteratorMock).next();
+		new ForwardingCloseableIterator<K, V>(iteratorMock).next();
 	}
 
 	/**
 	 * @see DATAKV-99
 	 */
 	@Test
-	public void closeShouldDoNothing() throws IOException {
+	public void closeShouldDoNothingByDefault() {
 
-		new ForwardingKeyValueIterator<K, V>(iteratorMock).close();
+		new ForwardingCloseableIterator<K, V>(iteratorMock).close();
 
 		verifyZeroInteractions(iteratorMock);
 	}
 
+	/**
+	 * @see DATAKV-99
+	 */
+	@Test
+	public void closeShouldInvokeConfiguredCloseAction() {
+
+		new ForwardingCloseableIterator<K, V>(iteratorMock, closeActionMock).close();
+
+		verify(closeActionMock, times(1)).run();
+	}
 }

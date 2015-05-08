@@ -15,18 +15,21 @@
  */
 package org.springframework.data.keyvalue.test.util;
 
+import java.util.AbstractMap;
+import java.util.Map;
+
 import org.hamcrest.CustomMatcher;
 import org.hamcrest.core.IsEqual;
-import org.springframework.data.keyvalue.core.Entry;
 
 /**
  * @author Christoph Strobl
+ * @author Thomas Darimont
  */
-public class IsEntry extends CustomMatcher<Entry<?, ?>> {
+public class IsEntry extends CustomMatcher<Map.Entry<?, ?>> {
 
-	private final Entry<?, ?> expected;
+	private final Map.Entry<?, ?> expected;
 
-	private IsEntry(Entry<?, ?> entry) {
+	private IsEntry(Map.Entry<?, ?> entry) {
 		super(String.format("an entry %s=%s.", entry != null ? entry.getKey() : "null", entry != null ? entry.getValue()
 				: "null"));
 		this.expected = entry;
@@ -39,11 +42,11 @@ public class IsEntry extends CustomMatcher<Entry<?, ?>> {
 			return true;
 		}
 
-		if (!(item instanceof Entry)) {
+		if (!(item instanceof Map.Entry)) {
 			return false;
 		}
 
-		Entry<?, ?> actual = (Entry<?, ?>) item;
+		Map.Entry<?, ?> actual = (Map.Entry<?, ?>) item;
 
 		return new IsEqual<Object>(expected.getKey()).matches(actual.getKey())
 				&& new IsEqual<Object>(expected.getValue()).matches(actual.getValue());
@@ -53,28 +56,16 @@ public class IsEntry extends CustomMatcher<Entry<?, ?>> {
 		return isEntry(new EntryImpl(key, value));
 	}
 
-	public static IsEntry isEntry(Entry<?, ?> entry) {
+	public static IsEntry isEntry(Map.Entry<?, ?> entry) {
 		return new IsEntry(entry);
 	}
 
-	private static class EntryImpl implements Entry<Object, Object> {
+	private static class EntryImpl extends AbstractMap.SimpleEntry<Object, Object> {
 
-		private final Object key;
-		private final Object value;
+		private static final long serialVersionUID = 1L;
 
 		private EntryImpl(Object key, Object value) {
-			this.key = key;
-			this.value = value;
-		}
-
-		@Override
-		public Object getKey() {
-			return key;
-		}
-
-		@Override
-		public Object getValue() {
-			return value;
+			super(key, value);
 		}
 
 		@Override

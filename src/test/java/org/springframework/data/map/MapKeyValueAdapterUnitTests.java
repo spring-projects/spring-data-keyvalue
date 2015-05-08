@@ -23,10 +23,11 @@ import static org.junit.Assert.*;
 import static org.springframework.data.keyvalue.test.util.IsEntry.*;
 
 import java.io.Serializable;
+import java.util.Map;
 
 import org.junit.Before;
 import org.junit.Test;
-import org.springframework.data.keyvalue.core.KeyValueIterator;
+import org.springframework.data.util.CloseableIterator;
 import org.springframework.util.ObjectUtils;
 
 /**
@@ -198,7 +199,7 @@ public class MapKeyValueAdapterUnitTests {
 		adapter.put("1", object1, COLLECTION_1);
 		adapter.put("2", object2, COLLECTION_1);
 
-		KeyValueIterator<Serializable, ?> iterator = adapter.entries(COLLECTION_1);
+		CloseableIterator<Map.Entry<Serializable, Object>> iterator = adapter.entries(COLLECTION_1);
 
 		assertThat(iterator.next(), isEntry("1", object1));
 		assertThat(iterator.next(), isEntry("2", object2));
@@ -222,7 +223,7 @@ public class MapKeyValueAdapterUnitTests {
 		adapter.put("1", object1, COLLECTION_1);
 		adapter.put("2", object2, COLLECTION_2);
 
-		KeyValueIterator<Serializable, ?> iterator = adapter.entries(COLLECTION_1);
+		CloseableIterator<Map.Entry<Serializable, Object>> iterator = adapter.entries(COLLECTION_1);
 
 		assertThat(iterator.next(), isEntry("1", object1));
 		assertThat(iterator.hasNext(), is(false));

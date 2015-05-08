@@ -17,14 +17,16 @@ package org.springframework.data.map;
 
 import java.io.Serializable;
 import java.util.Collection;
+import java.util.Iterator;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.concurrent.ConcurrentHashMap;
 
 import org.springframework.core.CollectionFactory;
 import org.springframework.data.keyvalue.core.AbstractKeyValueAdapter;
-import org.springframework.data.keyvalue.core.ForwardingKeyValueIterator;
+import org.springframework.data.keyvalue.core.ForwardingCloseableIterator;
 import org.springframework.data.keyvalue.core.KeyValueAdapter;
-import org.springframework.data.keyvalue.core.KeyValueIterator;
+import org.springframework.data.util.CloseableIterator;
 import org.springframework.util.Assert;
 import org.springframework.util.ClassUtils;
 
@@ -104,7 +106,6 @@ public class MapKeyValueAdapter extends AbstractKeyValueAdapter {
 		return get(id, keyspace) != null;
 	}
 
-
 	/* (non-Javadoc)
 	 * @see org.springframework.data.keyvalue.core.KeyValueAdapter#count(java.io.Serializable)
 	 */
@@ -149,8 +150,8 @@ public class MapKeyValueAdapter extends AbstractKeyValueAdapter {
 	 * @see org.springframework.data.keyvalue.core.KeyValueAdapter#entries(java.io.Serializable)
 	 */
 	@Override
-	public KeyValueIterator<Serializable, ?> entries(Serializable keyspace) {
-		return new ForwardingKeyValueIterator<Serializable, Object>(getKeySpaceMap(keyspace).entrySet().iterator());
+	public CloseableIterator<Map.Entry<Serializable, Object>> entries(Serializable keyspace) {
+		return new ForwardingCloseableIterator<Serializable, Object>(getKeySpaceMap(keyspace).entrySet().iterator());
 	}
 
 	/*

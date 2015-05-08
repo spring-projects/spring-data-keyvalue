@@ -17,9 +17,11 @@ package org.springframework.data.keyvalue.core;
 
 import java.io.Serializable;
 import java.util.Collection;
+import java.util.Map;
 
 import org.springframework.beans.factory.DisposableBean;
 import org.springframework.data.keyvalue.core.query.KeyValueQuery;
+import org.springframework.data.util.CloseableIterator;
 
 /**
  * {@link KeyValueAdapter} unifies access and shields the underlying key/value specific implementation.
@@ -79,7 +81,7 @@ public interface KeyValueAdapter extends DisposableBean {
 	 * @param keyspace
 	 * @return
 	 */
-	KeyValueIterator<? extends Serializable, ?> entries(Serializable keyspace);
+	CloseableIterator<Map.Entry<Serializable, Object>> entries(Serializable keyspace);
 
 	/**
 	 * Remove all objects of given type.
