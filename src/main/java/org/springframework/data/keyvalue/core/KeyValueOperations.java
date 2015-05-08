@@ -16,7 +16,6 @@
 package org.springframework.data.keyvalue.core;
 
 import java.io.Serializable;
-import java.util.List;
 
 import org.springframework.beans.factory.DisposableBean;
 import org.springframework.data.domain.Sort;
@@ -52,9 +51,9 @@ public interface KeyValueOperations extends DisposableBean {
 	 * assigned to requested type.
 	 * 
 	 * @param type must not be {@literal null}.
-	 * @return empty collection if no elements found.
+	 * @return empty iterable if no elements found.
 	 */
-	<T> List<T> findAll(Class<T> type);
+	<T> Iterable<T> findAll(Class<T> type);
 
 	/**
 	 * Get all elements ordered by sort. Respects {@link KeySpace} if present and therefore returns all elements that can
@@ -64,7 +63,7 @@ public interface KeyValueOperations extends DisposableBean {
 	 * @param type must not be {@literal null}.
 	 * @return
 	 */
-	<T> List<T> findAll(Sort sort, Class<T> type);
+	<T> Iterable<T> findAll(Sort sort, Class<T> type);
 
 	/**
 	 * Get element of given type with given id. Respects {@link KeySpace} if present and therefore returns all elements
@@ -90,9 +89,9 @@ public interface KeyValueOperations extends DisposableBean {
 	 * 
 	 * @param query must not be {@literal null}.
 	 * @param type must not be {@literal null}.
-	 * @return empty collection if no match found.
+	 * @return empty iterable if no match found.
 	 */
-	<T> List<T> find(KeyValueQuery<?> query, Class<T> type);
+	<T> Iterable<T> find(KeyValueQuery<?> query, Class<T> type);
 
 	/**
 	 * Get all elements in given range. Respects {@link KeySpace} if present and therefore returns all elements that can
@@ -103,7 +102,7 @@ public interface KeyValueOperations extends DisposableBean {
 	 * @param type must not be {@literal null}.
 	 * @return
 	 */
-	<T> List<T> findInRange(int offset, int rows, Class<T> type);
+	<T> Iterable<T> findInRange(int offset, int rows, Class<T> type);
 
 	/**
 	 * Get all elements in given range ordered by sort. Respects {@link KeySpace} if present and therefore returns all
@@ -115,7 +114,7 @@ public interface KeyValueOperations extends DisposableBean {
 	 * @param type
 	 * @return
 	 */
-	<T> List<T> findInRange(int offset, int rows, Sort sort, Class<T> type);
+	<T> Iterable<T> findInRange(int offset, int rows, Sort sort, Class<T> type);
 
 	/**
 	 * @param objectToUpdate must not be {@literal null}.
