@@ -15,7 +15,6 @@
  */
 package org.springframework.data.keyvalue.core;
 
-import java.io.IOException;
 import java.util.Iterator;
 import java.util.Map;
 
@@ -38,16 +37,14 @@ public class ForwardingKeyValueIterator<K, V> implements KeyValueIterator<K, V> 
 	}
 
 	@Override
-	public Entry<K, V> next() {
+	public Map.Entry<K, V> next() {
 		return new ForwardingEntry(delegate.next());
 	}
 
 	@Override
-	public void close() throws IOException {
+	public void close() {}
 
-	}
-
-	class ForwardingEntry implements Entry<K, V> {
+	class ForwardingEntry implements Map.Entry<K, V> {
 
 		private final Map.Entry<K, V> entry;
 
