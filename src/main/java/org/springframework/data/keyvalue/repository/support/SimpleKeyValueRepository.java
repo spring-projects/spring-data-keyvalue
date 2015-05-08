@@ -23,6 +23,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.data.keyvalue.core.IterableConverter;
 import org.springframework.data.keyvalue.core.KeyValueOperations;
 import org.springframework.data.keyvalue.repository.KeyValueRepository;
 import org.springframework.data.repository.core.EntityInformation;
@@ -76,12 +77,11 @@ public class SimpleKeyValueRepository<T, ID extends Serializable> implements Key
 			return new PageImpl<T>(result, null, result.size());
 		}
 
-		List<T> content = null;
-
-		content = operations.findInRange(pageable.getOffset(), pageable.getPageSize(), pageable.getSort(),
+		Iterable<T> content = operations.findInRange(pageable.getOffset(), pageable.getPageSize(), pageable.getSort(),
 				entityInformation.getJavaType());
 
-		return new PageImpl<T>(content, pageable, this.operations.count(entityInformation.getJavaType()));
+		return new PageImpl<T>(IterableConverter.toList(content), pageable, this.operations.count(entityInformation
+				.getJavaType()));
 	}
 
 	/*
@@ -139,7 +139,7 @@ public class SimpleKeyValueRepository<T, ID extends Serializable> implements Key
 	 */
 	@Override
 	public List<T> findAll() {
-		return operations.findAll(entityInformation.getJavaType());
+		return IterableConverter.toList(operations.findAll(entityInformation.getJavaType()));
 	}
 
 	/*

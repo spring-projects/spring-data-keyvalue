@@ -16,11 +16,11 @@
 package org.springframework.data.keyvalue.repository.query;
 
 import java.lang.reflect.Constructor;
-import java.util.List;
 
 import org.springframework.beans.BeanUtils;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.keyvalue.core.IterableConverter;
 import org.springframework.data.keyvalue.core.KeyValueOperations;
 import org.springframework.data.keyvalue.core.query.KeyValueQuery;
 import org.springframework.data.repository.query.EvaluationContextProvider;
@@ -33,7 +33,6 @@ import org.springframework.data.repository.query.parser.PartTree;
 import org.springframework.expression.EvaluationContext;
 import org.springframework.expression.spel.standard.SpelExpression;
 import org.springframework.util.ClassUtils;
-import org.springframework.util.CollectionUtils;
 
 /**
  * {@link RepositoryQuery} implementation deriving queries from {@link PartTree} using a predefined
@@ -77,12 +76,12 @@ public class KeyValuePartTreeQuery implements RepositoryQuery {
 			query.setOffset(page.getOffset());
 			query.setRows(page.getPageSize());
 
-			List<?> result = this.keyValueOperations.find(query, queryMethod.getEntityInformation().getJavaType());
+			Iterable<?> result = this.keyValueOperations.find(query, queryMethod.getEntityInformation().getJavaType());
 
 			long count = queryMethod.isSliceQuery() ? 0 : keyValueOperations.count(query, queryMethod.getEntityInformation()
 					.getJavaType());
 
-			return new PageImpl(result, page, count);
+			return new PageImpl(IterableConverter.toList(result), page, count);
 
 		} else if (queryMethod.isCollectionQuery()) {
 
@@ -90,8 +89,8 @@ public class KeyValuePartTreeQuery implements RepositoryQuery {
 
 		} else if (queryMethod.isQueryForEntity()) {
 
-			List<?> result = this.keyValueOperations.find(query, queryMethod.getEntityInformation().getJavaType());
-			return CollectionUtils.isEmpty(result) ? null : result.get(0);
+			Iterable<?> result = this.keyValueOperations.find(query, queryMethod.getEntityInformation().getJavaType());
+			return result.iterator().hasNext() ? result.iterator().next() : null;
 
 		}
 

@@ -65,10 +65,10 @@ class SpelQueryEngine<T extends KeyValueAdapter> extends QueryEngine<KeyValueAda
 	}
 
 	@SuppressWarnings({ "unchecked", "rawtypes" })
-	private List<?> sortAndFilterMatchingRange(Collection<?> source, SpelExpression criteria, Comparator sort,
-			int offset, int rows) {
+	private List<?> sortAndFilterMatchingRange(Iterable<?> source, SpelExpression criteria, Comparator sort, int offset,
+			int rows) {
 
-		List<?> tmp = new ArrayList(source);
+		List<?> tmp = IterableConverter.toList(source);
 		if (sort != null) {
 			Collections.sort(tmp, sort);
 		}

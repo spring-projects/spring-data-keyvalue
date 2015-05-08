@@ -19,7 +19,6 @@ import static org.springframework.data.keyvalue.core.KeySpaceUtils.*;
 
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
@@ -203,14 +202,14 @@ public class KeyValueTemplate implements KeyValueOperations, ApplicationContextA
 			@Override
 			public List<T> doInKeyValue(KeyValueAdapter adapter) {
 
-				Collection<?> x = adapter.getAllOf(resolveKeySpace(type));
+				Iterable<?> values = adapter.getAllOf(resolveKeySpace(type));
 
 				if (getKeySpace(type) == null) {
-					return new ArrayList<T>((Collection<T>) x);
+					return new ArrayList<T>(IterableConverter.toList((Iterable<T>) values));
 				}
 
 				ArrayList<T> filtered = new ArrayList<T>();
-				for (Object candidate : x) {
+				for (Object candidate : values) {
 					if (typeCheck(type, candidate)) {
 						filtered.add((T) candidate);
 					}
@@ -332,7 +331,7 @@ public class KeyValueTemplate implements KeyValueOperations, ApplicationContextA
 	public long count(Class<?> type) {
 
 		Assert.notNull(type, "Type for count must not be null!");
-		return findAll(type).size();
+		return adapter.count(resolveKeySpace(type));
 	}
 
 	/*
@@ -364,10 +363,10 @@ public class KeyValueTemplate implements KeyValueOperations, ApplicationContextA
 			@Override
 			public List<T> doInKeyValue(KeyValueAdapter adapter) {
 
-				Collection<?> result = adapter.find(query, resolveKeySpace(type));
+				Iterable<?> result = adapter.find(query, resolveKeySpace(type));
 
 				if (getKeySpace(type) == null) {
-					return new ArrayList<T>((Collection<T>) result);
+					return new ArrayList<T>(IterableConverter.toList((Iterable<T>) result));
 				}
 
 				List<T> filtered = new ArrayList<T>();
@@ -517,7 +516,7 @@ public class KeyValueTemplate implements KeyValueOperations, ApplicationContextA
 	}
 
 	private void potentiallyPublishEvent(KeyValueEvent event) {
-		
+
 		if (eventPublisher == null) {
 			return;
 		}

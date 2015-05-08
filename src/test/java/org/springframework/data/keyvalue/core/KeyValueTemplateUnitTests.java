@@ -362,11 +362,9 @@ public class KeyValueTemplateUnitTests {
 	 * @see DATACMNS-525
 	 */
 	@Test
-	@SuppressWarnings({ "rawtypes", "unchecked" })
 	public void countShouldReturnCollectionSize() {
 
-		Collection foo = Arrays.asList(FOO_ONE, FOO_ONE);
-		when(adapterMock.getAllOf(Foo.class.getName())).thenReturn(foo);
+		when(adapterMock.count(Foo.class.getName())).thenReturn(2L);
 
 		assertThat(template.count(Foo.class), is(2L));
 	}

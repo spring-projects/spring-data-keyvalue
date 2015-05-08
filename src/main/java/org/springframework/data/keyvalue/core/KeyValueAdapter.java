@@ -71,7 +71,7 @@ public interface KeyValueAdapter extends DisposableBean {
 	 * @param keyspace must not be {@literal null}.
 	 * @return empty {@link Collection} if nothing found.
 	 */
-	Collection<?> getAllOf(Serializable keyspace);
+	Iterable<?> getAllOf(Serializable keyspace);
 
 	/**
 	 * Returns a {@link KeyValueIterator} that iterates over all entries. 
@@ -100,7 +100,14 @@ public interface KeyValueAdapter extends DisposableBean {
 	 * @param keyspace must not be {@literal null}.
 	 * @return empty {@link Collection} if no match found.
 	 */
-	Collection<?> find(KeyValueQuery<?> query, Serializable keyspace);
+	Iterable<?> find(KeyValueQuery<?> query, Serializable keyspace);
+
+	/**
+	 * Count number of objects within {@literal keyspace}.
+	 * 
+	 * @param keyspace must not be {@literal null}.
+	 */
+	long count(Serializable keyspace);
 
 	/**
 	 * Count all matching objects within {@literal keyspace}.
