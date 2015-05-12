@@ -15,6 +15,7 @@
  */
 package org.springframework.data.map;
 
+import static org.hamcrest.collection.IsEmptyIterable.*;
 import static org.hamcrest.collection.IsIterableContainingInAnyOrder.*;
 import static org.hamcrest.core.Is.*;
 import static org.hamcrest.core.IsEqual.*;
@@ -24,6 +25,8 @@ import static org.springframework.data.keyvalue.test.util.IsEntry.*;
 
 import java.io.Serializable;
 
+import org.hamcrest.collection.IsIterableContainingInAnyOrder;
+import org.hamcrest.collection.IsIterableWithSize;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.data.keyvalue.core.KeyValueIterator;
@@ -193,7 +196,7 @@ public class MapKeyValueAdapterUnitTests {
 	 * @see DATAKV-99
 	 */
 	@Test
-	public void scanShouldIterateOverAvailableEntries() {
+	public void entriesShouldIterateOverAvailableEntries() {
 
 		adapter.put("1", object1, COLLECTION_1);
 		adapter.put("2", object2, COLLECTION_1);
@@ -209,7 +212,7 @@ public class MapKeyValueAdapterUnitTests {
 	 * @see DATAKV-99
 	 */
 	@Test
-	public void scanShouldReturnEmptyIteratorWhenNoElementsAvailable() {
+	public void entriesShouldReturnEmptyIteratorWhenNoElementsAvailable() {
 		assertThat(adapter.entries(COLLECTION_1).hasNext(), is(false));
 	}
 
@@ -217,7 +220,7 @@ public class MapKeyValueAdapterUnitTests {
 	 * @see DATAKV-99
 	 */
 	@Test
-	public void scanDoesNotMixResultsFromMultipleKeyspaces() {
+	public void entriesShouldNotMixResultsFromMultipleKeyspaces() {
 
 		adapter.put("1", object1, COLLECTION_1);
 		adapter.put("2", object2, COLLECTION_2);
@@ -226,6 +229,40 @@ public class MapKeyValueAdapterUnitTests {
 
 		assertThat(iterator.next(), isEntry("1", object1));
 		assertThat(iterator.hasNext(), is(false));
+	}
+
+	/**
+	 * @see DATAKV-102
+	 */
+	@Test
+	public void keysShouldReturnAvailableKeys() {
+
+		adapter.put("1", object1, COLLECTION_1);
+		adapter.put("2", object2, COLLECTION_1);
+
+		Iterable<Serializable> iterable = adapter.keys(COLLECTION_1);
+
+		assertThat(iterable, IsIterableContainingInAnyOrder.<Serializable> containsInAnyOrder("1", "2"));
+	}
+
+	/**
+	 * @see DATAKV-102
+	 */
+	@Test
+	public void keyShouldReturnEmptyIterableWhenNoElementsAvailable() {
+		assertThat(adapter.keys(COLLECTION_1), emptyIterable());
+	}
+
+	/**
+	 * @see DATAKV-102
+	 */
+	@Test
+	public void keysShouldNotMixResultsFromMultipleKeyspaces() {
+
+		adapter.put("1", object1, COLLECTION_1);
+		adapter.put("2", object2, COLLECTION_2);
+
+		assertThat(adapter.keys(COLLECTION_1), IsIterableWithSize.<Serializable> iterableWithSize(1));
 	}
 
 	static class SimpleObject {

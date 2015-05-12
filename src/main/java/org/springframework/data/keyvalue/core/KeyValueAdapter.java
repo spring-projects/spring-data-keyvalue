@@ -74,12 +74,20 @@ public interface KeyValueAdapter extends DisposableBean {
 	Iterable<?> getAllOf(Serializable keyspace);
 
 	/**
-	 * Returns a {@link KeyValueIterator} that iterates over all entries. 
+	 * Returns a {@link KeyValueIterator} that iterates over all entries.
 	 * 
-	 * @param keyspace
+	 * @param keyspace must not be {@literal null}.
 	 * @return
 	 */
 	KeyValueIterator<? extends Serializable, ?> entries(Serializable keyspace);
+
+	/**
+	 * Returns all keys available in {@literal keyspace}.
+	 * 
+	 * @param keyspace must not be {@literal null}.
+	 * @return empty {@link Iterable} if no keys available or keyspace unknown.
+	 */
+	Iterable<? extends Serializable> keys(Serializable keyspace);
 
 	/**
 	 * Remove all objects of given type.

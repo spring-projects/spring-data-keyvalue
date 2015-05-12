@@ -104,7 +104,6 @@ public class MapKeyValueAdapter extends AbstractKeyValueAdapter {
 		return get(id, keyspace) != null;
 	}
 
-
 	/* (non-Javadoc)
 	 * @see org.springframework.data.keyvalue.core.KeyValueAdapter#count(java.io.Serializable)
 	 */
@@ -151,6 +150,15 @@ public class MapKeyValueAdapter extends AbstractKeyValueAdapter {
 	@Override
 	public KeyValueIterator<Serializable, ?> entries(Serializable keyspace) {
 		return new ForwardingKeyValueIterator<Serializable, Object>(getKeySpaceMap(keyspace).entrySet().iterator());
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * @see org.springframework.data.keyvalue.core.KeyValueAdapter#keys(java.io.Serializable)
+	 */
+	@Override
+	public Iterable<Serializable> keys(Serializable keyspace) {
+		return getKeySpaceMap(keyspace).keySet();
 	}
 
 	/*
