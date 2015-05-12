@@ -15,14 +15,15 @@
  */
 package org.springframework.data.keyvalue.core;
 
-import java.io.Closeable;
-import java.util.Iterator;
+import java.util.Map;
+
+import org.springframework.data.util.CloseableIterator;
 
 /**
  * @author Christoph Strobl
  * @param <K>
  * @param <V>
  */
-public interface KeyValueIterator<K, V> extends Iterator<Entry<K, V>>, Closeable {
+public interface KeyValueIterator<K, V> extends CloseableIterator<Map.Entry<K, V>> {
 
 }

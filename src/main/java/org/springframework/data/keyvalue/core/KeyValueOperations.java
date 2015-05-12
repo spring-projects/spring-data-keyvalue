@@ -170,6 +170,14 @@ public interface KeyValueOperations extends DisposableBean {
 	long count(KeyValueQuery<?> query, Class<?> type);
 
 	/**
+	 * Returns a {@link KeyValueStore} scoped to the given {@code keyspace}.
+	 * 
+	 * @param keyspace must not be {@literal null}.
+	 * @return
+	 */
+	<K extends Serializable, V> KeyValueStore<K, V> getKeyValueStore(Serializable keyspace);
+
+	/**
 	 * @return mapping context in use.
 	 */
 	MappingContext<?, ?> getMappingContext();

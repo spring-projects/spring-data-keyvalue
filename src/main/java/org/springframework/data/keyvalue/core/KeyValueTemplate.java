@@ -430,6 +430,15 @@ public class KeyValueTemplate implements KeyValueOperations, ApplicationContextA
 
 	/*
 	 * (non-Javadoc)
+	 * @see org.springframework.data.keyvalue.core.KeyValueOperations#getKeyValueStore(java.io.Serializable)
+	 */
+	@Override
+	public <K extends Serializable, V> KeyValueStore<K, V> getKeyValueStore(Serializable keyspace) {
+		return new AdapterBackedKeyValueStore<K, V>(this.adapter, keyspace);
+	}
+
+	/*
+	 * (non-Javadoc)
 	 * @see org.springframework.data.keyvalue.core.KeyValueOperations#getMappingContext()
 	 */
 	@Override
