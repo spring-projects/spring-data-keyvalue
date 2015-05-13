@@ -17,9 +17,7 @@ package org.springframework.data.map;
 
 import java.io.Serializable;
 import java.util.Collection;
-import java.util.Iterator;
 import java.util.Map;
-import java.util.Map.Entry;
 import java.util.concurrent.ConcurrentHashMap;
 
 import org.springframework.core.CollectionFactory;
@@ -161,17 +159,6 @@ public class MapKeyValueAdapter extends AbstractKeyValueAdapter {
 	@Override
 	public void deleteAllOf(Serializable keyspace) {
 		getKeySpaceMap(keyspace).clear();
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * @see org.springframework.data.keyvalue.core.KeyValueAdapter#hasKeyspace(java.io.Serializable)
-	 */
-	@Override
-	public boolean hasKeyspace(Serializable keyspace) {
-
-		Assert.notNull(keyspace, "Collection must not be null for lookup.");
-		return store.containsKey(keyspace);
 	}
 
 	/*

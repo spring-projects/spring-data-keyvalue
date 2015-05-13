@@ -13,39 +13,45 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.springframework.data.keyvalue.core;
+package org.springframework.data.keyvalue.core.mapping;
 
 import static org.hamcrest.CoreMatchers.*;
 import static org.junit.Assert.*;
-import static org.springframework.data.keyvalue.core.KeySpaceUtils.*;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
+import org.junit.Before;
 import org.junit.Test;
 import org.springframework.data.annotation.Persistent;
+import org.springframework.data.keyvalue.TypeWithDirectKeySpaceAnnotation;
+import org.springframework.data.keyvalue.TypeWithInhteritedPersistentAnnotationNotHavingKeySpace;
+import org.springframework.data.keyvalue.TypeWithPersistentAnnotationNotHavingKeySpace;
 import org.springframework.data.keyvalue.annotation.KeySpace;
-import org.springframework.data.keyvalue.core.KeyValueTemplateUnitTests.AliasedEntity;
-import org.springframework.data.keyvalue.core.KeyValueTemplateUnitTests.ClassWithDirectKeySpaceAnnotation;
-import org.springframework.data.keyvalue.core.KeyValueTemplateUnitTests.EntityWithPersistentAnnotation;
-import org.springframework.data.keyvalue.core.KeyValueTemplateUnitTests.Foo;
 
 /**
- * Unit tests for {@link KeySpaceUtils}.
+ * Unit tests for {@link AnnotationBasedKeySpaceResolver}.
  * 
  * @author Christoph Strobl
  * @author Oliver Gierke
  */
-public class KeySpaceUtilsUnitTests {
+public class AnnotationBasedKeySpaceResolverUnitTests {
+
+	private AnnotationBasedKeySpaceResolver resolver;
+
+	@Before
+	public void setUp() {
+		resolver = AnnotationBasedKeySpaceResolver.INSTANCE;
+	}
 
 	/**
 	 * @see DATACMNS-525
 	 */
 	@Test
 	public void shouldResolveKeySpaceDefaultValueCorrectly() {
-		assertThat(getKeySpace(EntityWithDefaultKeySpace.class), is((Object) "daenerys"));
+		assertThat(resolver.resolveKeySpace(EntityWithDefaultKeySpace.class), is("daenerys"));
 	}
 
 	/**
@@ -53,31 +59,31 @@ public class KeySpaceUtilsUnitTests {
 	 */
 	@Test
 	public void shouldResolveKeySpaceCorrectly() {
-		assertThat(getKeySpace(EntityWithSetKeySpace.class), is((Object) "viserys"));
+		assertThat(resolver.resolveKeySpace(EntityWithSetKeySpace.class), is("viserys"));
 	}
 
 	/**
-	 * @see DATACMNS-525
+	 * @see DATAKV-105
 	 */
 	@Test
 	public void shouldReturnNullWhenNoKeySpaceFoundOnComposedPersistentAnnotation() {
-		assertThat(getKeySpace(AliasedEntity.class), nullValue());
+		assertThat(resolver.resolveKeySpace(TypeWithInhteritedPersistentAnnotationNotHavingKeySpace.class), nullValue());
 	}
 
 	/**
-	 * @see DATACMNS-525
+	 * @see DATAKV-105
 	 */
 	@Test
 	public void shouldReturnNullWhenPersistentIsFoundOnNonComposedAnnotation() {
-		assertThat(getKeySpace(EntityWithPersistentAnnotation.class), nullValue());
+		assertThat(resolver.resolveKeySpace(TypeWithPersistentAnnotationNotHavingKeySpace.class), nullValue());
 	}
 
 	/**
-	 * @see DATACMNS-525
+	 * @see DATAKV-105
 	 */
 	@Test
 	public void shouldReturnNullWhenPersistentIsNotFound() {
-		assertThat(getKeySpace(Foo.class), nullValue());
+		assertThat(resolver.resolveKeySpace(TypeWithoutKeySpace.class), nullValue());
 	}
 
 	/**
@@ -85,7 +91,7 @@ public class KeySpaceUtilsUnitTests {
 	 */
 	@Test
 	public void shouldResolveInheritedKeySpaceCorrectly() {
-		assertThat(getKeySpace(EntityWithInheritedKeySpace.class), is((Object) "viserys"));
+		assertThat(resolver.resolveKeySpace(EntityWithInheritedKeySpace.class), is("viserys"));
 	}
 
 	/**
@@ -93,7 +99,7 @@ public class KeySpaceUtilsUnitTests {
 	 */
 	@Test
 	public void shouldResolveDirectKeySpaceAnnotationCorrectly() {
-		assertThat(getKeySpace(ClassWithDirectKeySpaceAnnotation.class), is((Object) "rhaegar"));
+		assertThat(resolver.resolveKeySpace(TypeWithDirectKeySpaceAnnotation.class), is("rhaegar"));
 	}
 
 	@PersistentAnnotationWithExplicitKeySpace
@@ -121,12 +127,9 @@ public class KeySpaceUtilsUnitTests {
 		String lastnamne() default "targaryen";
 	}
 
-	@Persistent
-	@Retention(RetentionPolicy.RUNTIME)
-	@Target({ ElementType.TYPE })
-	static @interface ExplicitKeySpace {
+	static class TypeWithoutKeySpace {
 
-		@KeySpace
-		String name() default "";
+		String foo;
+
 	}
 }

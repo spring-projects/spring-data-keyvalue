@@ -16,7 +16,7 @@
 package org.springframework.data.keyvalue.core;
 
 import static org.hamcrest.collection.IsCollectionWithSize.*;
-import static org.hamcrest.collection.IsEmptyCollection.*;
+import static org.hamcrest.collection.IsEmptyIterable.*;
 import static org.hamcrest.collection.IsIterableContainingInAnyOrder.*;
 import static org.hamcrest.core.Is.*;
 import static org.hamcrest.core.IsNull.*;
@@ -191,7 +191,7 @@ public class KeyValueTemplateTests {
 		operations.insert("2", FOO_TWO);
 		operations.insert("3", FOO_THREE);
 
-		assertThat(operations.findInRange(5, 5, Foo.class), empty());
+		assertThat(operations.findInRange(5, 5, Foo.class), emptyIterable());
 	}
 
 	/**
