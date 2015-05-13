@@ -14,17 +14,17 @@ The Key/Value abstraction within Spring Data Commons requires an `Adapter` shiel
 ----
 interface KeyValueOperations {
 
-    <T> T insert(T objectToInsert);                             <1>
+    <T> T insert(T objectToInsert);                               <1>
 
-    void update(Object objectToUpdate);                         <2>
+    void update(Object objectToUpdate);                           <2>
 
-    void delete(Class<?> type);                                 <3>
+    void delete(Class<?> type);                                   <3>
 
-    <T> T findById(Serializable id, Class<T> type);             <4>
+    <T> T findById(Serializable id, Class<T> type);               <4>
 
-    <T> List<T> findAllOf(Class<T> type);                       <5>
+    <T> Iterable<T> findAllOf(Class<T> type);                     <5>
 
-    <T> List<T> find(KeyValueQuery<?> query, Class<T> type);    <6>
+    <T> Iterable<T> find(KeyValueQuery<?> query, Class<T> type);  <6>
 
     //... more functionality omitted.
 
@@ -44,7 +44,7 @@ In its very basic shape the `KeyValueTemplate` uses a `MapAdaper` wrapping a `Co
 
 NOTE: The used `KeyValueAdapter` does the heavy lifting when it comes to storing and retrieving data. The data structure used will influence performance and/or multi threading behavior.
 
-One may choose to use a different type or preinitialize the adapter with some values, and can do so using `MapKeyValueAdapterFactory`.
+One may choose to use a different type or preinitialize the adapter with some values, and can do so using various constructors on `MapKeyValueAdapter`.
 
 [source, java]
 ----
@@ -55,13 +55,7 @@ public KeyValueOperations keyValueTemplate() {
 
 @Bean
 public KeyValueAdapter keyValueAdapter() {
-
-  MapKeyValueAdapterFactory factory = new MapKeyValueAdapterFactory();
-  factory.setMapType(ConcurrentSkipListMap.class);
-  factory.setInitialValuesForKeyspace("lennister", singletonMap("1", "tyrion"));
-  factory.setInitialValuesForKeyspace("stark", singletonMap("1", "sansa"));
-
-  return factory.getAdapter();
+  return new MapKeyValueAdapter(ConcurrentHashMap.class);
 }
 ----
 
@@ -90,6 +84,29 @@ template.findAllOf(User.class);   <2>
 ----
 <1> Returns all entities for keyspace "persons".
 <2> Returns only elements of type `User` stored in keyspace "persons".
+
+[[key-value.keyspaces-custom]]
+=== Custom KeySpace Annotation
+
+It is possible to compose own `KeySpace` annotations for a more domain centric usage by annotating one of the attibutes with `@KeySpace`.
+
+NOTE: The composed annotation needs to inherit `@Persistent`.
+
+[source, java]
+----
+@Persistent
+@Retention(RetentionPolicy.RUNTIME)
+@Target({ ElementType.TYPE })
+static @interface CacheCentricAnnotation {
+  
+  @KeySpace String cacheRegion() default "";
+}
+
+@CacheCentricAnnotation(cacheRegion = "customers")
+class Customer {
+  //...
+}
+---- 
 
 [[key-value.template-query]]
 == Querying

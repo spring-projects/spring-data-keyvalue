@@ -192,20 +192,20 @@ public class KeyValueTemplate implements KeyValueOperations, ApplicationContextA
 	 * @see org.springframework.data.keyvalue.core.KeyValueOperations#findAllOf(java.lang.Class)
 	 */
 	@Override
-	public <T> List<T> findAll(final Class<T> type) {
+	public <T> Iterable<T> findAll(final Class<T> type) {
 
 		Assert.notNull(type, "Type to fetch must not be null!");
 
-		return execute(new KeyValueCallback<List<T>>() {
+		return execute(new KeyValueCallback<Iterable<T>>() {
 
 			@SuppressWarnings("unchecked")
 			@Override
-			public List<T> doInKeyValue(KeyValueAdapter adapter) {
+			public Iterable<T> doInKeyValue(KeyValueAdapter adapter) {
 
 				Iterable<?> values = adapter.getAllOf(resolveKeySpace(type));
 
 				if (getKeySpace(type) == null) {
-					return new ArrayList<T>(IterableConverter.toList((Iterable<T>) values));
+					return (Iterable<T>) values;
 				}
 
 				ArrayList<T> filtered = new ArrayList<T>();
@@ -355,18 +355,18 @@ public class KeyValueTemplate implements KeyValueOperations, ApplicationContextA
 	 * @see org.springframework.data.keyvalue.core.KeyValueOperations#find(org.springframework.data.keyvalue.core.query.KeyValueQuery, java.lang.Class)
 	 */
 	@Override
-	public <T> List<T> find(final KeyValueQuery<?> query, final Class<T> type) {
+	public <T> Iterable<T> find(final KeyValueQuery<?> query, final Class<T> type) {
 
-		return execute(new KeyValueCallback<List<T>>() {
+		return execute(new KeyValueCallback<Iterable<T>>() {
 
 			@SuppressWarnings("unchecked")
 			@Override
-			public List<T> doInKeyValue(KeyValueAdapter adapter) {
+			public Iterable<T> doInKeyValue(KeyValueAdapter adapter) {
 
 				Iterable<?> result = adapter.find(query, resolveKeySpace(type));
 
 				if (getKeySpace(type) == null) {
-					return new ArrayList<T>(IterableConverter.toList((Iterable<T>) result));
+					return (Iterable<T>) result;
 				}
 
 				List<T> filtered = new ArrayList<T>();
@@ -388,7 +388,7 @@ public class KeyValueTemplate implements KeyValueOperations, ApplicationContextA
 	 */
 	@SuppressWarnings("rawtypes")
 	@Override
-	public <T> List<T> findAll(Sort sort, Class<T> type) {
+	public <T> Iterable<T> findAll(Sort sort, Class<T> type) {
 		return find(new KeyValueQuery(sort), type);
 	}
 
@@ -398,7 +398,7 @@ public class KeyValueTemplate implements KeyValueOperations, ApplicationContextA
 	 */
 	@SuppressWarnings("rawtypes")
 	@Override
-	public <T> List<T> findInRange(int offset, int rows, Class<T> type) {
+	public <T> Iterable<T> findInRange(int offset, int rows, Class<T> type) {
 		return find(new KeyValueQuery().skip(offset).limit(rows), type);
 	}
 
@@ -408,7 +408,7 @@ public class KeyValueTemplate implements KeyValueOperations, ApplicationContextA
 	 */
 	@SuppressWarnings("rawtypes")
 	@Override
-	public <T> List<T> findInRange(int offset, int rows, Sort sort, Class<T> type) {
+	public <T> Iterable<T> findInRange(int offset, int rows, Sort sort, Class<T> type) {
 		return find(new KeyValueQuery(sort).skip(offset).limit(rows), type);
 	}
 

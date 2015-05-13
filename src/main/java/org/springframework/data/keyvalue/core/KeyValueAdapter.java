@@ -76,7 +76,7 @@ public interface KeyValueAdapter extends DisposableBean {
 	Iterable<?> getAllOf(Serializable keyspace);
 
 	/**
-	 * Returns a {@link KeyValueIterator} that iterates over all entries. 
+	 * Returns a {@link KeyValueIterator} that iterates over all entries.
 	 * 
 	 * @param keyspace
 	 * @return
@@ -119,12 +119,4 @@ public interface KeyValueAdapter extends DisposableBean {
 	 * @return
 	 */
 	long count(KeyValueQuery<?> query, Serializable keyspace);
-
-	/**
-	 * Check if values from the given keyspace are contained in the underlying key-value store.
-	 * 
-	 * @param keyspace
-	 * @return true if {@literal keyspace} already present in adapter.
-	 */
-	boolean hasKeyspace(Serializable keyspace);
 }
