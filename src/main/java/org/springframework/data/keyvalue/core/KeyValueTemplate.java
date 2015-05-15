@@ -15,15 +15,12 @@
  */
 package org.springframework.data.keyvalue.core;
 
-import static org.springframework.data.keyvalue.core.KeySpaceUtils.*;
-
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-import java.util.concurrent.ConcurrentHashMap;
 
 import org.springframework.beans.BeansException;
 import org.springframework.context.ApplicationContext;
@@ -35,6 +32,8 @@ import org.springframework.dao.InvalidDataAccessApiUsageException;
 import org.springframework.dao.support.PersistenceExceptionTranslator;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.keyvalue.core.event.KeyValueEvent;
+import org.springframework.data.keyvalue.core.mapping.KeyValuePersistentEntity;
+import org.springframework.data.keyvalue.core.mapping.KeyValuePersistentProperty;
 import org.springframework.data.keyvalue.core.mapping.context.KeyValueMappingContext;
 import org.springframework.data.keyvalue.core.query.KeyValueQuery;
 import org.springframework.data.mapping.PersistentEntity;
@@ -43,7 +42,6 @@ import org.springframework.data.mapping.context.MappingContext;
 import org.springframework.util.Assert;
 import org.springframework.util.ClassUtils;
 import org.springframework.util.CollectionUtils;
-import org.springframework.util.StringUtils;
 
 /**
  * Basic implementation of {@link KeyValueOperations}.
@@ -57,8 +55,8 @@ public class KeyValueTemplate implements KeyValueOperations, ApplicationContextA
 	private static final PersistenceExceptionTranslator DEFAULT_PERSISTENCE_EXCEPTION_TRANSLATOR = new KeyValuePersistenceExceptionTranslator();
 
 	private final KeyValueAdapter adapter;
-	private final ConcurrentHashMap<Class<?>, String> keySpaceCache = new ConcurrentHashMap<Class<?>, String>();
-	private final MappingContext<? extends PersistentEntity<?, ? extends PersistentProperty<?>>, ? extends PersistentProperty<?>> mappingContext;
+
+	private final MappingContext<? extends KeyValuePersistentEntity<?>, ? extends KeyValuePersistentProperty> mappingContext;
 	private final IdentifierGenerator identifierGenerator;
 	private ApplicationEventPublisher eventPublisher;
 	private final Set<KeyValueEvent.Type> eventTypesToPublish = new HashSet<KeyValueEvent.Type>(4);
@@ -80,10 +78,8 @@ public class KeyValueTemplate implements KeyValueOperations, ApplicationContextA
 	 * @param adapter must not be {@literal null}.
 	 * @param mappingContext must not be {@literal null}.
 	 */
-	@SuppressWarnings("rawtypes")
-	public KeyValueTemplate(
-			KeyValueAdapter adapter,
-			MappingContext<? extends PersistentEntity<?, ? extends PersistentProperty>, ? extends PersistentProperty<?>> mappingContext) {
+	public KeyValueTemplate(KeyValueAdapter adapter,
+			MappingContext<? extends KeyValuePersistentEntity<?>, ? extends KeyValuePersistentProperty> mappingContext) {
 
 		Assert.notNull(adapter, "Adapter must not be null!");
 		Assert.notNull(mappingContext, "MappingContext must not be null!");
@@ -204,7 +200,7 @@ public class KeyValueTemplate implements KeyValueOperations, ApplicationContextA
 
 				Iterable<?> values = adapter.getAllOf(resolveKeySpace(type));
 
-				if (getKeySpace(type) == null) {
+				if (!hasExplicitKeySpace(type)) {
 					return (Iterable<T>) values;
 				}
 
@@ -242,7 +238,7 @@ public class KeyValueTemplate implements KeyValueOperations, ApplicationContextA
 
 				Object result = adapter.get(id, keyspace);
 
-				if (result == null || getKeySpace(type) == null || typeCheck(type, result)) {
+				if (result == null || !hasExplicitKeySpace(type) || typeCheck(type, result)) {
 					return (T) result;
 				}
 
@@ -365,7 +361,7 @@ public class KeyValueTemplate implements KeyValueOperations, ApplicationContextA
 
 				Iterable<?> result = adapter.find(query, resolveKeySpace(type));
 
-				if (getKeySpace(type) == null) {
+				if (!hasExplicitKeySpace(type)) {
 					return (Iterable<T>) result;
 				}
 
@@ -480,29 +476,12 @@ public class KeyValueTemplate implements KeyValueOperations, ApplicationContextA
 		}
 	}
 
-	protected String resolveKeySpace(Class<?> type) {
+	private String resolveKeySpace(Class<?> type) {
+		return this.mappingContext.getPersistentEntity(type).getKeySpace();
+	}
 
-		Class<?> userClass = ClassUtils.getUserClass(type);
-
-		String potentialKeySpace = keySpaceCache.get(userClass);
-
-		if (potentialKeySpace != null) {
-			return potentialKeySpace;
-		}
-
-		String keySpaceString = null;
-		Object keySpace = getKeySpace(type);
-
-		if (keySpace != null) {
-			keySpaceString = keySpace.toString();
-		}
-
-		if (!StringUtils.hasText(keySpaceString)) {
-			keySpaceString = userClass.getName();
-		}
-
-		keySpaceCache.put(userClass, keySpaceString);
-		return keySpaceString;
+	private boolean hasExplicitKeySpace(Class<?> type) {
+		return this.mappingContext.getPersistentEntity(type).hasExplicitKeySpace();
 	}
 
 	private static boolean typeCheck(Class<?> requiredType, Object candidate) {
@@ -525,4 +504,5 @@ public class KeyValueTemplate implements KeyValueOperations, ApplicationContextA
 			eventPublisher.publishEvent(event);
 		}
 	}
+
 }

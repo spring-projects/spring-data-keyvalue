@@ -1,5 +1,5 @@
 /*
- * Copyright 2014 the original author or authors.
+ * Copyright 2015 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -26,24 +26,57 @@ import org.springframework.core.annotation.AnnotationUtils;
 import org.springframework.core.style.ToStringCreator;
 import org.springframework.data.annotation.Persistent;
 import org.springframework.data.keyvalue.annotation.KeySpace;
-import org.springframework.data.keyvalue.core.KeySpaceUtils.MetaAnnotationUtils.AnnotationDescriptor;
+import org.springframework.data.keyvalue.core.AnnotationBasedKeySpaceResolver.MetaAnnotationUtils.AnnotationDescriptor;
 import org.springframework.util.Assert;
+import org.springframework.util.ClassUtils;
 import org.springframework.util.ObjectUtils;
+import org.springframework.util.StringUtils;
 
 /**
+ * {@link AnnotationBasedKeySpaceResolver} looks up {@link Persistent} and checks for presence of either meta or direct
+ * usage of {@link KeySpace}. If non found it will default the keyspace to {@link Class#getName()}.
+ * 
  * @author Christoph Strobl
  * @author Oliver Gierke
  */
-abstract class KeySpaceUtils {
+public class AnnotationBasedKeySpaceResolver implements KeySpaceResolver {
 
-	private KeySpaceUtils() {}
-
-	/**
-	 * Looks up {@link Persistent} when used as meta annotation to find the {@link KeySpace} attribute.
-	 * 
-	 * @return
+	/*
+	 * (non-Javadoc)
+	 * @see org.springframework.data.keyvalue.core.KeySpaceResolver#resolveKeySpace(java.lang.Class)
 	 */
-	public static Object getKeySpace(Class<?> type) {
+	@Override
+	public String resolveKeySpace(Class<?> type) {
+
+		Assert.notNull(type, "Type for keyspace for null!");
+
+		Class<?> userClass = ClassUtils.getUserClass(type);
+		Object keySpace = getKeySpace(userClass);
+
+		String keySpaceString = null;
+		if (keySpace != null) {
+			keySpaceString = keySpace.toString();
+		}
+
+		if (!StringUtils.hasText(keySpaceString)) {
+			keySpaceString = getFallbackKeySpace(type);
+		}
+
+		return keySpaceString;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * @see org.springframework.data.keyvalue.core.KeySpaceResolver#getFallbackKeySpace(java.lang.Class)
+	 */
+	@Override
+	public String getFallbackKeySpace(Class<?> type) {
+
+		Assert.notNull(type, "Type must not be null!");
+		return ClassUtils.getUserClass(type).getName();
+	}
+
+	private Object getKeySpace(Class<?> type) {
 
 		KeySpace keyspace = AnnotationUtils.findAnnotation(type, KeySpace.class);
 
@@ -51,8 +84,7 @@ abstract class KeySpaceUtils {
 			return AnnotationUtils.getValue(keyspace);
 		}
 
-		AnnotationDescriptor<Persistent> descriptor = KeySpaceUtils.MetaAnnotationUtils.findAnnotationDescriptor(type,
-				Persistent.class);
+		AnnotationDescriptor<Persistent> descriptor = MetaAnnotationUtils.findAnnotationDescriptor(type, Persistent.class);
 
 		if (descriptor != null && descriptor.getComposedAnnotation() != null) {
 
@@ -392,6 +424,6 @@ abstract class KeySpaceUtils {
 				}
 			}
 		}
-
 	}
+
 }

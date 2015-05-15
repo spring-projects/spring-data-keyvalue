@@ -1,5 +1,5 @@
 /*
- * Copyright 2014 the original author or authors.
+ * Copyright 2014-2015 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,26 +18,55 @@ package org.springframework.data.keyvalue.core.mapping.context;
 import java.beans.PropertyDescriptor;
 import java.lang.reflect.Field;
 
+import org.springframework.data.keyvalue.core.AnnotationBasedKeySpaceResolver;
+import org.springframework.data.keyvalue.core.CachingKeySpaceResolver;
+import org.springframework.data.keyvalue.core.KeySpaceResolver;
+import org.springframework.data.keyvalue.core.mapping.BasicKeyValuePersistentEntity;
+import org.springframework.data.keyvalue.core.mapping.KeyValuePersistentEntity;
 import org.springframework.data.keyvalue.core.mapping.KeyValuePersistentProperty;
 import org.springframework.data.mapping.context.AbstractMappingContext;
-import org.springframework.data.mapping.model.BasicPersistentEntity;
+import org.springframework.data.mapping.context.MappingContext;
 import org.springframework.data.mapping.model.SimpleTypeHolder;
 import org.springframework.data.util.TypeInformation;
+import org.springframework.util.Assert;
 
 /**
+ * Default implementation of a {@link MappingContext} using {@link KeyValuePersistentEntity} and
+ * {@link KeyValuePersistentProperty} as primary abstractions.
+ * 
  * @author Christoph Strobl
  */
 public class KeyValueMappingContext extends
-		AbstractMappingContext<BasicPersistentEntity<?, KeyValuePersistentProperty>, KeyValuePersistentProperty> {
+		AbstractMappingContext<KeyValuePersistentEntity<?>, KeyValuePersistentProperty> {
+
+	private final KeySpaceResolver keySpaceResolver;
+
+	/**
+	 * Creates new {@link KeyValueMappingContext} using an {@link AnnotationBasedKeySpaceResolver} for {@literal keyspace}
+	 * resolution.
+	 */
+	public KeyValueMappingContext() {
+		this(new CachingKeySpaceResolver(new AnnotationBasedKeySpaceResolver()));
+	}
+
+	/**
+	 * Creates new {@link KeyValueMappingContext} using given {@link KeySpaceResolver}
+	 * 
+	 * @param keySpaceResolver must not be {@literal null}.
+	 */
+	public KeyValueMappingContext(KeySpaceResolver keySpaceResolver) {
+
+		Assert.notNull(keySpaceResolver, "KeySpaceResolver must not be null!");
+		this.keySpaceResolver = keySpaceResolver;
+	}
 
 	/*
 	 * (non-Javadoc)
 	 * @see org.springframework.data.mapping.context.AbstractMappingContext#createPersistentEntity(org.springframework.data.util.TypeInformation)
 	 */
 	@Override
-	protected <T> BasicPersistentEntity<?, KeyValuePersistentProperty> createPersistentEntity(
-			TypeInformation<T> typeInformation) {
-		return new BasicPersistentEntity<T, KeyValuePersistentProperty>(typeInformation);
+	protected <T> KeyValuePersistentEntity<T> createPersistentEntity(TypeInformation<T> typeInformation) {
+		return new BasicKeyValuePersistentEntity<T>(typeInformation, keySpaceResolver);
 	}
 
 	/*
@@ -46,7 +75,7 @@ public class KeyValueMappingContext extends
 	 */
 	@Override
 	protected KeyValuePersistentProperty createPersistentProperty(Field field, PropertyDescriptor descriptor,
-			BasicPersistentEntity<?, KeyValuePersistentProperty> owner, SimpleTypeHolder simpleTypeHolder) {
+			KeyValuePersistentEntity<?> owner, SimpleTypeHolder simpleTypeHolder) {
 		return new KeyValuePersistentProperty(field, descriptor, owner, simpleTypeHolder);
 	}
 }
