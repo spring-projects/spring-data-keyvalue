@@ -25,10 +25,8 @@ import java.util.List;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
-import org.springframework.beans.BeansException;
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.ApplicationContextAware;
 import org.springframework.context.ApplicationEventPublisher;
+import org.springframework.context.ApplicationEventPublisherAware;
 import org.springframework.dao.DataAccessException;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.dao.InvalidDataAccessApiUsageException;
@@ -52,7 +50,7 @@ import org.springframework.util.StringUtils;
  * @author Oliver Gierke
  * @author Thomas Darimont
  */
-public class KeyValueTemplate implements KeyValueOperations, ApplicationContextAware {
+public class KeyValueTemplate implements KeyValueOperations, ApplicationEventPublisherAware {
 
 	private static final PersistenceExceptionTranslator DEFAULT_PERSISTENCE_EXCEPTION_TRANSLATOR = new KeyValuePersistenceExceptionTranslator();
 
@@ -61,7 +59,8 @@ public class KeyValueTemplate implements KeyValueOperations, ApplicationContextA
 	private final MappingContext<? extends PersistentEntity<?, ? extends PersistentProperty<?>>, ? extends PersistentProperty<?>> mappingContext;
 	private final IdentifierGenerator identifierGenerator;
 	private ApplicationEventPublisher eventPublisher;
-	private final Set<KeyValueEvent.Type> eventTypesToPublish = new HashSet<KeyValueEvent.Type>(4);
+	private boolean publishEvents = true;
+	private final Set<Class<?>> eventTypesToPublish = new HashSet<Class<?>>(0);
 	private PersistenceExceptionTranslator exceptionTranslator = DEFAULT_PERSISTENCE_EXCEPTION_TRANSLATOR;
 
 	/**
@@ -122,7 +121,7 @@ public class KeyValueTemplate implements KeyValueOperations, ApplicationContextA
 
 		final String keyspace = resolveKeySpace(objectToInsert.getClass());
 
-		potentiallyPublishEvent(KeyValueEvent.beforeInsert(this, keyspace, id, objectToInsert));
+		potentiallyPublishEvent(KeyValueEvent.beforeInsert(id, keyspace, objectToInsert.getClass(), objectToInsert));
 
 		execute(new KeyValueCallback<Void>() {
 
@@ -139,7 +138,7 @@ public class KeyValueTemplate implements KeyValueOperations, ApplicationContextA
 			}
 		});
 
-		potentiallyPublishEvent(KeyValueEvent.afterInsert(this, keyspace, id, objectToInsert));
+		potentiallyPublishEvent(KeyValueEvent.afterInsert(id, keyspace, objectToInsert.getClass(), objectToInsert));
 	}
 
 	/*
@@ -173,18 +172,18 @@ public class KeyValueTemplate implements KeyValueOperations, ApplicationContextA
 
 		final String keyspace = resolveKeySpace(objectToUpdate.getClass());
 
-		potentiallyPublishEvent(KeyValueEvent.beforeUpdate(this, keyspace, id, objectToUpdate));
+		potentiallyPublishEvent(KeyValueEvent.beforeUpdate(id, keyspace, objectToUpdate.getClass(), objectToUpdate));
 
-		execute(new KeyValueCallback<Void>() {
+		Object existing = execute(new KeyValueCallback<Object>() {
 
 			@Override
-			public Void doInKeyValue(KeyValueAdapter adapter) {
-				adapter.put(id, objectToUpdate, keyspace);
-				return null;
+			public Object doInKeyValue(KeyValueAdapter adapter) {
+				return adapter.put(id, objectToUpdate, keyspace);
 			}
 		});
 
-		potentiallyPublishEvent(KeyValueEvent.afterUpdate(this, keyspace, id, objectToUpdate));
+		potentiallyPublishEvent(KeyValueEvent
+				.afterUpdate(id, keyspace, objectToUpdate.getClass(), objectToUpdate, existing));
 	}
 
 	/*
@@ -232,7 +231,7 @@ public class KeyValueTemplate implements KeyValueOperations, ApplicationContextA
 
 		final String keyspace = resolveKeySpace(type);
 
-		potentiallyPublishEvent(KeyValueEvent.beforeGet(this, keyspace, id));
+		potentiallyPublishEvent(KeyValueEvent.beforeGet(id, keyspace, type));
 
 		T result = execute(new KeyValueCallback<T>() {
 
@@ -250,7 +249,7 @@ public class KeyValueTemplate implements KeyValueOperations, ApplicationContextA
 			}
 		});
 
-		potentiallyPublishEvent(KeyValueEvent.afterGet(this, keyspace, id, result));
+		potentiallyPublishEvent(KeyValueEvent.afterGet(id, keyspace, type, result));
 
 		return result;
 	}
@@ -266,7 +265,7 @@ public class KeyValueTemplate implements KeyValueOperations, ApplicationContextA
 
 		final String keyspace = resolveKeySpace(type);
 
-		potentiallyPublishEvent(KeyValueEvent.beforeDelete(this, keyspace));
+		potentiallyPublishEvent(KeyValueEvent.beforeDropKeySpace(keyspace, type));
 
 		execute(new KeyValueCallback<Void>() {
 
@@ -278,7 +277,7 @@ public class KeyValueTemplate implements KeyValueOperations, ApplicationContextA
 			}
 		});
 
-		potentiallyPublishEvent(KeyValueEvent.afterDelete(this, keyspace));
+		potentiallyPublishEvent(KeyValueEvent.afterDropKeySpace(keyspace, type));
 	}
 
 	/*
@@ -302,12 +301,12 @@ public class KeyValueTemplate implements KeyValueOperations, ApplicationContextA
 	@Override
 	public <T> T delete(final Serializable id, final Class<T> type) {
 
-		Assert.notNull(id, "Id for object to be inserted must not be null!");
+		Assert.notNull(id, "Id for object to be deleted must not be null!");
 		Assert.notNull(type, "Type to delete must not be null!");
 
 		final String keyspace = resolveKeySpace(type);
 
-		potentiallyPublishEvent(KeyValueEvent.beforeDelete(this, keyspace, id));
+		potentiallyPublishEvent(KeyValueEvent.beforeDelete(id, keyspace, type));
 
 		T result = execute(new KeyValueCallback<T>() {
 
@@ -318,7 +317,7 @@ public class KeyValueTemplate implements KeyValueOperations, ApplicationContextA
 			}
 		});
 
-		potentiallyPublishEvent(KeyValueEvent.afterDelete(this, keyspace, id, result));
+		potentiallyPublishEvent(KeyValueEvent.afterDelete(id, keyspace, type, result));
 
 		return result;
 	}
@@ -459,24 +458,28 @@ public class KeyValueTemplate implements KeyValueOperations, ApplicationContextA
 
 	/*
 	 * (non-Javadoc)
-	 * @see org.springframework.context.ApplicationContextAware#setApplicationContext(org.springframework.context.ApplicationContext)
+	 * @see org.springframework.context.ApplicationEventPublisherAware#setApplicationEventPublisher(org.springframework.context.ApplicationEventPublisher)
 	 */
 	@Override
-	public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
-		eventPublisher = applicationContext;
+	public void setApplicationEventPublisher(ApplicationEventPublisher applicationEventPublisher) {
+		this.eventPublisher = applicationEventPublisher;
 	}
 
 	/**
 	 * Define the event types to publish via {@link ApplicationEventPublisher}.
 	 * 
-	 * @param eventTypesToPublish use {@literal null} or {@link Collections#emptySet()} to disable publishing.
+	 * @param eventTypesToPublish use {@literal null} or {@link Collections#emptySet()} to stop publishing.
 	 */
-	public void setEventTypesToPublish(Set<KeyValueEvent.Type> eventTypesToPublish) {
+	public void setEventTypesToPublish(Set<Class<? extends KeyValueEvent>> eventTypesToPublish) {
 
 		this.eventTypesToPublish.clear();
 
 		if (!CollectionUtils.isEmpty(eventTypesToPublish)) {
+
+			this.publishEvents = true;
 			this.eventTypesToPublish.addAll(eventTypesToPublish);
+		} else {
+			this.publishEvents = false;
 		}
 	}
 
@@ -521,7 +524,7 @@ public class KeyValueTemplate implements KeyValueOperations, ApplicationContextA
 			return;
 		}
 
-		if (eventTypesToPublish.contains(event.getType()) || eventTypesToPublish.contains(KeyValueEvent.Type.ANY)) {
+		if (publishEvents && (eventTypesToPublish.isEmpty() || eventTypesToPublish.contains(event.getClass()))) {
 			eventPublisher.publishEvent(event);
 		}
 	}

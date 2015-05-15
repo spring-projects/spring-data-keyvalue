@@ -28,33 +28,16 @@ import org.springframework.context.ApplicationEvent;
  * @author Thomas Darimont
  * @param <T>
  */
-public class KeyValueEvent extends ApplicationEvent {
+public class KeyValueEvent<T> extends ApplicationEvent {
 
 	private static final long serialVersionUID = -7128527253428193044L;
 
-	public enum Type {
-		ANY, BEFORE_INSERT, AFTER_INSERT, BEFORE_UPDATE, AFTER_UPDATE, BEFORE_DELETE, AFTER_DELETE, BEFORE_GET, AFTER_GET
-	}
-
-	private final Type type;
 	private final String keyspace;
-	private final Serializable id;
-	private final Object value;
 
-	protected KeyValueEvent(Object source, Type type, String keyspace, Serializable id, Object value) {
-		
+	protected KeyValueEvent(Object source, String keyspace) {
+
 		super(source);
-		this.type = type;
 		this.keyspace = keyspace;
-		this.id = id;
-		this.value = value;
-	}
-
-	/**
-	 * @return {@link Type} of event. Never {@literal null}.
-	 */
-	public Type getType() {
-		return type;
 	}
 
 	/**
@@ -64,114 +47,374 @@ public class KeyValueEvent extends ApplicationEvent {
 		return keyspace;
 	}
 
-	/**
-	 * @return can be {@literal null}.
-	 */
-	public Serializable getId() {
-		return id;
-	}
-
-	/**
-	 * @return can be {@literal null}.
-	 */
-	public Object getValue() {
-		return value;
-	}
-
 	@Override
 	public String toString() {
-		return "KeyValueEvent [type=" + type + ", keyspace=" + keyspace + ", id=" + id + "]";
+		return "KeyValueEvent [keyspace=" + keyspace + ", source=" + getSource() + "]";
 	}
 
-	public static GetEvent beforeGet(Object source, String keyspace, Serializable id) {
-		return new GetEvent(source, Type.BEFORE_GET, keyspace, id, null);
+	/**
+	 * Create new {@link BeforeGetEvent}.
+	 * 
+	 * @param id
+	 * @param keySpace
+	 * @param type
+	 * @return
+	 */
+	public static <T> BeforeGetEvent<T> beforeGet(Serializable id, String keySpace, Class<T> type) {
+		return new BeforeGetEvent<T>(id, keySpace, type);
 	}
 
-	public static GetEvent afterGet(Object source, String keyspace, Serializable id, Object value) {
-		return new GetEvent(source, Type.AFTER_GET, keyspace, id, value);
+	/**
+	 * Create new {@link AfterGetEvent}.
+	 * 
+	 * @param id
+	 * @param keySpace
+	 * @param type
+	 * @param value
+	 * @return
+	 */
+	public static <T> AfterGetEvent<T> afterGet(Serializable id, String keySpace, Class<T> type, T value) {
+		return new AfterGetEvent<T>(id, keySpace, type, value);
 	}
 
-	public static InsertEvent beforeInsert(Object source, String keyspace, Serializable id, Object value) {
-		return new InsertEvent(source, Type.BEFORE_INSERT, keyspace, id, value);
+	/**
+	 * Create new {@link BeforeInsertEvent}.
+	 * 
+	 * @param id
+	 * @param keySpace
+	 * @param type
+	 * @param value
+	 * @return
+	 */
+	public static <T> BeforeInsertEvent<T> beforeInsert(Serializable id, String keySpace, Class<? extends T> type, T value) {
+		return new BeforeInsertEvent<T>(id, keySpace, type, value);
 	}
 
-	public static InsertEvent afterInsert(Object source, String keyspace, Serializable id, Object value) {
-		return new InsertEvent(source, Type.AFTER_INSERT, keyspace, id, value);
+	/**
+	 * Create new {@link AfterInsertEvent}.
+	 * 
+	 * @param id
+	 * @param keySpace
+	 * @param type
+	 * @param value
+	 * @return
+	 */
+	public static <T> AfterInsertEvent<T> afterInsert(Serializable id, String keySpace, Class<? extends T> type, T value) {
+		return new AfterInsertEvent<T>(id, keySpace, type, value);
 	}
 
-	public static UpdateEvent beforeUpdate(Object source, String keyspace, Serializable id, Object value) {
-		return new UpdateEvent(source, Type.BEFORE_UPDATE, keyspace, id, value);
+	/**
+	 * Create new {@link BeforeUpdateEvent}.
+	 * 
+	 * @param id
+	 * @param keySpace
+	 * @param type
+	 * @param value
+	 * @return
+	 */
+	public static <T> BeforeUpdateEvent<T> beforeUpdate(Serializable id, String keySpace, Class<? extends T> type, T value) {
+		return new BeforeUpdateEvent<T>(id, keySpace, type, value);
 	}
 
-	public static UpdateEvent afterUpdate(Object source, String keyspace, Serializable id, Object value) {
-		return new UpdateEvent(source, Type.AFTER_UPDATE, keyspace, id, value);
+	/**
+	 * Create new {@link AfterUpdateEvent}.
+	 * 
+	 * @param id
+	 * @param keySpace
+	 * @param type
+	 * @param actualValue
+	 * @param previousValue
+	 * @return
+	 */
+	public static <T> AfterUpdateEvent<T> afterUpdate(Serializable id, String keySpace, Class<? extends T> type,
+			T actualValue, Object previousValue) {
+		return new AfterUpdateEvent<T>(id, keySpace, type, actualValue, previousValue);
 	}
 
-	public static DropKeyspaceEvent beforeDelete(Object source, String keyspace) {
-		return new DropKeyspaceEvent(source, Type.BEFORE_DELETE, keyspace);
+	/**
+	 * Create new {@link BeforeDropKeySpaceEvent}.
+	 * 
+	 * @param keySpace
+	 * @param type
+	 * @return
+	 */
+	public static <T> BeforeDropKeySpaceEvent<T> beforeDropKeySpace(String keySpace, Class<? extends T> type) {
+		return new BeforeDropKeySpaceEvent<T>(keySpace, type);
 	}
 
-	public static DeleteEvent beforeDelete(Object source, String keyspace, Serializable id) {
-		return beforeDelete(source, keyspace, id, null);
+	/**
+	 * Create new {@link AfterDropKeySpaceEvent}.
+	 * 
+	 * @param keySpace
+	 * @param type
+	 * @return
+	 */
+	public static <T> AfterDropKeySpaceEvent<T> afterDropKeySpace(String keySpace, Class<? extends T> type) {
+		return new AfterDropKeySpaceEvent<T>(keySpace, type);
 	}
 
-	public static DeleteEvent beforeDelete(Object source, String keyspace, Serializable id, Object value) {
-		return new DeleteEvent(source, Type.BEFORE_DELETE, keyspace, id, value);
+	/**
+	 * Create new {@link BeforeDeleteEvent}.
+	 * 
+	 * @param id
+	 * @param keySpace
+	 * @param type
+	 * @return
+	 */
+	public static <T> BeforeDeleteEvent<T> beforeDelete(Serializable id, String keySpace, Class<? extends T> type) {
+		return new BeforeDeleteEvent<T>(id, keySpace, type);
 	}
 
-	public static DropKeyspaceEvent afterDelete(Object source, String keyspace) {
-		return new DropKeyspaceEvent(source, Type.AFTER_DELETE, keyspace);
+	/**
+	 * Create new {@link AfterDeleteEvent}.
+	 * 
+	 * @param id
+	 * @param keySpace
+	 * @param type
+	 * @param value
+	 * @return
+	 */
+	public static <T> AfterDeleteEvent<T> afterDelete(Serializable id, String keySpace, Class<? extends T> type, T value) {
+		return new AfterDeleteEvent<T>(id, keySpace, type, value);
 	}
 
-	public static DeleteEvent afterDelete(Object source, String keyspace, Serializable id, Object value) {
-		return new DeleteEvent(source, Type.AFTER_DELETE, keyspace, id, value);
-	}
+	/**
+	 * @author Christoph Strobl
+	 * @param <T>
+	 */
+	@SuppressWarnings("serial")
+	abstract static class KeyBasedEvent<T> extends KeyValueEvent<T> {
 
-	public static class InsertEvent extends KeyValueEvent {
+		private Serializable key;
+		private Class<? extends T> type;
 
-		private static final long serialVersionUID = -1;
+		protected KeyBasedEvent(Serializable key, String keySpace, Class<? extends T> type) {
 
-		InsertEvent(Object source, Type type, String keyspace, Serializable id, Object value) {
-			super(source, type, keyspace, id, value);
+			super(type, keySpace);
+			this.key = key;
+		}
+
+		public Serializable getKey() {
+			return key;
+		}
+
+		/*
+		 * (non-Javadoc)
+		 * @see java.util.EventObject#getSource()
+		 */
+		@Override
+		public Serializable getSource() {
+			return getKey();
+		}
+
+		/**
+		 * Get the type of the element the {@link KeyValueEvent} refers to.
+		 * 
+		 * @return
+		 */
+		public Class<? extends T> getType() {
+			return type;
 		}
 	}
 
-	public static class UpdateEvent extends KeyValueEvent {
+	/**
+	 * @author Christoph Strobl
+	 * @param <T>
+	 */
+	@SuppressWarnings("serial")
+	abstract static class KeyBasedEventWithPayload<T> extends KeyBasedEvent<T> {
 
-		private static final long serialVersionUID = -1;
+		private final T payload;
 
-		UpdateEvent(Object source, Type type, String keyspace, Serializable id, Object value) {
-			super(source, type, keyspace, id, value);
+		public KeyBasedEventWithPayload(Serializable key, String keySpace, Class<? extends T> type, T payload) {
+			super(key, keySpace, type);
+			this.payload = payload;
+		}
+
+		/**
+		 * Get the value of the element the {@link KeyValueEvent} refers to. Can be {@literal null}.
+		 * 
+		 * @return
+		 */
+		public T getPayload() {
+			return payload;
 		}
 	}
 
-	public static class DeleteEvent extends KeyValueEvent {
+	/**
+	 * {@link KeyValueEvent} raised before loading an object by its {@literal key}.
+	 * 
+	 * @author Christoph Strobl
+	 * @param <T>
+	 */
+	@SuppressWarnings("serial")
+	public static class BeforeGetEvent<T> extends KeyBasedEvent<T> {
 
-		private static final long serialVersionUID = -1;
-
-		DeleteEvent(Object source, Type type, String keyspace, Serializable id, Object value) {
-			super(source, type, keyspace, id, value);
-		}
-	}
-
-	public static class DropKeyspaceEvent extends DeleteEvent {
-
-		private static final long serialVersionUID = -1;
-
-		DropKeyspaceEvent(Object source, Type type, String keyspace) {
-			super(source, type, keyspace, null, null);
-		}
-	}
-
-	public static class GetEvent extends KeyValueEvent {
-
-		private static final long serialVersionUID = -1;
-
-		protected GetEvent(Object source, Type type, String keyspace,
-				Serializable id, Object value) {
-			super(source, type, keyspace, id, value);
+		protected BeforeGetEvent(Serializable key, String keySpace, Class<T> type) {
+			super(key, keySpace, type);
 		}
 
 	}
 
+	/**
+	 * {@link KeyValueEvent} after loading an object by its {@literal key}.
+	 * 
+	 * @author Christoph Strobl
+	 * @param <T>
+	 */
+	@SuppressWarnings("serial")
+	public static class AfterGetEvent<T> extends KeyBasedEventWithPayload<T> {
+
+		protected AfterGetEvent(Serializable key, String keyspace, Class<T> type, T payload) {
+			super(key, keyspace, type, payload);
+		}
+
+	}
+
+	/**
+	 * {@link KeyValueEvent} before inserting an object by with a given {@literal key}.
+	 * 
+	 * @author Christoph Strobl
+	 * @param <T>
+	 */
+	@SuppressWarnings("serial")
+	public static class BeforeInsertEvent<T> extends KeyBasedEventWithPayload<T> {
+
+		public BeforeInsertEvent(Serializable key, String keySpace, Class<? extends T> type, T payload) {
+			super(key, keySpace, type, payload);
+
+		}
+	}
+
+	/**
+	 * {@link KeyValueEvent} after inserting an object by with a given {@literal key}.
+	 * 
+	 * @author Christoph Strobl
+	 * @param <T>
+	 */
+	@SuppressWarnings("serial")
+	public static class AfterInsertEvent<T> extends KeyBasedEventWithPayload<T> {
+
+		public AfterInsertEvent(Serializable key, String keySpace, Class<? extends T> type, T payload) {
+			super(key, keySpace, type, payload);
+		}
+	}
+
+	/**
+	 * {@link KeyValueEvent} before updating an object by with a given {@literal key}.
+	 * 
+	 * @author Christoph Strobl
+	 * @param <T>
+	 */
+	@SuppressWarnings("serial")
+	public static class BeforeUpdateEvent<T> extends KeyBasedEventWithPayload<T> {
+
+		public BeforeUpdateEvent(Serializable key, String keySpace, Class<? extends T> type, T payload) {
+			super(key, keySpace, type, payload);
+		}
+	}
+
+	/**
+	 * {@link KeyValueEvent} after updating an object by with a given {@literal key}.
+	 * 
+	 * @author Christoph Strobl
+	 * @param <T>
+	 */
+	@SuppressWarnings("serial")
+	public static class AfterUpdateEvent<T> extends KeyBasedEventWithPayload<T> {
+
+		private final Object existing;
+
+		public AfterUpdateEvent(Serializable key, String keySpace, Class<? extends T> type, T payload, Object existing) {
+			super(key, keySpace, type, payload);
+			this.existing = existing;
+		}
+
+		/**
+		 * Get the value before update. Can be {@literal null}.
+		 * 
+		 * @return
+		 */
+		public Object before() {
+			return existing;
+		}
+
+		/**
+		 * Get the current value.
+		 * 
+		 * @return
+		 */
+		public T after() {
+			return getPayload();
+		}
+	}
+
+	/**
+	 * {@link KeyValueEvent} before removing an object by with a given {@literal key}.
+	 * 
+	 * @author Christoph Strobl
+	 * @param <T>
+	 */
+	@SuppressWarnings("serial")
+	public static class BeforeDeleteEvent<T> extends KeyBasedEvent<T> {
+
+		public BeforeDeleteEvent(Serializable key, String keySpace, Class<? extends T> type) {
+			super(key, keySpace, type);
+		}
+	}
+
+	/**
+	 * {@link KeyValueEvent} after removing an object by with a given {@literal key}.
+	 * 
+	 * @author Christoph Strobl
+	 * @param <T>
+	 */
+	@SuppressWarnings("serial")
+	public static class AfterDeleteEvent<T> extends KeyBasedEventWithPayload<T> {
+
+		public AfterDeleteEvent(Serializable key, String keySpace, Class<? extends T> type, T payload) {
+			super(key, keySpace, type, payload);
+		}
+	}
+
+	/**
+	 * {@link KeyValueEvent} before removing all elements in a given {@literal keySpace}.
+	 * 
+	 * @author Christoph Strobl
+	 * @param <T>
+	 */
+	@SuppressWarnings("serial")
+	public static class BeforeDropKeySpaceEvent<T> extends KeyValueEvent<T> {
+
+		public BeforeDropKeySpaceEvent(String keySpace, Class<? extends T> type) {
+			super(type, keySpace);
+		}
+
+		@Override
+		@SuppressWarnings("unchecked")
+		public Class<T> getSource() {
+			return (Class<T>) super.getSource();
+		}
+
+	}
+
+	/**
+	 * {@link KeyValueEvent} after removing all elements in a given {@literal keySpace}.
+	 * 
+	 * @author Christoph Strobl
+	 * @param <T>
+	 */
+	@SuppressWarnings("serial")
+	public static class AfterDropKeySpaceEvent<T> extends KeyValueEvent<T> {
+
+		public AfterDropKeySpaceEvent(String keySpace, Class<? extends T> type) {
+			super(type, keySpace);
+		}
+
+		@Override
+		@SuppressWarnings("unchecked")
+		public Class<T> getSource() {
+			return (Class<T>) super.getSource();
+		}
+	}
 }
