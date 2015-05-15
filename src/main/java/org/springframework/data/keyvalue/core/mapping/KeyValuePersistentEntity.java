@@ -15,7 +15,6 @@
  */
 package org.springframework.data.keyvalue.core.mapping;
 
-import org.springframework.data.mapping.PersistentEntity;
 import org.springframework.data.mapping.model.MutablePersistentEntity;
 
 /**
@@ -30,10 +29,4 @@ public interface KeyValuePersistentEntity<T> extends MutablePersistentEntity<T, 
 	 * @return never {@literal null}.
 	 */
 	String getKeySpace();
-
-	/**
-	 * @return true if the {@link PersistentEntity} has a non default {@literal keySpace}.
-	 */
-	boolean hasExplicitKeySpace();
-
 }

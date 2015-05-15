@@ -22,10 +22,6 @@ import static org.mockito.Matchers.*;
 import static org.mockito.Mockito.*;
 
 import java.io.Serializable;
-import java.lang.annotation.ElementType;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.lang.annotation.Target;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashSet;
@@ -42,9 +38,8 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.dao.InvalidDataAccessApiUsageException;
 import org.springframework.data.annotation.Id;
-import org.springframework.data.annotation.Persistent;
-import org.springframework.data.annotation.TypeAlias;
-import org.springframework.data.keyvalue.annotation.KeySpace;
+import org.springframework.data.keyvalue.TypeWithCustomComposedKeySpaceAnnotation;
+import org.springframework.data.keyvalue.SubclassOfTypeWithCustomComposedKeySpaceAnnotation;
 import org.springframework.data.keyvalue.core.event.KeyValueEvent;
 import org.springframework.data.keyvalue.core.event.KeyValueEvent.DeleteEvent;
 import org.springframework.data.keyvalue.core.event.KeyValueEvent.DropKeyspaceEvent;
@@ -66,8 +61,8 @@ public class KeyValueTemplateUnitTests {
 
 	private static final Foo FOO_ONE = new Foo("one");
 	private static final Foo FOO_TWO = new Foo("two");
-	private static final ClassWithTypeAlias ALIASED = new ClassWithTypeAlias("super");
-	private static final SubclassOfAliasedType SUBCLASS_OF_ALIASED = new SubclassOfAliasedType("sub");
+	private static final TypeWithCustomComposedKeySpaceAnnotation ALIASED = new TypeWithCustomComposedKeySpaceAnnotation("super");
+	private static final SubclassOfTypeWithCustomComposedKeySpaceAnnotation SUBCLASS_OF_ALIASED = new SubclassOfTypeWithCustomComposedKeySpaceAnnotation("sub");
 
 	private static final KeyValueQuery<String> STRING_QUERY = new KeyValueQuery<String>("foo == 'two'");
 
@@ -683,7 +678,7 @@ public class KeyValueTemplateUnitTests {
 
 	}
 
-	static class Bar {
+	class Bar {
 
 		String bar;
 
@@ -752,95 +747,5 @@ public class KeyValueTemplateUnitTests {
 			return true;
 		}
 
-	}
-
-	@ExplicitKeySpace(name = "aliased")
-	static class ClassWithTypeAlias {
-
-		@Id String id;
-		String name;
-
-		public ClassWithTypeAlias(String name) {
-			this.name = name;
-		}
-
-		public String getId() {
-			return id;
-		}
-
-		public void setId(String id) {
-			this.id = id;
-		}
-
-		public String getName() {
-			return name;
-		}
-
-		public void setName(String name) {
-			this.name = name;
-		}
-
-		@Override
-		public int hashCode() {
-			final int prime = 31;
-			int result = 1;
-			result = prime * result + ObjectUtils.nullSafeHashCode(this.id);
-			result = prime * result + ObjectUtils.nullSafeHashCode(this.name);
-			return result;
-		}
-
-		@Override
-		public boolean equals(Object obj) {
-			if (this == obj) {
-				return true;
-			}
-			if (obj == null) {
-				return false;
-			}
-			if (!(obj instanceof ClassWithTypeAlias)) {
-				return false;
-			}
-			ClassWithTypeAlias other = (ClassWithTypeAlias) obj;
-			if (!ObjectUtils.nullSafeEquals(this.id, other.id)) {
-				return false;
-			}
-			if (!ObjectUtils.nullSafeEquals(this.name, other.name)) {
-				return false;
-			}
-			return true;
-		}
-
-	}
-
-	static class SubclassOfAliasedType extends ClassWithTypeAlias {
-
-		public SubclassOfAliasedType(String name) {
-			super(name);
-		}
-
-	}
-
-	@Persistent
-	static class EntityWithPersistentAnnotation {
-
-	}
-
-	@TypeAlias("foo")
-	static class AliasedEntity {
-
-	}
-
-	@KeySpace("rhaegar")
-	static class ClassWithDirectKeySpaceAnnotation {
-
-	}
-
-	@Persistent
-	@Retention(RetentionPolicy.RUNTIME)
-	@Target({ ElementType.TYPE })
-	private static @interface ExplicitKeySpace {
-
-		@KeySpace
-		String name() default "";
 	}
 }

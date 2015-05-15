@@ -19,7 +19,7 @@ import org.springframework.data.keyvalue.core.KeySpaceResolver;
 import org.springframework.data.mapping.model.BasicPersistentEntity;
 import org.springframework.data.util.TypeInformation;
 import org.springframework.util.Assert;
-import org.springframework.util.ObjectUtils;
+import org.springframework.util.StringUtils;
 
 /**
  * {@link KeyValuePersistentEntity} implementation that adds specific meta-data such as the {@literal keySpace}..
@@ -31,21 +31,21 @@ public class BasicKeyValuePersistentEntity<T> extends BasicPersistentEntity<T, K
 		KeyValuePersistentEntity<T> {
 
 	private final String keyspace;
-	private final boolean explicitKeySpace;
 
 	/**
 	 * @param information must not be {@literal null}.
 	 * @param keySpaceResolver must not be {@literal null}.
 	 */
-	public BasicKeyValuePersistentEntity(TypeInformation<T> information, KeySpaceResolver keySpaceResolver) {
+	public BasicKeyValuePersistentEntity(TypeInformation<T> information, KeySpaceResolver fallbackKeySpaceResolver) {
 
 		super(information);
 
-		Assert.notNull(keySpaceResolver, "KeySpaceResolver must not be null!");
+		Assert.notNull(fallbackKeySpaceResolver, "FallbackKeySpaceResolver must not be null!");
 
-		this.keyspace = keySpaceResolver.resolveKeySpace(information.getType());
-		this.explicitKeySpace = !ObjectUtils.nullSafeEquals(this.keyspace,
-				keySpaceResolver.getFallbackKeySpace(information.getType()));
+		String resolvedKeySpace = AnnotationBasedKeySpaceResolver.INSTANCE.resolveKeySpace(information.getType());
+		this.keyspace = StringUtils.hasText(resolvedKeySpace) ? resolvedKeySpace : fallbackKeySpaceResolver
+				.resolveKeySpace(information.getType());
+
 	}
 
 	/*
@@ -55,14 +55,5 @@ public class BasicKeyValuePersistentEntity<T> extends BasicPersistentEntity<T, K
 	@Override
 	public String getKeySpace() {
 		return this.keyspace;
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * @see org.springframework.data.keyvalue.core.mapping.KeyValuePersistentEntity#hasExplicitKeySpace()
-	 */
-	@Override
-	public boolean hasExplicitKeySpace() {
-		return explicitKeySpace;
 	}
 }

@@ -13,21 +13,26 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.springframework.data.keyvalue.core;
+package org.springframework.data.keyvalue;
+
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
+
+import org.springframework.data.annotation.Persistent;
+import org.springframework.data.keyvalue.annotation.KeySpace;
 
 /**
- * {@link KeySpaceResolver} determines the {@literal keyspace} a given type is assigned to. A keyspace in this context
- * is a specific region/collection/grouping of elements sharing a common keyrange. <br />
+ * Custom composed {@link Persistent} annotation using {@link KeySpace} on name attribute.
  * 
  * @author Christoph Strobl
  */
-public interface KeySpaceResolver {
+@Persistent
+@Retention(RetentionPolicy.RUNTIME)
+@Target({ ElementType.TYPE })
+public @interface CustomKeySpaceAnnotation {
 
-	/**
-	 * Determine the {@literal keySpace} to use for a given type.
-	 * 
-	 * @param type must not be {@literal null}.
-	 * @return
-	 */
-	String resolveKeySpace(Class<?> type);
+	@KeySpace
+	String name() default "";
 }

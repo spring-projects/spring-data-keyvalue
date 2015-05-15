@@ -13,21 +13,18 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.springframework.data.keyvalue.core;
+package org.springframework.data.keyvalue;
+
+import org.springframework.data.keyvalue.annotation.KeySpace;
 
 /**
- * {@link KeySpaceResolver} determines the {@literal keyspace} a given type is assigned to. A keyspace in this context
- * is a specific region/collection/grouping of elements sharing a common keyrange. <br />
- * 
+ * Class that inherits its {@link KeySpace} from a super class annotated with a custom {@link CustomKeySpaceAnnotation} annotation.
  * @author Christoph Strobl
  */
-public interface KeySpaceResolver {
+public class SubclassOfTypeWithCustomComposedKeySpaceAnnotation extends TypeWithCustomComposedKeySpaceAnnotation {
 
-	/**
-	 * Determine the {@literal keySpace} to use for a given type.
-	 * 
-	 * @param type must not be {@literal null}.
-	 * @return
-	 */
-	String resolveKeySpace(Class<?> type);
+	public SubclassOfTypeWithCustomComposedKeySpaceAnnotation(String name) {
+		super(name);
+	}
+
 }

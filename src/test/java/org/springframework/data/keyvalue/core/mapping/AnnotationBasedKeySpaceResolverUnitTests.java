@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.springframework.data.keyvalue.core;
+package org.springframework.data.keyvalue.core.mapping;
 
 import static org.hamcrest.CoreMatchers.*;
 import static org.junit.Assert.*;
@@ -26,14 +26,13 @@ import java.lang.annotation.Target;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.data.annotation.Persistent;
+import org.springframework.data.keyvalue.TypeWithDirectKeySpaceAnnotation;
+import org.springframework.data.keyvalue.TypeWithInhteritedPersistentAnnotationNotHavingKeySpace;
+import org.springframework.data.keyvalue.TypeWithPersistentAnnotationNotHavingKeySpace;
 import org.springframework.data.keyvalue.annotation.KeySpace;
-import org.springframework.data.keyvalue.core.KeyValueTemplateUnitTests.AliasedEntity;
-import org.springframework.data.keyvalue.core.KeyValueTemplateUnitTests.ClassWithDirectKeySpaceAnnotation;
-import org.springframework.data.keyvalue.core.KeyValueTemplateUnitTests.EntityWithPersistentAnnotation;
-import org.springframework.data.keyvalue.core.KeyValueTemplateUnitTests.Foo;
 
 /**
- * Unit tests for {@link KeySpaceUtils}.
+ * Unit tests for {@link AnnotationBasedKeySpaceResolver}.
  * 
  * @author Christoph Strobl
  * @author Oliver Gierke
@@ -44,7 +43,7 @@ public class AnnotationBasedKeySpaceResolverUnitTests {
 
 	@Before
 	public void setUp() {
-		resolver = new AnnotationBasedKeySpaceResolver();
+		resolver = AnnotationBasedKeySpaceResolver.INSTANCE;
 	}
 
 	/**
@@ -67,25 +66,24 @@ public class AnnotationBasedKeySpaceResolverUnitTests {
 	 * @see DATAKV-105
 	 */
 	@Test
-	public void shouldReturnClassNameWhenNoKeySpaceFoundOnComposedPersistentAnnotation() {
-		assertThat(resolver.resolveKeySpace(AliasedEntity.class), is(AliasedEntity.class.getName()));
+	public void shouldReturnNullWhenNoKeySpaceFoundOnComposedPersistentAnnotation() {
+		assertThat(resolver.resolveKeySpace(TypeWithInhteritedPersistentAnnotationNotHavingKeySpace.class), nullValue());
 	}
 
 	/**
 	 * @see DATAKV-105
 	 */
 	@Test
-	public void shouldReturnClassNameWhenPersistentIsFoundOnNonComposedAnnotation() {
-		assertThat(resolver.resolveKeySpace(EntityWithPersistentAnnotation.class),
-				is(EntityWithPersistentAnnotation.class.getName()));
+	public void shouldReturnNullWhenPersistentIsFoundOnNonComposedAnnotation() {
+		assertThat(resolver.resolveKeySpace(TypeWithPersistentAnnotationNotHavingKeySpace.class), nullValue());
 	}
 
 	/**
 	 * @see DATAKV-105
 	 */
 	@Test
-	public void shouldReturnClassNameWhenPersistentIsNotFound() {
-		assertThat(resolver.resolveKeySpace(Foo.class), is(Foo.class.getName()));
+	public void shouldReturnNullWhenPersistentIsNotFound() {
+		assertThat(resolver.resolveKeySpace(TypeWithoutKeySpace.class), nullValue());
 	}
 
 	/**
@@ -101,23 +99,7 @@ public class AnnotationBasedKeySpaceResolverUnitTests {
 	 */
 	@Test
 	public void shouldResolveDirectKeySpaceAnnotationCorrectly() {
-		assertThat(resolver.resolveKeySpace(ClassWithDirectKeySpaceAnnotation.class), is("rhaegar"));
-	}
-
-	/**
-	 * @see DATAKV-105
-	 */
-	@Test
-	public void getFallbackKeySpaceShouldReturnClassName() {
-		assertThat(resolver.getFallbackKeySpace(String.class), is(String.class.getName()));
-	}
-
-	/**
-	 * @see DATAKV-105
-	 */
-	@Test(expected = IllegalArgumentException.class)
-	public void getFallbackKeySpaceShouldThrowExceptionWhenTypeIsNull() {
-		resolver.getFallbackKeySpace(null);
+		assertThat(resolver.resolveKeySpace(TypeWithDirectKeySpaceAnnotation.class), is("rhaegar"));
 	}
 
 	@PersistentAnnotationWithExplicitKeySpace
@@ -145,12 +127,9 @@ public class AnnotationBasedKeySpaceResolverUnitTests {
 		String lastnamne() default "targaryen";
 	}
 
-	@Persistent
-	@Retention(RetentionPolicy.RUNTIME)
-	@Target({ ElementType.TYPE })
-	static @interface ExplicitKeySpace {
+	static class TypeWithoutKeySpace {
 
-		@KeySpace
-		String name() default "";
+		String foo;
+
 	}
 }

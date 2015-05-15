@@ -15,19 +15,27 @@
  */
 package org.springframework.data.keyvalue.core;
 
+import org.springframework.util.Assert;
+import org.springframework.util.ClassUtils;
+
 /**
- * {@link KeySpaceResolver} determines the {@literal keyspace} a given type is assigned to. A keyspace in this context
- * is a specific region/collection/grouping of elements sharing a common keyrange. <br />
+ * Most trivial implementation of {@link KeySpaceResolver} returning the {@link Class#getName()}.
  * 
  * @author Christoph Strobl
  */
-public interface KeySpaceResolver {
+public enum ClassNameKeySpaceResolver implements KeySpaceResolver {
 
-	/**
-	 * Determine the {@literal keySpace} to use for a given type.
-	 * 
-	 * @param type must not be {@literal null}.
-	 * @return
+	INSTANCE;
+
+	/*
+	 * (non-Javadoc)
+	 * @see org.springframework.data.keyvalue.core.KeySpaceResolver#resolveKeySpace(java.lang.Class)
 	 */
-	String resolveKeySpace(Class<?> type);
+	@Override
+	public String resolveKeySpace(Class<?> type) {
+
+		Assert.notNull(type, "Type must not be null!");
+		return ClassUtils.getUserClass(type).getName();
+	}
+
 }

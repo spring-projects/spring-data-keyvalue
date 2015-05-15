@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.springframework.data.keyvalue.core;
+package org.springframework.data.keyvalue.core.mapping;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
@@ -26,11 +26,11 @@ import org.springframework.core.annotation.AnnotationUtils;
 import org.springframework.core.style.ToStringCreator;
 import org.springframework.data.annotation.Persistent;
 import org.springframework.data.keyvalue.annotation.KeySpace;
-import org.springframework.data.keyvalue.core.AnnotationBasedKeySpaceResolver.MetaAnnotationUtils.AnnotationDescriptor;
+import org.springframework.data.keyvalue.core.KeySpaceResolver;
+import org.springframework.data.keyvalue.core.mapping.AnnotationBasedKeySpaceResolver.MetaAnnotationUtils.AnnotationDescriptor;
 import org.springframework.util.Assert;
 import org.springframework.util.ClassUtils;
 import org.springframework.util.ObjectUtils;
-import org.springframework.util.StringUtils;
 
 /**
  * {@link AnnotationBasedKeySpaceResolver} looks up {@link Persistent} and checks for presence of either meta or direct
@@ -39,7 +39,9 @@ import org.springframework.util.StringUtils;
  * @author Christoph Strobl
  * @author Oliver Gierke
  */
-public class AnnotationBasedKeySpaceResolver implements KeySpaceResolver {
+enum AnnotationBasedKeySpaceResolver implements KeySpaceResolver {
+
+	INSTANCE;
 
 	/*
 	 * (non-Javadoc)
@@ -53,27 +55,7 @@ public class AnnotationBasedKeySpaceResolver implements KeySpaceResolver {
 		Class<?> userClass = ClassUtils.getUserClass(type);
 		Object keySpace = getKeySpace(userClass);
 
-		String keySpaceString = null;
-		if (keySpace != null) {
-			keySpaceString = keySpace.toString();
-		}
-
-		if (!StringUtils.hasText(keySpaceString)) {
-			keySpaceString = getFallbackKeySpace(type);
-		}
-
-		return keySpaceString;
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * @see org.springframework.data.keyvalue.core.KeySpaceResolver#getFallbackKeySpace(java.lang.Class)
-	 */
-	@Override
-	public String getFallbackKeySpace(Class<?> type) {
-
-		Assert.notNull(type, "Type must not be null!");
-		return ClassUtils.getUserClass(type).getName();
+		return keySpace != null ? keySpace.toString() : null;
 	}
 
 	private Object getKeySpace(Class<?> type) {

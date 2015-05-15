@@ -18,8 +18,7 @@ package org.springframework.data.keyvalue.core.mapping.context;
 import java.beans.PropertyDescriptor;
 import java.lang.reflect.Field;
 
-import org.springframework.data.keyvalue.core.AnnotationBasedKeySpaceResolver;
-import org.springframework.data.keyvalue.core.CachingKeySpaceResolver;
+import org.springframework.data.keyvalue.core.ClassNameKeySpaceResolver;
 import org.springframework.data.keyvalue.core.KeySpaceResolver;
 import org.springframework.data.keyvalue.core.mapping.BasicKeyValuePersistentEntity;
 import org.springframework.data.keyvalue.core.mapping.KeyValuePersistentEntity;
@@ -39,14 +38,14 @@ import org.springframework.util.Assert;
 public class KeyValueMappingContext extends
 		AbstractMappingContext<KeyValuePersistentEntity<?>, KeyValuePersistentProperty> {
 
-	private final KeySpaceResolver keySpaceResolver;
+	private final KeySpaceResolver fallbackKeySpaceResolver;
 
 	/**
-	 * Creates new {@link KeyValueMappingContext} using an {@link AnnotationBasedKeySpaceResolver} for {@literal keyspace}
+	 * Creates new {@link KeyValueMappingContext} using an {@link ClassNameKeySpaceResolver} for {@literal keyspace}
 	 * resolution.
 	 */
 	public KeyValueMappingContext() {
-		this(new CachingKeySpaceResolver(new AnnotationBasedKeySpaceResolver()));
+		this(ClassNameKeySpaceResolver.INSTANCE);
 	}
 
 	/**
@@ -54,10 +53,10 @@ public class KeyValueMappingContext extends
 	 * 
 	 * @param keySpaceResolver must not be {@literal null}.
 	 */
-	public KeyValueMappingContext(KeySpaceResolver keySpaceResolver) {
+	public KeyValueMappingContext(KeySpaceResolver fallbackKeySpaceResolver) {
 
-		Assert.notNull(keySpaceResolver, "KeySpaceResolver must not be null!");
-		this.keySpaceResolver = keySpaceResolver;
+		Assert.notNull(fallbackKeySpaceResolver, "FallbackKeySpaceResolver must not be null!");
+		this.fallbackKeySpaceResolver = fallbackKeySpaceResolver;
 	}
 
 	/*
@@ -66,7 +65,7 @@ public class KeyValueMappingContext extends
 	 */
 	@Override
 	protected <T> KeyValuePersistentEntity<T> createPersistentEntity(TypeInformation<T> typeInformation) {
-		return new BasicKeyValuePersistentEntity<T>(typeInformation, keySpaceResolver);
+		return new BasicKeyValuePersistentEntity<T>(typeInformation, fallbackKeySpaceResolver);
 	}
 
 	/*

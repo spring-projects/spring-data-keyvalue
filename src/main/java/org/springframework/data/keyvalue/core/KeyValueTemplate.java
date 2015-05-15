@@ -200,8 +200,8 @@ public class KeyValueTemplate implements KeyValueOperations, ApplicationContextA
 
 				Iterable<?> values = adapter.getAllOf(resolveKeySpace(type));
 
-				if (!hasExplicitKeySpace(type)) {
-					return (Iterable<T>) values;
+				if (values == null) {
+					return Collections.emptySet();
 				}
 
 				ArrayList<T> filtered = new ArrayList<T>();
@@ -238,7 +238,7 @@ public class KeyValueTemplate implements KeyValueOperations, ApplicationContextA
 
 				Object result = adapter.get(id, keyspace);
 
-				if (result == null || !hasExplicitKeySpace(type) || typeCheck(type, result)) {
+				if (result == null || typeCheck(type, result)) {
 					return (T) result;
 				}
 
@@ -360,9 +360,8 @@ public class KeyValueTemplate implements KeyValueOperations, ApplicationContextA
 			public Iterable<T> doInKeyValue(KeyValueAdapter adapter) {
 
 				Iterable<?> result = adapter.find(query, resolveKeySpace(type));
-
-				if (!hasExplicitKeySpace(type)) {
-					return (Iterable<T>) result;
+				if (result == null) {
+					return Collections.emptySet();
 				}
 
 				List<T> filtered = new ArrayList<T>();
@@ -478,10 +477,6 @@ public class KeyValueTemplate implements KeyValueOperations, ApplicationContextA
 
 	private String resolveKeySpace(Class<?> type) {
 		return this.mappingContext.getPersistentEntity(type).getKeySpace();
-	}
-
-	private boolean hasExplicitKeySpace(Class<?> type) {
-		return this.mappingContext.getPersistentEntity(type).hasExplicitKeySpace();
 	}
 
 	private static boolean typeCheck(Class<?> requiredType, Object candidate) {

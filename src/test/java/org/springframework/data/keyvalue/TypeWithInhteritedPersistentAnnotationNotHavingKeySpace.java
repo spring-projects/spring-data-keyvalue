@@ -13,21 +13,18 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.springframework.data.keyvalue.core;
+package org.springframework.data.keyvalue;
+
+import org.springframework.data.annotation.Persistent;
+import org.springframework.data.annotation.TypeAlias;
+import org.springframework.data.keyvalue.annotation.KeySpace;
 
 /**
- * {@link KeySpaceResolver} determines the {@literal keyspace} a given type is assigned to. A keyspace in this context
- * is a specific region/collection/grouping of elements sharing a common keyrange. <br />
+ * A type inheriting {@link Persistent} from {@link TypeAlias} not having a {@link KeySpace} defined.
  * 
  * @author Christoph Strobl
  */
-public interface KeySpaceResolver {
+@TypeAlias("foo")
+public class TypeWithInhteritedPersistentAnnotationNotHavingKeySpace {
 
-	/**
-	 * Determine the {@literal keySpace} to use for a given type.
-	 * 
-	 * @param type must not be {@literal null}.
-	 * @return
-	 */
-	String resolveKeySpace(Class<?> type);
 }
