@@ -18,7 +18,6 @@ package org.springframework.data.keyvalue.core;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -55,11 +54,12 @@ public class KeyValueTemplate implements KeyValueOperations, ApplicationEventPub
 	private final KeyValueAdapter adapter;
 	private final MappingContext<? extends KeyValuePersistentEntity<?>, ? extends KeyValuePersistentProperty> mappingContext;
 	private final IdentifierGenerator identifierGenerator;
-	private ApplicationEventPublisher eventPublisher;
-	private boolean publishEvents = true;
-	private final Set<Class<?>> eventTypesToPublish = new HashSet<Class<?>>(0);
 
 	private PersistenceExceptionTranslator exceptionTranslator = DEFAULT_PERSISTENCE_EXCEPTION_TRANSLATOR;
+	private ApplicationEventPublisher eventPublisher;
+	private boolean publishEvents = true;
+	private @SuppressWarnings("rawtypes") Set<Class<? extends KeyValueEvent>> eventTypesToPublish = Collections
+			.emptySet();
 
 	/**
 	 * Create new {@link KeyValueTemplate} using the given {@link KeyValueAdapter} with a default
@@ -86,6 +86,42 @@ public class KeyValueTemplate implements KeyValueOperations, ApplicationEventPub
 		this.adapter = adapter;
 		this.mappingContext = mappingContext;
 		this.identifierGenerator = DefaultIdentifierGenerator.INSTANCE;
+	}
+
+	/**
+	 * Set the {@link PersistenceExceptionTranslator} used for converting {@link RuntimeException}.
+	 * 
+	 * @param exceptionTranslator must not be {@literal null}.
+	 */
+	public void setExceptionTranslator(PersistenceExceptionTranslator exceptionTranslator) {
+
+		Assert.notNull(exceptionTranslator, "ExceptionTranslator must not be null.");
+		this.exceptionTranslator = exceptionTranslator;
+	}
+
+	/**
+	 * Define the event types to publish via {@link ApplicationEventPublisher}.
+	 * 
+	 * @param eventTypesToPublish use {@literal null} or {@link Collections#emptySet()} to stop publishing.
+	 */
+	@SuppressWarnings("rawtypes")
+	public void setEventTypesToPublish(Set<Class<? extends KeyValueEvent>> eventTypesToPublish) {
+
+		if (CollectionUtils.isEmpty(eventTypesToPublish)) {
+			this.publishEvents = false;
+		} else {
+			this.publishEvents = true;
+			this.eventTypesToPublish = Collections.unmodifiableSet(eventTypesToPublish);
+		}
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * @see org.springframework.context.ApplicationEventPublisherAware#setApplicationEventPublisher(org.springframework.context.ApplicationEventPublisher)
+	 */
+	@Override
+	public void setApplicationEventPublisher(ApplicationEventPublisher applicationEventPublisher) {
+		this.eventPublisher = applicationEventPublisher;
 	}
 
 	/*
@@ -440,50 +476,8 @@ public class KeyValueTemplate implements KeyValueOperations, ApplicationEventPub
 		this.adapter.clear();
 	}
 
-	/**
-	 * Set the {@link PersistenceExceptionTranslator} used for converting {@link RuntimeException}.
-	 * 
-	 * @param exceptionTranslator must not be {@literal null}.
-	 */
-	public void setExceptionTranslator(PersistenceExceptionTranslator exceptionTranslator) {
-
-		Assert.notNull(exceptionTranslator, "ExceptionTranslator must not be null.");
-		this.exceptionTranslator = exceptionTranslator;
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * @see org.springframework.context.ApplicationEventPublisherAware#setApplicationEventPublisher(org.springframework.context.ApplicationEventPublisher)
-	 */
-	@Override
-	public void setApplicationEventPublisher(ApplicationEventPublisher applicationEventPublisher) {
-		this.eventPublisher = applicationEventPublisher;
-	}
-
-	/**
-	 * Define the event types to publish via {@link ApplicationEventPublisher}.
-	 * 
-	 * @param eventTypesToPublish use {@literal null} or {@link Collections#emptySet()} to stop publishing.
-	 */
-	public void setEventTypesToPublish(Set<Class<? extends KeyValueEvent>> eventTypesToPublish) {
-
-		this.eventTypesToPublish.clear();
-
-		if (!CollectionUtils.isEmpty(eventTypesToPublish)) {
-
-			this.publishEvents = true;
-			this.eventTypesToPublish.addAll(eventTypesToPublish);
-		} else {
-			this.publishEvents = false;
-		}
-	}
-
 	private String resolveKeySpace(Class<?> type) {
 		return this.mappingContext.getPersistentEntity(type).getKeySpace();
-	}
-
-	private static boolean typeCheck(Class<?> requiredType, Object candidate) {
-		return candidate == null ? true : ClassUtils.isAssignable(requiredType, candidate.getClass());
 	}
 
 	private RuntimeException resolveExceptionIfPossible(RuntimeException e) {
@@ -492,6 +486,7 @@ public class KeyValueTemplate implements KeyValueOperations, ApplicationEventPub
 		return translatedException != null ? translatedException : e;
 	}
 
+	@SuppressWarnings("rawtypes")
 	private void potentiallyPublishEvent(KeyValueEvent event) {
 
 		if (eventPublisher == null) {
@@ -503,4 +498,7 @@ public class KeyValueTemplate implements KeyValueOperations, ApplicationEventPub
 		}
 	}
 
+	private static boolean typeCheck(Class<?> requiredType, Object candidate) {
+		return candidate == null ? true : ClassUtils.isAssignable(requiredType, candidate.getClass());
+	}
 }

@@ -40,8 +40,8 @@ import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.dao.InvalidDataAccessApiUsageException;
 import org.springframework.data.annotation.Id;
-import org.springframework.data.keyvalue.TypeWithCustomComposedKeySpaceAnnotation;
 import org.springframework.data.keyvalue.SubclassOfTypeWithCustomComposedKeySpaceAnnotation;
+import org.springframework.data.keyvalue.TypeWithCustomComposedKeySpaceAnnotation;
 import org.springframework.data.keyvalue.core.event.KeyValueEvent;
 import org.springframework.data.keyvalue.core.event.KeyValueEvent.AfterDeleteEvent;
 import org.springframework.data.keyvalue.core.event.KeyValueEvent.AfterDropKeySpaceEvent;
@@ -58,6 +58,7 @@ import org.springframework.util.ObjectUtils;
 /**
  * @author Christoph Strobl
  * @author Thomas Darimont
+ * @author Oliver Gierke
  */
 @RunWith(MockitoJUnitRunner.class)
 public class KeyValueTemplateUnitTests {
@@ -66,9 +67,10 @@ public class KeyValueTemplateUnitTests {
 
 	private static final Foo FOO_ONE = new Foo("one");
 	private static final Foo FOO_TWO = new Foo("two");
-	private static final TypeWithCustomComposedKeySpaceAnnotation ALIASED = new TypeWithCustomComposedKeySpaceAnnotation("super");
-	private static final SubclassOfTypeWithCustomComposedKeySpaceAnnotation SUBCLASS_OF_ALIASED = new SubclassOfTypeWithCustomComposedKeySpaceAnnotation("sub");
-
+	private static final TypeWithCustomComposedKeySpaceAnnotation ALIASED = new TypeWithCustomComposedKeySpaceAnnotation(
+			"super");
+	private static final SubclassOfTypeWithCustomComposedKeySpaceAnnotation SUBCLASS_OF_ALIASED = new SubclassOfTypeWithCustomComposedKeySpaceAnnotation(
+			"sub");
 	private static final KeyValueQuery<String> STRING_QUERY = new KeyValueQuery<String>("foo == 'two'");
 
 	private @Mock KeyValueAdapter adapterMock;
@@ -695,7 +697,7 @@ public class KeyValueTemplateUnitTests {
 		assertThat(captor.getValue().getKeyspace(), is(Foo.class.getName()));
 	}
 
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings("rawtypes")
 	private void setEventsToPublish(Class<? extends KeyValueEvent>... events) {
 		template.setEventTypesToPublish(new HashSet<Class<? extends KeyValueEvent>>(Arrays.asList(events)));
 	}
