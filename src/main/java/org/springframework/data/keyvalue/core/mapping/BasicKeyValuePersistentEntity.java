@@ -15,37 +15,43 @@
  */
 package org.springframework.data.keyvalue.core.mapping;
 
-import org.springframework.data.keyvalue.core.KeySpaceResolver;
 import org.springframework.data.mapping.model.BasicPersistentEntity;
 import org.springframework.data.util.TypeInformation;
-import org.springframework.util.Assert;
 import org.springframework.util.StringUtils;
 
 /**
  * {@link KeyValuePersistentEntity} implementation that adds specific meta-data such as the {@literal keySpace}..
  * 
  * @author Christoph Strobl
+ * @author Oliver Gierke
  * @param <T>
  */
 public class BasicKeyValuePersistentEntity<T> extends BasicPersistentEntity<T, KeyValuePersistentProperty> implements
 		KeyValuePersistentEntity<T> {
 
+	private static final KeySpaceResolver DEFAULT_FALLBACK_RESOLVER = ClassNameKeySpaceResolver.INSTANCE;
+
 	private final String keyspace;
 
 	/**
 	 * @param information must not be {@literal null}.
-	 * @param keySpaceResolver must not be {@literal null}.
+	 * @param keySpaceResolver can be {@literal null}.
 	 */
 	public BasicKeyValuePersistentEntity(TypeInformation<T> information, KeySpaceResolver fallbackKeySpaceResolver) {
 
 		super(information);
 
-		Assert.notNull(fallbackKeySpaceResolver, "FallbackKeySpaceResolver must not be null!");
+		this.keyspace = detectKeySpace(information.getType(), fallbackKeySpaceResolver);
+	}
 
-		String resolvedKeySpace = AnnotationBasedKeySpaceResolver.INSTANCE.resolveKeySpace(information.getType());
-		this.keyspace = StringUtils.hasText(resolvedKeySpace) ? resolvedKeySpace : fallbackKeySpaceResolver
-				.resolveKeySpace(information.getType());
+	private static String detectKeySpace(Class<?> type, KeySpaceResolver fallback) {
 
+		String keySpace = AnnotationBasedKeySpaceResolver.INSTANCE.resolveKeySpace(type);
+
+		if (StringUtils.hasText(keySpace))
+			return keySpace;
+
+		return (fallback == null ? DEFAULT_FALLBACK_RESOLVER : fallback).resolveKeySpace(type);
 	}
 
 	/*

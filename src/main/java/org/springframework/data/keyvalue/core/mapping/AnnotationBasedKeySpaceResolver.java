@@ -26,7 +26,6 @@ import org.springframework.core.annotation.AnnotationUtils;
 import org.springframework.core.style.ToStringCreator;
 import org.springframework.data.annotation.Persistent;
 import org.springframework.data.keyvalue.annotation.KeySpace;
-import org.springframework.data.keyvalue.core.KeySpaceResolver;
 import org.springframework.data.keyvalue.core.mapping.AnnotationBasedKeySpaceResolver.MetaAnnotationUtils.AnnotationDescriptor;
 import org.springframework.util.Assert;
 import org.springframework.util.ClassUtils;
@@ -58,7 +57,7 @@ enum AnnotationBasedKeySpaceResolver implements KeySpaceResolver {
 		return keySpace != null ? keySpace.toString() : null;
 	}
 
-	private Object getKeySpace(Class<?> type) {
+	private static Object getKeySpace(Class<?> type) {
 
 		KeySpace keyspace = AnnotationUtils.findAnnotation(type, KeySpace.class);
 
@@ -81,6 +80,7 @@ enum AnnotationBasedKeySpaceResolver implements KeySpaceResolver {
 				}
 			}
 		}
+
 		return null;
 	}
 
@@ -407,5 +407,4 @@ enum AnnotationBasedKeySpaceResolver implements KeySpaceResolver {
 			}
 		}
 	}
-
 }

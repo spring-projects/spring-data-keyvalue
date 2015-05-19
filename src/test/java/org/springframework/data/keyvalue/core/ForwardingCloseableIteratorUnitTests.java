@@ -22,21 +22,24 @@ import static org.mockito.Mockito.*;
 
 import java.util.Iterator;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.NoSuchElementException;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
+import org.springframework.data.util.CloseableIterator;
 
 /**
  * @author Christoph Strobl
  * @author Thomas Darimont
+ * @author Oliver Gierke
  */
 @RunWith(MockitoJUnitRunner.class)
 public class ForwardingCloseableIteratorUnitTests<K, V> {
 
-	@Mock Iterator<Map.Entry<K, V>> iteratorMock;
+	@Mock Iterator<Entry<K, V>> iteratorMock;
 	@Mock Runnable closeActionMock;
 
 	/**
@@ -47,22 +50,33 @@ public class ForwardingCloseableIteratorUnitTests<K, V> {
 
 		when(iteratorMock.hasNext()).thenReturn(true);
 
-		assertThat(new ForwardingCloseableIterator<K, V>(iteratorMock).hasNext(), is(true));
+		CloseableIterator<Entry<K, V>> iterator = new ForwardingCloseableIterator<Entry<K, V>>(iteratorMock);
 
-		verify(iteratorMock, times(1)).hasNext();
+		try {
+			assertThat(iterator.hasNext(), is(true));
+			verify(iteratorMock, times(1)).hasNext();
+		} finally {
+			iterator.close();
+		}
 	}
 
 	/**
 	 * @see DATAKV-99
 	 */
 	@Test
+	@SuppressWarnings("unchecked")
 	public void nextShoudDelegateToWrappedIterator() {
 
-		when(iteratorMock.next()).thenReturn((Map.Entry<K, V>) mock(Map.Entry.class));
+		when(iteratorMock.next()).thenReturn((Entry<K, V>) mock(Map.Entry.class));
 
-		assertThat(new ForwardingCloseableIterator<K, V>(iteratorMock).next(), notNullValue());
+		CloseableIterator<Entry<K, V>> iterator = new ForwardingCloseableIterator<Entry<K, V>>(iteratorMock);
 
-		verify(iteratorMock, times(1)).next();
+		try {
+			assertThat(iterator.next(), notNullValue());
+			verify(iteratorMock, times(1)).next();
+		} finally {
+			iterator.close();
+		}
 	}
 
 	/**
@@ -73,7 +87,13 @@ public class ForwardingCloseableIteratorUnitTests<K, V> {
 
 		when(iteratorMock.next()).thenThrow(new NoSuchElementException());
 
-		new ForwardingCloseableIterator<K, V>(iteratorMock).next();
+		CloseableIterator<Entry<K, V>> iterator = new ForwardingCloseableIterator<Entry<K, V>>(iteratorMock);
+
+		try {
+			iterator.next();
+		} finally {
+			iterator.close();
+		}
 	}
 
 	/**
@@ -82,7 +102,7 @@ public class ForwardingCloseableIteratorUnitTests<K, V> {
 	@Test
 	public void closeShouldDoNothingByDefault() {
 
-		new ForwardingCloseableIterator<K, V>(iteratorMock).close();
+		new ForwardingCloseableIterator<Entry<K, V>>(iteratorMock).close();
 
 		verifyZeroInteractions(iteratorMock);
 	}
@@ -93,7 +113,7 @@ public class ForwardingCloseableIteratorUnitTests<K, V> {
 	@Test
 	public void closeShouldInvokeConfiguredCloseAction() {
 
-		new ForwardingCloseableIterator<K, V>(iteratorMock, closeActionMock).close();
+		new ForwardingCloseableIterator<Entry<K, V>>(iteratorMock, closeActionMock).close();
 
 		verify(closeActionMock, times(1)).run();
 	}

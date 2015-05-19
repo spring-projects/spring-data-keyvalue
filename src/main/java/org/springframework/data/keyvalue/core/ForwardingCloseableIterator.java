@@ -16,39 +16,44 @@
 package org.springframework.data.keyvalue.core;
 
 import java.util.Iterator;
-import java.util.Map;
 
 import org.springframework.data.util.CloseableIterator;
+import org.springframework.util.Assert;
 
 /**
  * Forwards {@link CloseableIterator} invocations to the configured {@link Iterator} delegate.
  * 
  * @author Christoph Strobl
  * @author Thomas Darimont
+ * @author Oliver Gierke
  * @param <K>
  * @param <V>
  */
-public class ForwardingCloseableIterator<K, V> implements CloseableIterator<Map.Entry<K, V>> {
+public class ForwardingCloseableIterator<T> implements CloseableIterator<T> {
 
-	private final Iterator<? extends Map.Entry<K, V>> delegate;
+	private final Iterator<? extends T> delegate;
 	private final Runnable closeHandler;
 
 	/**
 	 * Creates a new {@link ForwardingCloseableIterator}.
 	 * 
-	 * @param delegate must not be {@literal null}
+	 * @param delegate must not be {@literal null}.
 	 */
-	public ForwardingCloseableIterator(Iterator<? extends Map.Entry<K, V>> delegate) {
+	public ForwardingCloseableIterator(Iterator<? extends T> delegate) {
 		this(delegate, null);
 	}
 
 	/**
-	 * Creates a new {@link ForwardingCloseableIterator} that invokes the configured {@code closeHanlder} on {@link #close()}.
+	 * Creates a new {@link ForwardingCloseableIterator} that invokes the configured {@code closeHandler} on
+	 * {@link #close()}.
 	 * 
-	 * @param delegate must not be {@literal null}
-	 * @param closeHandler may be {@literal null}
+	 * @param delegate must not be {@literal null}.
+	 * @param closeHandler may be {@literal null}.
 	 */
-	public ForwardingCloseableIterator(Iterator<? extends Map.Entry<K, V>> delegate, Runnable closeHandler) {
+	public ForwardingCloseableIterator(Iterator<? extends T> delegate, Runnable closeHandler) {
+
+		Assert.notNull(delegate, "Delegate iterator must not be null!");
+
 		this.delegate = delegate;
 		this.closeHandler = closeHandler;
 	}
@@ -67,7 +72,7 @@ public class ForwardingCloseableIterator<K, V> implements CloseableIterator<Map.
 	 * @see java.util.Iterator#next()
 	 */
 	@Override
-	public Map.Entry<K, V> next() {
+	public T next() {
 		return delegate.next();
 	}
 

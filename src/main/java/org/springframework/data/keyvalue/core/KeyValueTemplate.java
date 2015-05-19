@@ -55,12 +55,12 @@ public class KeyValueTemplate implements KeyValueOperations, ApplicationContextA
 	private static final PersistenceExceptionTranslator DEFAULT_PERSISTENCE_EXCEPTION_TRANSLATOR = new KeyValuePersistenceExceptionTranslator();
 
 	private final KeyValueAdapter adapter;
-
 	private final MappingContext<? extends KeyValuePersistentEntity<?>, ? extends KeyValuePersistentProperty> mappingContext;
 	private final IdentifierGenerator identifierGenerator;
-	private ApplicationEventPublisher eventPublisher;
 	private final Set<KeyValueEvent.Type> eventTypesToPublish = new HashSet<KeyValueEvent.Type>(4);
+
 	private PersistenceExceptionTranslator exceptionTranslator = DEFAULT_PERSISTENCE_EXCEPTION_TRANSLATOR;
+	private ApplicationEventPublisher eventPublisher;
 
 	/**
 	 * Create new {@link KeyValueTemplate} using the given {@link KeyValueAdapter} with a default

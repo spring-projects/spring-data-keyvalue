@@ -18,44 +18,33 @@ package org.springframework.data.keyvalue.core.mapping.context;
 import java.beans.PropertyDescriptor;
 import java.lang.reflect.Field;
 
-import org.springframework.data.keyvalue.core.ClassNameKeySpaceResolver;
-import org.springframework.data.keyvalue.core.KeySpaceResolver;
 import org.springframework.data.keyvalue.core.mapping.BasicKeyValuePersistentEntity;
+import org.springframework.data.keyvalue.core.mapping.KeySpaceResolver;
 import org.springframework.data.keyvalue.core.mapping.KeyValuePersistentEntity;
 import org.springframework.data.keyvalue.core.mapping.KeyValuePersistentProperty;
 import org.springframework.data.mapping.context.AbstractMappingContext;
 import org.springframework.data.mapping.context.MappingContext;
 import org.springframework.data.mapping.model.SimpleTypeHolder;
 import org.springframework.data.util.TypeInformation;
-import org.springframework.util.Assert;
 
 /**
  * Default implementation of a {@link MappingContext} using {@link KeyValuePersistentEntity} and
  * {@link KeyValuePersistentProperty} as primary abstractions.
  * 
  * @author Christoph Strobl
+ * @author Oliver Gierke
  */
 public class KeyValueMappingContext extends
 		AbstractMappingContext<KeyValuePersistentEntity<?>, KeyValuePersistentProperty> {
 
-	private final KeySpaceResolver fallbackKeySpaceResolver;
+	private KeySpaceResolver fallbackKeySpaceResolver;
 
 	/**
-	 * Creates new {@link KeyValueMappingContext} using an {@link ClassNameKeySpaceResolver} for {@literal keyspace}
-	 * resolution.
-	 */
-	public KeyValueMappingContext() {
-		this(ClassNameKeySpaceResolver.INSTANCE);
-	}
-
-	/**
-	 * Creates new {@link KeyValueMappingContext} using given {@link KeySpaceResolver}
+	 * Configures the {@link KeySpaceResolver} to be used if not explicit key space is annotated to the domain type.
 	 * 
-	 * @param keySpaceResolver must not be {@literal null}.
+	 * @param fallbackKeySpaceResolver can be {@literal null}.
 	 */
-	public KeyValueMappingContext(KeySpaceResolver fallbackKeySpaceResolver) {
-
-		Assert.notNull(fallbackKeySpaceResolver, "FallbackKeySpaceResolver must not be null!");
+	public void setFallbackKeySpaceResolver(KeySpaceResolver fallbackKeySpaceResolver) {
 		this.fallbackKeySpaceResolver = fallbackKeySpaceResolver;
 	}
 

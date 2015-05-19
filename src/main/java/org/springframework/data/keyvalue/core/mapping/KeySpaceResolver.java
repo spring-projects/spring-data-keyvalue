@@ -13,19 +13,21 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package ort.springframework.data.keyvalue.core.mapping.context;
+package org.springframework.data.keyvalue.core.mapping;
 
-import org.junit.Test;
-import org.springframework.data.keyvalue.core.mapping.context.KeyValueMappingContext;
-
-public class KeyValueMappingContextUnitTests {
+/**
+ * {@link KeySpaceResolver} determines the {@literal keyspace} a given type is assigned to. A keyspace in this context
+ * is a specific region/collection/grouping of elements sharing a common keyrange. <br />
+ * 
+ * @author Christoph Strobl
+ */
+public interface KeySpaceResolver {
 
 	/**
-	 * @see DATAKV-105
+	 * Determine the {@literal keySpace} to use for a given type.
+	 * 
+	 * @param type must not be {@literal null}.
+	 * @return
 	 */
-	@Test(expected = IllegalArgumentException.class)
-	public void shouldThrowExceptionWhenKeySpaceResolverIsNull() {
-		new KeyValueMappingContext(null);
-	}
-
+	String resolveKeySpace(Class<?> type);
 }
