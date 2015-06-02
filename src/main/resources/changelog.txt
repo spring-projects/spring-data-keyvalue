@@ -1,0 +1,28 @@
+Spring Data KeyValue Changelog
+==========================
+
+Changes in version 1.0.0.M1 (2015-06-02)
+----------------------------------------
+* DATAKV-108 - Release 1.0 M1 (Gosling).
+* DATAKV-107 - Add license to repository.
+* DATAKV-106 - Set up Travis build and Slack notifications.
+* DATAKV-105 - Polish implementation after recent addition of featurs.
+* DATAKV-104 - Refactor event handling according to design in Spring Data MongoDB.
+* DATAKV-103 - Add minimal keyspace bound interface to access underlying store via Adapter.
+* DATAKV-101 - Favor Iterable over Collection types as return types in KeyValueAdapter and KeyValueOperations.
+* DATAKV-100 - Update artifactId on readme.md.
+* DATAKV-99 - Add KeyValueIterator.
+* DATAKV-98 - Adapt to changes in Spring Data Commons.
+* DATAKV-97 - Upgrade to gosling build pom.
+* DATAKV-96 - Add 'findAll' method to QuerydslKeyValueRepository which accepts a querydsl Predicate and a Sort.
+* DATAKV-95 - Adapt to latest changes in Querydsl APIs in Spring Data Commons.
+* DATAKV-94 - Remove invalid @since attributes from javadoc.
+* DATAKV-93 - Add readme and reference documentation.
+* DATAKV-91 - Add support for sending application events.
+* DATAKV-90 - Add findAll variant with QueryDSL OrderSpecifier without a Predicate.
+* DATAKV-89 - KeyValueTemplate.insert(…) should throw DuplicateKeyException for duplicate keys instead of InvalidDataAccessApiUsageException.
+* DATAKV-88 - Let the configuration infrastructure for maps default a KeyValueTemplate.
+* DATAKV-87 - @EnableMapRepositories should allow the definition of the Map-type to be used.
+* DATAKV-86 - Move configuration infrastructure for Map-based repositories into map package.
+* DATAKV-85 - Migrate key-value infrastructure from Spring Data Commons.
+* DATAKV-84 - Setup project structure.
