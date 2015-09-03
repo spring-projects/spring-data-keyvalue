@@ -1,5 +1,5 @@
 /*
- * Copyright 2014 the original author or authors.
+ * Copyright 2014-2016 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -27,6 +27,7 @@ import org.springframework.core.annotation.AnnotationAttributes;
 import org.springframework.core.type.AnnotationMetadata;
 import org.springframework.data.keyvalue.core.mapping.context.KeyValueMappingContext;
 import org.springframework.data.keyvalue.repository.KeyValueRepository;
+import org.springframework.data.keyvalue.repository.query.KeyValuePartTreeQuery;
 import org.springframework.data.keyvalue.repository.query.SpelQueryCreator;
 import org.springframework.data.keyvalue.repository.support.KeyValueRepositoryFactoryBean;
 import org.springframework.data.repository.config.AnnotationRepositoryConfigurationSource;
@@ -92,6 +93,7 @@ public abstract class KeyValueRepositoryConfigurationExtension extends Repositor
 
 		builder.addPropertyReference("keyValueOperations", attributes.getString(KEY_VALUE_TEMPLATE_BEAN_REF_ATTRIBUTE));
 		builder.addPropertyValue("queryCreator", getQueryCreatorType(config));
+		builder.addPropertyValue("queryType", getQueryType(config));
 		builder.addPropertyReference("mappingContext", MAPPING_CONTEXT_BEAN_NAME);
 	}
 
@@ -106,14 +108,35 @@ public abstract class KeyValueRepositoryConfigurationExtension extends Repositor
 
 		AnnotationMetadata metadata = config.getEnableAnnotationMetadata();
 
-		Map<String, Object> queryCreatorFoo = metadata.getAnnotationAttributes(QueryCreatorType.class.getName());
+		Map<String, Object> queryCreatorAnnotationAttributes = metadata.getAnnotationAttributes(QueryCreatorType.class.getName());
 
-		if (queryCreatorFoo == null) {
+		if (queryCreatorAnnotationAttributes == null) {
 			return SpelQueryCreator.class;
 		}
 
-		AnnotationAttributes queryCreatorAttributes = new AnnotationAttributes(queryCreatorFoo);
+		AnnotationAttributes queryCreatorAttributes = new AnnotationAttributes(queryCreatorAnnotationAttributes);
 		return queryCreatorAttributes.getClass("value");
+	}
+
+	/**
+	 * Detects the query creator type to be used for the factory to set. Will lookup a {@link QueryCreatorType} annotation
+	 * on the {@code @Enable}-annotation or use {@link SpelQueryCreator} if not found.
+	 * 
+	 * @param config
+	 * @return
+	 */
+	private static Class<?> getQueryType(AnnotationRepositoryConfigurationSource config) {
+
+		AnnotationMetadata metadata = config.getEnableAnnotationMetadata();
+
+		Map<String, Object> queryCreatorAnnotationAttributes = metadata.getAnnotationAttributes(QueryCreatorType.class.getName());
+
+		if (queryCreatorAnnotationAttributes == null) {
+			return KeyValuePartTreeQuery.class;
+		}
+
+		AnnotationAttributes queryCreatorAttributes = new AnnotationAttributes(queryCreatorAnnotationAttributes);
+		return queryCreatorAttributes.getClass("repositoryQueryType");
 	}
 
 	/* 

@@ -24,6 +24,7 @@ import org.springframework.data.mapping.context.MappingContext;
 import org.springframework.data.repository.Repository;
 import org.springframework.data.repository.core.support.RepositoryFactoryBeanSupport;
 import org.springframework.data.repository.core.support.RepositoryFactorySupport;
+import org.springframework.data.repository.query.RepositoryQuery;
 import org.springframework.data.repository.query.parser.AbstractQueryCreator;
 import org.springframework.util.Assert;
 
@@ -33,11 +34,12 @@ import org.springframework.util.Assert;
  * @author Christoph Strobl
  * @author Oliver Gierke
  */
-public class KeyValueRepositoryFactoryBean<T extends Repository<S, ID>, S, ID extends Serializable> extends
-		RepositoryFactoryBeanSupport<T, S, ID> {
+public class KeyValueRepositoryFactoryBean<T extends Repository<S, ID>, S, ID extends Serializable>
+		extends RepositoryFactoryBeanSupport<T, S, ID> {
 
 	private KeyValueOperations operations;
 	private Class<? extends AbstractQueryCreator<?, ?>> queryCreator;
+	private Class<? extends RepositoryQuery> repositoryQueryType;
 
 	/**
 	 * Configures the {@link KeyValueOperations} to be used for the repositories.
@@ -72,27 +74,42 @@ public class KeyValueRepositoryFactoryBean<T extends Repository<S, ID>, S, ID ex
 		this.queryCreator = queryCreator;
 	}
 
+	/**
+	 * Configures the {@link RepositoryQuery} type to be created.
+	 *
+	 * @param repositoryQueryType must not be {@literal null}.
+	 * @since 1.1
+	 */
+	public void setQueryType(Class<? extends RepositoryQuery> repositoryQueryType) {
+
+		Assert.notNull(queryCreator, "Query creator type must not be null!");
+
+		this.repositoryQueryType = repositoryQueryType;
+
+	}
+
 	/*
 	 * (non-Javadoc)
 	 * @see org.springframework.data.repository.core.support.RepositoryFactoryBeanSupport#createRepositoryFactory()
 	 */
 	@Override
 	protected final RepositoryFactorySupport createRepositoryFactory() {
-		return createRepositoryFactory(operations, queryCreator);
+		return createRepositoryFactory(operations, queryCreator, repositoryQueryType);
 	}
 
 	/**
 	 * Create the repository factory to be used to create repositories.
-	 * 
+	 *
 	 * @param operations will never be {@literal null}.
 	 * @param queryCreator will never be {@literal null}.
+	 * @param repositoryQueryType will never be {@literal null}.
 	 * @return must not be {@literal null}.
 	 * @since 1.1
 	 */
 	protected KeyValueRepositoryFactory createRepositoryFactory(KeyValueOperations operations,
-			Class<? extends AbstractQueryCreator<?, ?>> queryCreator) {
+			Class<? extends AbstractQueryCreator<?, ?>> queryCreator, Class<? extends RepositoryQuery> repositoryQueryType) {
 
-		return new KeyValueRepositoryFactory(operations, queryCreator);
+		return new KeyValueRepositoryFactory(operations, queryCreator, repositoryQueryType);
 	}
 
 	/*
@@ -104,6 +121,7 @@ public class KeyValueRepositoryFactoryBean<T extends Repository<S, ID>, S, ID ex
 
 		Assert.notNull(operations, "KeyValueOperations must not be null!");
 		Assert.notNull(queryCreator, "Query creator type must not be null!");
+		Assert.notNull(repositoryQueryType, "RepositoryQueryType type type must not be null!");
 
 		super.afterPropertiesSet();
 	}
