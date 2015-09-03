@@ -52,8 +52,6 @@ public class KeyValuePartTreeQuery implements RepositoryQuery {
 	private final KeyValueOperations keyValueOperations;
 	private final Class<? extends AbstractQueryCreator<?, ?>> queryCreator;
 
-	private KeyValueQuery<?> query;
-
 	/**
 	 * Creates a new {@link KeyValuePartTreeQuery} for the given {@link QueryMethod}, {@link EvaluationContextProvider},
 	 * {@link KeyValueOperations} and query creator type.
@@ -75,15 +73,6 @@ public class KeyValuePartTreeQuery implements RepositoryQuery {
 		this.keyValueOperations = keyValueOperations;
 		this.evaluationContextProvider = evaluationContextProvider;
 		this.queryCreator = queryCreator;
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * @see org.springframework.data.repository.query.RepositoryQuery#getQueryMethod()
-	 */
-	@Override
-	public QueryMethod getQueryMethod() {
-		return queryMethod;
 	}
 
 	/*
@@ -133,23 +122,25 @@ public class KeyValuePartTreeQuery implements RepositoryQuery {
 		throw new UnsupportedOperationException("Query method not supported.");
 	}
 
-	@SuppressWarnings({ "rawtypes", "unchecked" })
 	protected KeyValueQuery<?> prepareQuery(Object[] parameters) {
+
+		return prepareQuery(createQuery(new ParametersParameterAccessor(getQueryMethod().getParameters(), parameters)),
+				parameters);
+	}
+
+	@SuppressWarnings({ "rawtypes", "unchecked" })
+	protected KeyValueQuery<?> prepareQuery(KeyValueQuery<?> instance, Object[] parameters) {
 
 		ParametersParameterAccessor accessor = new ParametersParameterAccessor(getQueryMethod().getParameters(),
 				parameters);
 
-		if (this.query == null) {
-			this.query = createQuery(accessor);
-		}
+		KeyValueQuery<?> query = new KeyValueQuery(instance.getCritieria());
 
-		KeyValueQuery<?> query = new KeyValueQuery(this.query.getCritieria());
-
-		if (this.query.getCritieria() instanceof SpelExpression) {
+		if (instance.getCritieria() instanceof SpelExpression) {
 
 			EvaluationContext context = this.evaluationContextProvider.getEvaluationContext(getQueryMethod().getParameters(),
 					parameters);
-			query = new KeyValueQuery(new SpelCriteria((SpelExpression) this.query.getCritieria(), context));
+			query = new KeyValueQuery(new SpelCriteria((SpelExpression) instance.getCritieria(), context));
 		}
 
 		Pageable pageable = accessor.getPageable();
@@ -157,7 +148,7 @@ public class KeyValuePartTreeQuery implements RepositoryQuery {
 
 		query.setOffset(pageable == null ? -1 : pageable.getOffset());
 		query.setRows(pageable == null ? -1 : pageable.getPageSize());
-		query.setSort(sort == null ? this.query.getSort() : sort);
+		query.setSort(sort == null ? instance.getSort() : sort);
 
 		return query;
 	}
@@ -169,5 +160,14 @@ public class KeyValuePartTreeQuery implements RepositoryQuery {
 		Constructor<? extends AbstractQueryCreator<?, ?>> constructor = (Constructor<? extends AbstractQueryCreator<?, ?>>) ClassUtils
 				.getConstructorIfAvailable(queryCreator, PartTree.class, ParameterAccessor.class);
 		return (KeyValueQuery<?>) BeanUtils.instantiateClass(constructor, tree, accessor).createQuery();
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * @see org.springframework.data.repository.query.RepositoryQuery#getQueryMethod()
+	 */
+	@Override
+	public QueryMethod getQueryMethod() {
+		return queryMethod;
 	}
 }

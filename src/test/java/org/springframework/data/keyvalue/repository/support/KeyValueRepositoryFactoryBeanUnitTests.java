@@ -26,7 +26,9 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 import org.springframework.data.keyvalue.core.KeyValueOperations;
+import org.springframework.data.keyvalue.repository.query.KeyValuePartTreeQuery;
 import org.springframework.data.repository.Repository;
+import org.springframework.data.repository.query.RepositoryQuery;
 import org.springframework.data.repository.query.parser.AbstractQueryCreator;
 
 /**
@@ -95,6 +97,7 @@ public class KeyValueRepositoryFactoryBeanUnitTests {
 
 	/**
 	 * @see DATAKV-123
+	 * @see DATAKV-112
 	 */
 	@Test
 	@SuppressWarnings("unchecked")
@@ -102,9 +105,12 @@ public class KeyValueRepositoryFactoryBeanUnitTests {
 
 		Class<? extends AbstractQueryCreator<?, ?>> creatorType = (Class<? extends AbstractQueryCreator<?, ?>>) mock(
 				AbstractQueryCreator.class).getClass();
+		Class<? extends RepositoryQuery> queryType = (Class<? extends RepositoryQuery>) mock(KeyValuePartTreeQuery.class)
+				.getClass();
 
 		factoryBean.setQueryCreator(creatorType);
 		factoryBean.setKeyValueOperations(mock(KeyValueOperations.class));
+		factoryBean.setQueryType(queryType);
 
 		exception.expect(IllegalArgumentException.class);
 		exception.expectMessage("Repository interface");
@@ -121,10 +127,21 @@ public class KeyValueRepositoryFactoryBeanUnitTests {
 
 		Class<? extends AbstractQueryCreator<?, ?>> creatorType = (Class<? extends AbstractQueryCreator<?, ?>>) mock(
 				AbstractQueryCreator.class).getClass();
+		Class<? extends RepositoryQuery> queryType = (Class<? extends RepositoryQuery>) mock(KeyValuePartTreeQuery.class)
+				.getClass();
 
 		factoryBean.setQueryCreator(creatorType);
 		factoryBean.setKeyValueOperations(mock(KeyValueOperations.class));
+		factoryBean.setQueryType(queryType);
 
 		assertThat(factoryBean.createRepositoryFactory(), is(notNullValue()));
+	}
+
+	/**
+	 * @see DATAKV-112
+	 */
+	@Test(expected = IllegalArgumentException.class)
+	public void rejectsNullQueryType() {
+		factoryBean.setQueryType(null);
 	}
 }

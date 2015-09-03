@@ -1,5 +1,5 @@
 /*
- * Copyright 2014 the original author or authors.
+ * Copyright 2014-2016 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,12 +21,15 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
+import org.springframework.data.keyvalue.repository.query.KeyValuePartTreeQuery;
+import org.springframework.data.repository.query.RepositoryQuery;
 import org.springframework.data.repository.query.parser.AbstractQueryCreator;
 
 /**
  * Annotation to customize the query creator type to be used for a specific store.
  * 
  * @author Oliver Gierke
+ * @author Christoph Strobl
  */
 @Documented
 @Retention(RetentionPolicy.RUNTIME)
@@ -34,4 +37,12 @@ import org.springframework.data.repository.query.parser.AbstractQueryCreator;
 public @interface QueryCreatorType {
 
 	Class<? extends AbstractQueryCreator<?, ?>> value();
+
+	/**
+	 * The {@link RepositoryQuery} type to be created by the {@link QueryCreatorType#value()}.
+	 * 
+	 * @return
+	 * @since 1.1
+	 */
+	Class<? extends RepositoryQuery> repositoryQueryType() default KeyValuePartTreeQuery.class;
 }
