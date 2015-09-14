@@ -26,7 +26,7 @@ import org.springframework.data.keyvalue.core.query.KeyValueQuery;
 public interface CriteriaAccessor<T> {
 
 	/**
-	 * Checks and reads {@link KeyValueQuery#getCritieria()} of given {@link KeyValueQuery}. Might also apply additional
+	 * Checks and reads {@link KeyValueQuery#getCriteria()} of given {@link KeyValueQuery}. Might also apply additional
 	 * transformation to match the desired type.
 	 * 
 	 * @param query can be {@literal null}.

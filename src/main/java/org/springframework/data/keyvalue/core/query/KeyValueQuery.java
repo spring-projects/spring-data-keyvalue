@@ -59,7 +59,7 @@ public class KeyValueQuery<T> implements Serializable{
 	 * 
 	 * @return
 	 */
-	public T getCritieria() {
+	public T getCriteria() {
 		return criteria;
 	}
 

@@ -106,7 +106,7 @@ public class KeyValuePartTreeQuery implements RepositoryQuery {
 			this.query = createQuery(accessor);
 		}
 
-		KeyValueQuery<?> q = new KeyValueQuery(this.query.getCritieria());
+		KeyValueQuery<?> q = new KeyValueQuery(this.query.getCriteria());
 
 		if (accessor.getPageable() != null) {
 			q.setOffset(accessor.getPageable().getOffset());
@@ -122,10 +122,10 @@ public class KeyValuePartTreeQuery implements RepositoryQuery {
 			q.setSort(this.query.getSort());
 		}
 
-		if (q.getCritieria() instanceof SpelExpression) {
+		if (q.getCriteria() instanceof SpelExpression) {
 			EvaluationContext context = this.evaluationContextProvider.getEvaluationContext(getQueryMethod().getParameters(),
 					parameters);
-			((SpelExpression) q.getCritieria()).setEvaluationContext(context);
+			((SpelExpression) q.getCriteria()).setEvaluationContext(context);
 		}
 
 		return q;
