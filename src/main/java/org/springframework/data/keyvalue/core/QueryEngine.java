@@ -63,6 +63,21 @@ public abstract class QueryEngine<ADAPTER extends KeyValueAdapter, CRITERIA, SOR
 	 * @param keyspace
 	 * @return
 	 */
+	public <T> Collection<T> execute(KeyValueQuery<?> query, Serializable keyspace, Class<T> type) {
+
+		CRITERIA criteria = this.criteriaAccessor != null ? this.criteriaAccessor.resolve(query) : null;
+		SORT sort = this.sortAccessor != null ? this.sortAccessor.resolve(query) : null;
+
+		return execute(criteria, sort, query.getOffset(), query.getRows(), keyspace, type);
+	}
+
+	/**
+	 * Extract query attributes and delegate to concrete execution.
+	 * 
+	 * @param query
+	 * @param keyspace
+	 * @return
+	 */
 	public long count(KeyValueQuery<?> query, Serializable keyspace) {
 
 		CRITERIA criteria = this.criteriaAccessor != null ? this.criteriaAccessor.resolve(query) : null;
@@ -78,6 +93,21 @@ public abstract class QueryEngine<ADAPTER extends KeyValueAdapter, CRITERIA, SOR
 	 * @return
 	 */
 	public abstract Collection<?> execute(CRITERIA criteria, SORT sort, int offset, int rows, Serializable keyspace);
+
+	/**
+	 * @param criteria
+	 * @param sort
+	 * @param offset
+	 * @param rows
+	 * @param keyspace
+	 * @param type
+	 * @return
+	 * @since 1.1
+	 */
+	public <T> Collection<T> execute(CRITERIA criteria, SORT sort, int offset, int rows, Serializable keyspace,
+			Class<T> type) {
+		return (Collection<T>) execute(criteria, sort, offset, rows, keyspace);
+	}
 
 	/**
 	 * @param criteria

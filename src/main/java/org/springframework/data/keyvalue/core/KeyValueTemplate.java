@@ -271,7 +271,7 @@ public class KeyValueTemplate implements KeyValueOperations, ApplicationEventPub
 			@Override
 			public T doInKeyValue(KeyValueAdapter adapter) {
 
-				Object result = adapter.get(id, keyspace);
+				Object result = adapter.get(id, keyspace, type);
 
 				if (result == null || typeCheck(type, result)) {
 					return (T) result;
@@ -342,10 +342,9 @@ public class KeyValueTemplate implements KeyValueOperations, ApplicationEventPub
 
 		T result = execute(new KeyValueCallback<T>() {
 
-			@SuppressWarnings("unchecked")
 			@Override
 			public T doInKeyValue(KeyValueAdapter adapter) {
-				return (T) adapter.delete(id, keyspace);
+				return (T) adapter.delete(id, keyspace, type);
 			}
 		});
 
@@ -394,7 +393,7 @@ public class KeyValueTemplate implements KeyValueOperations, ApplicationEventPub
 			@Override
 			public Iterable<T> doInKeyValue(KeyValueAdapter adapter) {
 
-				Iterable<?> result = adapter.find(query, resolveKeySpace(type));
+				Iterable<?> result = adapter.find(query, resolveKeySpace(type), type);
 				if (result == null) {
 					return Collections.emptySet();
 				}
