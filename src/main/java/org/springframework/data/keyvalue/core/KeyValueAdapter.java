@@ -59,6 +59,15 @@ public interface KeyValueAdapter extends DisposableBean {
 	Object get(Serializable id, Serializable keyspace);
 
 	/**
+	 * @param id
+	 * @param keyspace
+	 * @param type
+	 * @return
+	 * @since 1.1
+	 */
+	<T> T get(Serializable id, Serializable keyspace, Class<T> type);
+
+	/**
 	 * Delete and return the obect with given type and id.
 	 * 
 	 * @param id must not be {@literal null}.
@@ -66,6 +75,15 @@ public interface KeyValueAdapter extends DisposableBean {
 	 * @return {@literal null} if object could not be found
 	 */
 	Object delete(Serializable id, Serializable keyspace);
+
+	/**
+	 * @param id
+	 * @param keyspace
+	 * @param type
+	 * @return
+	 * @since 1.1
+	 */
+	<T> T delete(Serializable id, Serializable keyspace, Class<T> type);
 
 	/**
 	 * Get all elements for given keyspace.
@@ -103,6 +121,15 @@ public interface KeyValueAdapter extends DisposableBean {
 	 * @return empty {@link Collection} if no match found.
 	 */
 	Iterable<?> find(KeyValueQuery<?> query, Serializable keyspace);
+
+	/**
+	 * @param query
+	 * @param keyspace
+	 * @param type
+	 * @return
+	 * @since 1.1
+	 */
+	<T> Iterable<T> find(KeyValueQuery<?> query, Serializable keyspace, Class<T> type);
 
 	/**
 	 * Count number of objects within {@literal keyspace}.

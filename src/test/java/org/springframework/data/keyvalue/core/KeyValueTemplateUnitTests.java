@@ -215,7 +215,7 @@ public class KeyValueTemplateUnitTests {
 
 		template.findById("1", Foo.class);
 
-		verify(adapterMock, times(1)).get("1", Foo.class.getName());
+		verify(adapterMock, times(1)).get("1", Foo.class.getName(), Foo.class);
 	}
 
 	/**
@@ -253,7 +253,7 @@ public class KeyValueTemplateUnitTests {
 
 		template.find(STRING_QUERY, Foo.class);
 
-		verify(adapterMock, times(1)).find(STRING_QUERY, Foo.class.getName());
+		verify(adapterMock, times(1)).find(STRING_QUERY, Foo.class.getName(), Foo.class);
 	}
 
 	/**
@@ -267,7 +267,7 @@ public class KeyValueTemplateUnitTests {
 
 		template.findInRange(1, 5, Foo.class);
 
-		verify(adapterMock, times(1)).find(captor.capture(), eq(Foo.class.getName()));
+		verify(adapterMock, times(1)).find(captor.capture(), eq(Foo.class.getName()), eq(Foo.class));
 		assertThat(captor.getValue().getOffset(), is(1));
 		assertThat(captor.getValue().getRows(), is(5));
 		assertThat(captor.getValue().getCritieria(), nullValue());
@@ -330,7 +330,7 @@ public class KeyValueTemplateUnitTests {
 
 		template.delete("1", Foo.class);
 
-		verify(adapterMock, times(1)).delete("1", Foo.class.getName());
+		verify(adapterMock, times(1)).delete("1", Foo.class.getName(), Foo.class);
 	}
 
 	/**
@@ -344,7 +344,7 @@ public class KeyValueTemplateUnitTests {
 
 		template.delete(source);
 
-		verify(adapterMock, times(1)).delete("some-id", ClassWithStringId.class.getName());
+		verify(adapterMock, times(1)).delete("some-id", ClassWithStringId.class.getName(), ClassWithStringId.class);
 	}
 
 	/**
@@ -619,7 +619,7 @@ public class KeyValueTemplateUnitTests {
 	public void shouldPublishAfterDeleteEventCorrectly() {
 
 		setEventsToPublish(AfterDeleteEvent.class);
-		when(adapterMock.delete(eq("1"), eq(FOO_ONE.getClass().getName()))).thenReturn(FOO_ONE);
+		when(adapterMock.delete(eq("1"), eq(FOO_ONE.getClass().getName()), eq(Foo.class))).thenReturn(FOO_ONE);
 
 		template.delete("1", FOO_ONE.getClass());
 
@@ -666,7 +666,7 @@ public class KeyValueTemplateUnitTests {
 
 		setEventsToPublish(AfterGetEvent.class);
 
-		when(adapterMock.get(eq("1"), eq(FOO_ONE.getClass().getName()))).thenReturn(FOO_ONE);
+		when(adapterMock.get(eq("1"), eq(FOO_ONE.getClass().getName()), eq(Foo.class))).thenReturn(FOO_ONE);
 
 		template.findById("1", FOO_ONE.getClass());
 

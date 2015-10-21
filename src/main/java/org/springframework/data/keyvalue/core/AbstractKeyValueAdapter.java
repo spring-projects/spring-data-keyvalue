@@ -59,6 +59,33 @@ public abstract class AbstractKeyValueAdapter implements KeyValueAdapter {
 
 	/*
 	 * (non-Javadoc)
+	 * @see org.springframework.data.keyvalue.core.KeyValueAdapter#get(java.io.Serializable, java.io.Serializable, java.lang.Class)
+	 */
+	@Override
+	public <T> T get(Serializable id, Serializable keyspace, Class<T> type) {
+		return (T) get(id, keyspace);
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * @see org.springframework.data.keyvalue.core.KeyValueAdapter#get(java.io.Serializable, java.io.Serializable, java.lang.Class)
+	 */
+	@Override
+	public <T> T delete(Serializable id, Serializable keyspace, Class<T> type) {
+		return (T) delete(id, keyspace);
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * @see org.springframework.data.keyvalue.core.KeyValueAdapter#get(java.io.Serializable, java.io.Serializable, java.lang.Class)
+	 */
+	@Override
+	public <T> Iterable<T> find(KeyValueQuery<?> query, Serializable keyspace, Class<T> type) {
+		return (Iterable<T>) engine.execute(query, keyspace, type);
+	}
+
+	/*
+	 * (non-Javadoc)
 	 * @see org.springframework.data.keyvalue.core.KeyValueAdapter#find(org.springframework.data.keyvalue.core.query.KeyValueQuery, java.io.Serializable)
 	 */
 	@Override
