@@ -93,7 +93,7 @@ class SpelQueryEngine<T extends KeyValueAdapter> extends QueryEngine<KeyValueAda
 					matches = criteria.getValue(candidate, Boolean.class);
 				} catch (SpelEvaluationException e) {
 					criteria.getEvaluationContext().setVariable("it", candidate);
-					matches = criteria.getValue(Boolean.class);
+					matches = criteria.getValue() == null ? false : criteria.getValue(Boolean.class);
 				}
 			}
 
