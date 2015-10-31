@@ -40,7 +40,7 @@ interface KeyValueOperations {
 [[key-value.template-configuration]]
 == Configuring The KeyValueTemplate
 
-In its very basic shape the `KeyValueTemplate` uses a `MapAdaper` wrapping a `ConcurrentHashMap` using link:{spring-framework-docs}/expressions.html[Spring Expression Language] to perform queries and sorting.
+In its very basic shape the `KeyValueTemplate` uses a `MapAdapter` wrapping a `ConcurrentHashMap` using link:{spring-framework-docs}/expressions.html[Spring Expression Language] to perform queries and sorting.
 
 NOTE: The used `KeyValueAdapter` does the heavy lifting when it comes to storing and retrieving data. The data structure used will influence performance and/or multi threading behavior.
 
@@ -128,7 +128,7 @@ WARNING: Please note that you need to have getters/setters present to query prop
 == Sorting
 
 Depending on the store implementation provided by the adapter entities might already be stored in some sorted way but do not necessarily have to be. Again the underlying `QueryEngine` is capable of performing sort operations.
-When used without further customization sorting is done using a `SpelPropertyComperator` extracted from the `Sort` clause provided
+When used without further customization sorting is done using a `SpelPropertyComparator` extracted from the `Sort` clause provided
 
 [source, java]
 ----
@@ -142,7 +142,7 @@ WARNING: Please note that you need to have getters/setters present to sort using
 [[key-value.repositories.map]]
 == Map Repositories
 
-Map repositories reside on top of the `KeyValaueTemplate`. Using the default `SpelQueryCreator` allows deriving query and sort expressions from the given methodname.
+Map repositories reside on top of the `KeyValueTemplate`. Using the default `SpelQueryCreator` allows deriving query and sort expressions from the given method name.
 
 [source, java]
 ----
