@@ -16,7 +16,6 @@
 package org.springframework.data.keyvalue.core;
 
 import static org.hamcrest.Matchers.*;
-import static org.hamcrest.Matchers.contains;
 import static org.junit.Assert.*;
 import static org.mockito.Matchers.*;
 import static org.mockito.Mockito.*;
@@ -33,14 +32,12 @@ import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.springframework.data.annotation.Id;
-import org.springframework.data.keyvalue.core.query.KeyValueQuery;
 import org.springframework.data.keyvalue.repository.query.SpelQueryCreator;
 import org.springframework.data.projection.SpelAwareProxyProjectionFactory;
 import org.springframework.data.repository.core.RepositoryMetadata;
 import org.springframework.data.repository.query.ParametersParameterAccessor;
 import org.springframework.data.repository.query.QueryMethod;
 import org.springframework.data.repository.query.parser.PartTree;
-import org.springframework.expression.spel.standard.SpelExpression;
 import org.springframework.expression.spel.support.StandardEvaluationContext;
 
 /**
@@ -77,8 +74,8 @@ public class SpelQueryEngineUnitTests {
 
 		doReturn(people).when(adapter).getAllOf(anyString());
 
-		assertThat((Collection<Person>) engine.execute(createQueryForMethodWithArgs("findByFirstname", "bob"), null, -1, -1,
-				anyString()), contains(BOB_WITH_FIRSTNAME));
+		assertThat((Collection<Person>) engine.execute(createQueryForMethodWithArgs("findByFirstname", "bob"), null, -1,
+				-1, anyString()), contains(BOB_WITH_FIRSTNAME));
 	}
 
 	/**
@@ -92,7 +89,7 @@ public class SpelQueryEngineUnitTests {
 		assertThat(engine.count(createQueryForMethodWithArgs("findByFirstname", "bob"), anyString()), is(1L));
 	}
 
-	private static SpelExpression createQueryForMethodWithArgs(String methodName, Object... args) throws Exception {
+	private static SpelCriteria createQueryForMethodWithArgs(String methodName, Object... args) throws Exception {
 
 		List<Class<?>> types = new ArrayList<Class<?>>(args.length);
 
@@ -105,13 +102,10 @@ public class SpelQueryEngineUnitTests {
 		doReturn(method.getReturnType()).when(metadata).getReturnedDomainClass(method);
 
 		PartTree partTree = new PartTree(method.getName(), method.getReturnType());
-		SpelQueryCreator creator = new SpelQueryCreator(partTree, new ParametersParameterAccessor(
-				new QueryMethod(method, metadata, new SpelAwareProxyProjectionFactory()).getParameters(), args));
+		SpelQueryCreator creator = new SpelQueryCreator(partTree, new ParametersParameterAccessor(new QueryMethod(method,
+				metadata, new SpelAwareProxyProjectionFactory()).getParameters(), args));
 
-		KeyValueQuery<SpelExpression> query = creator.createQuery();
-		query.getCritieria().setEvaluationContext(new StandardEvaluationContext(args));
-
-		return query.getCritieria();
+		return new SpelCriteria(creator.createQuery().getCritieria(), new StandardEvaluationContext(args));
 	}
 
 	static interface PersonRepository {

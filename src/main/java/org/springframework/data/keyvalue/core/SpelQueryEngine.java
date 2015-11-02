@@ -1,5 +1,5 @@
 /*
- * Copyright 2014 the original author or authors.
+ * Copyright 2014-2016 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -35,7 +35,7 @@ import org.springframework.expression.spel.standard.SpelExpressionParser;
  * @author Oliver Gierke
  * @param <T>
  */
-class SpelQueryEngine<T extends KeyValueAdapter> extends QueryEngine<KeyValueAdapter, SpelExpression, Comparator<?>> {
+class SpelQueryEngine<T extends KeyValueAdapter> extends QueryEngine<KeyValueAdapter, SpelCriteria, Comparator<?>> {
 
 	private static final SpelExpressionParser PARSER = new SpelExpressionParser();
 
@@ -51,7 +51,7 @@ class SpelQueryEngine<T extends KeyValueAdapter> extends QueryEngine<KeyValueAda
 	 * @see org.springframework.data.keyvalue.core.QueryEngine#execute(java.lang.Object, java.lang.Object, int, int, java.io.Serializable)
 	 */
 	@Override
-	public Collection<?> execute(SpelExpression criteria, Comparator<?> sort, int offset, int rows, Serializable keyspace) {
+	public Collection<?> execute(SpelCriteria criteria, Comparator<?> sort, int offset, int rows, Serializable keyspace) {
 		return sortAndFilterMatchingRange(getAdapter().getAllOf(keyspace), criteria, sort, offset, rows);
 	}
 
@@ -60,12 +60,12 @@ class SpelQueryEngine<T extends KeyValueAdapter> extends QueryEngine<KeyValueAda
 	 * @see org.springframework.data.keyvalue.core.QueryEngine#count(java.lang.Object, java.io.Serializable)
 	 */
 	@Override
-	public long count(SpelExpression criteria, Serializable keyspace) {
+	public long count(SpelCriteria criteria, Serializable keyspace) {
 		return filterMatchingRange(getAdapter().getAllOf(keyspace), criteria, -1, -1).size();
 	}
 
 	@SuppressWarnings({ "unchecked", "rawtypes" })
-	private List<?> sortAndFilterMatchingRange(Iterable<?> source, SpelExpression criteria, Comparator sort, int offset,
+	private List<?> sortAndFilterMatchingRange(Iterable<?> source, SpelCriteria criteria, Comparator sort, int offset,
 			int rows) {
 
 		List<?> tmp = IterableConverter.toList(source);
@@ -76,7 +76,7 @@ class SpelQueryEngine<T extends KeyValueAdapter> extends QueryEngine<KeyValueAda
 		return filterMatchingRange(tmp, criteria, offset, rows);
 	}
 
-	private static <S> List<S> filterMatchingRange(Iterable<S> source, SpelExpression criteria, int offset, int rows) {
+	private static <S> List<S> filterMatchingRange(Iterable<S> source, SpelCriteria criteria, int offset, int rows) {
 
 		List<S> result = new ArrayList<S>();
 
@@ -90,10 +90,11 @@ class SpelQueryEngine<T extends KeyValueAdapter> extends QueryEngine<KeyValueAda
 
 			if (!matches) {
 				try {
-					matches = criteria.getValue(candidate, Boolean.class);
+					matches = criteria.getExpression().getValue(criteria.getContext(), candidate, Boolean.class);
 				} catch (SpelEvaluationException e) {
-					criteria.getEvaluationContext().setVariable("it", candidate);
-					matches = criteria.getValue() == null ? false : criteria.getValue(Boolean.class);
+					criteria.getContext().setVariable("it", candidate);
+					matches = criteria.getExpression().getValue(criteria.getContext()) == null ? false : criteria.getExpression()
+							.getValue(criteria.getContext(), Boolean.class);
 				}
 			}
 
