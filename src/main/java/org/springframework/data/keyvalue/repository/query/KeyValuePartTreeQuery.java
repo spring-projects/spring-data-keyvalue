@@ -1,5 +1,5 @@
 /*
- * Copyright 2014-2015 the original author or authors.
+ * Copyright 2014-2016 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,6 +23,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.keyvalue.core.IterableConverter;
 import org.springframework.data.keyvalue.core.KeyValueOperations;
+import org.springframework.data.keyvalue.core.SpelCriteria;
 import org.springframework.data.keyvalue.core.query.KeyValueQuery;
 import org.springframework.data.repository.query.EvaluationContextProvider;
 import org.springframework.data.repository.query.ParameterAccessor;
@@ -93,7 +94,7 @@ public class KeyValuePartTreeQuery implements RepositoryQuery {
 	public Object execute(Object[] parameters) {
 
 		ParameterAccessor accessor = new ParametersParameterAccessor(getQueryMethod().getParameters(), parameters);
-		KeyValueQuery<?> query = prepareQuery(parameters, accessor);
+		KeyValueQuery<?> query = prepareQuery(parameters);
 		ResultProcessor processor = queryMethod.getResultProcessor().withDynamicProjection(accessor);
 
 		return processor.processResult(doExecute(parameters, query));
@@ -114,8 +115,8 @@ public class KeyValuePartTreeQuery implements RepositoryQuery {
 
 			Iterable<?> result = this.keyValueOperations.find(query, queryMethod.getEntityInformation().getJavaType());
 
-			long count = queryMethod.isSliceQuery() ? 0
-					: keyValueOperations.count(query, queryMethod.getEntityInformation().getJavaType());
+			long count = queryMethod.isSliceQuery() ? 0 : keyValueOperations.count(query, queryMethod.getEntityInformation()
+					.getJavaType());
 
 			return new PageImpl(IterableConverter.toList(result), page, count);
 
@@ -133,13 +134,23 @@ public class KeyValuePartTreeQuery implements RepositoryQuery {
 	}
 
 	@SuppressWarnings({ "rawtypes", "unchecked" })
-	private KeyValueQuery<?> prepareQuery(Object[] parameters, ParameterAccessor accessor) {
+	protected KeyValueQuery<?> prepareQuery(Object[] parameters) {
+
+		ParametersParameterAccessor accessor = new ParametersParameterAccessor(getQueryMethod().getParameters(), parameters);
 
 		if (this.query == null) {
 			this.query = createQuery(accessor);
 		}
 
 		KeyValueQuery<?> q = new KeyValueQuery(this.query.getCritieria());
+
+		if (this.query.getCritieria() instanceof SpelExpression) {
+
+			EvaluationContext context = this.evaluationContextProvider.getEvaluationContext(getQueryMethod().getParameters(),
+					parameters);
+			SpelCriteria spelCriteria = new SpelCriteria((SpelExpression) this.query.getCritieria(), context);
+			q = new KeyValueQuery(spelCriteria);
+		}
 
 		if (accessor.getPageable() != null) {
 			q.setOffset(accessor.getPageable().getOffset());
@@ -152,12 +163,6 @@ public class KeyValuePartTreeQuery implements RepositoryQuery {
 		Sort sort = accessor.getSort();
 
 		q.setSort(sort != null ? sort : query.getSort());
-
-		if (q.getCritieria() instanceof SpelExpression) {
-			EvaluationContext context = this.evaluationContextProvider.getEvaluationContext(getQueryMethod().getParameters(),
-					parameters);
-			((SpelExpression) q.getCritieria()).setEvaluationContext(context);
-		}
 
 		return q;
 	}
