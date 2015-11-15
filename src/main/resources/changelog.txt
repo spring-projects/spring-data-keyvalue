@@ -1,6 +1,13 @@
 Spring Data KeyValue Changelog
 ==========================
 
+Changes in version 1.0.1.RELEASE (2015-11-15)
+---------------------------------------------
+* DATAKV-118 - Release 1.0.1 (Gosling).
+* DATAKV-114 - Query using a repository's findByXXX fails when a property XXX of any entry is null.
+* DATAKV-111 - Typos in reference documentation.
+
+
 Changes in version 1.0.0.RELEASE (2015-09-01)
 ---------------------------------------------
 * DATAKV-110 - Release 1.0 GA (Gosling).
