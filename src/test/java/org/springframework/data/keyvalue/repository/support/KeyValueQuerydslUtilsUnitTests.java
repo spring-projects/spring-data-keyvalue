@@ -29,9 +29,9 @@ import org.springframework.data.keyvalue.Person;
 import org.springframework.data.keyvalue.QPerson;
 import org.springframework.data.querydsl.SimpleEntityPathResolver;
 
-import com.mysema.query.types.EntityPath;
-import com.mysema.query.types.OrderSpecifier;
-import com.mysema.query.types.path.PathBuilder;
+import com.querydsl.core.types.EntityPath;
+import com.querydsl.core.types.OrderSpecifier;
+import com.querydsl.core.types.dsl.PathBuilder;
 
 /**
  * Unit tests for {@link KeyValueQuerydslUtils}.
@@ -78,7 +78,8 @@ public class KeyValueQuerydslUtilsUnitTests {
 
 		OrderSpecifier<?>[] specifiers = toOrderSpecifier(sort, builder);
 
-		assertThat(specifiers, IsArrayContainingInOrder.<OrderSpecifier<?>> arrayContaining(QPerson.person.firstname.asc()));
+		assertThat(specifiers,
+				IsArrayContainingInOrder.<OrderSpecifier<?>> arrayContaining(QPerson.person.firstname.asc()));
 	}
 
 	/**
@@ -105,8 +106,8 @@ public class KeyValueQuerydslUtilsUnitTests {
 
 		OrderSpecifier<?>[] specifiers = toOrderSpecifier(sort, builder);
 
-		assertThat(specifiers, IsArrayContainingInOrder.<OrderSpecifier<?>> arrayContaining(
-				QPerson.person.firstname.desc(), QPerson.person.age.asc()));
+		assertThat(specifiers, IsArrayContainingInOrder.<OrderSpecifier<?>> arrayContaining(QPerson.person.firstname.desc(),
+				QPerson.person.age.asc()));
 	}
 
 	/**

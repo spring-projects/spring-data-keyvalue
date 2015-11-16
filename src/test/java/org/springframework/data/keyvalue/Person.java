@@ -1,5 +1,5 @@
 /*
- * Copyright 2014 the original author or authors.
+ * Copyright 2014-2015 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,13 +20,15 @@ import java.io.Serializable;
 import org.springframework.data.annotation.Id;
 import org.springframework.util.ObjectUtils;
 
-import com.mysema.query.annotations.QueryEntity;
+import com.querydsl.core.annotations.QueryEntity;
 
 /**
  * @author Christoph Strobl
  */
 @QueryEntity
 public class Person implements Serializable {
+
+	private static final long serialVersionUID = 4212763002445358314L;
 
 	private @Id String id;
 	private String firstname;

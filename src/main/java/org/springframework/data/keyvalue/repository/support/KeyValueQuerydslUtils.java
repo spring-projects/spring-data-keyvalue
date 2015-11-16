@@ -24,12 +24,12 @@ import org.springframework.data.mapping.PropertyPath;
 import org.springframework.data.querydsl.QSort;
 import org.springframework.util.Assert;
 
-import com.mysema.query.support.Expressions;
-import com.mysema.query.types.Expression;
-import com.mysema.query.types.OrderSpecifier;
-import com.mysema.query.types.OrderSpecifier.NullHandling;
-import com.mysema.query.types.Path;
-import com.mysema.query.types.path.PathBuilder;
+import com.querydsl.core.types.Expression;
+import com.querydsl.core.types.OrderSpecifier;
+import com.querydsl.core.types.OrderSpecifier.NullHandling;
+import com.querydsl.core.types.Path;
+import com.querydsl.core.types.dsl.Expressions;
+import com.querydsl.core.types.dsl.PathBuilder;
 
 /**
  * Utilities for Querydsl usage.
@@ -76,9 +76,9 @@ abstract class KeyValueQuerydslUtils {
 
 	@SuppressWarnings({ "rawtypes", "unchecked" })
 	private static OrderSpecifier<?> toOrderSpecifier(Order order, PathBuilder<?> builder) {
-		return new OrderSpecifier(order.isAscending() ? com.mysema.query.types.Order.ASC
-				: com.mysema.query.types.Order.DESC, buildOrderPropertyPathFrom(order, builder),
-				toQueryDslNullHandling(order.getNullHandling()));
+		return new OrderSpecifier(
+				order.isAscending() ? com.querydsl.core.types.Order.ASC : com.querydsl.core.types.Order.DESC,
+				buildOrderPropertyPathFrom(order, builder), toQueryDslNullHandling(order.getNullHandling()));
 	}
 
 	/**

@@ -5,7 +5,7 @@ Bundle-Version: ${project.version}
 Bundle-ManifestVersion: 2
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Import-Template:
- com.mysema.query.*;version="${querydsl:[=.=.=,+1.0.0)}";resolution:=optional,
+ com.querydsl.*;version="${querydsl:[=.=.=,+1.0.0)}";resolution:=optional,
  org.springframework.*;version="${spring:[=.=.=,+1.0.0)}",
  org.springframework.data.*;version="${springdata.commons:[=.=.=,+1.0.0)}"
 DynamicImport-Package: *

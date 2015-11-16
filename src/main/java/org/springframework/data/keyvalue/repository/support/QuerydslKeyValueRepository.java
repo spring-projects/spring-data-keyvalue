@@ -32,12 +32,12 @@ import org.springframework.data.repository.core.EntityInformation;
 import org.springframework.util.Assert;
 import org.springframework.util.ObjectUtils;
 
-import com.mysema.query.collections.CollQuery;
-import com.mysema.query.support.ProjectableQuery;
-import com.mysema.query.types.EntityPath;
-import com.mysema.query.types.OrderSpecifier;
-import com.mysema.query.types.Predicate;
-import com.mysema.query.types.path.PathBuilder;
+import com.querydsl.collections.AbstractCollQuery;
+import com.querydsl.collections.CollQuery;
+import com.querydsl.core.types.EntityPath;
+import com.querydsl.core.types.OrderSpecifier;
+import com.querydsl.core.types.Predicate;
+import com.querydsl.core.types.dsl.PathBuilder;
 
 /**
  * {@link KeyValueRepository} implementation capable of executing {@link Predicate}s using {@link CollQuery}.
@@ -46,10 +46,10 @@ import com.mysema.query.types.path.PathBuilder;
  * @author Oliver Gierke
  * @author Thomas Darimont
  * @param <T> the domain type to manage
- * @param <ID> the identififer type of the domain type
+ * @param <ID> the identifier type of the domain type
  */
-public class QuerydslKeyValueRepository<T, ID extends Serializable> extends SimpleKeyValueRepository<T, ID> implements
-		QueryDslPredicateExecutor<T> {
+public class QuerydslKeyValueRepository<T, ID extends Serializable> extends SimpleKeyValueRepository<T, ID>
+		implements QueryDslPredicateExecutor<T> {
 
 	private static final EntityPathResolver DEFAULT_ENTITY_PATH_RESOLVER = SimpleEntityPathResolver.INSTANCE;
 
@@ -92,7 +92,7 @@ public class QuerydslKeyValueRepository<T, ID extends Serializable> extends Simp
 	 */
 	@Override
 	public T findOne(Predicate predicate) {
-		return prepareQuery(predicate).uniqueResult(builder);
+		return prepareQuery(predicate).fetchOne();
 	}
 
 	/*
@@ -101,7 +101,7 @@ public class QuerydslKeyValueRepository<T, ID extends Serializable> extends Simp
 	 */
 	@Override
 	public Iterable<T> findAll(Predicate predicate) {
-		return prepareQuery(predicate).list(builder);
+		return prepareQuery(predicate).fetchResults().getResults();
 	}
 
 	/*
@@ -111,10 +111,10 @@ public class QuerydslKeyValueRepository<T, ID extends Serializable> extends Simp
 	@Override
 	public Iterable<T> findAll(Predicate predicate, OrderSpecifier<?>... orders) {
 
-		ProjectableQuery<?> query = prepareQuery(predicate);
+		AbstractCollQuery<T, ?> query = prepareQuery(predicate);
 		query.orderBy(orders);
 
-		return query.list(builder);
+		return query.fetchResults().getResults();
 	}
 
 	/* 
@@ -133,7 +133,7 @@ public class QuerydslKeyValueRepository<T, ID extends Serializable> extends Simp
 	@Override
 	public Page<T> findAll(Predicate predicate, Pageable pageable) {
 
-		ProjectableQuery<?> query = prepareQuery(predicate);
+		AbstractCollQuery<T, ?> query = prepareQuery(predicate);
 
 		if (pageable != null) {
 
@@ -145,7 +145,7 @@ public class QuerydslKeyValueRepository<T, ID extends Serializable> extends Simp
 			}
 		}
 
-		return new PageImpl<T>(query.list(builder), pageable, count(predicate));
+		return new PageImpl<T>(query.fetchResults().getResults(), pageable, count(predicate));
 	}
 
 	/*
@@ -159,10 +159,10 @@ public class QuerydslKeyValueRepository<T, ID extends Serializable> extends Simp
 			return findAll();
 		}
 
-		ProjectableQuery<?> query = prepareQuery(null);
+		AbstractCollQuery<T, ?> query = prepareQuery(null);
 		query.orderBy(orders);
 
-		return query.list(builder);
+		return query.fetchResults().getResults();
 	}
 
 	/*
@@ -171,7 +171,7 @@ public class QuerydslKeyValueRepository<T, ID extends Serializable> extends Simp
 	 */
 	@Override
 	public long count(Predicate predicate) {
-		return prepareQuery(predicate).count();
+		return prepareQuery(predicate).fetchCount();
 	}
 
 	/* 
@@ -180,7 +180,7 @@ public class QuerydslKeyValueRepository<T, ID extends Serializable> extends Simp
 	 */
 	@Override
 	public boolean exists(Predicate predicate) {
-		return prepareQuery(predicate).exists();
+		return count(predicate) > 0;
 	}
 
 	/**
@@ -189,14 +189,11 @@ public class QuerydslKeyValueRepository<T, ID extends Serializable> extends Simp
 	 * @param predicate
 	 * @return
 	 */
-	protected ProjectableQuery<?> prepareQuery(Predicate predicate) {
+	protected AbstractCollQuery<T, ?> prepareQuery(Predicate predicate) {
 
-		CollQuery query = new CollQuery();
-
+		CollQuery<T> query = new CollQuery<T>();
 		query.from(builder, findAll());
-		if (predicate != null) {
-			query.where(predicate);
-		}
-		return query;
+
+		return predicate != null ? query.where(predicate) : query;
 	}
 }
