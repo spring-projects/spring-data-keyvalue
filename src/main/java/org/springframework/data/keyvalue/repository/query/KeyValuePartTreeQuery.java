@@ -1,5 +1,5 @@
 /*
- * Copyright 2014 the original author or authors.
+ * Copyright 2014-2015 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,6 +20,7 @@ import java.lang.reflect.Constructor;
 import org.springframework.beans.BeanUtils;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.keyvalue.core.IterableConverter;
 import org.springframework.data.keyvalue.core.KeyValueOperations;
 import org.springframework.data.keyvalue.core.query.KeyValueQuery;
@@ -28,10 +29,12 @@ import org.springframework.data.repository.query.ParameterAccessor;
 import org.springframework.data.repository.query.ParametersParameterAccessor;
 import org.springframework.data.repository.query.QueryMethod;
 import org.springframework.data.repository.query.RepositoryQuery;
+import org.springframework.data.repository.query.ResultProcessor;
 import org.springframework.data.repository.query.parser.AbstractQueryCreator;
 import org.springframework.data.repository.query.parser.PartTree;
 import org.springframework.expression.EvaluationContext;
 import org.springframework.expression.spel.standard.SpelExpression;
+import org.springframework.util.Assert;
 import org.springframework.util.ClassUtils;
 
 /**
@@ -50,25 +53,58 @@ public class KeyValuePartTreeQuery implements RepositoryQuery {
 
 	private KeyValueQuery<?> query;
 
-	public KeyValuePartTreeQuery(QueryMethod queryMethod, EvaluationContextProvider evalContextProvider,
+	/**
+	 * Creates a new {@link KeyValuePartTreeQuery} for the given {@link QueryMethod}, {@link EvaluationContextProvider},
+	 * {@link KeyValueOperations} and query creator type.
+	 * 
+	 * @param queryMethod must not be {@literal null}.
+	 * @param evaluationContextProvider must not be {@literal null}.
+	 * @param keyValueOperations must not be {@literal null}.
+	 * @param queryCreator must not be {@literal null}.
+	 */
+	public KeyValuePartTreeQuery(QueryMethod queryMethod, EvaluationContextProvider evaluationContextProvider,
 			KeyValueOperations keyValueOperations, Class<? extends AbstractQueryCreator<?, ?>> queryCreator) {
+
+		Assert.notNull(queryMethod, "Query method must not be null!");
+		Assert.notNull(evaluationContextProvider, "EvaluationContextprovider must not be null!");
+		Assert.notNull(keyValueOperations, "KeyValueOperations must not be null!");
+		Assert.notNull(queryCreator, "QueryCreator type must not be null!");
 
 		this.queryMethod = queryMethod;
 		this.keyValueOperations = keyValueOperations;
-		this.evaluationContextProvider = evalContextProvider;
+		this.evaluationContextProvider = evaluationContextProvider;
 		this.queryCreator = queryCreator;
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * @see org.springframework.data.repository.query.RepositoryQuery#getQueryMethod()
+	 */
 	@Override
 	public QueryMethod getQueryMethod() {
 		return queryMethod;
 	}
 
-	@SuppressWarnings({ "unchecked", "rawtypes" })
+	/*
+	 * (non-Javadoc)
+	 * @see org.springframework.data.repository.query.RepositoryQuery#execute(java.lang.Object[])
+	 */
 	@Override
 	public Object execute(Object[] parameters) {
 
-		KeyValueQuery<?> query = prepareQuery(parameters);
+		ParameterAccessor accessor = new ParametersParameterAccessor(getQueryMethod().getParameters(), parameters);
+		KeyValueQuery<?> query = prepareQuery(parameters, accessor);
+		ResultProcessor processor = queryMethod.getResultProcessor().withDynamicProjection(accessor);
+
+		return processor.processResult(doExecute(parameters, query));
+	}
+
+	/**
+	 * @param parameters
+	 * @param query
+	 */
+	@SuppressWarnings({ "unchecked", "rawtypes" })
+	protected Object doExecute(Object[] parameters, KeyValueQuery<?> query) {
 
 		if (queryMethod.isPageQuery() || queryMethod.isSliceQuery()) {
 
@@ -78,8 +114,8 @@ public class KeyValuePartTreeQuery implements RepositoryQuery {
 
 			Iterable<?> result = this.keyValueOperations.find(query, queryMethod.getEntityInformation().getJavaType());
 
-			long count = queryMethod.isSliceQuery() ? 0 : keyValueOperations.count(query, queryMethod.getEntityInformation()
-					.getJavaType());
+			long count = queryMethod.isSliceQuery() ? 0
+					: keyValueOperations.count(query, queryMethod.getEntityInformation().getJavaType());
 
 			return new PageImpl(IterableConverter.toList(result), page, count);
 
@@ -91,16 +127,13 @@ public class KeyValuePartTreeQuery implements RepositoryQuery {
 
 			Iterable<?> result = this.keyValueOperations.find(query, queryMethod.getEntityInformation().getJavaType());
 			return result.iterator().hasNext() ? result.iterator().next() : null;
-
 		}
 
 		throw new UnsupportedOperationException("Query method not supported.");
 	}
 
 	@SuppressWarnings({ "rawtypes", "unchecked" })
-	private KeyValueQuery<?> prepareQuery(Object[] parameters) {
-
-		ParametersParameterAccessor accessor = new ParametersParameterAccessor(getQueryMethod().getParameters(), parameters);
+	private KeyValueQuery<?> prepareQuery(Object[] parameters, ParameterAccessor accessor) {
 
 		if (this.query == null) {
 			this.query = createQuery(accessor);
@@ -116,11 +149,9 @@ public class KeyValuePartTreeQuery implements RepositoryQuery {
 			q.setRows(-1);
 		}
 
-		if (accessor.getSort() != null) {
-			q.setSort(accessor.getSort());
-		} else {
-			q.setSort(this.query.getSort());
-		}
+		Sort sort = accessor.getSort();
+
+		q.setSort(sort != null ? sort : query.getSort());
 
 		if (q.getCritieria() instanceof SpelExpression) {
 			EvaluationContext context = this.evaluationContextProvider.getEvaluationContext(getQueryMethod().getParameters(),
@@ -131,7 +162,7 @@ public class KeyValuePartTreeQuery implements RepositoryQuery {
 		return q;
 	}
 
-	public KeyValueQuery<?> createQuery(ParametersParameterAccessor accessor) {
+	public KeyValueQuery<?> createQuery(ParameterAccessor accessor) {
 
 		PartTree tree = new PartTree(getQueryMethod().getName(), getQueryMethod().getEntityInformation().getJavaType());
 

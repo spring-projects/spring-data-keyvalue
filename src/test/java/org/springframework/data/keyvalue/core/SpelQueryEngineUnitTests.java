@@ -35,6 +35,7 @@ import org.mockito.runners.MockitoJUnitRunner;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.keyvalue.core.query.KeyValueQuery;
 import org.springframework.data.keyvalue.repository.query.SpelQueryCreator;
+import org.springframework.data.projection.SpelAwareProxyProjectionFactory;
 import org.springframework.data.repository.core.RepositoryMetadata;
 import org.springframework.data.repository.query.ParametersParameterAccessor;
 import org.springframework.data.repository.query.QueryMethod;
@@ -100,11 +101,12 @@ public class SpelQueryEngineUnitTests {
 		}
 
 		Method method = PersonRepository.class.getMethod(methodName, types.toArray(new Class<?>[types.size()]));
-
 		RepositoryMetadata metadata = mock(RepositoryMetadata.class);
+		doReturn(method.getReturnType()).when(metadata).getReturnedDomainClass(method);
+
 		PartTree partTree = new PartTree(method.getName(), method.getReturnType());
-		SpelQueryCreator creator = new SpelQueryCreator(partTree,
-				new ParametersParameterAccessor(new QueryMethod(method, metadata).getParameters(), args));
+		SpelQueryCreator creator = new SpelQueryCreator(partTree, new ParametersParameterAccessor(
+				new QueryMethod(method, metadata, new SpelAwareProxyProjectionFactory()).getParameters(), args));
 
 		KeyValueQuery<SpelExpression> query = creator.createQuery();
 		query.getCritieria().setEvaluationContext(new StandardEvaluationContext(args));

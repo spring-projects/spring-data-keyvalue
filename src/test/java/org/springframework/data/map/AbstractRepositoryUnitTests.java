@@ -155,6 +155,34 @@ public abstract class AbstractRepositoryUnitTests<T extends AbstractRepositoryUn
 		assertThat(result, contains(TYRION, JAIME, CERSEI));
 	}
 
+	/**
+	 * @see DATAKV-121
+	 */
+	@Test
+	public void projectsResultToInterface() {
+
+		repository.save(LENNISTERS);
+
+		List<PersonSummary> result = repository.findByAgeGreaterThan(0, new Sort("firstname"));
+
+		assertThat(result, hasSize(3));
+		assertThat(result.get(0).getFirstname(), is(CERSEI.getFirstname()));
+	}
+
+	/**
+	 * @see DATAKV-121
+	 */
+	@Test
+	public void projectsResultToDynamicInterface() {
+
+		repository.save(LENNISTERS);
+
+		List<PersonSummary> result = repository.findByAgeGreaterThan(0, new Sort("firstname"), PersonSummary.class);
+
+		assertThat(result, hasSize(3));
+		assertThat(result.get(0).getFirstname(), is(CERSEI.getFirstname()));
+	}
+
 	protected abstract T getRepository(KeyValueRepositoryFactory factory);
 
 	public static interface PersonRepository extends CrudRepository<Person, String>, KeyValueRepository<Person, String> {
@@ -173,6 +201,13 @@ public abstract class AbstractRepositoryUnitTests<T extends AbstractRepositoryUn
 
 		List<Person> findByAgeGreaterThanOrderByAgeAscFirstnameDesc(int age);
 
+		List<PersonSummary> findByAgeGreaterThan(int age, Sort sort);
+
+		<T> List<T> findByAgeGreaterThan(int age, Sort sort, Class<T> projectionType);
 	}
 
+	interface PersonSummary {
+
+		String getFirstname();
+	}
 }

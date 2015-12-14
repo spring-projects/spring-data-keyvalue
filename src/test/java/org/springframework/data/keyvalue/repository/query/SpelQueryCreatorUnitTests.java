@@ -17,6 +17,7 @@ package org.springframework.data.keyvalue.repository.query;
 
 import static org.hamcrest.core.Is.*;
 import static org.junit.Assert.*;
+import static org.mockito.Mockito.*;
 
 import java.lang.reflect.Method;
 import java.util.Date;
@@ -30,6 +31,7 @@ import org.mockito.runners.MockitoJUnitRunner;
 import org.springframework.dao.InvalidDataAccessApiUsageException;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.keyvalue.core.query.KeyValueQuery;
+import org.springframework.data.projection.SpelAwareProxyProjectionFactory;
 import org.springframework.data.repository.core.RepositoryMetadata;
 import org.springframework.data.repository.query.ParametersParameterAccessor;
 import org.springframework.data.repository.query.QueryMethod;
@@ -238,7 +240,7 @@ public class SpelQueryCreatorUnitTests {
 	 * @see DATACMNS-525
 	 */
 	@Test
-	public void greaterThanEaualsReturnsTrueForEqualValues() throws Exception {
+	public void greaterThanEqualsReturnsTrueForEqualValues() throws Exception {
 		assertThat(evaluate("findByAgeGreaterThanEqual", BRAN.age).against(BRAN), is(true));
 	}
 
@@ -394,10 +396,11 @@ public class SpelQueryCreatorUnitTests {
 		}
 
 		Method method = PersonRepository.class.getMethod(methodName, argTypes);
+		doReturn(Person.class).when(metadataMock).getReturnedDomainClass(method);
 
 		PartTree partTree = new PartTree(method.getName(), method.getReturnType());
-		SpelQueryCreator creator = new SpelQueryCreator(partTree, new ParametersParameterAccessor(new QueryMethod(method,
-				metadataMock).getParameters(), args));
+		SpelQueryCreator creator = new SpelQueryCreator(partTree, new ParametersParameterAccessor(
+				new QueryMethod(method, metadataMock, new SpelAwareProxyProjectionFactory()).getParameters(), args));
 
 		KeyValueQuery<SpelExpression> q = creator.createQuery();
 		q.getCritieria().setEvaluationContext(new StandardEvaluationContext(args));
