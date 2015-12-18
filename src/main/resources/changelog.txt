@@ -1,6 +1,11 @@
 Spring Data KeyValue Changelog
 ==========================
 
+Changes in version 1.0.2.RELEASE (2015-12-18)
+---------------------------------------------
+* DATAKV-122 - Release 1.0.2 (Gosling).
+
+
 Changes in version 1.0.1.RELEASE (2015-11-15)
 ---------------------------------------------
 * DATAKV-118 - Release 1.0.1 (Gosling).
