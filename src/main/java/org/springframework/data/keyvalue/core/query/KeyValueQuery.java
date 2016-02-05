@@ -17,12 +17,15 @@ package org.springframework.data.keyvalue.core.query;
 
 import org.springframework.data.domain.Sort;
 
+import java.io.Serializable;
+
 /**
  * @author Christoph Strobl
  * @param <T> Criteria type
  */
-public class KeyValueQuery<T> {
+public class KeyValueQuery<T> implements Serializable{
 
+	private static final long serialVersionUID = -8972566396517213978L;
 	private Sort sort;
 	private int offset = -1;
 	private int rows = -1;
@@ -56,7 +59,7 @@ public class KeyValueQuery<T> {
 	 * 
 	 * @return
 	 */
-	public T getCritieria() {
+	public T getCriteria() {
 		return criteria;
 	}
 

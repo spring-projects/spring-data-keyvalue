@@ -42,18 +42,18 @@ class SpelCriteriaAccessor implements CriteriaAccessor<SpelExpression> {
 	@Override
 	public SpelExpression resolve(KeyValueQuery<?> query) {
 
-		if (query.getCritieria() == null) {
+		if (query.getCriteria() == null) {
 			return null;
 		}
 
-		if (query.getCritieria() instanceof SpelExpression) {
-			return (SpelExpression) query.getCritieria();
+		if (query.getCriteria() instanceof SpelExpression) {
+			return (SpelExpression) query.getCriteria();
 		}
 
-		if (query.getCritieria() instanceof String) {
-			return parser.parseRaw((String) query.getCritieria());
+		if (query.getCriteria() instanceof String) {
+			return parser.parseRaw((String) query.getCriteria());
 		}
 
-		throw new IllegalArgumentException("Cannot create SpelCriteria for " + query.getCritieria());
+		throw new IllegalArgumentException("Cannot create SpelCriteria for " + query.getCriteria());
 	}
 }
