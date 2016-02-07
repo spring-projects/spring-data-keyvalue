@@ -63,7 +63,10 @@ public class KeyValuePartTreeQueryUnitTests {
 
 		Object[] args = new Object[] { "foo" };
 
-		assertThat(query.prepareQuery(args).getCritieria(), not(sameInstance(query.prepareQuery(args).getCritieria())));
+		Object first = query.prepareQuery(args).getCritieria();
+		Object second = query.prepareQuery(args).getCritieria();
+
+		assertThat(first, not(sameInstance(second)));
 	}
 
 	static interface Repo {

@@ -18,12 +18,14 @@ package org.springframework.data.keyvalue.core;
 import org.springframework.expression.EvaluationContext;
 import org.springframework.expression.spel.standard.SpelExpression;
 import org.springframework.expression.spel.support.StandardEvaluationContext;
+import org.springframework.util.Assert;
 
 /**
  * {@link SpelCriteria} allows to pass on a {@link SpelExpression} and {@link EvaluationContext} to the actual query
  * processor. This decouples the {@link SpelExpression} from the context it is used in.
  * 
  * @author Christoph Strobl
+ * @author Oliver Gierke
  */
 public class SpelCriteria {
 
@@ -31,29 +33,40 @@ public class SpelCriteria {
 	private final EvaluationContext context;
 
 	/**
-	 * Creates new {@link SpelCriteria}.
+	 * Creates a new {@link SpelCriteria} for the given {@link SpelExpression}.
 	 * 
 	 * @param expression must not be {@literal null}.
-	 * @param context can be {@literal null} and will be defaulted to {@link StandardEvaluationContext}.
 	 */
-	public SpelCriteria(SpelExpression expression, EvaluationContext context) {
-
-		this.expression = expression;
-		this.context = context == null ? new StandardEvaluationContext() : context;
+	public SpelCriteria(SpelExpression expression) {
+		this(expression, new StandardEvaluationContext());
 	}
 
 	/**
-	 * @return never {@literal null}.
+	 * Creates new {@link SpelCriteria}.
+	 * 
+	 * @param expression must not be {@literal null}.
+	 * @param context must not be {@literal null}.
+	 */
+	public SpelCriteria(SpelExpression expression, EvaluationContext context) {
+
+		Assert.notNull(expression, "SpEL expression must not be null!");
+		Assert.notNull(context, "EvaluationContext must not be null!");
+
+		this.expression = expression;
+		this.context = context;
+	}
+
+	/**
+	 * @return will never be {@literal null}.
 	 */
 	public EvaluationContext getContext() {
 		return context;
 	}
 
 	/**
-	 * @return never {@literal null}.
+	 * @return will never be {@literal null}.
 	 */
 	public SpelExpression getExpression() {
 		return expression;
 	}
-
 }

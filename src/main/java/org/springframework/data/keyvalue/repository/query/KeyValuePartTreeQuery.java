@@ -115,8 +115,8 @@ public class KeyValuePartTreeQuery implements RepositoryQuery {
 
 			Iterable<?> result = this.keyValueOperations.find(query, queryMethod.getEntityInformation().getJavaType());
 
-			long count = queryMethod.isSliceQuery() ? 0 : keyValueOperations.count(query, queryMethod.getEntityInformation()
-					.getJavaType());
+			long count = queryMethod.isSliceQuery() ? 0
+					: keyValueOperations.count(query, queryMethod.getEntityInformation().getJavaType());
 
 			return new PageImpl(IterableConverter.toList(result), page, count);
 
@@ -136,35 +136,30 @@ public class KeyValuePartTreeQuery implements RepositoryQuery {
 	@SuppressWarnings({ "rawtypes", "unchecked" })
 	protected KeyValueQuery<?> prepareQuery(Object[] parameters) {
 
-		ParametersParameterAccessor accessor = new ParametersParameterAccessor(getQueryMethod().getParameters(), parameters);
+		ParametersParameterAccessor accessor = new ParametersParameterAccessor(getQueryMethod().getParameters(),
+				parameters);
 
 		if (this.query == null) {
 			this.query = createQuery(accessor);
 		}
 
-		KeyValueQuery<?> q = new KeyValueQuery(this.query.getCritieria());
+		KeyValueQuery<?> query = new KeyValueQuery(this.query.getCritieria());
 
 		if (this.query.getCritieria() instanceof SpelExpression) {
 
 			EvaluationContext context = this.evaluationContextProvider.getEvaluationContext(getQueryMethod().getParameters(),
 					parameters);
-			SpelCriteria spelCriteria = new SpelCriteria((SpelExpression) this.query.getCritieria(), context);
-			q = new KeyValueQuery(spelCriteria);
+			query = new KeyValueQuery(new SpelCriteria((SpelExpression) this.query.getCritieria(), context));
 		}
 
-		if (accessor.getPageable() != null) {
-			q.setOffset(accessor.getPageable().getOffset());
-			q.setRows(accessor.getPageable().getPageSize());
-		} else {
-			q.setOffset(-1);
-			q.setRows(-1);
-		}
-
+		Pageable pageable = accessor.getPageable();
 		Sort sort = accessor.getSort();
 
-		q.setSort(sort != null ? sort : query.getSort());
+		query.setOffset(pageable == null ? -1 : pageable.getOffset());
+		query.setRows(pageable == null ? -1 : pageable.getPageSize());
+		query.setSort(sort == null ? this.query.getSort() : sort);
 
-		return q;
+		return query;
 	}
 
 	public KeyValueQuery<?> createQuery(ParameterAccessor accessor) {

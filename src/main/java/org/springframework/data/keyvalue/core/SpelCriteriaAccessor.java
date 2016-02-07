@@ -18,7 +18,6 @@ package org.springframework.data.keyvalue.core;
 import org.springframework.data.keyvalue.core.query.KeyValueQuery;
 import org.springframework.expression.spel.standard.SpelExpression;
 import org.springframework.expression.spel.standard.SpelExpressionParser;
-import org.springframework.expression.spel.support.StandardEvaluationContext;
 import org.springframework.util.Assert;
 
 /**
@@ -32,14 +31,21 @@ class SpelCriteriaAccessor implements CriteriaAccessor<SpelCriteria> {
 	private final SpelExpressionParser parser;
 
 	/**
+	 * Creates a new {@link SpelCriteriaAccessor} using the given {@link SpelExpressionParser}.
+	 * 
 	 * @param parser must not be {@literal null}.
 	 */
 	public SpelCriteriaAccessor(SpelExpressionParser parser) {
 
 		Assert.notNull(parser, "SpelExpressionParser must not be null!");
+
 		this.parser = parser;
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * @see org.springframework.data.keyvalue.core.CriteriaAccessor#resolve(org.springframework.data.keyvalue.core.query.KeyValueQuery)
+	 */
 	@Override
 	public SpelCriteria resolve(KeyValueQuery<?> query) {
 
@@ -48,11 +54,11 @@ class SpelCriteriaAccessor implements CriteriaAccessor<SpelCriteria> {
 		}
 
 		if (query.getCritieria() instanceof SpelExpression) {
-			return new SpelCriteria((SpelExpression) query.getCritieria(), new StandardEvaluationContext());
+			return new SpelCriteria((SpelExpression) query.getCritieria());
 		}
 
 		if (query.getCritieria() instanceof String) {
-			return new SpelCriteria(parser.parseRaw((String) query.getCritieria()), new StandardEvaluationContext());
+			return new SpelCriteria(parser.parseRaw((String) query.getCritieria()));
 		}
 
 		if (query.getCritieria() instanceof SpelCriteria) {
@@ -61,5 +67,4 @@ class SpelCriteriaAccessor implements CriteriaAccessor<SpelCriteria> {
 
 		throw new IllegalArgumentException("Cannot create SpelCriteria for " + query.getCritieria());
 	}
-
 }
