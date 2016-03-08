@@ -1,5 +1,5 @@
 /*
- * Copyright 2014 the original author or authors.
+ * Copyright 2014-2016 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -25,6 +25,7 @@ import java.lang.annotation.Target;
 
 import org.junit.Before;
 import org.junit.Test;
+import org.springframework.core.annotation.AliasFor;
 import org.springframework.data.annotation.Persistent;
 import org.springframework.data.keyvalue.TypeWithDirectKeySpaceAnnotation;
 import org.springframework.data.keyvalue.TypeWithInhteritedPersistentAnnotationNotHavingKeySpace;
@@ -102,6 +103,22 @@ public class AnnotationBasedKeySpaceResolverUnitTests {
 		assertThat(resolver.resolveKeySpace(TypeWithDirectKeySpaceAnnotation.class), is("rhaegar"));
 	}
 
+	/**
+	 * @see DATAKV-129
+	 */
+	@Test
+	public void shouldResolveKeySpaceUsingAliasForCorrectly() {
+		assertThat(resolver.resolveKeySpace(EntityWithSetKeySpaceUsingAliasFor.class), is("viserys"));
+	}
+
+	/**
+	 * @see DATAKV-129
+	 */
+	@Test
+	public void shouldResolveKeySpaceUsingAliasForCorrectlyOnSubClass() {
+		assertThat(resolver.resolveKeySpace(EntityWithInheritedKeySpaceUsingAliasFor.class), is("viserys"));
+	}
+
 	@PersistentAnnotationWithExplicitKeySpace
 	static class EntityWithDefaultKeySpace {
 
@@ -116,6 +133,15 @@ public class AnnotationBasedKeySpaceResolverUnitTests {
 
 	}
 
+	@PersistentAnnotationWithExplicitKeySpace(firstname = "viserys")
+	static class EntityWithSetKeySpaceUsingAliasFor {
+
+	}
+
+	static class EntityWithInheritedKeySpaceUsingAliasFor extends EntityWithSetKeySpaceUsingAliasFor {
+
+	}
+
 	@Persistent
 	@Retention(RetentionPolicy.RUNTIME)
 	@Target({ ElementType.TYPE })
@@ -125,6 +151,19 @@ public class AnnotationBasedKeySpaceResolverUnitTests {
 		String firstname() default "daenerys";
 
 		String lastnamne() default "targaryen";
+	}
+
+	@Persistent
+	@Retention(RetentionPolicy.RUNTIME)
+	@Target({ ElementType.TYPE })
+	@KeySpace
+	static @interface PersistentAnnotationWithExplicitKeySpaceUsingAliasFor {
+
+		@AliasFor(annotation = KeySpace.class, attribute = "value")
+		String firstname() default "daenerys";
+
+		String lastnamne() default "targaryen";
+
 	}
 
 	static class TypeWithoutKeySpace {

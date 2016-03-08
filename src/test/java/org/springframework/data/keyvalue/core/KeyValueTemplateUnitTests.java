@@ -1,5 +1,5 @@
 /*
- * Copyright 2014-2015 the original author or authors.
+ * Copyright 2014-2016 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -42,6 +42,7 @@ import org.springframework.dao.InvalidDataAccessApiUsageException;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.keyvalue.SubclassOfTypeWithCustomComposedKeySpaceAnnotation;
 import org.springframework.data.keyvalue.TypeWithCustomComposedKeySpaceAnnotation;
+import org.springframework.data.keyvalue.TypeWithCustomComposedKeySpaceAnnotationUsingAliasFor;
 import org.springframework.data.keyvalue.core.event.KeyValueEvent;
 import org.springframework.data.keyvalue.core.event.KeyValueEvent.AfterDeleteEvent;
 import org.springframework.data.keyvalue.core.event.KeyValueEvent.AfterDropKeySpaceEvent;
@@ -68,6 +69,8 @@ public class KeyValueTemplateUnitTests {
 	private static final Foo FOO_ONE = new Foo("one");
 	private static final Foo FOO_TWO = new Foo("two");
 	private static final TypeWithCustomComposedKeySpaceAnnotation ALIASED = new TypeWithCustomComposedKeySpaceAnnotation(
+			"super");
+	private static final TypeWithCustomComposedKeySpaceAnnotationUsingAliasFor ALIASED_USING_ALIAS_FOR = new TypeWithCustomComposedKeySpaceAnnotationUsingAliasFor(
 			"super");
 	private static final SubclassOfTypeWithCustomComposedKeySpaceAnnotation SUBCLASS_OF_ALIASED = new SubclassOfTypeWithCustomComposedKeySpaceAnnotation(
 			"sub");
@@ -695,6 +698,17 @@ public class KeyValueTemplateUnitTests {
 		verifyNoMoreInteractions(publisherMock);
 
 		assertThat(captor.getValue().getKeyspace(), is(Foo.class.getName()));
+	}
+
+	/**
+	 * @see DATAKV-129
+	 */
+	@Test
+	public void insertShouldRespectTypeAliasUsingAliasFor() {
+
+		template.insert("1", ALIASED_USING_ALIAS_FOR);
+
+		verify(adapterMock, times(1)).put("1", ALIASED_USING_ALIAS_FOR, "aliased");
 	}
 
 	@SuppressWarnings("rawtypes")

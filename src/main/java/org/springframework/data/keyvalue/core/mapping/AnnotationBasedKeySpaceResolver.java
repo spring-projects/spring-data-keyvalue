@@ -59,7 +59,7 @@ enum AnnotationBasedKeySpaceResolver implements KeySpaceResolver {
 
 	private static Object getKeySpace(Class<?> type) {
 
-		KeySpace keyspace = AnnotationUtils.findAnnotation(type, KeySpace.class);
+		KeySpace keyspace = AnnotatedElementUtils.findMergedAnnotation(type, KeySpace.class);
 
 		if (keyspace != null) {
 			return AnnotationUtils.getValue(keyspace);
