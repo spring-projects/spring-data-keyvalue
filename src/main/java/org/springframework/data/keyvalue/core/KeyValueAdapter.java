@@ -1,5 +1,5 @@
 /*
- * Copyright 2014-2015 the original author or authors.
+ * Copyright 2014-2016 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -94,7 +94,7 @@ public interface KeyValueAdapter extends DisposableBean {
 	Iterable<?> getAllOf(Serializable keyspace);
 
 	/**
-	 * Returns a {@link KeyValueIterator} that iterates over all entries.
+	 * Returns a {@link CloseableIterator} that iterates over all entries.
 	 * 
 	 * @param keyspace
 	 * @return
