@@ -44,6 +44,7 @@ import org.springframework.util.ClassUtils;
  * 
  * @author Christoph Strobl
  * @author Oliver Gierke
+ * @author Mark Paluch
  */
 public class KeyValuePartTreeQuery implements RepositoryQuery {
 
@@ -134,15 +135,17 @@ public class KeyValuePartTreeQuery implements RepositoryQuery {
 		ParametersParameterAccessor accessor = new ParametersParameterAccessor(getQueryMethod().getParameters(),
 				parameters);
 
-		KeyValueQuery<?> query = new KeyValueQuery(instance.getCritieria());
+		Object criteria = instance.getCritieria();
 
-		if (instance.getCritieria() instanceof SpelExpression) {
+		if (criteria instanceof SpelCriteria || criteria instanceof SpelExpression) {
 
+			SpelExpression spelExpression = getSpelExpression(criteria);
 			EvaluationContext context = this.evaluationContextProvider.getEvaluationContext(getQueryMethod().getParameters(),
 					parameters);
-			query = new KeyValueQuery(new SpelCriteria((SpelExpression) instance.getCritieria(), context));
+			criteria = new SpelCriteria(spelExpression, context);
 		}
-
+		
+		KeyValueQuery<?> query = new KeyValueQuery(criteria);
 		Pageable pageable = accessor.getPageable();
 		Sort sort = accessor.getSort();
 
@@ -151,6 +154,19 @@ public class KeyValuePartTreeQuery implements RepositoryQuery {
 		query.setSort(sort == null ? instance.getSort() : sort);
 
 		return query;
+	}
+
+	private SpelExpression getSpelExpression(Object criteria) {
+		
+		if(criteria instanceof SpelExpression){
+			return (SpelExpression) criteria;
+		}
+		
+		if(criteria instanceof SpelCriteria){
+			return getSpelExpression(((SpelCriteria) criteria).getExpression());
+		}
+
+		throw new IllegalStateException(String.format("Cannot retrieve SpelExpression from %s", criteria));
 	}
 
 	public KeyValueQuery<?> createQuery(ParameterAccessor accessor) {

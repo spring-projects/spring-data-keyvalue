@@ -1,5 +1,5 @@
 /*
- * Copyright 2014-2015 the original author or authors.
+ * Copyright 2014-2016 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -43,6 +43,7 @@ import org.springframework.data.repository.CrudRepository;
  * @author Christoph Strobl
  * @author Oliver Gierke
  * @author Thomas Darimont
+ * @author Mark Paluch
  */
 public abstract class AbstractRepositoryUnitTests<T extends AbstractRepositoryUnitTests.PersonRepository> {
 
@@ -61,7 +62,7 @@ public abstract class AbstractRepositoryUnitTests<T extends AbstractRepositoryUn
 	public void setup() {
 
 		KeyValueOperations operations = new KeyValueTemplate(new MapKeyValueAdapter());
-		KeyValueRepositoryFactory keyValueRepositoryFactory = new KeyValueRepositoryFactory(operations);
+		KeyValueRepositoryFactory keyValueRepositoryFactory = createKeyValueRepositoryFactory(operations);
 
 		this.repository = getRepository(keyValueRepositoryFactory);
 	}
@@ -78,7 +79,20 @@ public abstract class AbstractRepositoryUnitTests<T extends AbstractRepositoryUn
 	}
 
 	/**
+	 * @see DATAKV-137
+	 */
+	@Test
+	public void findByFirstname() {
+
+		repository.save(LENNISTERS);
+
+		assertThat(repository.findByFirstname(CERSEI.getFirstname()), hasItems(CERSEI));
+		assertThat(repository.findByFirstname(JAIME.getFirstname()), hasItems(JAIME));
+	}
+
+	/**
 	 * @see DATACMNS-525
+	 * @see DATAKV-137
 	 */
 	@Test
 	public void combindedFindUsingAnd() {
@@ -86,6 +100,7 @@ public abstract class AbstractRepositoryUnitTests<T extends AbstractRepositoryUn
 		repository.save(LENNISTERS);
 
 		assertThat(repository.findByFirstnameAndAge(JAIME.getFirstname(), 19), hasItem(JAIME));
+		assertThat(repository.findByFirstnameAndAge(TYRION.getFirstname(), 17), hasItem(TYRION));
 	}
 
 	/**
@@ -120,6 +135,7 @@ public abstract class AbstractRepositoryUnitTests<T extends AbstractRepositoryUn
 
 	/**
 	 * @see DATACMNS-525
+	 * @see DATAKV-137
 	 */
 	@Test
 	public void singleEntityExecution() {
@@ -127,6 +143,7 @@ public abstract class AbstractRepositoryUnitTests<T extends AbstractRepositoryUn
 		repository.save(LENNISTERS);
 
 		assertThat(repository.findByAgeAndFirstname(TYRION.getAge(), TYRION.getFirstname()), is(TYRION));
+		assertThat(repository.findByAgeAndFirstname(CERSEI.getAge(), CERSEI.getFirstname()), is(CERSEI));
 	}
 
 	/**
@@ -183,6 +200,10 @@ public abstract class AbstractRepositoryUnitTests<T extends AbstractRepositoryUn
 		assertThat(result.get(0).getFirstname(), is(CERSEI.getFirstname()));
 	}
 
+	protected KeyValueRepositoryFactory createKeyValueRepositoryFactory(KeyValueOperations operations) {
+		return new KeyValueRepositoryFactory(operations);
+	}
+	
 	protected abstract T getRepository(KeyValueRepositoryFactory factory);
 
 	public static interface PersonRepository extends CrudRepository<Person, String>, KeyValueRepository<Person, String> {
