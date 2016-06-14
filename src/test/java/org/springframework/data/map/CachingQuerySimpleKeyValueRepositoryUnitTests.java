@@ -15,31 +15,23 @@
  */
 package org.springframework.data.map;
 
-import static org.hamcrest.Matchers.hasItems;
-import static org.junit.Assert.assertThat;
-
-import org.junit.Test;
 import org.springframework.data.keyvalue.core.KeyValueOperations;
 import org.springframework.data.keyvalue.repository.query.CachingKeyValuePartTreeQuery;
 import org.springframework.data.keyvalue.repository.query.SpelQueryCreator;
 import org.springframework.data.keyvalue.repository.support.KeyValueRepositoryFactory;
 import org.springframework.data.keyvalue.repository.support.SimpleKeyValueRepository;
-import org.springframework.data.map.AbstractRepositoryUnitTests.PersonRepository;
 
 /**
- * Unit tests for {@link SimpleKeyValueRepository} using {@link CachingKeyValuePartTreeQuery} and {@link SpelQueryCreator}.
- * 
+ * Unit tests for {@link SimpleKeyValueRepository} using {@link CachingKeyValuePartTreeQuery} and
+ * {@link SpelQueryCreator}.
+ *
  * @author Mark Paluch
+ * @author Christoph Strobl
  */
-public class CachingQuerySimpleKeyValueRepositoryUnitTests extends AbstractRepositoryUnitTests<PersonRepository> {
+public class CachingQuerySimpleKeyValueRepositoryUnitTests extends SimpleKeyValueRepositoryUnitTests {
 
 	@Override
 	protected KeyValueRepositoryFactory createKeyValueRepositoryFactory(KeyValueOperations operations) {
 		return new KeyValueRepositoryFactory(operations, SpelQueryCreator.class, CachingKeyValuePartTreeQuery.class);
-	}
-
-	@Override
-	protected PersonRepository getRepository(KeyValueRepositoryFactory factory) {
-		return factory.getRepository(PersonRepository.class);
 	}
 }
