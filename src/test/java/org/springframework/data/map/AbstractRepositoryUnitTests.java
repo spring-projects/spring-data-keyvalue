@@ -203,7 +203,7 @@ public abstract class AbstractRepositoryUnitTests<T extends AbstractRepositoryUn
 	protected KeyValueRepositoryFactory createKeyValueRepositoryFactory(KeyValueOperations operations) {
 		return new KeyValueRepositoryFactory(operations);
 	}
-	
+
 	protected abstract T getRepository(KeyValueRepositoryFactory factory);
 
 	public static interface PersonRepository extends CrudRepository<Person, String>, KeyValueRepository<Person, String> {

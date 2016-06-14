@@ -18,7 +18,7 @@ package org.springframework.data.keyvalue.repository.query;
 import static org.hamcrest.core.IsNot.*;
 import static org.hamcrest.core.IsSame.*;
 import static org.junit.Assert.*;
-import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.*;
 import static org.mockito.Mockito.*;
 
 import java.lang.reflect.Method;
@@ -39,7 +39,7 @@ import org.springframework.data.repository.query.QueryMethod;
 
 /**
  * Unit tests for {@link CachingKeyValuePartTreeQuery}.
- * 
+ *
  * @author Mark Paluch
  */
 @RunWith(MockitoJUnitRunner.class)
@@ -50,6 +50,7 @@ public class CachingKeyValuePartTreeQueryUnitTests {
 	@Mock ProjectionFactory projectionFactoryMock;
 
 	@Before
+	@SuppressWarnings({ "unchecked", "rawtypes" })
 	public void setUp() throws Exception {
 
 		when(metadataMock.getDomainType()).thenReturn((Class) Person.class);
@@ -60,7 +61,6 @@ public class CachingKeyValuePartTreeQueryUnitTests {
 	 * @see DATAKV-137
 	 */
 	@Test
-	@SuppressWarnings({ "unchecked", "rawtypes" })
 	public void cachedSpelExpressionShouldBeReusedWithNewContext() throws NoSuchMethodException, SecurityException {
 
 		QueryMethod qm = new QueryMethod(Repo.class.getMethod("findByFirstname", String.class), metadataMock,

@@ -144,7 +144,7 @@ public class KeyValuePartTreeQuery implements RepositoryQuery {
 					parameters);
 			criteria = new SpelCriteria(spelExpression, context);
 		}
-		
+
 		KeyValueQuery<?> query = new KeyValueQuery(criteria);
 		Pageable pageable = accessor.getPageable();
 		Sort sort = accessor.getSort();
@@ -157,12 +157,12 @@ public class KeyValuePartTreeQuery implements RepositoryQuery {
 	}
 
 	private SpelExpression getSpelExpression(Object criteria) {
-		
-		if(criteria instanceof SpelExpression){
+
+		if (criteria instanceof SpelExpression) {
 			return (SpelExpression) criteria;
 		}
-		
-		if(criteria instanceof SpelCriteria){
+
+		if (criteria instanceof SpelCriteria) {
 			return getSpelExpression(((SpelCriteria) criteria).getExpression());
 		}
 
