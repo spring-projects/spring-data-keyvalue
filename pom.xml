@@ -5,20 +5,19 @@
 
 	<groupId>org.springframework.data</groupId>
 	<artifactId>spring-data-keyvalue</artifactId>
-	<version>1.2.0.BUILD-SNAPSHOT</version>
+	<version>2.0.0.BUILD-SNAPSHOT</version>
 
 	<name>Spring Data KeyValue</name>
 
 	<parent>
 		<groupId>org.springframework.data.build</groupId>
 		<artifactId>spring-data-parent</artifactId>
-		<version>1.9.0.BUILD-SNAPSHOT</version>
+		<version>2.0.0.BUILD-SNAPSHOT</version>
 		<relativePath/>
 	</parent>
 
 	<properties>
-		<dist.key>DATAKV</dist.key>
-		<springdata.commons>1.13.0.BUILD-SNAPSHOT</springdata.commons>
+		<springdata.commons>2.0.0.BUILD-SNAPSHOT</springdata.commons>
 	</properties>
 
 	<dependencies>
