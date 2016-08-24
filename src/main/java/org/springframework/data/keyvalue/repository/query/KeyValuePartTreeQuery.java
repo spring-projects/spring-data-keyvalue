@@ -150,7 +150,13 @@ public class KeyValuePartTreeQuery implements RepositoryQuery {
 		Sort sort = accessor.getSort();
 
 		query.setOffset(pageable == null ? -1 : pageable.getOffset());
-		query.setRows(pageable == null ? -1 : pageable.getPageSize());
+
+		if (pageable != null) {
+			query.setRows(pageable.getPageSize());
+		} else if (instance.getRows() >= 0) {
+			query.setRows(instance.getRows());
+		}
+
 		query.setSort(sort == null ? instance.getSort() : sort);
 
 		return query;
@@ -175,7 +181,12 @@ public class KeyValuePartTreeQuery implements RepositoryQuery {
 
 		Constructor<? extends AbstractQueryCreator<?, ?>> constructor = (Constructor<? extends AbstractQueryCreator<?, ?>>) ClassUtils
 				.getConstructorIfAvailable(queryCreator, PartTree.class, ParameterAccessor.class);
-		return (KeyValueQuery<?>) BeanUtils.instantiateClass(constructor, tree, accessor).createQuery();
+		KeyValueQuery<?> query = (KeyValueQuery<?>) BeanUtils.instantiateClass(constructor, tree, accessor).createQuery();
+
+		if (tree.isLimiting()) {
+			query.setRows(tree.getMaxResults());
+		}
+		return query;
 	}
 
 	/*
