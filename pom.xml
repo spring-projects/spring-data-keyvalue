@@ -12,13 +12,13 @@
 	<parent>
 		<groupId>org.springframework.data.build</groupId>
 		<artifactId>spring-data-parent</artifactId>
-		<version>1.7.5.BUILD-SNAPSHOT</version>
+		<version>1.7.5.RELEASE</version>
 		<relativePath>../spring-data-build/parent/pom.xml</relativePath>
 	</parent>
 
 	<properties>
 		<dist.key>DATAKV</dist.key>
-		<springdata.commons>1.11.5.BUILD-SNAPSHOT</springdata.commons>
+		<springdata.commons>1.11.5.RELEASE</springdata.commons>
 	</properties>
 
 	<dependencies>
@@ -115,8 +115,8 @@
 
 	<repositories>
 		<repository>
-			<id>spring-libs-snapshot</id>
-			<url>https://repo.spring.io/libs-snapshot</url>
+			<id>spring-libs-release</id>
+			<url>https://repo.spring.io/libs-release</url>
 		</repository>
 	</repositories>
 
