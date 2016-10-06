@@ -330,7 +330,7 @@ enum AnnotationBasedKeySpaceResolver implements KeySpaceResolver {
 				this.declaringClass = declaringClass;
 				this.composedAnnotation = composedAnnotation;
 				this.annotation = annotation;
-				this.annotationAttributes = AnnotatedElementUtils.getAnnotationAttributes(rootDeclaringClass, annotation
+				this.annotationAttributes = AnnotatedElementUtils.getMergedAnnotationAttributes(rootDeclaringClass, annotation
 						.annotationType().getName());
 			}
 
