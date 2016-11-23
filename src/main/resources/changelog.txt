@@ -1,6 +1,12 @@
 Spring Data KeyValue Changelog
 ==========================
 
+Changes in version 2.0.0.M1 (2016-11-23)
+----------------------------------------
+* DATAKV-150 - Set up 2.0 development.
+* DATAKV-149 - Release 2.0 M1 (Kay).
+
+
 Changes in version 1.1.5.RELEASE (2016-11-03)
 ---------------------------------------------
 * DATAKV-146 - Release 1.1.5 (Hopper SR5).
