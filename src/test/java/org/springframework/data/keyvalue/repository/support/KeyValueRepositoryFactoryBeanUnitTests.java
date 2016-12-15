@@ -44,7 +44,8 @@ public class KeyValueRepositoryFactoryBeanUnitTests {
 
 	@Before
 	public void setUp() {
-		this.factoryBean = new KeyValueRepositoryFactoryBean<Repository<Object, Serializable>, Object, Serializable>();
+		this.factoryBean = new KeyValueRepositoryFactoryBean<Repository<Object, Serializable>, Object, Serializable>(
+				SampleRepository.class);
 	}
 
 	/**
@@ -97,29 +98,6 @@ public class KeyValueRepositoryFactoryBeanUnitTests {
 
 	/**
 	 * @see DATAKV-123
-	 * @see DATAKV-112
-	 */
-	@Test
-	@SuppressWarnings("unchecked")
-	public void initializesConfiguredFactory() {
-
-		Class<? extends AbstractQueryCreator<?, ?>> creatorType = (Class<? extends AbstractQueryCreator<?, ?>>) mock(
-				AbstractQueryCreator.class).getClass();
-		Class<? extends RepositoryQuery> queryType = (Class<? extends RepositoryQuery>) mock(KeyValuePartTreeQuery.class)
-				.getClass();
-
-		factoryBean.setQueryCreator(creatorType);
-		factoryBean.setKeyValueOperations(mock(KeyValueOperations.class));
-		factoryBean.setQueryType(queryType);
-
-		exception.expect(IllegalArgumentException.class);
-		exception.expectMessage("Repository interface");
-
-		factoryBean.afterPropertiesSet();
-	}
-
-	/**
-	 * @see DATAKV-123
 	 */
 	@Test
 	@SuppressWarnings("unchecked")
@@ -144,4 +122,6 @@ public class KeyValueRepositoryFactoryBeanUnitTests {
 	public void rejectsNullQueryType() {
 		factoryBean.setQueryType(null);
 	}
+
+	interface SampleRepository extends Repository<Object, Serializable> {}
 }
