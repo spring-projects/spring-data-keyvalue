@@ -42,6 +42,15 @@ public class KeyValueRepositoryFactoryBean<T extends Repository<S, ID>, S, ID ex
 	private Class<? extends RepositoryQuery> repositoryQueryType;
 
 	/**
+	 * Creates a new {@link KeyValueRepositoryFactoryBean} for the given repository interface.
+	 * 
+	 * @param repositoryInterface must not be {@literal null}.
+	 */
+	public KeyValueRepositoryFactoryBean(Class<? extends T> repositoryInterface) {
+		super(repositoryInterface);
+	}
+
+	/**
 	 * Configures the {@link KeyValueOperations} to be used for the repositories.
 	 * 
 	 * @param operations must not be {@literal null}.
