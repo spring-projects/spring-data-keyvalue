@@ -1,12 +1,23 @@
 language: java
+
 jdk:
-- oraclejdk8
+  - oraclejdk8
+
+addons:
+  apt:
+    packages:
+    - oracle-java8-installer
+
 cache:
   directories:
-  - $HOME/.m2
+    - $HOME/.m2
+
 sudo: false
+
 install: true
+
 script: mvn clean dependency:list test -Dsort
+
 notifications:
   slack:
     secure: e9Mgff6nnlx6KEnQalzKmqviOUGdnrwgdIFxoFzNZLsVomBZtp7UhxP4zBPnVjwPPH30d3oT8qirB4xraQtZBn5esj1fdav2yrtlfYEQnoYvKRiZE9ZfNWcOaqoaPz3uBSNPcxbS3mkLr3pTTpQ20eSQGlnG36PvWLRQkD89gjk=
