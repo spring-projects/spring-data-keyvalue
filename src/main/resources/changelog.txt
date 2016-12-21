@@ -1,6 +1,15 @@
 Spring Data KeyValue Changelog
 ==========================
 
+Changes in version 1.2.0.RC1 (2016-12-21)
+-----------------------------------------
+* DATAKV-154 - Upgrade to a newer JDK version on TravisCI.
+* DATAKV-153 - Adapt API in RepositoryFactoryBeanSupport implementation.
+* DATAKV-152 - Register repository factory in spring.factories for multi-store support.
+* DATAKV-142 - Consider PartTree.isLimiting() and PartTree.getMaxResults() when creating queries.
+* DATAKV-141 - Release 1.2 RC1 (Ingalls).
+
+
 Changes in version 2.0.0.M1 (2016-11-23)
 ----------------------------------------
 * DATAKV-150 - Set up 2.0 development.
