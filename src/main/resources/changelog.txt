@@ -1,6 +1,11 @@
 Spring Data KeyValue Changelog
 ==========================
 
+Changes in version 1.1.6.RELEASE (2016-12-21)
+---------------------------------------------
+* DATAKV-148 - Release 1.1.6 (Hopper SR6).
+
+
 Changes in version 1.2.0.RC1 (2016-12-21)
 -----------------------------------------
 * DATAKV-154 - Upgrade to a newer JDK version on TravisCI.
