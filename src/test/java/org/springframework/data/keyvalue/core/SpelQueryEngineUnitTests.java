@@ -1,5 +1,5 @@
 /*
- * Copyright 2015 the original author or authors.
+ * Copyright 2015-2017 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -65,10 +65,7 @@ public class SpelQueryEngineUnitTests {
 		engine.registerAdapter(adapter);
 	}
 
-	/**
-	 * @see DATAKV-114
-	 */
-	@Test
+	@Test // DATAKV-114
 	@SuppressWarnings("unchecked")
 	public void queriesEntitiesWithNullProperty() throws Exception {
 
@@ -78,10 +75,7 @@ public class SpelQueryEngineUnitTests {
 				-1, anyString()), contains(BOB_WITH_FIRSTNAME));
 	}
 
-	/**
-	 * @see DATAKV-114
-	 */
-	@Test
+	@Test // DATAKV-114
 	public void countsEntitiesWithNullProperty() throws Exception {
 
 		doReturn(people).when(adapter).getAllOf(anyString());

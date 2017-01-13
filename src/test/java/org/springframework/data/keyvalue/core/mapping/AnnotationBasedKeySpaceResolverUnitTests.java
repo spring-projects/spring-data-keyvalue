@@ -1,5 +1,5 @@
 /*
- * Copyright 2014-2016 the original author or authors.
+ * Copyright 2014-2017 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -47,74 +47,47 @@ public class AnnotationBasedKeySpaceResolverUnitTests {
 		resolver = AnnotationBasedKeySpaceResolver.INSTANCE;
 	}
 
-	/**
-	 * @see DATACMNS-525
-	 */
-	@Test
+	@Test // DATACMNS-525
 	public void shouldResolveKeySpaceDefaultValueCorrectly() {
 		assertThat(resolver.resolveKeySpace(EntityWithDefaultKeySpace.class), is("daenerys"));
 	}
 
-	/**
-	 * @see DATACMNS-525
-	 */
-	@Test
+	@Test // DATACMNS-525
 	public void shouldResolveKeySpaceCorrectly() {
 		assertThat(resolver.resolveKeySpace(EntityWithSetKeySpace.class), is("viserys"));
 	}
 
-	/**
-	 * @see DATAKV-105
-	 */
-	@Test
+	@Test // DATAKV-105
 	public void shouldReturnNullWhenNoKeySpaceFoundOnComposedPersistentAnnotation() {
 		assertThat(resolver.resolveKeySpace(TypeWithInhteritedPersistentAnnotationNotHavingKeySpace.class), nullValue());
 	}
 
-	/**
-	 * @see DATAKV-105
-	 */
-	@Test
+	@Test // DATAKV-105
 	public void shouldReturnNullWhenPersistentIsFoundOnNonComposedAnnotation() {
 		assertThat(resolver.resolveKeySpace(TypeWithPersistentAnnotationNotHavingKeySpace.class), nullValue());
 	}
 
-	/**
-	 * @see DATAKV-105
-	 */
-	@Test
+	@Test // DATAKV-105
 	public void shouldReturnNullWhenPersistentIsNotFound() {
 		assertThat(resolver.resolveKeySpace(TypeWithoutKeySpace.class), nullValue());
 	}
 
-	/**
-	 * @see DATACMNS-525
-	 */
-	@Test
+	@Test // DATACMNS-525
 	public void shouldResolveInheritedKeySpaceCorrectly() {
 		assertThat(resolver.resolveKeySpace(EntityWithInheritedKeySpace.class), is("viserys"));
 	}
 
-	/**
-	 * @see DATACMNS-525
-	 */
-	@Test
+	@Test // DATACMNS-525
 	public void shouldResolveDirectKeySpaceAnnotationCorrectly() {
 		assertThat(resolver.resolveKeySpace(TypeWithDirectKeySpaceAnnotation.class), is("rhaegar"));
 	}
 
-	/**
-	 * @see DATAKV-129
-	 */
-	@Test
+	@Test // DATAKV-129
 	public void shouldResolveKeySpaceUsingAliasForCorrectly() {
 		assertThat(resolver.resolveKeySpace(EntityWithSetKeySpaceUsingAliasFor.class), is("viserys"));
 	}
 
-	/**
-	 * @see DATAKV-129
-	 */
-	@Test
+	@Test // DATAKV-129
 	public void shouldResolveKeySpaceUsingAliasForCorrectlyOnSubClass() {
 		assertThat(resolver.resolveKeySpace(EntityWithInheritedKeySpaceUsingAliasFor.class), is("viserys"));
 	}

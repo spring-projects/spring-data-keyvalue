@@ -1,5 +1,5 @@
 /*
- * Copyright 2014 the original author or authors.
+ * Copyright 2014-2017 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -50,10 +50,7 @@ public class SimpleKeyValueRepositoryUnitTests {
 		repo = new SimpleKeyValueRepository<Foo, String>(ei, opsMock);
 	}
 
-	/**
-	 * @see DATACMNS-525
-	 */
-	@Test
+	@Test // DATACMNS-525
 	public void saveNewWithNumericId() {
 
 		ReflectionEntityInformation<WithNumericId, Integer> ei = new ReflectionEntityInformation<WithNumericId, Integer>(
@@ -67,10 +64,7 @@ public class SimpleKeyValueRepositoryUnitTests {
 		verify(opsMock, times(1)).insert(eq(withNumericId));
 	}
 
-	/**
-	 * @see DATACMNS-525
-	 */
-	@Test
+	@Test // DATACMNS-525
 	public void testDoubleSave() {
 
 		Foo foo = new Foo("one");
@@ -83,10 +77,7 @@ public class SimpleKeyValueRepositoryUnitTests {
 		verify(opsMock, times(1)).update(eq(foo.getId()), eq(foo));
 	}
 
-	/**
-	 * @see DATACMNS-525
-	 */
-	@Test
+	@Test // DATACMNS-525
 	public void multipleSave() {
 
 		Foo one = new Foo("one");
@@ -97,10 +88,7 @@ public class SimpleKeyValueRepositoryUnitTests {
 		verify(opsMock, times(1)).insert(eq(two));
 	}
 
-	/**
-	 * @see DATACMNS-525
-	 */
-	@Test
+	@Test // DATACMNS-525
 	public void deleteEntity() {
 
 		Foo one = repo.save(new Foo("one"));
@@ -109,10 +97,7 @@ public class SimpleKeyValueRepositoryUnitTests {
 		verify(opsMock, times(1)).delete(eq(one.getId()), eq(Foo.class));
 	}
 
-	/**
-	 * @see DATACMNS-525
-	 */
-	@Test
+	@Test // DATACMNS-525
 	public void deleteById() {
 
 		repo.delete("one");
@@ -120,10 +105,7 @@ public class SimpleKeyValueRepositoryUnitTests {
 		verify(opsMock, times(1)).delete(eq("one"), eq(Foo.class));
 	}
 
-	/**
-	 * @see DATACMNS-525
-	 */
-	@Test
+	@Test // DATACMNS-525
 	public void deleteAll() {
 
 		repo.deleteAll();
@@ -131,10 +113,7 @@ public class SimpleKeyValueRepositoryUnitTests {
 		verify(opsMock, times(1)).delete(eq(Foo.class));
 	}
 
-	/**
-	 * @see DATACMNS-525
-	 */
-	@Test
+	@Test // DATACMNS-525
 	public void findAllIds() {
 
 		repo.findAll(Arrays.asList("one", "two", "three"));
@@ -142,10 +121,7 @@ public class SimpleKeyValueRepositoryUnitTests {
 		verify(opsMock, times(3)).findById(anyString(), eq(Foo.class));
 	}
 
-	/**
-	 * @see DATACMNS-525
-	 */
-	@Test
+	@Test // DATACMNS-525
 	public void findAllWithPageableShouldDelegateToOperationsCorrectlyWhenPageableDoesNotContainSort() {
 
 		repo.findAll(new PageRequest(10, 15));
@@ -153,10 +129,7 @@ public class SimpleKeyValueRepositoryUnitTests {
 		verify(opsMock, times(1)).findInRange(eq(150), eq(15), isNull(Sort.class), eq(Foo.class));
 	}
 
-	/**
-	 * @see DATACMNS-525
-	 */
-	@Test
+	@Test // DATACMNS-525
 	public void findAllWithPageableShouldDelegateToOperationsCorrectlyWhenPageableContainsSort() {
 
 		Sort sort = new Sort("for", "bar");
@@ -165,10 +138,7 @@ public class SimpleKeyValueRepositoryUnitTests {
 		verify(opsMock, times(1)).findInRange(eq(150), eq(15), eq(sort), eq(Foo.class));
 	}
 
-	/**
-	 * @see DATACMNS-525
-	 */
-	@Test
+	@Test // DATACMNS-525
 	public void findAllShouldFallbackToFindAllOfWhenGivenNullPageable() {
 
 		repo.findAll((Pageable) null);

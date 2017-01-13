@@ -1,5 +1,5 @@
 /*
- * Copyright 2014-2016 the original author or authors.
+ * Copyright 2014-2017 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -67,10 +67,7 @@ public abstract class AbstractRepositoryUnitTests<T extends AbstractRepositoryUn
 		this.repository = getRepository(keyValueRepositoryFactory);
 	}
 
-	/**
-	 * @see DATACMNS-525
-	 */
-	@Test
+	@Test // DATACMNS-525
 	public void findBy() {
 
 		repository.save(LENNISTERS);
@@ -78,10 +75,7 @@ public abstract class AbstractRepositoryUnitTests<T extends AbstractRepositoryUn
 		assertThat(repository.findByAge(19), hasItems(CERSEI, JAIME));
 	}
 
-	/**
-	 * @see DATAKV-137
-	 */
-	@Test
+	@Test // DATAKV-137
 	public void findByFirstname() {
 
 		repository.save(LENNISTERS);
@@ -90,11 +84,7 @@ public abstract class AbstractRepositoryUnitTests<T extends AbstractRepositoryUn
 		assertThat(repository.findByFirstname(JAIME.getFirstname()), hasItems(JAIME));
 	}
 
-	/**
-	 * @see DATACMNS-525
-	 * @see DATAKV-137
-	 */
-	@Test
+	@Test // DATACMNS-525, DATAKV-137
 	public void combindedFindUsingAnd() {
 
 		repository.save(LENNISTERS);
@@ -103,10 +93,7 @@ public abstract class AbstractRepositoryUnitTests<T extends AbstractRepositoryUn
 		assertThat(repository.findByFirstnameAndAge(TYRION.getFirstname(), 17), hasItem(TYRION));
 	}
 
-	/**
-	 * @see DATACMNS-525
-	 */
-	@Test
+	@Test // DATACMNS-525
 	public void findPage() {
 
 		repository.save(LENNISTERS);
@@ -122,10 +109,7 @@ public abstract class AbstractRepositoryUnitTests<T extends AbstractRepositoryUn
 		assertThat(next.getContent(), IsCollectionWithSize.hasSize(1));
 	}
 
-	/**
-	 * @see DATACMNS-525
-	 */
-	@Test
+	@Test // DATACMNS-525
 	public void findByConnectingOr() {
 
 		repository.save(LENNISTERS);
@@ -133,11 +117,7 @@ public abstract class AbstractRepositoryUnitTests<T extends AbstractRepositoryUn
 		assertThat(repository.findByAgeOrFirstname(19, TYRION.getFirstname()), hasItems(CERSEI, JAIME, TYRION));
 	}
 
-	/**
-	 * @see DATACMNS-525
-	 * @see DATAKV-137
-	 */
-	@Test
+	@Test // DATACMNS-525, DATAKV-137
 	public void singleEntityExecution() {
 
 		repository.save(LENNISTERS);
@@ -146,10 +126,7 @@ public abstract class AbstractRepositoryUnitTests<T extends AbstractRepositoryUn
 		assertThat(repository.findByAgeAndFirstname(CERSEI.getAge(), CERSEI.getFirstname()), is(CERSEI));
 	}
 
-	/**
-	 * @see DATACMNS-525
-	 */
-	@Test
+	@Test // DATACMNS-525
 	public void findAllShouldRespectSort() {
 
 		repository.save(LENNISTERS);
@@ -159,10 +136,7 @@ public abstract class AbstractRepositoryUnitTests<T extends AbstractRepositoryUn
 				contains(TYRION, JAIME, CERSEI));
 	}
 
-	/**
-	 * @see DATACMNS-525
-	 */
-	@Test
+	@Test // DATACMNS-525
 	public void derivedFinderShouldRespectSort() {
 
 		repository.save(LENNISTERS);
@@ -172,10 +146,7 @@ public abstract class AbstractRepositoryUnitTests<T extends AbstractRepositoryUn
 		assertThat(result, contains(TYRION, JAIME, CERSEI));
 	}
 
-	/**
-	 * @see DATAKV-121
-	 */
-	@Test
+	@Test // DATAKV-121
 	public void projectsResultToInterface() {
 
 		repository.save(LENNISTERS);
@@ -186,10 +157,7 @@ public abstract class AbstractRepositoryUnitTests<T extends AbstractRepositoryUn
 		assertThat(result.get(0).getFirstname(), is(CERSEI.getFirstname()));
 	}
 
-	/**
-	 * @see DATAKV-121
-	 */
-	@Test
+	@Test // DATAKV-121
 	public void projectsResultToDynamicInterface() {
 
 		repository.save(LENNISTERS);

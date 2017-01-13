@@ -1,5 +1,5 @@
 /*
- * Copyright 2014 the original author or authors.
+ * Copyright 2014-2017 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -49,112 +49,73 @@ public class MapKeyValueAdapterUnitTests {
 		this.adapter = new MapKeyValueAdapter();
 	}
 
-	/**
-	 * @see DATACMNS-525
-	 */
-	@Test(expected = IllegalArgumentException.class)
+	@Test(expected = IllegalArgumentException.class) // DATACMNS-525
 	public void putShouldThrowExceptionWhenAddingNullId() {
 		adapter.put(null, object1, COLLECTION_1);
 	}
 
-	/**
-	 * @see DATACMNS-525
-	 */
-	@Test(expected = IllegalArgumentException.class)
+	@Test(expected = IllegalArgumentException.class) // DATACMNS-525
 	public void putShouldThrowExceptionWhenCollectionIsNullValue() {
 		adapter.put("1", object1, null);
 	}
 
-	/**
-	 * @see DATACMNS-525
-	 */
-	@Test
+	@Test // DATACMNS-525
 	public void putReturnsNullWhenNoObjectForIdPresent() {
 		assertThat(adapter.put("1", object1, COLLECTION_1), nullValue());
 	}
 
-	/**
-	 * @see DATACMNS-525
-	 */
-	@Test
+	@Test // DATACMNS-525
 	public void putShouldReturnPreviousObjectForIdWhenAddingNewOneWithSameIdPresent() {
 
 		adapter.put("1", object1, COLLECTION_1);
 		assertThat(adapter.put("1", object2, COLLECTION_1), equalTo(object1));
 	}
 
-	/**
-	 * @see DATACMNS-525
-	 */
-	@Test(expected = IllegalArgumentException.class)
+	@Test(expected = IllegalArgumentException.class) // DATACMNS-525
 	public void containsShouldThrowExceptionWhenIdIsNull() {
 		adapter.contains(null, COLLECTION_1);
 	}
 
-	/**
-	 * @see DATACMNS-525
-	 */
-	@Test(expected = IllegalArgumentException.class)
+	@Test(expected = IllegalArgumentException.class) // DATACMNS-525
 	public void containsShouldThrowExceptionWhenTypeIsNull() {
 		adapter.contains("", null);
 	}
 
-	/**
-	 * @see DATACMNS-525
-	 */
-	@Test
+	@Test // DATACMNS-525
 	public void containsShouldReturnFalseWhenNoElementsPresent() {
 		assertThat(adapter.contains("1", COLLECTION_1), is(false));
 	}
 
-	/**
-	 * @see DATACMNS-525
-	 */
-	@Test
+	@Test // DATACMNS-525
 	public void containShouldReturnTrueWhenElementWithIdPresent() {
 
 		adapter.put("1", object1, COLLECTION_1);
 		assertThat(adapter.contains("1", COLLECTION_1), is(true));
 	}
 
-	/**
-	 * @see DATACMNS-525
-	 */
-	@Test
+	@Test // DATACMNS-525
 	public void getShouldReturnNullWhenNoElementWithIdPresent() {
 		assertThat(adapter.get("1", COLLECTION_1), nullValue());
 	}
 
-	/**
-	 * @see DATACMNS-525
-	 */
-	@Test
+	@Test // DATACMNS-525
 	public void getShouldReturnElementWhenMatchingIdPresent() {
 
 		adapter.put("1", object1, COLLECTION_1);
 		assertThat(adapter.get("1", COLLECTION_1), is(object1));
 	}
 
-	/**
-	 * @see DATACMNS-525
-	 */
-	@Test(expected = IllegalArgumentException.class)
+	@Test(expected = IllegalArgumentException.class) // DATACMNS-525
 	public void getShouldThrowExceptionWhenIdIsNull() {
 		adapter.get(null, COLLECTION_1);
 	}
 
-	/**
-	 * @see DATACMNS-525
-	 */
-	@Test(expected = IllegalArgumentException.class)
+	@Test(expected = IllegalArgumentException.class) // DATACMNS-525
 	public void getShouldThrowExceptionWhenTypeIsNull() {
 		adapter.get("1", null);
 	}
 
-	/**
-	 * @see DATACMNS-525
-	 */
-	@Test
+	@Test // DATACMNS-525
 	public void getAllOfShouldReturnAllValuesOfGivenCollection() {
 
 		adapter.put("1", object1, COLLECTION_1);
@@ -164,36 +125,24 @@ public class MapKeyValueAdapterUnitTests {
 		assertThat(adapter.getAllOf(COLLECTION_1), containsInAnyOrder(object1, object2));
 	}
 
-	/**
-	 * @see DATACMNS-525
-	 */
-	@Test(expected = IllegalArgumentException.class)
+	@Test(expected = IllegalArgumentException.class) // DATACMNS-525
 	public void getAllOfShouldThrowExceptionWhenTypeIsNull() {
 		adapter.getAllOf(null);
 	}
 
-	/**
-	 * @see DATACMNS-525
-	 */
-	@Test
+	@Test // DATACMNS-525
 	public void deleteShouldReturnNullWhenGivenIdThatDoesNotExist() {
 		assertThat(adapter.delete("1", COLLECTION_1), nullValue());
 	}
 
-	/**
-	 * @see DATACMNS-525
-	 */
-	@Test
+	@Test // DATACMNS-525
 	public void deleteShouldReturnDeletedObject() {
 
 		adapter.put("1", object1, COLLECTION_1);
 		assertThat(adapter.delete("1", COLLECTION_1), is(object1));
 	}
 
-	/**
-	 * @see DATAKV-99
-	 */
-	@Test
+	@Test // DATAKV-99
 	public void scanShouldIterateOverAvailableEntries() {
 
 		adapter.put("1", object1, COLLECTION_1);
@@ -206,18 +155,12 @@ public class MapKeyValueAdapterUnitTests {
 		assertThat(iterator.hasNext(), is(false));
 	}
 
-	/**
-	 * @see DATAKV-99
-	 */
-	@Test
+	@Test // DATAKV-99
 	public void scanShouldReturnEmptyIteratorWhenNoElementsAvailable() {
 		assertThat(adapter.entries(COLLECTION_1).hasNext(), is(false));
 	}
 
-	/**
-	 * @see DATAKV-99
-	 */
-	@Test
+	@Test // DATAKV-99
 	public void scanDoesNotMixResultsFromMultipleKeyspaces() {
 
 		adapter.put("1", object1, COLLECTION_1);

@@ -1,5 +1,5 @@
 /*
- * Copyright 2016 the original author or authors.
+ * Copyright 2016-2017 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -34,18 +34,12 @@ public class DefaultIdentifierGeneratorUnitTests {
 
 	DefaultIdentifierGenerator generator = DefaultIdentifierGenerator.INSTANCE;
 
-	/**
-	 * @DATAKV-136
-	 */
 	@Test(expected = InvalidDataAccessApiUsageException.class)
 	public void shouldThrowExceptionForUnsupportedType() {
 		generator.generateIdentifierOfType(ClassTypeInformation.from(Date.class));
 	}
 
-	/**
-	 * @DATAKV-136
-	 */
-	@Test
+	@Test // DATAKV-136
 	public void shouldGenerateUUIDValueCorrectly() {
 
 		Object value = generator.generateIdentifierOfType(ClassTypeInformation.from(UUID.class));
@@ -54,10 +48,7 @@ public class DefaultIdentifierGeneratorUnitTests {
 		assertThat(value, instanceOf(UUID.class));
 	}
 
-	/**
-	 * @DATAKV-136
-	 */
-	@Test
+	@Test // DATAKV-136
 	public void shouldGenerateStringValueCorrectly() {
 
 		Object value = generator.generateIdentifierOfType(ClassTypeInformation.from(String.class));
@@ -66,10 +57,7 @@ public class DefaultIdentifierGeneratorUnitTests {
 		assertThat(value, instanceOf(String.class));
 	}
 
-	/**
-	 * @DATAKV-136
-	 */
-	@Test
+	@Test // DATAKV-136
 	public void shouldGenerateLongValueCorrectly() {
 
 		Object value = generator.generateIdentifierOfType(ClassTypeInformation.from(Long.class));
@@ -78,10 +66,7 @@ public class DefaultIdentifierGeneratorUnitTests {
 		assertThat(value, instanceOf(Long.class));
 	}
 
-	/**
-	 * @DATAKV-136
-	 */
-	@Test
+	@Test // DATAKV-136
 	public void shouldGenerateIntValueCorrectly() {
 
 		Object value = generator.generateIdentifierOfType(ClassTypeInformation.from(Integer.class));

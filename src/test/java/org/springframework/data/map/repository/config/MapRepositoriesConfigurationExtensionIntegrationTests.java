@@ -1,5 +1,5 @@
 /*
- * Copyright 2014 the original author or authors.
+ * Copyright 2014-2017 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -40,10 +40,7 @@ import org.springframework.test.util.ReflectionTestUtils;
  */
 public class MapRepositoriesConfigurationExtensionIntegrationTests {
 
-	/**
-	 * @see DATAKV-86
-	 */
-	@Test
+	@Test // DATAKV-86
 	public void registersDefaultTemplateIfReferenceNotCustomized() {
 
 		ConfigurableApplicationContext context = new AnnotationConfigApplicationContext(Config.class);
@@ -53,10 +50,7 @@ public class MapRepositoriesConfigurationExtensionIntegrationTests {
 		context.close();
 	}
 
-	/**
-	 * @see DATAKV-86
-	 */
-	@Test
+	@Test // DATAKV-86
 	public void doesNotRegisterDefaulttemplateIfReferenceIsCustomized() {
 
 		ConfigurableApplicationContext context = new AnnotationConfigApplicationContext(
@@ -67,19 +61,13 @@ public class MapRepositoriesConfigurationExtensionIntegrationTests {
 		context.close();
 	}
 
-	/**
-	 * @see DATAKV-87
-	 */
-	@Test
+	@Test // DATAKV-87
 	public void considersMapTypeConfiguredOnAnnotation() {
 		assertKeyValueTemplateWithAdapterFor(ConcurrentSkipListMap.class, new AnnotationConfigApplicationContext(
 				ConfigWithCustomizedMapType.class));
 	}
 
-	/**
-	 * @see DATAKV-87
-	 */
-	@Test
+	@Test // DATAKV-87
 	public void doesNotConsiderMapConfiguredIfTemplateIsPresent() {
 		assertKeyValueTemplateWithAdapterFor(ConcurrentHashMap.class, new AnnotationConfigApplicationContext(
 				ConfigWithCustomizedMapTypeAndExplicitDefinitionOfKeyValueTemplate.class));

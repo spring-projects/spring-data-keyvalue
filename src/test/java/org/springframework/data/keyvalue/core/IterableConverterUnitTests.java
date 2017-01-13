@@ -1,5 +1,5 @@
 /*
- * Copyright 2015 the original author or authors.
+ * Copyright 2015-2017 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -37,26 +37,17 @@ import org.junit.Test;
  */
 public class IterableConverterUnitTests {
 
-	/**
-	 * @see DATAKV-101
-	 */
-	@Test
+	@Test // DATAKV-101
 	public void toListShouldReturnEmptyListWhenSourceIsNull() {
 		assertThat(toList(null), notNullValue());
 	}
 
-	/**
-	 * @see DATAKV-101
-	 */
-	@Test
+	@Test // DATAKV-101
 	public void toListShouldReturnEmptyListWhenSourceEmpty() {
 		assertThat(toList(Collections.emptySet()), empty());
 	}
 
-	/**
-	 * @see DATAKV-101
-	 */
-	@Test
+	@Test // DATAKV-101
 	public void toListShouldReturnSameObjectWhenSourceIsAlreadyListType() {
 
 		List<String> source = new ArrayList<String>();
@@ -64,10 +55,7 @@ public class IterableConverterUnitTests {
 		assertThat(toList(source), sameInstance(source));
 	}
 
-	/**
-	 * @see DATAKV-101
-	 */
-	@Test
+	@Test // DATAKV-101
 	public void toListShouldReturnListWhenSourceIsNonListType() {
 
 		Set<String> source = new HashSet<String>();
@@ -76,10 +64,7 @@ public class IterableConverterUnitTests {
 		assertThat(toList(source), instanceOf(List.class));
 	}
 
-	/**
-	 * @see DATAKV-101
-	 */
-	@Test
+	@Test // DATAKV-101
 	public void toListShouldHoldValuesInOrderOfSource() {
 
 		Set<String> source = new LinkedHashSet<String>();
