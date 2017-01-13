@@ -1,5 +1,5 @@
 /*
- * Copyright 2014-2015 the original author or authors.
+ * Copyright 2014-2017 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -44,10 +44,7 @@ import com.google.common.collect.Lists;
  */
 public class QuerydslKeyValueRepositoryUnitTests extends AbstractRepositoryUnitTests<QPersonRepository> {
 
-	/**
-	 * @see DATACMNS-525
-	 */
-	@Test
+	@Test // DATACMNS-525
 	public void findOneIsExecutedCorrectly() {
 
 		repository.save(LENNISTERS);
@@ -56,10 +53,7 @@ public class QuerydslKeyValueRepositoryUnitTests extends AbstractRepositoryUnitT
 		assertThat(result, is(CERSEI));
 	}
 
-	/**
-	 * @see DATACMNS-525
-	 */
-	@Test
+	@Test // DATACMNS-525
 	public void findAllIsExecutedCorrectly() {
 
 		repository.save(LENNISTERS);
@@ -68,10 +62,7 @@ public class QuerydslKeyValueRepositoryUnitTests extends AbstractRepositoryUnitT
 		assertThat(result, containsInAnyOrder(CERSEI, JAIME));
 	}
 
-	/**
-	 * @see DATACMNS-525
-	 */
-	@Test
+	@Test // DATACMNS-525
 	public void findWithPaginationWorksCorrectly() {
 
 		repository.save(LENNISTERS);
@@ -89,10 +80,7 @@ public class QuerydslKeyValueRepositoryUnitTests extends AbstractRepositoryUnitT
 		assertThat(page2.hasNext(), is(false));
 	}
 
-	/**
-	 * @see DATACMNS-525
-	 */
-	@Test
+	@Test // DATACMNS-525
 	public void findAllUsingOrderSpecifierWorksCorrectly() {
 
 		repository.save(LENNISTERS);
@@ -103,10 +91,7 @@ public class QuerydslKeyValueRepositoryUnitTests extends AbstractRepositoryUnitT
 		assertThat(result, contains(JAIME, CERSEI));
 	}
 
-	/**
-	 * @see DATACMNS-525
-	 */
-	@Test
+	@Test // DATACMNS-525
 	public void findAllUsingPageableWithSortWorksCorrectly() {
 
 		repository.save(LENNISTERS);
@@ -117,10 +102,7 @@ public class QuerydslKeyValueRepositoryUnitTests extends AbstractRepositoryUnitT
 		assertThat(result, contains(JAIME, CERSEI));
 	}
 
-	/**
-	 * @see DATACMNS-525
-	 */
-	@Test
+	@Test // DATACMNS-525
 	public void findAllUsingPagableWithQSortWorksCorrectly() {
 
 		repository.save(LENNISTERS);
@@ -131,10 +113,7 @@ public class QuerydslKeyValueRepositoryUnitTests extends AbstractRepositoryUnitT
 		assertThat(result, contains(JAIME, CERSEI));
 	}
 
-	/**
-	 * @see DATAKV-90
-	 */
-	@Test
+	@Test // DATAKV-90
 	public void findAllWithOrderSpecifierWorksCorrectly() {
 
 		repository.save(LENNISTERS);
@@ -144,10 +123,7 @@ public class QuerydslKeyValueRepositoryUnitTests extends AbstractRepositoryUnitT
 		assertThat(result, contains(TYRION, JAIME, CERSEI));
 	}
 
-	/**
-	 * @see DATAKV-90
-	 */
-	@Test
+	@Test // DATAKV-90
 	public void findAllShouldIgnoreNullOrderSpecifier() {
 
 		repository.save(LENNISTERS);
@@ -157,10 +133,7 @@ public class QuerydslKeyValueRepositoryUnitTests extends AbstractRepositoryUnitT
 		assertThat(result, containsInAnyOrder(TYRION, JAIME, CERSEI));
 	}
 
-	/**
-	 * @see DATAKV-95
-	 */
-	@Test
+	@Test // DATAKV-95
 	public void executesExistsCorrectly() {
 
 		repository.save(LENNISTERS);
@@ -168,10 +141,7 @@ public class QuerydslKeyValueRepositoryUnitTests extends AbstractRepositoryUnitT
 		assertThat(repository.exists(QPerson.person.age.eq(CERSEI.getAge())), is(true));
 	}
 
-	/**
-	 * @see DATAKV-96
-	 */
-	@Test
+	@Test // DATAKV-96
 	public void shouldSupportFindAllWithPredicateAndSort() {
 
 		repository.save(LENNISTERS);

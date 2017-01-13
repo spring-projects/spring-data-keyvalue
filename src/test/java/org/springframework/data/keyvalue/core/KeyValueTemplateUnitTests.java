@@ -1,5 +1,5 @@
 /*
- * Copyright 2014-2016 the original author or authors.
+ * Copyright 2014-2017 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -86,26 +86,17 @@ public class KeyValueTemplateUnitTests {
 		this.template.setApplicationEventPublisher(publisherMock);
 	}
 
-	/**
-	 * @see DATACMNS-525
-	 */
-	@Test(expected = IllegalArgumentException.class)
+	@Test(expected = IllegalArgumentException.class) // DATACMNS-525
 	public void shouldThrowExceptionWhenCreatingNewTempateWithNullAdapter() {
 		new KeyValueTemplate(null);
 	}
 
-	/**
-	 * @see DATACMNS-525
-	 */
-	@Test(expected = IllegalArgumentException.class)
+	@Test(expected = IllegalArgumentException.class) // DATACMNS-525
 	public void shouldThrowExceptionWhenCreatingNewTempateWithNullMappingContext() {
 		new KeyValueTemplate(adapterMock, null);
 	}
 
-	/**
-	 * @see DATACMNS-525
-	 */
-	@Test
+	@Test // DATACMNS-525
 	public void insertShouldLookUpValuesBeforeInserting() {
 
 		template.insert("1", FOO_ONE);
@@ -113,10 +104,7 @@ public class KeyValueTemplateUnitTests {
 		verify(adapterMock, times(1)).contains("1", Foo.class.getName());
 	}
 
-	/**
-	 * @see DATACMNS-525
-	 */
-	@Test
+	@Test // DATACMNS-525
 	public void insertShouldInsertUseClassNameAsDefaultKeyspace() {
 
 		template.insert("1", FOO_ONE);
@@ -124,10 +112,7 @@ public class KeyValueTemplateUnitTests {
 		verify(adapterMock, times(1)).put("1", FOO_ONE, Foo.class.getName());
 	}
 
-	/**
-	 * @see DATACMNS-525
-	 */
-	@Test
+	@Test // DATACMNS-525
 	public void insertShouldThrowExceptionWhenObectWithIdAlreadyExists() {
 
 		exception.expect(DuplicateKeyException.class);
@@ -138,26 +123,17 @@ public class KeyValueTemplateUnitTests {
 		template.insert("1", FOO_ONE);
 	}
 
-	/**
-	 * @see DATACMNS-525
-	 */
-	@Test(expected = IllegalArgumentException.class)
+	@Test(expected = IllegalArgumentException.class) // DATACMNS-525
 	public void insertShouldThrowExceptionForNullId() {
 		template.insert(null, FOO_ONE);
 	}
 
-	/**
-	 * @see DATACMNS-525
-	 */
-	@Test(expected = IllegalArgumentException.class)
+	@Test(expected = IllegalArgumentException.class) // DATACMNS-525
 	public void insertShouldThrowExceptionForNullObject() {
 		template.insert("some-id", null);
 	}
 
-	/**
-	 * @see DATACMNS-525
-	 */
-	@Test
+	@Test // DATACMNS-525
 	public void insertShouldGenerateId() {
 
 		ClassWithStringId target = template.insert(new ClassWithStringId());
@@ -165,18 +141,12 @@ public class KeyValueTemplateUnitTests {
 		assertThat(target.id, notNullValue());
 	}
 
-	/**
-	 * @see DATACMNS-525
-	 */
-	@Test(expected = IllegalArgumentException.class)
+	@Test(expected = IllegalArgumentException.class) // DATACMNS-525
 	public void insertShouldThrowErrorWhenIdCannotBeResolved() {
 		template.insert(FOO_ONE);
 	}
 
-	/**
-	 * @see DATACMNS-525
-	 */
-	@Test
+	@Test // DATACMNS-525
 	public void insertShouldReturnSameInstanceGenerateId() {
 
 		ClassWithStringId source = new ClassWithStringId();
@@ -185,10 +155,7 @@ public class KeyValueTemplateUnitTests {
 		assertThat(target, sameInstance(source));
 	}
 
-	/**
-	 * @see DATACMNS-525
-	 */
-	@Test
+	@Test // DATACMNS-525
 	public void insertShouldRespectExistingId() {
 
 		ClassWithStringId source = new ClassWithStringId();
@@ -199,18 +166,12 @@ public class KeyValueTemplateUnitTests {
 		verify(adapterMock, times(1)).put("one", source, ClassWithStringId.class.getName());
 	}
 
-	/**
-	 * @see DATACMNS-525
-	 */
-	@Test
+	@Test // DATACMNS-525
 	public void findByIdShouldReturnNullWhenNoElementsPresent() {
 		assertNull(template.findById("1", Foo.class));
 	}
 
-	/**
-	 * @see DATACMNS-525
-	 */
-	@Test
+	@Test // DATACMNS-525
 	public void findByIdShouldReturnObjectWithMatchingIdAndType() {
 
 		template.findById("1", Foo.class);
@@ -218,18 +179,12 @@ public class KeyValueTemplateUnitTests {
 		verify(adapterMock, times(1)).get("1", Foo.class.getName(), Foo.class);
 	}
 
-	/**
-	 * @see DATACMNS-525
-	 */
-	@Test(expected = IllegalArgumentException.class)
+	@Test(expected = IllegalArgumentException.class) // DATACMNS-525
 	public void findByIdShouldThrowExceptionWhenGivenNullId() {
 		template.findById((Serializable) null, Foo.class);
 	}
 
-	/**
-	 * @see DATACMNS-525
-	 */
-	@Test
+	@Test // DATACMNS-525
 	public void findAllOfShouldReturnEntireCollection() {
 
 		template.findAll(Foo.class);
@@ -237,18 +192,12 @@ public class KeyValueTemplateUnitTests {
 		verify(adapterMock, times(1)).getAllOf(Foo.class.getName());
 	}
 
-	/**
-	 * @see DATACMNS-525
-	 */
-	@Test(expected = IllegalArgumentException.class)
+	@Test(expected = IllegalArgumentException.class) // DATACMNS-525
 	public void findAllOfShouldThrowExceptionWhenGivenNullType() {
 		template.findAll(null);
 	}
 
-	/**
-	 * @see DATACMNS-525
-	 */
-	@Test
+	@Test // DATACMNS-525
 	public void findShouldCallFindOnAdapterToResolveMatching() {
 
 		template.find(STRING_QUERY, Foo.class);
@@ -256,10 +205,7 @@ public class KeyValueTemplateUnitTests {
 		verify(adapterMock, times(1)).find(STRING_QUERY, Foo.class.getName(), Foo.class);
 	}
 
-	/**
-	 * @see DATACMNS-525
-	 */
-	@Test
+	@Test // DATACMNS-525
 	@SuppressWarnings("rawtypes")
 	public void findInRangeShouldRespectOffset() {
 
@@ -273,10 +219,7 @@ public class KeyValueTemplateUnitTests {
 		assertThat(captor.getValue().getCritieria(), nullValue());
 	}
 
-	/**
-	 * @see DATACMNS-525
-	 */
-	@Test
+	@Test // DATACMNS-525
 	public void updateShouldReplaceExistingObject() {
 
 		template.update("1", FOO_TWO);
@@ -284,26 +227,17 @@ public class KeyValueTemplateUnitTests {
 		verify(adapterMock, times(1)).put("1", FOO_TWO, Foo.class.getName());
 	}
 
-	/**
-	 * @see DATACMNS-525
-	 */
-	@Test(expected = IllegalArgumentException.class)
+	@Test(expected = IllegalArgumentException.class) // DATACMNS-525
 	public void updateShouldThrowExceptionWhenGivenNullId() {
 		template.update(null, FOO_ONE);
 	}
 
-	/**
-	 * @see DATACMNS-525
-	 */
-	@Test(expected = IllegalArgumentException.class)
+	@Test(expected = IllegalArgumentException.class) // DATACMNS-525
 	public void updateShouldThrowExceptionWhenGivenNullObject() {
 		template.update("1", null);
 	}
 
-	/**
-	 * @see DATACMNS-525
-	 */
-	@Test
+	@Test // DATACMNS-525
 	public void updateShouldUseExtractedIdInformation() {
 
 		ClassWithStringId source = new ClassWithStringId();
@@ -314,18 +248,12 @@ public class KeyValueTemplateUnitTests {
 		verify(adapterMock, times(1)).put(source.id, source, ClassWithStringId.class.getName());
 	}
 
-	/**
-	 * @see DATACMNS-525
-	 */
-	@Test(expected = InvalidDataAccessApiUsageException.class)
+	@Test(expected = InvalidDataAccessApiUsageException.class) // DATACMNS-525
 	public void updateShouldThrowErrorWhenIdInformationCannotBeExtracted() {
 		template.update(FOO_ONE);
 	}
 
-	/**
-	 * @see DATACMNS-525
-	 */
-	@Test
+	@Test // DATACMNS-525
 	public void deleteShouldRemoveObjectCorrectly() {
 
 		template.delete("1", Foo.class);
@@ -333,10 +261,7 @@ public class KeyValueTemplateUnitTests {
 		verify(adapterMock, times(1)).delete("1", Foo.class.getName(), Foo.class);
 	}
 
-	/**
-	 * @see DATACMNS-525
-	 */
-	@Test
+	@Test // DATACMNS-525
 	public void deleteRemovesObjectUsingExtractedId() {
 
 		ClassWithStringId source = new ClassWithStringId();
@@ -347,26 +272,17 @@ public class KeyValueTemplateUnitTests {
 		verify(adapterMock, times(1)).delete("some-id", ClassWithStringId.class.getName(), ClassWithStringId.class);
 	}
 
-	/**
-	 * @see DATACMNS-525
-	 */
-	@Test(expected = IllegalArgumentException.class)
+	@Test(expected = IllegalArgumentException.class) // DATACMNS-525
 	public void deleteThrowsExceptionWhenIdCannotBeExctracted() {
 		template.delete(FOO_ONE);
 	}
 
-	/**
-	 * @see DATACMNS-525
-	 */
-	@Test
+	@Test // DATACMNS-525
 	public void countShouldReturnZeroWhenNoElementsPresent() {
 		template.count(Foo.class);
 	}
 
-	/**
-	 * @see DATACMNS-525
-	 */
-	@Test
+	@Test // DATACMNS-525
 	public void countShouldReturnCollectionSize() {
 
 		when(adapterMock.count(Foo.class.getName())).thenReturn(2L);
@@ -374,18 +290,12 @@ public class KeyValueTemplateUnitTests {
 		assertThat(template.count(Foo.class), is(2L));
 	}
 
-	/**
-	 * @see DATACMNS-525
-	 */
-	@Test(expected = IllegalArgumentException.class)
+	@Test(expected = IllegalArgumentException.class) // DATACMNS-525
 	public void countShouldThrowErrorOnNullType() {
 		template.count(null);
 	}
 
-	/**
-	 * @see DATACMNS-525
-	 */
-	@Test
+	@Test // DATACMNS-525
 	public void insertShouldRespectTypeAlias() {
 
 		template.insert("1", ALIASED);
@@ -393,10 +303,7 @@ public class KeyValueTemplateUnitTests {
 		verify(adapterMock, times(1)).put("1", ALIASED, "aliased");
 	}
 
-	/**
-	 * @see DATACMNS-525
-	 */
-	@Test
+	@Test // DATACMNS-525
 	public void insertShouldRespectTypeAliasOnSubClass() {
 
 		template.insert("1", SUBCLASS_OF_ALIASED);
@@ -404,11 +311,8 @@ public class KeyValueTemplateUnitTests {
 		verify(adapterMock, times(1)).put("1", SUBCLASS_OF_ALIASED, "aliased");
 	}
 
-	/**
-	 * @see DATACMNS-525
-	 */
 	@SuppressWarnings({ "rawtypes", "unchecked" })
-	@Test
+	@Test // DATACMNS-525
 	public void findAllOfShouldRespectTypeAliasAndFilterNonMatchingTypes() {
 
 		Collection foo = Arrays.asList(ALIASED, SUBCLASS_OF_ALIASED);
@@ -417,28 +321,19 @@ public class KeyValueTemplateUnitTests {
 		assertThat(template.findAll(SUBCLASS_OF_ALIASED.getClass()), containsInAnyOrder(SUBCLASS_OF_ALIASED));
 	}
 
-	/**
-	 * @see DATACMNS-525
-	 */
-	@Test
+	@Test // DATACMNS-525
 	public void insertSouldRespectTypeAliasAndFilterNonMatching() {
 
 		template.insert("1", ALIASED);
 		assertThat(template.findById("1", SUBCLASS_OF_ALIASED.getClass()), nullValue());
 	}
 
-	/**
-	 * @see DATACMNS-525
-	 */
-	@Test(expected = IllegalArgumentException.class)
+	@Test(expected = IllegalArgumentException.class) // DATACMNS-525
 	public void setttingNullPersistenceExceptionTranslatorShouldThrowException() {
 		template.setExceptionTranslator(null);
 	}
 
-	/**
-	 * @see DATAKV-91
-	 */
-	@Test
+	@Test // DATAKV-91
 	public void shouldNotPublishEventWhenNoApplicationContextSet() {
 
 		template.setApplicationEventPublisher(null);
@@ -448,10 +343,7 @@ public class KeyValueTemplateUnitTests {
 		verifyZeroInteractions(publisherMock);
 	}
 
-	/**
-	 * @see DATAKV-104
-	 */
-	@Test
+	@Test // DATAKV-104
 	public void shouldNotPublishEventsWhenEventsToPublishIsSetToNull() {
 
 		template.setEventTypesToPublish(null);
@@ -461,10 +353,7 @@ public class KeyValueTemplateUnitTests {
 		verifyZeroInteractions(publisherMock);
 	}
 
-	/**
-	 * @see DATAKV-104
-	 */
-	@Test
+	@Test // DATAKV-104
 	@SuppressWarnings("rawtypes")
 	public void shouldNotPublishEventsWhenEventsToPublishIsSetToEmptyList() {
 
@@ -475,10 +364,7 @@ public class KeyValueTemplateUnitTests {
 		verifyZeroInteractions(publisherMock);
 	}
 
-	/**
-	 * @see DATAKV-104
-	 */
-	@Test
+	@Test // DATAKV-104
 	public void shouldPublishEventsByDefault() {
 
 		template.insert("1", FOO_ONE);
@@ -486,11 +372,7 @@ public class KeyValueTemplateUnitTests {
 		verify(publisherMock, atLeastOnce()).publishEvent(Matchers.any(KeyValueEvent.class));
 	}
 
-	/**
-	 * @see DATAKV-91
-	 * @see DATAKV-104
-	 */
-	@Test
+	@Test // DATAKV-91, DATAKV-104
 	@SuppressWarnings({ "unchecked", })
 	public void shouldNotPublishEventWhenNotExplicitlySetForPublication() {
 
@@ -501,11 +383,7 @@ public class KeyValueTemplateUnitTests {
 		verifyZeroInteractions(publisherMock);
 	}
 
-	/**
-	 * @see DATAKV-91
-	 * @see DATAKV-104
-	 */
-	@Test
+	@Test // DATAKV-91, DATAKV-104
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	public void shouldPublishBeforeInsertEventCorrectly() {
 
@@ -523,11 +401,7 @@ public class KeyValueTemplateUnitTests {
 		assertThat(captor.getValue().getPayload(), is((Object) FOO_ONE));
 	}
 
-	/**
-	 * @see DATAKV-91
-	 * @see DATAKV-104
-	 */
-	@Test
+	@Test // DATAKV-91, DATAKV-104
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	public void shouldPublishAfterInsertEventCorrectly() {
 
@@ -545,11 +419,7 @@ public class KeyValueTemplateUnitTests {
 		assertThat(captor.getValue().getPayload(), is((Object) FOO_ONE));
 	}
 
-	/**
-	 * @see DATAKV-91
-	 * @see DATAKV-104
-	 */
-	@Test
+	@Test // DATAKV-91, DATAKV-104
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	public void shouldPublishBeforeUpdateEventCorrectly() {
 
@@ -567,11 +437,7 @@ public class KeyValueTemplateUnitTests {
 		assertThat(captor.getValue().getPayload(), is((Object) FOO_ONE));
 	}
 
-	/**
-	 * @see DATAKV-91
-	 * @see DATAKV-104
-	 */
-	@Test
+	@Test // DATAKV-91, DATAKV-104
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	public void shouldPublishAfterUpdateEventCorrectly() {
 
@@ -589,11 +455,7 @@ public class KeyValueTemplateUnitTests {
 		assertThat(captor.getValue().getPayload(), is((Object) FOO_ONE));
 	}
 
-	/**
-	 * @see DATAKV-91
-	 * @see DATAKV-104
-	 */
-	@Test
+	@Test // DATAKV-91, DATAKV-104
 	@SuppressWarnings({ "rawtypes", "unchecked" })
 	public void shouldPublishBeforeDeleteEventCorrectly() {
 
@@ -610,11 +472,7 @@ public class KeyValueTemplateUnitTests {
 		assertThat(captor.getValue().getKeyspace(), is(Foo.class.getName()));
 	}
 
-	/**
-	 * @see DATAKV-91
-	 * @see DATAKV-104
-	 */
-	@Test
+	@Test // DATAKV-91, DATAKV-104
 	@SuppressWarnings({ "rawtypes", "unchecked" })
 	public void shouldPublishAfterDeleteEventCorrectly() {
 
@@ -633,11 +491,7 @@ public class KeyValueTemplateUnitTests {
 		assertThat(captor.getValue().getPayload(), is((Object) FOO_ONE));
 	}
 
-	/**
-	 * @see DATAKV-91
-	 * @see DATAKV-104
-	 */
-	@Test
+	@Test // DATAKV-91, DATAKV-104
 	@SuppressWarnings({ "rawtypes", "unchecked" })
 	public void shouldPublishBeforeGetEventCorrectly() {
 
@@ -656,11 +510,7 @@ public class KeyValueTemplateUnitTests {
 		assertThat(captor.getValue().getKeyspace(), is(Foo.class.getName()));
 	}
 
-	/**
-	 * @see DATAKV-91
-	 * @see DATAKV-104
-	 */
-	@Test
+	@Test // DATAKV-91, DATAKV-104
 	@SuppressWarnings({ "rawtypes", "unchecked" })
 	public void shouldPublishAfterGetEventCorrectly() {
 
@@ -680,11 +530,7 @@ public class KeyValueTemplateUnitTests {
 		assertThat(captor.getValue().getPayload(), is((Object) FOO_ONE));
 	}
 
-	/**
-	 * @see DATAKV-91
-	 * @see DATAKV-104
-	 */
-	@Test
+	@Test // DATAKV-91, DATAKV-104
 	@SuppressWarnings({ "rawtypes", "unchecked" })
 	public void shouldPublishDropKeyspaceEventCorrectly() {
 
@@ -700,10 +546,7 @@ public class KeyValueTemplateUnitTests {
 		assertThat(captor.getValue().getKeyspace(), is(Foo.class.getName()));
 	}
 
-	/**
-	 * @see DATAKV-129
-	 */
-	@Test
+	@Test // DATAKV-129
 	public void insertShouldRespectTypeAliasUsingAliasFor() {
 
 		template.insert("1", ALIASED_USING_ALIAS_FOR);

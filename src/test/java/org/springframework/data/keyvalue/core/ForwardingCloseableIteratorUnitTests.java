@@ -1,5 +1,5 @@
 /*
- * Copyright 2015 the original author or authors.
+ * Copyright 2015-2017 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -42,10 +42,7 @@ public class ForwardingCloseableIteratorUnitTests<K, V> {
 	@Mock Iterator<Entry<K, V>> iteratorMock;
 	@Mock Runnable closeActionMock;
 
-	/**
-	 * @see DATAKV-99
-	 */
-	@Test
+	@Test // DATAKV-99
 	public void hasNextShoudDelegateToWrappedIterator() {
 
 		when(iteratorMock.hasNext()).thenReturn(true);
@@ -60,10 +57,7 @@ public class ForwardingCloseableIteratorUnitTests<K, V> {
 		}
 	}
 
-	/**
-	 * @see DATAKV-99
-	 */
-	@Test
+	@Test // DATAKV-99
 	@SuppressWarnings("unchecked")
 	public void nextShoudDelegateToWrappedIterator() {
 
@@ -79,10 +73,7 @@ public class ForwardingCloseableIteratorUnitTests<K, V> {
 		}
 	}
 
-	/**
-	 * @see DATAKV-99
-	 */
-	@Test(expected = NoSuchElementException.class)
+	@Test(expected = NoSuchElementException.class) // DATAKV-99
 	public void nextShoudThrowErrorWhenWrappedIteratorHasNoMoreElements() {
 
 		when(iteratorMock.next()).thenThrow(new NoSuchElementException());
@@ -96,10 +87,7 @@ public class ForwardingCloseableIteratorUnitTests<K, V> {
 		}
 	}
 
-	/**
-	 * @see DATAKV-99
-	 */
-	@Test
+	@Test // DATAKV-99
 	public void closeShouldDoNothingByDefault() {
 
 		new ForwardingCloseableIterator<Entry<K, V>>(iteratorMock).close();
@@ -107,10 +95,7 @@ public class ForwardingCloseableIteratorUnitTests<K, V> {
 		verifyZeroInteractions(iteratorMock);
 	}
 
-	/**
-	 * @see DATAKV-99
-	 */
-	@Test
+	@Test // DATAKV-99
 	public void closeShouldInvokeConfiguredCloseAction() {
 
 		new ForwardingCloseableIterator<Entry<K, V>>(iteratorMock, closeActionMock).close();

@@ -1,5 +1,5 @@
 /*
- * Copyright 2016 the original author or authors.
+ * Copyright 2016-2017 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -48,35 +48,23 @@ public class KeyValueRepositoryFactoryBeanUnitTests {
 				SampleRepository.class);
 	}
 
-	/**
-	 * @see DATAKV-123
-	 */
-	@Test(expected = IllegalArgumentException.class)
+	@Test(expected = IllegalArgumentException.class) // DATAKV-123
 	public void rejectsNullKeyValueOperations() {
 		factoryBean.setKeyValueOperations(null);
 	}
 
-	/**
-	 * @see DATAKV-123
-	 */
-	@Test(expected = IllegalArgumentException.class)
+	@Test(expected = IllegalArgumentException.class) // DATAKV-123
 	public void rejectsNullQueryCreator() {
 		factoryBean.setQueryCreator(null);
 	}
 
-	/**
-	 * @see DATAKV-123
-	 */
-	@Test(expected = IllegalArgumentException.class)
+	@Test(expected = IllegalArgumentException.class) // DATAKV-123
 	public void rejectsUninitializedInstance() {
 		factoryBean.afterPropertiesSet();
 	}
 
-	/**
-	 * @see DATAKV-123
-	 */
 	@SuppressWarnings("unchecked")
-	@Test(expected = IllegalArgumentException.class)
+	@Test(expected = IllegalArgumentException.class) // DATAKV-123
 	public void rejectsInstanceWithoutKeyValueOperations() {
 
 		Class<? extends AbstractQueryCreator<?, ?>> creatorType = (Class<? extends AbstractQueryCreator<?, ?>>) mock(
@@ -86,20 +74,14 @@ public class KeyValueRepositoryFactoryBeanUnitTests {
 		factoryBean.afterPropertiesSet();
 	}
 
-	/**
-	 * @see DATAKV-123
-	 */
-	@Test(expected = IllegalArgumentException.class)
+	@Test(expected = IllegalArgumentException.class) // DATAKV-123
 	public void rejectsInstanceWithoutQueryCreator() {
 
 		factoryBean.setKeyValueOperations(mock(KeyValueOperations.class));
 		factoryBean.afterPropertiesSet();
 	}
 
-	/**
-	 * @see DATAKV-123
-	 */
-	@Test
+	@Test // DATAKV-123
 	@SuppressWarnings("unchecked")
 	public void createsRepositoryFactory() {
 
@@ -115,10 +97,7 @@ public class KeyValueRepositoryFactoryBeanUnitTests {
 		assertThat(factoryBean.createRepositoryFactory(), is(notNullValue()));
 	}
 
-	/**
-	 * @see DATAKV-112
-	 */
-	@Test(expected = IllegalArgumentException.class)
+	@Test(expected = IllegalArgumentException.class) // DATAKV-112
 	public void rejectsNullQueryType() {
 		factoryBean.setQueryType(null);
 	}

@@ -1,5 +1,5 @@
 /*
- * Copyright 2014 the original author or authors.
+ * Copyright 2014-2017 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -32,63 +32,42 @@ public class KeyValuePersistenceExceptionTranslatorUnitTests {
 
 	KeyValuePersistenceExceptionTranslator translator = new KeyValuePersistenceExceptionTranslator();
 
-	/**
-	 * @see DATACMNS-525
-	 */
-	@Test
+	@Test // DATACMNS-525
 	public void translateExeptionShouldReturnDataAccessExceptionWhenGivenOne() {
 		assertThat(translator.translateExceptionIfPossible(new DataRetrievalFailureException("booh")),
 				instanceOf(DataRetrievalFailureException.class));
 	}
 
-	/**
-	 * @see DATACMNS-525
-	 */
-	@Test
+	@Test // DATACMNS-525
 	public void translateExeptionShouldReturnNullWhenGivenNull() {
 		assertThat(translator.translateExceptionIfPossible(null), nullValue());
 	}
 
-	/**
-	 * @see DATACMNS-525
-	 */
-	@Test
+	@Test // DATACMNS-525
 	public void translateExeptionShouldTranslateNoSuchElementExceptionToDataRetrievalFailureException() {
 		assertThat(translator.translateExceptionIfPossible(new NoSuchElementException("")),
 				instanceOf(DataRetrievalFailureException.class));
 	}
 
-	/**
-	 * @see DATACMNS-525
-	 */
-	@Test
+	@Test // DATACMNS-525
 	public void translateExeptionShouldTranslateIndexOutOfBoundsExceptionToDataRetrievalFailureException() {
 		assertThat(translator.translateExceptionIfPossible(new IndexOutOfBoundsException("")),
 				instanceOf(DataRetrievalFailureException.class));
 	}
 
-	/**
-	 * @see DATACMNS-525
-	 */
-	@Test
+	@Test // DATACMNS-525
 	public void translateExeptionShouldTranslateIllegalStateExceptionToDataRetrievalFailureException() {
 		assertThat(translator.translateExceptionIfPossible(new IllegalStateException("")),
 				instanceOf(DataRetrievalFailureException.class));
 	}
 
-	/**
-	 * @see DATACMNS-525
-	 */
-	@Test
+	@Test // DATACMNS-525
 	public void translateExeptionShouldTranslateAnyJavaExceptionToUncategorizedKeyValueException() {
 		assertThat(translator.translateExceptionIfPossible(new UnsupportedOperationException("")),
 				instanceOf(UncategorizedKeyValueException.class));
 	}
 
-	/**
-	 * @see DATACMNS-525
-	 */
-	@Test
+	@Test // DATACMNS-525
 	public void translateExeptionShouldReturnNullForNonJavaExceptions() {
 		assertThat(translator.translateExceptionIfPossible(new NoSuchBeanDefinitionException("")), nullValue());
 	}

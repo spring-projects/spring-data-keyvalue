@@ -1,5 +1,5 @@
 /*
- * Copyright 2014-2015 the original author or authors.
+ * Copyright 2014-2017 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -52,26 +52,17 @@ public class KeyValueQuerydslUtilsUnitTests {
 		this.builder = new PathBuilder<Person>(path.getType(), path.getMetadata());
 	}
 
-	/**
-	 * @see DATACMNS-525
-	 */
-	@Test(expected = IllegalArgumentException.class)
+	@Test(expected = IllegalArgumentException.class) // DATACMNS-525
 	public void toOrderSpecifierThrowsExceptioOnNullPathBuilder() {
 		toOrderSpecifier(new Sort("firstname"), null);
 	}
 
-	/**
-	 * @see DATACMNS-525
-	 */
-	@Test
+	@Test // DATACMNS-525
 	public void toOrderSpecifierReturnsEmptyArrayWhenSortIsNull() {
 		assertThat(toOrderSpecifier(null, builder), arrayWithSize(0));
 	}
 
-	/**
-	 * @see DATACMNS-525
-	 */
-	@Test
+	@Test // DATACMNS-525
 	public void toOrderSpecifierConvertsSimpleAscSortCorrectly() {
 
 		Sort sort = new Sort(Direction.ASC, "firstname");
@@ -82,10 +73,7 @@ public class KeyValueQuerydslUtilsUnitTests {
 				IsArrayContainingInOrder.<OrderSpecifier<?>> arrayContaining(QPerson.person.firstname.asc()));
 	}
 
-	/**
-	 * @see DATACMNS-525
-	 */
-	@Test
+	@Test // DATACMNS-525
 	public void toOrderSpecifierConvertsSimpleDescSortCorrectly() {
 
 		Sort sort = new Sort(Direction.DESC, "firstname");
@@ -96,10 +84,7 @@ public class KeyValueQuerydslUtilsUnitTests {
 				IsArrayContainingInOrder.<OrderSpecifier<?>> arrayContaining(QPerson.person.firstname.desc()));
 	}
 
-	/**
-	 * @see DATACMNS-525
-	 */
-	@Test
+	@Test // DATACMNS-525
 	public void toOrderSpecifierConvertsSortCorrectlyAndRetainsArgumentOrder() {
 
 		Sort sort = new Sort(Direction.DESC, "firstname").and(new Sort(Direction.ASC, "age"));
@@ -110,10 +95,7 @@ public class KeyValueQuerydslUtilsUnitTests {
 				QPerson.person.age.asc()));
 	}
 
-	/**
-	 * @see DATACMNS-525
-	 */
-	@Test
+	@Test // DATACMNS-525
 	public void toOrderSpecifierConvertsSortWithNullHandlingCorrectly() {
 
 		Sort sort = new Sort(new Sort.Order(Direction.DESC, "firstname", NullHandling.NULLS_LAST));

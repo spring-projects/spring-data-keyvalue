@@ -1,5 +1,5 @@
 /*
- * Copyright 2014 the original author or authors.
+ * Copyright 2014-2017 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -67,54 +67,36 @@ public class KeyValueTemplateTests {
 		this.operations.destroy();
 	}
 
-	/**
-	 * @see DATACMNS-525
-	 */
-	@Test
+	@Test // DATACMNS-525
 	public void insertShouldNotThorwErrorWhenExecutedHavingNonExistingIdAndNonNullValue() {
 		operations.insert("1", FOO_ONE);
 	}
 
-	/**
-	 * @see DATACMNS-525
-	 */
-	@Test(expected = IllegalArgumentException.class)
+	@Test(expected = IllegalArgumentException.class) // DATACMNS-525
 	public void insertShouldThrowExceptionForNullId() {
 		operations.insert(null, FOO_ONE);
 	}
 
-	/**
-	 * @see DATACMNS-525
-	 */
-	@Test(expected = IllegalArgumentException.class)
+	@Test(expected = IllegalArgumentException.class) // DATACMNS-525
 	public void insertShouldThrowExceptionForNullObject() {
 		operations.insert("some-id", null);
 	}
 
-	/**
-	 * @see DATACMNS-525
-	 */
-	@Test(expected = DuplicateKeyException.class)
+	@Test(expected = DuplicateKeyException.class) // DATACMNS-525
 	public void insertShouldThrowExecptionWhenObjectOfSameTypeAlreadyExists() {
 
 		operations.insert("1", FOO_ONE);
 		operations.insert("1", FOO_TWO);
 	}
 
-	/**
-	 * @see DATACMNS-525
-	 */
-	@Test
+	@Test // DATACMNS-525
 	public void insertShouldWorkCorrectlyWhenObjectsOfDifferentTypesWithSameIdAreInserted() {
 
 		operations.insert("1", FOO_ONE);
 		operations.insert("1", BAR_ONE);
 	}
 
-	/**
-	 * @see DATACMNS-525
-	 */
-	@Test
+	@Test // DATACMNS-525
 	public void createShouldReturnSameInstanceGenerateId() {
 
 		ClassWithStringId source = new ClassWithStringId();
@@ -123,10 +105,7 @@ public class KeyValueTemplateTests {
 		assertThat(target, sameInstance(source));
 	}
 
-	/**
-	 * @see DATACMNS-525
-	 */
-	@Test
+	@Test // DATACMNS-525
 	public void createShouldRespectExistingId() {
 
 		ClassWithStringId source = new ClassWithStringId();
@@ -137,40 +116,28 @@ public class KeyValueTemplateTests {
 		assertThat(operations.findById("one", ClassWithStringId.class), is(source));
 	}
 
-	/**
-	 * @see DATACMNS-525
-	 */
-	@Test
+	@Test // DATACMNS-525
 	public void findByIdShouldReturnObjectWithMatchingIdAndType() {
 
 		operations.insert("1", FOO_ONE);
 		assertThat(operations.findById("1", Foo.class), is(FOO_ONE));
 	}
 
-	/**
-	 * @see DATACMNS-525
-	 */
-	@Test
+	@Test // DATACMNS-525
 	public void findByIdSouldReturnNullIfNoMatchingIdFound() {
 
 		operations.insert("1", FOO_ONE);
 		assertThat(operations.findById("2", Foo.class), nullValue());
 	}
 
-	/**
-	 * @see DATACMNS-525
-	 */
-	@Test
+	@Test // DATACMNS-525
 	public void findByIdShouldReturnNullIfNoMatchingTypeFound() {
 
 		operations.insert("1", FOO_ONE);
 		assertThat(operations.findById("1", Bar.class), nullValue());
 	}
 
-	/**
-	 * @see DATACMNS-525
-	 */
-	@Test
+	@Test // DATACMNS-525
 	public void findShouldExecuteQueryCorrectly() {
 
 		operations.insert("1", FOO_ONE);
@@ -181,10 +148,7 @@ public class KeyValueTemplateTests {
 		assertThat(result.get(0), is(FOO_TWO));
 	}
 
-	/**
-	 * @see DATACMNS-525
-	 */
-	@Test
+	@Test // DATACMNS-525
 	public void readShouldReturnEmptyCollectionIfOffsetOutOfRange() {
 
 		operations.insert("1", FOO_ONE);
@@ -194,10 +158,7 @@ public class KeyValueTemplateTests {
 		assertThat(operations.findInRange(5, 5, Foo.class), emptyIterable());
 	}
 
-	/**
-	 * @see DATACMNS-525
-	 */
-	@Test
+	@Test // DATACMNS-525
 	public void updateShouldReplaceExistingObject() {
 
 		operations.insert("1", FOO_ONE);
@@ -205,10 +166,7 @@ public class KeyValueTemplateTests {
 		assertThat(operations.findById("1", Foo.class), is(FOO_TWO));
 	}
 
-	/**
-	 * @see DATACMNS-525
-	 */
-	@Test
+	@Test // DATACMNS-525
 	public void updateShouldRespectTypeInformation() {
 
 		operations.insert("1", FOO_ONE);
@@ -217,10 +175,7 @@ public class KeyValueTemplateTests {
 		assertThat(operations.findById("1", Foo.class), is(FOO_ONE));
 	}
 
-	/**
-	 * @see DATACMNS-525
-	 */
-	@Test
+	@Test // DATACMNS-525
 	public void deleteShouldRemoveObjectCorrectly() {
 
 		operations.insert("1", FOO_ONE);
@@ -228,46 +183,31 @@ public class KeyValueTemplateTests {
 		assertThat(operations.findById("1", Foo.class), nullValue());
 	}
 
-	/**
-	 * @see DATACMNS-525
-	 */
-	@Test
+	@Test // DATACMNS-525
 	public void deleteReturnsNullWhenNotExisting() {
 
 		operations.insert("1", FOO_ONE);
 		assertThat(operations.delete("2", Foo.class), nullValue());
 	}
 
-	/**
-	 * @see DATACMNS-525
-	 */
-	@Test
+	@Test // DATACMNS-525
 	public void deleteReturnsRemovedObject() {
 
 		operations.insert("1", FOO_ONE);
 		assertThat(operations.delete("1", Foo.class), is(FOO_ONE));
 	}
 
-	/**
-	 * @see DATACMNS-525
-	 */
-	@Test(expected = IllegalArgumentException.class)
+	@Test(expected = IllegalArgumentException.class) // DATACMNS-525
 	public void deleteThrowsExceptionWhenIdCannotBeExctracted() {
 		operations.delete(FOO_ONE);
 	}
 
-	/**
-	 * @see DATACMNS-525
-	 */
-	@Test
+	@Test // DATACMNS-525
 	public void countShouldReturnZeroWhenNoElementsPresent() {
 		assertThat(operations.count(Foo.class), is(0L));
 	}
 
-	/**
-	 * @see DATACMNS-525
-	 */
-	@Test
+	@Test // DATACMNS-525
 	public void insertShouldRespectTypeAlias() {
 
 		operations.insert("1", ALIASED);

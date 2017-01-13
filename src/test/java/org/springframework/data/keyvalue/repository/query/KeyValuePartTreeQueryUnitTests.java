@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2016 the original author or authors.
+ * Copyright 2015-2017 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -52,10 +52,7 @@ public class KeyValuePartTreeQueryUnitTests {
 	@Mock RepositoryMetadata metadataMock;
 	@Mock ProjectionFactory projectionFactoryMock;
 
-	/**
-	 * @see DATAKV-115
-	 */
-	@Test
+	@Test // DATAKV-115
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	public void spelExpressionAndContextShouldNotBeReused() throws NoSuchMethodException, SecurityException {
 
@@ -76,10 +73,7 @@ public class KeyValuePartTreeQueryUnitTests {
 		assertThat(first, not(sameInstance(second)));
 	}
 
-	/**
-	 * @see DATAKV-142
-	 */
-	@Test
+	@Test // DATAKV-142
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	public void shouldApplyPageableParameterToCollectionQuery() throws SecurityException, NoSuchMethodException {
 
@@ -98,10 +92,7 @@ public class KeyValuePartTreeQueryUnitTests {
 		assertThat(query.getRows(), is(3));
 	}
 
-	/**
-	 * @see DATAKV-142
-	 */
-	@Test
+	@Test // DATAKV-142
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	public void shouldApplyDerivedMaxResultsToQuery() throws SecurityException, NoSuchMethodException {
 
@@ -118,10 +109,7 @@ public class KeyValuePartTreeQueryUnitTests {
 		assertThat(query.getRows(), is(3));
 	}
 
-	/**
-	 * @see DATAKV-142
-	 */
-	@Test
+	@Test // DATAKV-142
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	public void shouldApplyDerivedMaxResultsToQueryWithParameters() throws SecurityException, NoSuchMethodException {
 
