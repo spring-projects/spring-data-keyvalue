@@ -92,7 +92,7 @@ public abstract class QueryEngine<ADAPTER extends KeyValueAdapter, CRITERIA, SOR
 	 * @param keyspace
 	 * @return
 	 */
-	public abstract Collection<?> execute(CRITERIA criteria, SORT sort, int offset, int rows, Serializable keyspace);
+	public abstract Collection<?> execute(CRITERIA criteria, SORT sort, long offset, int rows, Serializable keyspace);
 
 	/**
 	 * @param criteria
@@ -104,7 +104,7 @@ public abstract class QueryEngine<ADAPTER extends KeyValueAdapter, CRITERIA, SOR
 	 * @return
 	 * @since 1.1
 	 */
-	public <T> Collection<T> execute(CRITERIA criteria, SORT sort, int offset, int rows, Serializable keyspace,
+	public <T> Collection<T> execute(CRITERIA criteria, SORT sort, long offset, int rows, Serializable keyspace,
 			Class<T> type) {
 		return (Collection<T>) execute(criteria, sort, offset, rows, keyspace);
 	}

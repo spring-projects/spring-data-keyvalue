@@ -31,7 +31,7 @@ import org.springframework.data.keyvalue.repository.support.KeyValueRepositoryFa
 import org.springframework.data.keyvalue.repository.support.QuerydslKeyValueRepository;
 import org.springframework.data.map.QuerydslKeyValueRepositoryUnitTests.QPersonRepository;
 import org.springframework.data.querydsl.QSort;
-import org.springframework.data.querydsl.QueryDslPredicateExecutor;
+import org.springframework.data.querydsl.QuerydslPredicateExecutor;
 
 import com.google.common.collect.Lists;
 
@@ -164,5 +164,5 @@ public class QuerydslKeyValueRepositoryUnitTests extends AbstractRepositoryUnitT
 	}
 
 	static interface QPersonRepository extends org.springframework.data.map.AbstractRepositoryUnitTests.PersonRepository,
-			QueryDslPredicateExecutor<Person> {}
+			QuerydslPredicateExecutor<Person> {}
 }

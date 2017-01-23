@@ -22,6 +22,7 @@ import org.springframework.data.mapping.Association;
 import org.springframework.data.mapping.PersistentEntity;
 import org.springframework.data.mapping.PersistentProperty;
 import org.springframework.data.mapping.model.AnnotationBasedPersistentProperty;
+import org.springframework.data.mapping.model.Property;
 import org.springframework.data.mapping.model.SimpleTypeHolder;
 
 /**
@@ -31,9 +32,9 @@ import org.springframework.data.mapping.model.SimpleTypeHolder;
  */
 public class KeyValuePersistentProperty extends AnnotationBasedPersistentProperty<KeyValuePersistentProperty> {
 
-	public KeyValuePersistentProperty(Field field, PropertyDescriptor propertyDescriptor,
-			PersistentEntity<?, KeyValuePersistentProperty> owner, SimpleTypeHolder simpleTypeHolder) {
-		super(field, propertyDescriptor, owner, simpleTypeHolder);
+	public KeyValuePersistentProperty(Property property, PersistentEntity<?, KeyValuePersistentProperty> owner,
+			SimpleTypeHolder simpleTypeHolder) {
+		super(property, owner, simpleTypeHolder);
 	}
 
 	/*

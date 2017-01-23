@@ -26,7 +26,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.keyvalue.core.KeyValueOperations;
 import org.springframework.data.keyvalue.repository.KeyValueRepository;
 import org.springframework.data.querydsl.EntityPathResolver;
-import org.springframework.data.querydsl.QueryDslPredicateExecutor;
+import org.springframework.data.querydsl.QuerydslPredicateExecutor;
 import org.springframework.data.querydsl.SimpleEntityPathResolver;
 import org.springframework.data.repository.core.EntityInformation;
 import org.springframework.util.Assert;
@@ -49,7 +49,7 @@ import com.querydsl.core.types.dsl.PathBuilder;
  * @param <ID> the identifier type of the domain type
  */
 public class QuerydslKeyValueRepository<T, ID extends Serializable> extends SimpleKeyValueRepository<T, ID>
-		implements QueryDslPredicateExecutor<T> {
+		implements QuerydslPredicateExecutor<T> {
 
 	private static final EntityPathResolver DEFAULT_ENTITY_PATH_RESOLVER = SimpleEntityPathResolver.INSTANCE;
 

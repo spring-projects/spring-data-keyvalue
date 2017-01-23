@@ -88,7 +88,7 @@ public class KeyValuePartTreeQueryUnitTests {
 
 		KeyValueQuery<?> query = partTreeQuery.prepareQuery(new Object[] { new PageRequest(2, 3) });
 
-		assertThat(query.getOffset(), is(6));
+		assertThat(query.getOffset(), is(6L));
 		assertThat(query.getRows(), is(3));
 	}
 

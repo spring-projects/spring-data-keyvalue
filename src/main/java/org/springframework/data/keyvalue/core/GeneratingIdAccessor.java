@@ -16,6 +16,7 @@
 package org.springframework.data.keyvalue.core;
 
 import java.io.Serializable;
+import java.util.Optional;
 
 import org.springframework.data.mapping.IdentifierAccessor;
 import org.springframework.data.mapping.PersistentProperty;
@@ -60,7 +61,7 @@ class GeneratingIdAccessor implements IdentifierAccessor {
 	 * @see org.springframework.data.keyvalue.core.IdentifierAccessor#getIdentifier()
 	 */
 	@Override
-	public Object getIdentifier() {
+	public Optional<Object> getIdentifier() {
 		return accessor.getProperty(identifierProperty);
 	}
 
@@ -72,14 +73,14 @@ class GeneratingIdAccessor implements IdentifierAccessor {
 	 */
 	public Object getOrGenerateIdentifier() {
 
-		Serializable existingIdentifier = (Serializable) getIdentifier();
+		Optional<Object> existingIdentifier = getIdentifier();
 
-		if (existingIdentifier != null) {
-			return existingIdentifier;
+		if (existingIdentifier.isPresent()) {
+			return existingIdentifier.get();
 		}
 
 		Object generatedIdentifier = generator.generateIdentifierOfType(identifierProperty.getTypeInformation());
-		accessor.setProperty(identifierProperty, generatedIdentifier);
+		accessor.setProperty(identifierProperty, Optional.ofNullable(generatedIdentifier));
 
 		return generatedIdentifier;
 	}

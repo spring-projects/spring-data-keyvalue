@@ -29,6 +29,7 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 import java.util.List;
+import java.util.Optional;
 
 import org.junit.After;
 import org.junit.Before;
@@ -113,28 +114,28 @@ public class KeyValueTemplateTests {
 
 		operations.insert(source);
 
-		assertThat(operations.findById("one", ClassWithStringId.class), is(source));
+		assertThat(operations.findById("one", ClassWithStringId.class), is(Optional.of(source)));
 	}
 
 	@Test // DATACMNS-525
 	public void findByIdShouldReturnObjectWithMatchingIdAndType() {
 
 		operations.insert("1", FOO_ONE);
-		assertThat(operations.findById("1", Foo.class), is(FOO_ONE));
+		assertThat(operations.findById("1", Foo.class), is(Optional.of(FOO_ONE)));
 	}
 
 	@Test // DATACMNS-525
-	public void findByIdSouldReturnNullIfNoMatchingIdFound() {
+	public void findByIdSouldReturnOptionalEmptyIfNoMatchingIdFound() {
 
 		operations.insert("1", FOO_ONE);
-		assertThat(operations.findById("2", Foo.class), nullValue());
+		assertThat(operations.findById("2", Foo.class), is(Optional.empty()));
 	}
 
 	@Test // DATACMNS-525
-	public void findByIdShouldReturnNullIfNoMatchingTypeFound() {
+	public void findByIdShouldReturnOptionalEmptyIfNoMatchingTypeFound() {
 
 		operations.insert("1", FOO_ONE);
-		assertThat(operations.findById("1", Bar.class), nullValue());
+		assertThat(operations.findById("1", Bar.class), is(Optional.empty()));
 	}
 
 	@Test // DATACMNS-525
@@ -163,7 +164,7 @@ public class KeyValueTemplateTests {
 
 		operations.insert("1", FOO_ONE);
 		operations.update("1", FOO_TWO);
-		assertThat(operations.findById("1", Foo.class), is(FOO_TWO));
+		assertThat(operations.findById("1", Foo.class), is(Optional.of(FOO_TWO)));
 	}
 
 	@Test // DATACMNS-525
@@ -172,7 +173,7 @@ public class KeyValueTemplateTests {
 		operations.insert("1", FOO_ONE);
 		operations.update("1", BAR_ONE);
 
-		assertThat(operations.findById("1", Foo.class), is(FOO_ONE));
+		assertThat(operations.findById("1", Foo.class), is(Optional.of(FOO_ONE)));
 	}
 
 	@Test // DATACMNS-525
@@ -180,7 +181,7 @@ public class KeyValueTemplateTests {
 
 		operations.insert("1", FOO_ONE);
 		operations.delete("1", Foo.class);
-		assertThat(operations.findById("1", Foo.class), nullValue());
+		assertThat(operations.findById("1", Foo.class), is(Optional.empty()));
 	}
 
 	@Test // DATACMNS-525

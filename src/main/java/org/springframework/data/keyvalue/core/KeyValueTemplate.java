@@ -19,6 +19,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 
 import org.springframework.context.ApplicationEventPublisher;
@@ -33,12 +34,11 @@ import org.springframework.data.keyvalue.core.mapping.KeyValuePersistentEntity;
 import org.springframework.data.keyvalue.core.mapping.KeyValuePersistentProperty;
 import org.springframework.data.keyvalue.core.mapping.context.KeyValueMappingContext;
 import org.springframework.data.keyvalue.core.query.KeyValueQuery;
-import org.springframework.data.mapping.PersistentEntity;
-import org.springframework.data.mapping.PersistentProperty;
 import org.springframework.data.mapping.context.MappingContext;
 import org.springframework.util.Assert;
 import org.springframework.util.ClassUtils;
 import org.springframework.util.CollectionUtils;
+import org.springframework.util.ObjectUtils;
 
 /**
  * Basic implementation of {@link KeyValueOperations}.
@@ -131,14 +131,23 @@ public class KeyValueTemplate implements KeyValueOperations, ApplicationEventPub
 	@Override
 	public <T> T insert(T objectToInsert) {
 
-		PersistentEntity<?, ?> entity = this.mappingContext.getPersistentEntity(ClassUtils.getUserClass(objectToInsert));
+		KeyValuePersistentEntity<?> entity = getKeyValuePersistentEntity(objectToInsert);
 
 		GeneratingIdAccessor generatingIdAccessor = new GeneratingIdAccessor(entity.getPropertyAccessor(objectToInsert),
-				entity.getIdProperty(), identifierGenerator);
+				entity.getIdProperty()
+						.orElseThrow(() -> new IllegalArgumentException("Unable to extract 'id' for object to be deleted")),
+				identifierGenerator);
 		Object id = generatingIdAccessor.getOrGenerateIdentifier();
 
 		insert((Serializable) id, objectToInsert);
 		return objectToInsert;
+	}
+
+	private KeyValuePersistentEntity<?> getKeyValuePersistentEntity(Object objectToInsert) {
+
+		return this.mappingContext.getPersistentEntity(ClassUtils.getUserClass(objectToInsert))
+				.orElseThrow(() -> new IllegalArgumentException(
+						String.format("Unable to find PersistentEntity for %s", ObjectUtils.nullSafeClassName(objectToInsert))));
 	}
 
 	/*
@@ -161,8 +170,8 @@ public class KeyValueTemplate implements KeyValueOperations, ApplicationEventPub
 			public Void doInKeyValue(KeyValueAdapter adapter) {
 
 				if (adapter.contains(id, keyspace)) {
-					throw new DuplicateKeyException(String.format(
-							"Cannot insert existing object with id %s!. Please use update.", id));
+					throw new DuplicateKeyException(
+							String.format("Cannot insert existing object with id %s!. Please use update.", id));
 				}
 
 				adapter.put(id, objectToInsert, keyspace);
@@ -181,15 +190,14 @@ public class KeyValueTemplate implements KeyValueOperations, ApplicationEventPub
 	@Override
 	public void update(Object objectToUpdate) {
 
-		PersistentEntity<?, ? extends PersistentProperty> entity = this.mappingContext.getPersistentEntity(ClassUtils
-				.getUserClass(objectToUpdate));
+		KeyValuePersistentEntity<?> entity = getKeyValuePersistentEntity(objectToUpdate);
 
 		if (!entity.hasIdProperty()) {
-			throw new InvalidDataAccessApiUsageException(String.format("Cannot determine id for type %s",
-					ClassUtils.getUserClass(objectToUpdate)));
+			throw new InvalidDataAccessApiUsageException(
+					String.format("Cannot determine id for type %s", ClassUtils.getUserClass(objectToUpdate)));
 		}
 
-		update((Serializable) entity.getIdentifierAccessor(objectToUpdate).getIdentifier(), objectToUpdate);
+		update((Serializable) entity.getIdentifierAccessor(objectToUpdate).getIdentifier().get(), objectToUpdate);
 	}
 
 	/*
@@ -214,8 +222,8 @@ public class KeyValueTemplate implements KeyValueOperations, ApplicationEventPub
 			}
 		});
 
-		potentiallyPublishEvent(KeyValueEvent
-				.afterUpdate(id, keyspace, objectToUpdate.getClass(), objectToUpdate, existing));
+		potentiallyPublishEvent(
+				KeyValueEvent.afterUpdate(id, keyspace, objectToUpdate.getClass(), objectToUpdate, existing));
 	}
 
 	/*
@@ -256,7 +264,7 @@ public class KeyValueTemplate implements KeyValueOperations, ApplicationEventPub
 	 * @see org.springframework.data.keyvalue.core.KeyValueOperations#findById(java.io.Serializable, java.lang.Class)
 	 */
 	@Override
-	public <T> T findById(final Serializable id, final Class<T> type) {
+	public <T> Optional<T> findById(final Serializable id, final Class<T> type) {
 
 		Assert.notNull(id, "Id for object to be inserted must not be null!");
 		Assert.notNull(type, "Type to fetch must not be null!");
@@ -283,7 +291,7 @@ public class KeyValueTemplate implements KeyValueOperations, ApplicationEventPub
 
 		potentiallyPublishEvent(KeyValueEvent.afterGet(id, keyspace, type, result));
 
-		return result;
+		return Optional.ofNullable(result);
 	}
 
 	/*
@@ -321,9 +329,10 @@ public class KeyValueTemplate implements KeyValueOperations, ApplicationEventPub
 	public <T> T delete(T objectToDelete) {
 
 		Class<T> type = (Class<T>) ClassUtils.getUserClass(objectToDelete);
-		PersistentEntity<?, ? extends PersistentProperty> entity = this.mappingContext.getPersistentEntity(type);
+		KeyValuePersistentEntity<?> entity = getKeyValuePersistentEntity(objectToDelete);
 
-		return delete((Serializable) entity.getIdentifierAccessor(objectToDelete).getIdentifier(), type);
+		return delete((Serializable) entity.getIdentifierAccessor(objectToDelete).getIdentifier()
+				.orElseThrow(() -> new IllegalArgumentException("Unable to extract 'id' for object to be deleted")), type);
 	}
 
 	/*
@@ -423,21 +432,21 @@ public class KeyValueTemplate implements KeyValueOperations, ApplicationEventPub
 
 	/*
 	 * (non-Javadoc)
-	 * @see org.springframework.data.keyvalue.core.KeyValueOperations#findInRange(int, int, java.lang.Class)
+	 * @see org.springframework.data.keyvalue.core.KeyValueOperations#findInRange(long, int, java.lang.Class)
 	 */
 	@SuppressWarnings("rawtypes")
 	@Override
-	public <T> Iterable<T> findInRange(int offset, int rows, Class<T> type) {
+	public <T> Iterable<T> findInRange(long offset, int rows, Class<T> type) {
 		return find(new KeyValueQuery().skip(offset).limit(rows), type);
 	}
 
 	/*
 	 * (non-Javadoc)
-	 * @see org.springframework.data.keyvalue.core.KeyValueOperations#findInRange(int, int, org.springframework.data.domain.Sort, java.lang.Class)
+	 * @see org.springframework.data.keyvalue.core.KeyValueOperations#findInRange(long, int, org.springframework.data.domain.Sort, java.lang.Class)
 	 */
 	@SuppressWarnings("rawtypes")
 	@Override
-	public <T> Iterable<T> findInRange(int offset, int rows, Sort sort, Class<T> type) {
+	public <T> Iterable<T> findInRange(long offset, int rows, Sort sort, Class<T> type) {
 		return find(new KeyValueQuery(sort).skip(offset).limit(rows), type);
 	}
 
@@ -476,7 +485,7 @@ public class KeyValueTemplate implements KeyValueOperations, ApplicationEventPub
 	}
 
 	private String resolveKeySpace(Class<?> type) {
-		return this.mappingContext.getPersistentEntity(type).getKeySpace();
+		return this.mappingContext.getPersistentEntity(type).get().getKeySpace();
 	}
 
 	private RuntimeException resolveExceptionIfPossible(RuntimeException e) {

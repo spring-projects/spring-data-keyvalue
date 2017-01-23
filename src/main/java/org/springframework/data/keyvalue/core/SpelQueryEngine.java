@@ -51,7 +51,7 @@ class SpelQueryEngine<T extends KeyValueAdapter> extends QueryEngine<KeyValueAda
 	 * @see org.springframework.data.keyvalue.core.QueryEngine#execute(java.lang.Object, java.lang.Object, int, int, java.io.Serializable)
 	 */
 	@Override
-	public Collection<?> execute(SpelCriteria criteria, Comparator<?> sort, int offset, int rows, Serializable keyspace) {
+	public Collection<?> execute(SpelCriteria criteria, Comparator<?> sort, long offset, int rows, Serializable keyspace) {
 		return sortAndFilterMatchingRange(getAdapter().getAllOf(keyspace), criteria, sort, offset, rows);
 	}
 
@@ -65,7 +65,7 @@ class SpelQueryEngine<T extends KeyValueAdapter> extends QueryEngine<KeyValueAda
 	}
 
 	@SuppressWarnings({ "unchecked", "rawtypes" })
-	private List<?> sortAndFilterMatchingRange(Iterable<?> source, SpelCriteria criteria, Comparator sort, int offset,
+	private List<?> sortAndFilterMatchingRange(Iterable<?> source, SpelCriteria criteria, Comparator sort, long offset,
 			int rows) {
 
 		List<?> tmp = IterableConverter.toList(source);
@@ -76,7 +76,7 @@ class SpelQueryEngine<T extends KeyValueAdapter> extends QueryEngine<KeyValueAda
 		return filterMatchingRange(tmp, criteria, offset, rows);
 	}
 
-	private static <S> List<S> filterMatchingRange(Iterable<S> source, SpelCriteria criteria, int offset, int rows) {
+	private static <S> List<S> filterMatchingRange(Iterable<S> source, SpelCriteria criteria, long offset, int rows) {
 
 		List<S> result = new ArrayList<S>();
 

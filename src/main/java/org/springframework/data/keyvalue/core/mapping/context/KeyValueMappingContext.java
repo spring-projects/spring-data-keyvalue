@@ -24,6 +24,7 @@ import org.springframework.data.keyvalue.core.mapping.KeyValuePersistentEntity;
 import org.springframework.data.keyvalue.core.mapping.KeyValuePersistentProperty;
 import org.springframework.data.mapping.context.AbstractMappingContext;
 import org.springframework.data.mapping.context.MappingContext;
+import org.springframework.data.mapping.model.Property;
 import org.springframework.data.mapping.model.SimpleTypeHolder;
 import org.springframework.data.util.TypeInformation;
 
@@ -57,13 +58,8 @@ public class KeyValueMappingContext extends
 		return new BasicKeyValuePersistentEntity<T>(typeInformation, fallbackKeySpaceResolver);
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @see org.springframework.data.mapping.context.AbstractMappingContext#createPersistentProperty(java.lang.reflect.Field, java.beans.PropertyDescriptor, org.springframework.data.mapping.model.MutablePersistentEntity, org.springframework.data.mapping.model.SimpleTypeHolder)
-	 */
 	@Override
-	protected KeyValuePersistentProperty createPersistentProperty(Field field, PropertyDescriptor descriptor,
-			KeyValuePersistentEntity<?> owner, SimpleTypeHolder simpleTypeHolder) {
-		return new KeyValuePersistentProperty(field, descriptor, owner, simpleTypeHolder);
+	protected KeyValuePersistentProperty createPersistentProperty(Property property, KeyValuePersistentEntity<?> owner, SimpleTypeHolder simpleTypeHolder) {
+		return new KeyValuePersistentProperty(property, owner, simpleTypeHolder);
 	}
 }

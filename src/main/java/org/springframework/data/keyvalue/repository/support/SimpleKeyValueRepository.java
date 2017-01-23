@@ -18,6 +18,7 @@ package org.springframework.data.keyvalue.repository.support;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -74,7 +75,7 @@ public class SimpleKeyValueRepository<T, ID extends Serializable> implements Key
 
 		if (pageable == null) {
 			List<T> result = findAll();
-			return new PageImpl<T>(result, null, result.size());
+			return new PageImpl<T>(result, Pageable.NONE, result.size());
 		}
 
 		Iterable<T> content = operations.findInRange(pageable.getOffset(), pageable.getPageSize(), pageable.getSort(),
@@ -96,7 +97,7 @@ public class SimpleKeyValueRepository<T, ID extends Serializable> implements Key
 		if (entityInformation.isNew(entity)) {
 			operations.insert(entity);
 		} else {
-			operations.update(entityInformation.getId(entity), entity);
+			operations.update(entityInformation.getId(entity).get(), entity);
 		}
 		return entity;
 	}
@@ -120,7 +121,7 @@ public class SimpleKeyValueRepository<T, ID extends Serializable> implements Key
 	 * @see org.springframework.data.repository.CrudRepository#findOne(java.io.Serializable)
 	 */
 	@Override
-	public T findOne(ID id) {
+	public Optional<T> findOne(ID id) {
 		return operations.findById(id, entityInformation.getJavaType());
 	}
 
@@ -153,10 +154,10 @@ public class SimpleKeyValueRepository<T, ID extends Serializable> implements Key
 
 		for (ID id : ids) {
 
-			T candidate = findOne(id);
+			Optional<T> candidate = findOne(id);
 
-			if (candidate != null) {
-				result.add(candidate);
+			if (candidate.isPresent()) {
+				result.add(candidate.get());
 			}
 		}
 
@@ -187,7 +188,7 @@ public class SimpleKeyValueRepository<T, ID extends Serializable> implements Key
 	 */
 	@Override
 	public void delete(T entity) {
-		delete(entityInformation.getId(entity));
+		delete(entityInformation.getId(entity).orElseThrow(() -> new IllegalArgumentException("Cannot delete entity with 'null' id.")));
 	}
 
 	/*

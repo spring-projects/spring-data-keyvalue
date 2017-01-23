@@ -26,6 +26,7 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
+import java.util.Optional;
 
 import org.junit.Before;
 import org.junit.Rule;
@@ -167,8 +168,8 @@ public class KeyValueTemplateUnitTests {
 	}
 
 	@Test // DATACMNS-525
-	public void findByIdShouldReturnNullWhenNoElementsPresent() {
-		assertNull(template.findById("1", Foo.class));
+	public void findByIdShouldReturnOptionalEmptyWhenNoElementsPresent() {
+		assertThat(template.findById("1", Foo.class), is(Optional.empty()));
 	}
 
 	@Test // DATACMNS-525
@@ -214,7 +215,7 @@ public class KeyValueTemplateUnitTests {
 		template.findInRange(1, 5, Foo.class);
 
 		verify(adapterMock, times(1)).find(captor.capture(), eq(Foo.class.getName()), eq(Foo.class));
-		assertThat(captor.getValue().getOffset(), is(1));
+		assertThat(captor.getValue().getOffset(), is(1L));
 		assertThat(captor.getValue().getRows(), is(5));
 		assertThat(captor.getValue().getCritieria(), nullValue());
 	}
@@ -325,7 +326,7 @@ public class KeyValueTemplateUnitTests {
 	public void insertSouldRespectTypeAliasAndFilterNonMatching() {
 
 		template.insert("1", ALIASED);
-		assertThat(template.findById("1", SUBCLASS_OF_ALIASED.getClass()), nullValue());
+		assertThat(template.findById("1", SUBCLASS_OF_ALIASED.getClass()), is(Optional.empty()));
 	}
 
 	@Test(expected = IllegalArgumentException.class) // DATACMNS-525

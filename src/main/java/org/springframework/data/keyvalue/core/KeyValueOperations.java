@@ -16,6 +16,7 @@
 package org.springframework.data.keyvalue.core;
 
 import java.io.Serializable;
+import java.util.Optional;
 
 import org.springframework.beans.factory.DisposableBean;
 import org.springframework.data.domain.Sort;
@@ -73,7 +74,7 @@ public interface KeyValueOperations extends DisposableBean {
 	 * @param type must not be {@literal null}.
 	 * @return null if not found.
 	 */
-	<T> T findById(Serializable id, Class<T> type);
+	<T> Optional<T> findById(Serializable id, Class<T> type);
 
 	/**
 	 * Execute operation against underlying store.
@@ -102,7 +103,7 @@ public interface KeyValueOperations extends DisposableBean {
 	 * @param type must not be {@literal null}.
 	 * @return
 	 */
-	<T> Iterable<T> findInRange(int offset, int rows, Class<T> type);
+	<T> Iterable<T> findInRange(long offset, int rows, Class<T> type);
 
 	/**
 	 * Get all elements in given range ordered by sort. Respects {@link KeySpace} if present and therefore returns all
@@ -114,7 +115,7 @@ public interface KeyValueOperations extends DisposableBean {
 	 * @param type
 	 * @return
 	 */
-	<T> Iterable<T> findInRange(int offset, int rows, Sort sort, Class<T> type);
+	<T> Iterable<T> findInRange(long offset, int rows, Sort sort, Class<T> type);
 
 	/**
 	 * @param objectToUpdate must not be {@literal null}.

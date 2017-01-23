@@ -18,6 +18,7 @@ package org.springframework.data.keyvalue.repository.config;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Map;
+import java.util.Optional;
 
 import org.springframework.beans.factory.support.AbstractBeanDefinition;
 import org.springframework.beans.factory.support.BeanDefinitionBuilder;
@@ -153,16 +154,16 @@ public abstract class KeyValueRepositoryConfigurationExtension extends Repositor
 
 		registerIfNotAlreadyRegistered(mappingContextDefinition, registry, MAPPING_CONTEXT_BEAN_NAME, configurationSource);
 
-		String keyValueTemplateName = configurationSource.getAttribute(KEY_VALUE_TEMPLATE_BEAN_REF_ATTRIBUTE);
+		Optional<String> keyValueTemplateName = configurationSource.getAttribute(KEY_VALUE_TEMPLATE_BEAN_REF_ATTRIBUTE);
 
 		// No custom template reference configured and no matching bean definition found
-		if (getDefaultKeyValueTemplateRef().equals(keyValueTemplateName)
-				&& !registry.containsBeanDefinition(keyValueTemplateName)) {
+		if (keyValueTemplateName.isPresent() && getDefaultKeyValueTemplateRef().equals(keyValueTemplateName.get())
+				&& !registry.containsBeanDefinition(keyValueTemplateName.get())) {
 
 			AbstractBeanDefinition beanDefinition = getDefaultKeyValueTemplateBeanDefinition(configurationSource);
 
 			if (beanDefinition != null) {
-				registerIfNotAlreadyRegistered(beanDefinition, registry, keyValueTemplateName, configurationSource.getSource());
+				registerIfNotAlreadyRegistered(beanDefinition, registry, keyValueTemplateName.get(), configurationSource.getSource());
 			}
 		}
 	}

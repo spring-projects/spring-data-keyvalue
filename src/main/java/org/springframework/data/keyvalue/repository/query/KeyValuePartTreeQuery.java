@@ -16,8 +16,10 @@
 package org.springframework.data.keyvalue.repository.query;
 
 import java.lang.reflect.Constructor;
+import java.util.Optional;
 
 import org.springframework.beans.BeanUtils;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -85,7 +87,7 @@ public class KeyValuePartTreeQuery implements RepositoryQuery {
 
 		ParameterAccessor accessor = new ParametersParameterAccessor(getQueryMethod().getParameters(), parameters);
 		KeyValueQuery<?> query = prepareQuery(parameters);
-		ResultProcessor processor = queryMethod.getResultProcessor().withDynamicProjection(accessor);
+		ResultProcessor processor = queryMethod.getResultProcessor().withDynamicProjection(Optional.ofNullable(accessor));
 
 		return processor.processResult(doExecute(parameters, query));
 	}
@@ -149,15 +151,15 @@ public class KeyValuePartTreeQuery implements RepositoryQuery {
 		Pageable pageable = accessor.getPageable();
 		Sort sort = accessor.getSort();
 
-		query.setOffset(pageable == null ? -1 : pageable.getOffset());
+		query.setOffset(pageable != null && Pageable.NONE.equals(pageable) ? -1L : pageable.getOffset());
 
-		if (pageable != null) {
+		if (pageable != null && !Pageable.NONE.equals(pageable)) {
 			query.setRows(pageable.getPageSize());
 		} else if (instance.getRows() >= 0) {
 			query.setRows(instance.getRows());
 		}
 
-		query.setSort(sort == null ? instance.getSort() : sort);
+		query.setSort(sort == null || Sort.unsorted().equals(sort) ? instance.getSort() : sort);
 
 		return query;
 	}

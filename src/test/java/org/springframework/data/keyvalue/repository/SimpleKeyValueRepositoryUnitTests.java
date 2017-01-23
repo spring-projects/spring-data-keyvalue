@@ -18,7 +18,9 @@ package org.springframework.data.keyvalue.repository;
 import static org.mockito.Matchers.*;
 import static org.mockito.Mockito.*;
 
+import java.io.Serializable;
 import java.util.Arrays;
+import java.util.Optional;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -91,7 +93,9 @@ public class SimpleKeyValueRepositoryUnitTests {
 	@Test // DATACMNS-525
 	public void deleteEntity() {
 
-		Foo one = repo.save(new Foo("one"));
+		Foo one = new Foo("one");
+		one.id = "1";
+		repo.save(one);
 		repo.delete(one);
 
 		verify(opsMock, times(1)).delete(eq(one.getId()), eq(Foo.class));
@@ -116,6 +120,7 @@ public class SimpleKeyValueRepositoryUnitTests {
 	@Test // DATACMNS-525
 	public void findAllIds() {
 
+		when(opsMock.findById(any(Serializable.class), any(Class.class))).thenReturn(Optional.empty());
 		repo.findAll(Arrays.asList("one", "two", "three"));
 
 		verify(opsMock, times(3)).findById(anyString(), eq(Foo.class));
@@ -126,7 +131,7 @@ public class SimpleKeyValueRepositoryUnitTests {
 
 		repo.findAll(new PageRequest(10, 15));
 
-		verify(opsMock, times(1)).findInRange(eq(150), eq(15), isNull(Sort.class), eq(Foo.class));
+		verify(opsMock, times(1)).findInRange(eq(150L), eq(15), eq(Sort.unsorted()), eq(Foo.class));
 	}
 
 	@Test // DATACMNS-525
@@ -135,7 +140,7 @@ public class SimpleKeyValueRepositoryUnitTests {
 		Sort sort = new Sort("for", "bar");
 		repo.findAll(new PageRequest(10, 15, sort));
 
-		verify(opsMock, times(1)).findInRange(eq(150), eq(15), eq(sort), eq(Foo.class));
+		verify(opsMock, times(1)).findInRange(eq(150L), eq(15), eq(sort), eq(Foo.class));
 	}
 
 	@Test // DATACMNS-525

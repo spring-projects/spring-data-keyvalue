@@ -24,7 +24,7 @@ import org.springframework.data.domain.Sort;
 public class KeyValueQuery<T> {
 
 	private Sort sort;
-	private int offset = -1;
+	private long offset = -1;
 	private int rows = -1;
 	private T criteria;
 
@@ -74,7 +74,7 @@ public class KeyValueQuery<T> {
 	 * 
 	 * @return negative value if not set.
 	 */
-	public int getOffset() {
+	public long getOffset() {
 		return this.offset;
 	}
 
@@ -92,7 +92,7 @@ public class KeyValueQuery<T> {
 	 * 
 	 * @param offset use negative value for none.
 	 */
-	public void setOffset(int offset) {
+	public void setOffset(long offset) {
 		this.offset = offset;
 	}
 
@@ -139,7 +139,7 @@ public class KeyValueQuery<T> {
 	 * @param offset
 	 * @return
 	 */
-	public KeyValueQuery<T> skip(int offset) {
+	public KeyValueQuery<T> skip(long offset) {
 		setOffset(offset);
 		return this;
 	}
