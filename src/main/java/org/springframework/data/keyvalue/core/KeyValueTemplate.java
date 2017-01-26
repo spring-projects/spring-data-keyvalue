@@ -52,7 +52,7 @@ public class KeyValueTemplate implements KeyValueOperations, ApplicationEventPub
 	private static final PersistenceExceptionTranslator DEFAULT_PERSISTENCE_EXCEPTION_TRANSLATOR = new KeyValuePersistenceExceptionTranslator();
 
 	private final KeyValueAdapter adapter;
-	private final MappingContext<? extends KeyValuePersistentEntity<?>, ? extends KeyValuePersistentProperty> mappingContext;
+	private final MappingContext<? extends KeyValuePersistentEntity<?, ?>, ? extends KeyValuePersistentProperty<?>> mappingContext;
 	private final IdentifierGenerator identifierGenerator;
 
 	private PersistenceExceptionTranslator exceptionTranslator = DEFAULT_PERSISTENCE_EXCEPTION_TRANSLATOR;
@@ -78,7 +78,7 @@ public class KeyValueTemplate implements KeyValueOperations, ApplicationEventPub
 	 * @param mappingContext must not be {@literal null}.
 	 */
 	public KeyValueTemplate(KeyValueAdapter adapter,
-			MappingContext<? extends KeyValuePersistentEntity<?>, ? extends KeyValuePersistentProperty> mappingContext) {
+			MappingContext<? extends KeyValuePersistentEntity<?, ?>, ? extends KeyValuePersistentProperty<?>> mappingContext) {
 
 		Assert.notNull(adapter, "Adapter must not be null!");
 		Assert.notNull(mappingContext, "MappingContext must not be null!");
@@ -131,7 +131,7 @@ public class KeyValueTemplate implements KeyValueOperations, ApplicationEventPub
 	@Override
 	public <T> T insert(T objectToInsert) {
 
-		KeyValuePersistentEntity<?> entity = getKeyValuePersistentEntity(objectToInsert);
+		KeyValuePersistentEntity<?, ?> entity = getKeyValuePersistentEntity(objectToInsert);
 
 		GeneratingIdAccessor generatingIdAccessor = new GeneratingIdAccessor(entity.getPropertyAccessor(objectToInsert),
 				entity.getIdProperty()
@@ -143,7 +143,7 @@ public class KeyValueTemplate implements KeyValueOperations, ApplicationEventPub
 		return objectToInsert;
 	}
 
-	private KeyValuePersistentEntity<?> getKeyValuePersistentEntity(Object objectToInsert) {
+	private KeyValuePersistentEntity<?, ?> getKeyValuePersistentEntity(Object objectToInsert) {
 
 		return this.mappingContext.getPersistentEntity(ClassUtils.getUserClass(objectToInsert))
 				.orElseThrow(() -> new IllegalArgumentException(
@@ -190,7 +190,7 @@ public class KeyValueTemplate implements KeyValueOperations, ApplicationEventPub
 	@Override
 	public void update(Object objectToUpdate) {
 
-		KeyValuePersistentEntity<?> entity = getKeyValuePersistentEntity(objectToUpdate);
+		KeyValuePersistentEntity<?, ?> entity = getKeyValuePersistentEntity(objectToUpdate);
 
 		if (!entity.hasIdProperty()) {
 			throw new InvalidDataAccessApiUsageException(
@@ -329,7 +329,7 @@ public class KeyValueTemplate implements KeyValueOperations, ApplicationEventPub
 	public <T> T delete(T objectToDelete) {
 
 		Class<T> type = (Class<T>) ClassUtils.getUserClass(objectToDelete);
-		KeyValuePersistentEntity<?> entity = getKeyValuePersistentEntity(objectToDelete);
+		KeyValuePersistentEntity<?, ?> entity = getKeyValuePersistentEntity(objectToDelete);
 
 		return delete((Serializable) entity.getIdentifierAccessor(objectToDelete).getIdentifier()
 				.orElseThrow(() -> new IllegalArgumentException("Unable to extract 'id' for object to be deleted")), type);

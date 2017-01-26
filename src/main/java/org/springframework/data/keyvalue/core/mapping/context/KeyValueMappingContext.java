@@ -15,9 +15,6 @@
  */
 package org.springframework.data.keyvalue.core.mapping.context;
 
-import java.beans.PropertyDescriptor;
-import java.lang.reflect.Field;
-
 import org.springframework.data.keyvalue.core.mapping.BasicKeyValuePersistentEntity;
 import org.springframework.data.keyvalue.core.mapping.KeySpaceResolver;
 import org.springframework.data.keyvalue.core.mapping.KeyValuePersistentEntity;
@@ -35,8 +32,8 @@ import org.springframework.data.util.TypeInformation;
  * @author Christoph Strobl
  * @author Oliver Gierke
  */
-public class KeyValueMappingContext extends
-		AbstractMappingContext<KeyValuePersistentEntity<?>, KeyValuePersistentProperty> {
+public class KeyValueMappingContext<E extends KeyValuePersistentEntity<?, P>, P extends KeyValuePersistentProperty<P>>
+		extends AbstractMappingContext<E, P> {
 
 	private KeySpaceResolver fallbackKeySpaceResolver;
 
@@ -49,17 +46,13 @@ public class KeyValueMappingContext extends
 		this.fallbackKeySpaceResolver = fallbackKeySpaceResolver;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @see org.springframework.data.mapping.context.AbstractMappingContext#createPersistentEntity(org.springframework.data.util.TypeInformation)
-	 */
 	@Override
-	protected <T> KeyValuePersistentEntity<T> createPersistentEntity(TypeInformation<T> typeInformation) {
-		return new BasicKeyValuePersistentEntity<T>(typeInformation, fallbackKeySpaceResolver);
+	protected <T> E createPersistentEntity(TypeInformation<T> typeInformation) {
+		return (E) new BasicKeyValuePersistentEntity<T, P>(typeInformation, fallbackKeySpaceResolver);
 	}
 
 	@Override
-	protected KeyValuePersistentProperty createPersistentProperty(Property property, KeyValuePersistentEntity<?> owner, SimpleTypeHolder simpleTypeHolder) {
-		return new KeyValuePersistentProperty(property, owner, simpleTypeHolder);
+	protected P createPersistentProperty(Property property, E owner, SimpleTypeHolder simpleTypeHolder) {
+		return (P) new KeyValuePersistentProperty(property, owner, simpleTypeHolder);
 	}
 }

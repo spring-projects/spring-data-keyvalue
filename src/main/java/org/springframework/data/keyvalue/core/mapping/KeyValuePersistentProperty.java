@@ -15,9 +15,6 @@
  */
 package org.springframework.data.keyvalue.core.mapping;
 
-import java.beans.PropertyDescriptor;
-import java.lang.reflect.Field;
-
 import org.springframework.data.mapping.Association;
 import org.springframework.data.mapping.PersistentEntity;
 import org.springframework.data.mapping.PersistentProperty;
@@ -30,9 +27,10 @@ import org.springframework.data.mapping.model.SimpleTypeHolder;
  * 
  * @author Christoph Strobl
  */
-public class KeyValuePersistentProperty extends AnnotationBasedPersistentProperty<KeyValuePersistentProperty> {
+public class KeyValuePersistentProperty<P extends KeyValuePersistentProperty<P>>
+		extends AnnotationBasedPersistentProperty<P> {
 
-	public KeyValuePersistentProperty(Property property, PersistentEntity<?, KeyValuePersistentProperty> owner,
+	public KeyValuePersistentProperty(Property property, PersistentEntity<?, P> owner,
 			SimpleTypeHolder simpleTypeHolder) {
 		super(property, owner, simpleTypeHolder);
 	}
@@ -42,7 +40,7 @@ public class KeyValuePersistentProperty extends AnnotationBasedPersistentPropert
 	 * @see org.springframework.data.mapping.model.AbstractPersistentProperty#createAssociation()
 	 */
 	@Override
-	protected Association<KeyValuePersistentProperty> createAssociation() {
-		return new Association<KeyValuePersistentProperty>(this, null);
+	protected Association<P> createAssociation() {
+		return new Association<P>((P) this, null);
 	}
 }

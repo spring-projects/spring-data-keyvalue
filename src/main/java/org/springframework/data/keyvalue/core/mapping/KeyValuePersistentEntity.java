@@ -21,7 +21,8 @@ import org.springframework.data.mapping.model.MutablePersistentEntity;
  * @author Christoph Strobl
  * @param <T>
  */
-public interface KeyValuePersistentEntity<T> extends MutablePersistentEntity<T, KeyValuePersistentProperty> {
+public interface KeyValuePersistentEntity<T, P extends KeyValuePersistentProperty<P>>
+		extends MutablePersistentEntity<T, P> {
 
 	/**
 	 * Get the {@literal keySpace} a given entity assigns to.

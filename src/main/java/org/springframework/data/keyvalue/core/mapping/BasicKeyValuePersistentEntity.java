@@ -26,8 +26,8 @@ import org.springframework.util.StringUtils;
  * @author Oliver Gierke
  * @param <T>
  */
-public class BasicKeyValuePersistentEntity<T> extends BasicPersistentEntity<T, KeyValuePersistentProperty> implements
-		KeyValuePersistentEntity<T> {
+public class BasicKeyValuePersistentEntity<T, P extends KeyValuePersistentProperty<P>>
+		extends BasicPersistentEntity<T, P> implements KeyValuePersistentEntity<T, P> {
 
 	private static final KeySpaceResolver DEFAULT_FALLBACK_RESOLVER = ClassNameKeySpaceResolver.INSTANCE;
 
