@@ -1,6 +1,12 @@
 Spring Data KeyValue Changelog
 ==========================
 
+Changes in version 1.1.8.RELEASE (2017-03-02)
+---------------------------------------------
+* DATAKV-163 - Use Spring 5 compatible version of AnnotatedElementUtils.findAnnotationAttributes.
+* DATAKV-161 - Release 1.1.8 (Hopper SR8).
+
+
 Changes in version 1.2.1.RELEASE (2017-03-02)
 ---------------------------------------------
 * DATAKV-163 - Use Spring 5 compatible version of AnnotatedElementUtils.findAnnotationAttributes.
