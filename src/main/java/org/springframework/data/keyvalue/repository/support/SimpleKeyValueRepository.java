@@ -75,14 +75,14 @@ public class SimpleKeyValueRepository<T, ID extends Serializable> implements Key
 
 		if (pageable == null) {
 			List<T> result = findAll();
-			return new PageImpl<T>(result, Pageable.NONE, result.size());
+			return new PageImpl<T>(result, Pageable.unpaged(), result.size());
 		}
 
 		Iterable<T> content = operations.findInRange(pageable.getOffset(), pageable.getPageSize(), pageable.getSort(),
 				entityInformation.getJavaType());
 
-		return new PageImpl<T>(IterableConverter.toList(content), pageable, this.operations.count(entityInformation
-				.getJavaType()));
+		return new PageImpl<T>(IterableConverter.toList(content), pageable,
+				this.operations.count(entityInformation.getJavaType()));
 	}
 
 	/*
@@ -188,7 +188,8 @@ public class SimpleKeyValueRepository<T, ID extends Serializable> implements Key
 	 */
 	@Override
 	public void delete(T entity) {
-		delete(entityInformation.getId(entity).orElseThrow(() -> new IllegalArgumentException("Cannot delete entity with 'null' id.")));
+		delete(entityInformation.getId(entity)
+				.orElseThrow(() -> new IllegalArgumentException("Cannot delete entity with 'null' id.")));
 	}
 
 	/*
