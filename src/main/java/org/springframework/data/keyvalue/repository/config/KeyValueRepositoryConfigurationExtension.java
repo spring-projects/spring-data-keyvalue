@@ -38,7 +38,7 @@ import org.springframework.data.repository.config.RepositoryConfigurationSource;
 
 /**
  * {@link RepositoryConfigurationExtension} for {@link KeyValueRepository}.
- * 
+ *
  * @author Christoph Strobl
  * @author Oliver Gierke
  */
@@ -52,7 +52,7 @@ public abstract class KeyValueRepositoryConfigurationExtension extends Repositor
 	 * @see org.springframework.data.repository.config.RepositoryConfigurationExtension#getRepositoryFactoryClassName()
 	 */
 	@Override
-	public String getRepositoryFactoryClassName() {
+	public String getRepositoryFactoryBeanClassName() {
 		return KeyValueRepositoryFactoryBean.class.getName();
 	}
 
@@ -101,7 +101,7 @@ public abstract class KeyValueRepositoryConfigurationExtension extends Repositor
 	/**
 	 * Detects the query creator type to be used for the factory to set. Will lookup a {@link QueryCreatorType} annotation
 	 * on the {@code @Enable}-annotation or use {@link SpelQueryCreator} if not found.
-	 * 
+	 *
 	 * @param config
 	 * @return
 	 */
@@ -122,7 +122,7 @@ public abstract class KeyValueRepositoryConfigurationExtension extends Repositor
 	/**
 	 * Detects the query creator type to be used for the factory to set. Will lookup a {@link QueryCreatorType} annotation
 	 * on the {@code @Enable}-annotation or use {@link SpelQueryCreator} if not found.
-	 * 
+	 *
 	 * @param config
 	 * @return
 	 */
@@ -140,7 +140,7 @@ public abstract class KeyValueRepositoryConfigurationExtension extends Repositor
 		return queryCreatorAttributes.getClass("repositoryQueryType");
 	}
 
-	/* 
+	/*
 	 * (non-Javadoc)
 	 * @see org.springframework.data.repository.config.RepositoryConfigurationExtensionSupport#registerBeansForRoot(org.springframework.beans.factory.support.BeanDefinitionRegistry, org.springframework.data.repository.config.RepositoryConfigurationSource)
 	 */
@@ -170,7 +170,7 @@ public abstract class KeyValueRepositoryConfigurationExtension extends Repositor
 
 	/**
 	 * Get the default {@link RootBeanDefinition} for {@link org.springframework.data.keyvalue.core.KeyValueTemplate}.
-	 * 
+	 *
 	 * @return {@literal null} to explicitly not register a template.
 	 */
 	protected AbstractBeanDefinition getDefaultKeyValueTemplateBeanDefinition(
