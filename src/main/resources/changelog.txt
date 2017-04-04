@@ -1,6 +1,19 @@
 Spring Data KeyValue Changelog
 ==========================
 
+Changes in version 2.0.0.M2 (2017-04-04)
+----------------------------------------
+* DATAKV-166 - Rename getRepositoryFactoryClassName to getRepositoryFactoryBeanClassName.
+* DATAKV-163 - Use Spring 5 compatible version of AnnotatedElementUtils.findAnnotationAttributes.
+* DATAKV-159 - Integrate Data Commons Java 8 upgrade branch.
+* DATAKV-158 - Update project documentation with the CLA tool integration.
+* DATAKV-157 - Migrate ticket references in test code to Spring Framework style.
+* DATAKV-154 - Upgrade to a newer JDK version on TravisCI.
+* DATAKV-153 - Adapt API in RepositoryFactoryBeanSupport implementation.
+* DATAKV-152 - Register repository factory in spring.factories for multi-store support.
+* DATAKV-151 - Release 2.0 M2 (Kay).
+
+
 Changes in version 1.2.1.RELEASE (2017-03-02)
 ---------------------------------------------
 * DATAKV-163 - Use Spring 5 compatible version of AnnotatedElementUtils.findAnnotationAttributes.
