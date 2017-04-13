@@ -20,6 +20,7 @@ import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
 
 import java.lang.reflect.Method;
+import java.util.ArrayList;
 import java.util.Date;
 
 import org.joda.time.format.DateTimeFormatter;
@@ -380,6 +381,66 @@ public class SpelQueryCreatorUnitTests {
 		assertThat(evaluate("findByLastnameMatches", "^s.*w$").against(ROBB), is(false));
 	}
 
+	/**
+	 * @see DATAKV-169
+	 */
+	@Test
+	public void inReturnsMatchCorrectly() throws Exception {
+
+		ArrayList<String> list = new ArrayList<String>();
+		list.add(ROBB.firstname);
+
+		assertThat(evaluate("findByFirstnameIn", list).against(ROBB), is(true));
+	}
+
+	/**
+	 * @see DATAKV-169
+	 */
+	@Test
+	public void inNotMatchingReturnsCorrectly() throws Exception {
+
+		ArrayList<String> list = new ArrayList<String>();
+		list.add(ROBB.firstname);
+
+		assertThat(evaluate("findByFirstnameIn", list).against(JON), is(false));
+	}
+
+	/**
+	 * @see DATAKV-169
+	 */
+	@Test
+	public void inWithNullCompareValuesCorrectly() throws Exception {
+
+		ArrayList<String> list = new ArrayList<String>();
+		list.add(null);
+
+		assertThat(evaluate("findByFirstnameIn", list).against(JON), is(false));
+	}
+
+	/**
+	 * @see DATAKV-169
+	 */
+	@Test
+	public void inWithNullSourceValuesMatchesCorrectly() throws Exception {
+
+		ArrayList<String> list = new ArrayList<String>();
+		list.add(ROBB.firstname);
+
+		assertThat(evaluate("findByFirstnameIn", list).against(new Person(null, 10)), is(false));
+	}
+
+	/**
+	 * @see DATAKV-169
+	 */
+	@Test
+	public void inMatchesNullValuesCorrectly() throws Exception {
+
+		ArrayList<String> list = new ArrayList<String>();
+		list.add(null);
+
+		assertThat(evaluate("findByFirstnameIn", list).against(new Person(null, 10)), is(true));
+	}
+
 	private Evaluation evaluate(String methodName, Object... args) throws Exception {
 		return new Evaluation((SpelExpression) createQueryForMethodWithArgs(methodName, args).getCritieria());
 	}
@@ -463,6 +524,9 @@ public class SpelQueryCreatorUnitTests {
 
 		// Type.REGEX
 		Person findByLastnameMatches(String lastname);
+
+		// Type.IN
+		Person findByFirstnameIn(ArrayList<String> in);
 
 	}
 
