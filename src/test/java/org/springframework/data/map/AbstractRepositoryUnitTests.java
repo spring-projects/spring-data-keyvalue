@@ -168,13 +168,51 @@ public abstract class AbstractRepositoryUnitTests<T extends AbstractRepositoryUn
 		assertThat(result.get(0).getFirstname(), is(CERSEI.getFirstname()));
 	}
 
+	@Test // DATAKV-169
+	public void findsByValueInCollectionCorrectly() {
+
+		repository.save(LENNISTERS);
+
+		List<Person> result = repository.findByFirstnameIn(Arrays.asList(CERSEI.getFirstname(), JAIME.getFirstname()));
+
+		assertThat(result, hasSize(2));
+		assertThat(result, is(containsInAnyOrder(CERSEI, JAIME)));
+	}
+
+	@Test // DATAKV-169
+	public void findsByValueInCollectionCorrectlyWhenTargetPathContainsNullValue() {
+
+		repository.save(LENNISTERS);
+		repository.save(new Person(null, 10));
+
+		List<Person> result = repository.findByFirstnameIn(Arrays.asList(CERSEI.getFirstname(), JAIME.getFirstname()));
+
+		assertThat(result, hasSize(2));
+		assertThat(result, is(containsInAnyOrder(CERSEI, JAIME)));
+	}
+
+	@Test // DATAKV-169
+	public void findsByValueInCollectionCorrectlyWhenTargetPathAndCollectionContainNullValue() {
+
+		repository.save(LENNISTERS);
+
+		Person personWithNullAsFirstname = new Person(null, 10);
+		repository.save(personWithNullAsFirstname);
+
+		List<Person> result = repository
+				.findByFirstnameIn(Arrays.asList(CERSEI.getFirstname(), JAIME.getFirstname(), null));
+
+		assertThat(result, hasSize(3));
+		assertThat(result, is(containsInAnyOrder(CERSEI, JAIME, personWithNullAsFirstname)));
+	}
+
 	protected KeyValueRepositoryFactory createKeyValueRepositoryFactory(KeyValueOperations operations) {
 		return new KeyValueRepositoryFactory(operations);
 	}
 
 	protected abstract T getRepository(KeyValueRepositoryFactory factory);
 
-	public static interface PersonRepository extends CrudRepository<Person, String>, KeyValueRepository<Person, String> {
+	public interface PersonRepository extends CrudRepository<Person, String>, KeyValueRepository<Person, String> {
 
 		List<Person> findByAge(int age);
 
@@ -193,6 +231,8 @@ public abstract class AbstractRepositoryUnitTests<T extends AbstractRepositoryUn
 		List<PersonSummary> findByAgeGreaterThan(int age, Sort sort);
 
 		<T> List<T> findByAgeGreaterThan(int age, Sort sort, Class<T> projectionType);
+
+		List<Person> findByFirstnameIn(List<String> firstname);
 	}
 
 	interface PersonSummary {
