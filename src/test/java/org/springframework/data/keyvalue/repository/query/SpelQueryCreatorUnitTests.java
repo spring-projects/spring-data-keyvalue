@@ -1,5 +1,5 @@
 /*
- * Copyright 2014 the original author or authors.
+ * Copyright 2014-2017 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -81,7 +81,7 @@ public class SpelQueryCreatorUnitTests {
 	 * @see DATACMNS-525
 	 */
 	@Test
-	public void isTrueAssertedPropertlyWhenTrue() throws Exception {
+	public void isTrueAssertedProperlyWhenTrue() throws Exception {
 		assertThat(evaluate("findBySkinChangerIsTrue").against(BRAN), is(true));
 	}
 
@@ -89,7 +89,7 @@ public class SpelQueryCreatorUnitTests {
 	 * @see DATACMNS-525
 	 */
 	@Test
-	public void isTrueAssertedPropertlyWhenFalse() throws Exception {
+	public void isTrueAssertedProperlyWhenFalse() throws Exception {
 		assertThat(evaluate("findBySkinChangerIsTrue").against(RICKON), is(false));
 	}
 
@@ -97,7 +97,7 @@ public class SpelQueryCreatorUnitTests {
 	 * @see DATACMNS-525
 	 */
 	@Test
-	public void isFalseAssertedPropertlyWhenTrue() throws Exception {
+	public void isFalseAssertedProperlyWhenTrue() throws Exception {
 		assertThat(evaluate("findBySkinChangerIsFalse").against(BRAN), is(false));
 	}
 
@@ -105,7 +105,7 @@ public class SpelQueryCreatorUnitTests {
 	 * @see DATACMNS-525
 	 */
 	@Test
-	public void isFalseAssertedPropertlyWhenFalse() throws Exception {
+	public void isFalseAssertedProperlyWhenFalse() throws Exception {
 		assertThat(evaluate("findBySkinChangerIsFalse").against(RICKON), is(true));
 	}
 
@@ -113,7 +113,7 @@ public class SpelQueryCreatorUnitTests {
 	 * @see DATACMNS-525
 	 */
 	@Test
-	public void isNullAssertedPropertlyWhenAttributeIsNull() throws Exception {
+	public void isNullAssertedProperlyWhenAttributeIsNull() throws Exception {
 		assertThat(evaluate("findByLastnameIsNull").against(BRAN), is(true));
 	}
 
@@ -121,7 +121,7 @@ public class SpelQueryCreatorUnitTests {
 	 * @see DATACMNS-525
 	 */
 	@Test
-	public void isNullAssertedPropertlyWhenAttributeIsNotNull() throws Exception {
+	public void isNullAssertedProperlyWhenAttributeIsNotNull() throws Exception {
 		assertThat(evaluate("findByLastnameIsNull").against(ROBB), is(false));
 	}
 
@@ -535,8 +535,8 @@ public class SpelQueryCreatorUnitTests {
 		SpelExpression expression;
 		Object candidate;
 
-		public Evaluation(SpelExpression expresison) {
-			this.expression = expresison;
+		public Evaluation(SpelExpression expression) {
+			this.expression = expression;
 		}
 
 		public Boolean against(Object candidate) {
