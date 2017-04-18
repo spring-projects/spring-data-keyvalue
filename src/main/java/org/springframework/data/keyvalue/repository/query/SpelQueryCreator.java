@@ -32,7 +32,7 @@ import org.springframework.expression.spel.standard.SpelExpressionParser;
 
 /**
  * {@link AbstractQueryCreator} to create {@link SpelExpression} based {@link KeyValueQuery}s.
- * 
+ *
  * @author Christoph Strobl
  * @author Oliver Gierke
  */
@@ -44,7 +44,7 @@ public class SpelQueryCreator extends AbstractQueryCreator<KeyValueQuery<SpelExp
 
 	/**
 	 * Creates a new {@link SpelQueryCreator} for the given {@link PartTree} and {@link ParameterAccessor}.
-	 * 
+	 *
 	 * @param tree must not be {@literal null}.
 	 * @param parameters must not be {@literal null}.
 	 */
@@ -85,7 +85,7 @@ public class SpelQueryCreator extends AbstractQueryCreator<KeyValueQuery<SpelExp
 	@Override
 	protected KeyValueQuery<SpelExpression> complete(String criteria, Sort sort) {
 
-		KeyValueQuery<SpelExpression> query = new KeyValueQuery<SpelExpression>(this.expression);
+		KeyValueQuery<SpelExpression> query = new KeyValueQuery<>(this.expression);
 
 		if (sort != null) {
 			query.orderBy(sort);

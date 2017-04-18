@@ -15,11 +15,12 @@
  */
 package org.springframework.data.keyvalue.core;
 
-import static org.hamcrest.Matchers.*;
 import static org.hamcrest.Matchers.contains;
-import static org.junit.Assert.*;
-import static org.mockito.ArgumentMatchers.*;
-import static org.mockito.Mockito.*;
+import static org.hamcrest.Matchers.is;
+import static org.junit.Assert.assertThat;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.Mockito.doReturn;
+import static org.mockito.Mockito.mock;
 
 import java.lang.reflect.Method;
 import java.util.ArrayList;
@@ -32,6 +33,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
+
 import org.springframework.data.annotation.Id;
 import org.springframework.data.keyvalue.repository.query.SpelQueryCreator;
 import org.springframework.data.projection.SpelAwareProxyProjectionFactory;
@@ -43,7 +45,7 @@ import org.springframework.expression.spel.support.StandardEvaluationContext;
 
 /**
  * Unit tests for {@link SpelQueryEngine}.
- * 
+ *
  * @author Martin Macko
  * @author Oliver Gierke
  */
@@ -62,7 +64,7 @@ public class SpelQueryEngineUnitTests {
 	@Before
 	public void setUp() {
 
-		engine = new SpelQueryEngine<KeyValueAdapter>();
+		engine = new SpelQueryEngine<>();
 		engine.registerAdapter(adapter);
 	}
 
@@ -86,7 +88,7 @@ public class SpelQueryEngineUnitTests {
 
 	private static SpelCriteria createQueryForMethodWithArgs(String methodName, Object... args) throws Exception {
 
-		List<Class<?>> types = new ArrayList<Class<?>>(args.length);
+		List<Class<?>> types = new ArrayList<>(args.length);
 
 		for (Object arg : args) {
 			types.add(arg.getClass());

@@ -15,8 +15,12 @@
  */
 package org.springframework.data.keyvalue.repository;
 
-import static org.mockito.ArgumentMatchers.*;
-import static org.mockito.Mockito.*;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 import java.io.Serializable;
 import java.util.Arrays;
@@ -27,6 +31,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
+
 import org.springframework.data.annotation.Id;
 import org.springframework.data.annotation.Persistent;
 import org.springframework.data.domain.PageRequest;
@@ -48,16 +53,16 @@ public class SimpleKeyValueRepositoryUnitTests {
 	@Before
 	public void setUp() {
 
-		ReflectionEntityInformation<Foo, String> ei = new ReflectionEntityInformation<Foo, String>(Foo.class);
-		repo = new SimpleKeyValueRepository<Foo, String>(ei, opsMock);
+		ReflectionEntityInformation<Foo, String> ei = new ReflectionEntityInformation<>(Foo.class);
+		repo = new SimpleKeyValueRepository<>(ei, opsMock);
 	}
 
 	@Test // DATACMNS-525
 	public void saveNewWithNumericId() {
 
-		ReflectionEntityInformation<WithNumericId, Integer> ei = new ReflectionEntityInformation<WithNumericId, Integer>(
+		ReflectionEntityInformation<WithNumericId, Integer> ei = new ReflectionEntityInformation<>(
 				WithNumericId.class);
-		SimpleKeyValueRepository<WithNumericId, Integer> temp = new SimpleKeyValueRepository<WithNumericId, Integer>(ei,
+		SimpleKeyValueRepository<WithNumericId, Integer> temp = new SimpleKeyValueRepository<>(ei,
 				opsMock);
 
 		WithNumericId withNumericId = new WithNumericId();
@@ -129,7 +134,7 @@ public class SimpleKeyValueRepositoryUnitTests {
 	@Test // DATACMNS-525
 	public void findAllWithPageableShouldDelegateToOperationsCorrectlyWhenPageableDoesNotContainSort() {
 
-		repo.findAll(new PageRequest(10, 15));
+		repo.findAll(PageRequest.of(10, 15));
 
 		verify(opsMock, times(1)).findInRange(eq(150L), eq(15), eq(Sort.unsorted()), eq(Foo.class));
 	}
@@ -137,8 +142,8 @@ public class SimpleKeyValueRepositoryUnitTests {
 	@Test // DATACMNS-525
 	public void findAllWithPageableShouldDelegateToOperationsCorrectlyWhenPageableContainsSort() {
 
-		Sort sort = new Sort("for", "bar");
-		repo.findAll(new PageRequest(10, 15, sort));
+		Sort sort = Sort.by("for", "bar");
+		repo.findAll(PageRequest.of(10, 15, sort));
 
 		verify(opsMock, times(1)).findInRange(eq(150L), eq(15), eq(sort), eq(Foo.class));
 	}

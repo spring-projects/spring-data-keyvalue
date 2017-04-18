@@ -15,13 +15,13 @@
  */
 package org.springframework.data.keyvalue.core;
 
-import static org.hamcrest.collection.IsCollectionWithSize.*;
-import static org.hamcrest.collection.IsEmptyIterable.*;
-import static org.hamcrest.collection.IsIterableContainingInAnyOrder.*;
-import static org.hamcrest.core.Is.*;
-import static org.hamcrest.core.IsNull.*;
-import static org.hamcrest.core.IsSame.*;
-import static org.junit.Assert.*;
+import static org.hamcrest.collection.IsCollectionWithSize.hasSize;
+import static org.hamcrest.collection.IsEmptyIterable.emptyIterable;
+import static org.hamcrest.collection.IsIterableContainingInAnyOrder.containsInAnyOrder;
+import static org.hamcrest.core.Is.is;
+import static org.hamcrest.core.IsNull.nullValue;
+import static org.hamcrest.core.IsSame.sameInstance;
+import static org.junit.Assert.assertThat;
 
 import java.io.Serializable;
 import java.lang.annotation.ElementType;
@@ -34,6 +34,7 @@ import java.util.Optional;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.annotation.Persistent;
@@ -54,7 +55,7 @@ public class KeyValueTemplateTests {
 	static final Bar BAR_ONE = new Bar("one");
 	static final ClassWithTypeAlias ALIASED = new ClassWithTypeAlias("super");
 	static final SubclassOfAliasedType SUBCLASS_OF_ALIASED = new SubclassOfAliasedType("sub");
-	static final KeyValueQuery<String> STRING_QUERY = new KeyValueQuery<String>("foo == 'two'");
+	static final KeyValueQuery<String> STRING_QUERY = new KeyValueQuery<>("foo == 'two'");
 
 	KeyValueTemplate operations;
 

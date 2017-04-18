@@ -1,5 +1,5 @@
 /*
- * Copyright 2014 the original author or authors.
+ * Copyright 2014-2017 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,21 +16,21 @@
 package org.springframework.data.keyvalue.core;
 
 import java.util.Comparator;
+import java.util.Optional;
 
-import org.springframework.data.domain.Sort;
 import org.springframework.data.domain.Sort.Direction;
 import org.springframework.data.domain.Sort.NullHandling;
 import org.springframework.data.domain.Sort.Order;
 import org.springframework.data.keyvalue.core.query.KeyValueQuery;
 import org.springframework.expression.spel.standard.SpelExpressionParser;
 import org.springframework.util.Assert;
-import org.springframework.util.comparator.CompoundComparator;
 
 /**
  * {@link SortAccessor} implementation capable of creating {@link SpelPropertyComparator}.
- * 
+ *
  * @author Christoph Strobl
  * @author Oliver Gierke
+ * @author Mark Paluch
  */
 class SpelSortAccessor implements SortAccessor<Comparator<?>> {
 
@@ -53,27 +53,35 @@ class SpelSortAccessor implements SortAccessor<Comparator<?>> {
 	@Override
 	public Comparator<?> resolve(KeyValueQuery<?> query) {
 
-		if (query == null || query.getSort() == null || Sort.unsorted().equals(query.getSort())) {
+		if (query == null || query.getSort() == null || query.getSort().isUnsorted()) {
 			return null;
 		}
 
-		CompoundComparator compoundComperator = new CompoundComparator();
+		Optional<Comparator<?>> comparator = Optional.empty();
 		for (Order order : query.getSort()) {
 
-			SpelPropertyComparator<?> spelSort = new SpelPropertyComparator(order.getProperty(), parser);
+			SpelPropertyComparator<Object> spelSort = new SpelPropertyComparator<>(order.getProperty(), parser);
 
 			if (Direction.DESC.equals(order.getDirection())) {
 
 				spelSort.desc();
 
 				if (order.getNullHandling() != null && !NullHandling.NATIVE.equals(order.getNullHandling())) {
-					spelSort = NullHandling.NULLS_FIRST.equals(order.getNullHandling()) ? spelSort.nullsFirst() : spelSort
-							.nullsLast();
+					spelSort = NullHandling.NULLS_FIRST.equals(order.getNullHandling()) ? spelSort.nullsFirst()
+							: spelSort.nullsLast();
 				}
 			}
-			compoundComperator.addComparator(spelSort);
+
+			if (!comparator.isPresent()) {
+				comparator = Optional.of(spelSort);
+			} else {
+
+				SpelPropertyComparator<Object> spelSortToUse = spelSort;
+				comparator = comparator.map(it -> it.thenComparing(spelSortToUse));
+			}
 		}
 
-		return compoundComperator;
+		return comparator.orElseThrow(
+				() -> new IllegalStateException("No sort definitions have been added to this CompoundComparator to compare"));
 	}
 }

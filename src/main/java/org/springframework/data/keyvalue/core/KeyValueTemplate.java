@@ -42,7 +42,7 @@ import org.springframework.util.ObjectUtils;
 
 /**
  * Basic implementation of {@link KeyValueOperations}.
- * 
+ *
  * @author Christoph Strobl
  * @author Oliver Gierke
  * @author Thomas Darimont
@@ -64,7 +64,7 @@ public class KeyValueTemplate implements KeyValueOperations, ApplicationEventPub
 	/**
 	 * Create new {@link KeyValueTemplate} using the given {@link KeyValueAdapter} with a default
 	 * {@link KeyValueMappingContext}.
-	 * 
+	 *
 	 * @param adapter must not be {@literal null}.
 	 */
 	public KeyValueTemplate(KeyValueAdapter adapter) {
@@ -73,7 +73,7 @@ public class KeyValueTemplate implements KeyValueOperations, ApplicationEventPub
 
 	/**
 	 * Create new {@link KeyValueTemplate} using the given {@link KeyValueAdapter} and {@link MappingContext}.
-	 * 
+	 *
 	 * @param adapter must not be {@literal null}.
 	 * @param mappingContext must not be {@literal null}.
 	 */
@@ -90,7 +90,7 @@ public class KeyValueTemplate implements KeyValueOperations, ApplicationEventPub
 
 	/**
 	 * Set the {@link PersistenceExceptionTranslator} used for converting {@link RuntimeException}.
-	 * 
+	 *
 	 * @param exceptionTranslator must not be {@literal null}.
 	 */
 	public void setExceptionTranslator(PersistenceExceptionTranslator exceptionTranslator) {
@@ -101,7 +101,7 @@ public class KeyValueTemplate implements KeyValueOperations, ApplicationEventPub
 
 	/**
 	 * Define the event types to publish via {@link ApplicationEventPublisher}.
-	 * 
+	 *
 	 * @param eventTypesToPublish use {@literal null} or {@link Collections#emptySet()} to stop publishing.
 	 */
 	@SuppressWarnings("rawtypes")
@@ -247,7 +247,7 @@ public class KeyValueTemplate implements KeyValueOperations, ApplicationEventPub
 					return Collections.emptySet();
 				}
 
-				ArrayList<T> filtered = new ArrayList<T>();
+				ArrayList<T> filtered = new ArrayList<>();
 				for (Object candidate : values) {
 					if (typeCheck(type, candidate)) {
 						filtered.add((T) candidate);
@@ -407,7 +407,7 @@ public class KeyValueTemplate implements KeyValueOperations, ApplicationEventPub
 					return Collections.emptySet();
 				}
 
-				List<T> filtered = new ArrayList<T>();
+				List<T> filtered = new ArrayList<>();
 
 				for (Object candidate : result) {
 					if (typeCheck(type, candidate)) {

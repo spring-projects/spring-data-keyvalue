@@ -15,7 +15,7 @@
  */
 package org.springframework.data.keyvalue.repository.support;
 
-import static org.springframework.data.keyvalue.repository.support.KeyValueQuerydslUtils.*;
+import static org.springframework.data.keyvalue.repository.support.KeyValueQuerydslUtils.toOrderSpecifier;
 
 import java.io.Serializable;
 
@@ -41,7 +41,7 @@ import com.querydsl.core.types.dsl.PathBuilder;
 
 /**
  * {@link KeyValueRepository} implementation capable of executing {@link Predicate}s using {@link CollQuery}.
- * 
+ *
  * @author Christoph Strobl
  * @author Oliver Gierke
  * @author Thomas Darimont
@@ -59,7 +59,7 @@ public class QuerydslKeyValueRepository<T, ID extends Serializable> extends Simp
 	/**
 	 * Creates a new {@link QuerydslKeyValueRepository} for the given {@link EntityInformation} and
 	 * {@link KeyValueOperations}.
-	 * 
+	 *
 	 * @param entityInformation must not be {@literal null}.
 	 * @param operations must not be {@literal null}.
 	 */
@@ -70,7 +70,7 @@ public class QuerydslKeyValueRepository<T, ID extends Serializable> extends Simp
 	/**
 	 * Creates a new {@link QuerydslKeyValueRepository} for the given {@link EntityInformation},
 	 * {@link KeyValueOperations} and {@link EntityPathResolver}.
-	 * 
+	 *
 	 * @param entityInformation must not be {@literal null}.
 	 * @param operations must not be {@literal null}.
 	 * @param resolver must not be {@literal null}.
@@ -83,7 +83,7 @@ public class QuerydslKeyValueRepository<T, ID extends Serializable> extends Simp
 		Assert.notNull(resolver, "EntityPathResolver must not be null!");
 
 		this.path = resolver.createPath(entityInformation.getJavaType());
-		this.builder = new PathBuilder<T>(path.getType(), path.getMetadata());
+		this.builder = new PathBuilder<>(path.getType(), path.getMetadata());
 	}
 
 	/*
@@ -117,7 +117,7 @@ public class QuerydslKeyValueRepository<T, ID extends Serializable> extends Simp
 		return query.fetchResults().getResults();
 	}
 
-	/* 
+	/*
 	 * (non-Javadoc)
 	 * @see org.springframework.data.querydsl.QueryDslPredicateExecutor#findAll(com.mysema.query.types.Predicate, org.springframework.data.domain.Sort)
 	 */
@@ -145,7 +145,7 @@ public class QuerydslKeyValueRepository<T, ID extends Serializable> extends Simp
 			}
 		}
 
-		return new PageImpl<T>(query.fetchResults().getResults(), pageable, count(predicate));
+		return new PageImpl<>(query.fetchResults().getResults(), pageable, count(predicate));
 	}
 
 	/*
@@ -174,7 +174,7 @@ public class QuerydslKeyValueRepository<T, ID extends Serializable> extends Simp
 		return prepareQuery(predicate).fetchCount();
 	}
 
-	/* 
+	/*
 	 * (non-Javadoc)
 	 * @see org.springframework.data.querydsl.QueryDslPredicateExecutor#exists(com.mysema.query.types.Predicate)
 	 */
@@ -185,13 +185,13 @@ public class QuerydslKeyValueRepository<T, ID extends Serializable> extends Simp
 
 	/**
 	 * Creates executable query for given {@link Predicate}.
-	 * 
+	 *
 	 * @param predicate
 	 * @return
 	 */
 	protected AbstractCollQuery<T, ?> prepareQuery(Predicate predicate) {
 
-		CollQuery<T> query = new CollQuery<T>();
+		CollQuery<T> query = new CollQuery<>();
 		query.from(builder, findAll());
 
 		return predicate != null ? query.where(predicate) : query;

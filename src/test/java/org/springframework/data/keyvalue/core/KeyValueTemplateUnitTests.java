@@ -15,11 +15,20 @@
  */
 package org.springframework.data.keyvalue.core;
 
-import static org.hamcrest.CoreMatchers.*;
-import static org.hamcrest.collection.IsIterableContainingInAnyOrder.*;
-import static org.junit.Assert.*;
-import static org.mockito.ArgumentMatchers.*;
-import static org.mockito.Mockito.*;
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.notNullValue;
+import static org.hamcrest.CoreMatchers.nullValue;
+import static org.hamcrest.CoreMatchers.sameInstance;
+import static org.hamcrest.collection.IsIterableContainingInAnyOrder.containsInAnyOrder;
+import static org.junit.Assert.assertThat;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.atLeastOnce;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoMoreInteractions;
+import static org.mockito.Mockito.verifyZeroInteractions;
+import static org.mockito.Mockito.when;
 
 import java.io.Serializable;
 import java.util.Arrays;
@@ -37,6 +46,7 @@ import org.mockito.ArgumentCaptor;
 import org.mockito.Matchers;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
+
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.dao.InvalidDataAccessApiUsageException;
@@ -75,7 +85,7 @@ public class KeyValueTemplateUnitTests {
 			"super");
 	private static final SubclassOfTypeWithCustomComposedKeySpaceAnnotation SUBCLASS_OF_ALIASED = new SubclassOfTypeWithCustomComposedKeySpaceAnnotation(
 			"sub");
-	private static final KeyValueQuery<String> STRING_QUERY = new KeyValueQuery<String>("foo == 'two'");
+	private static final KeyValueQuery<String> STRING_QUERY = new KeyValueQuery<>("foo == 'two'");
 
 	private @Mock KeyValueAdapter adapterMock;
 	private KeyValueTemplate template;
@@ -557,7 +567,7 @@ public class KeyValueTemplateUnitTests {
 
 	@SuppressWarnings("rawtypes")
 	private void setEventsToPublish(Class<? extends KeyValueEvent>... events) {
-		template.setEventTypesToPublish(new HashSet<Class<? extends KeyValueEvent>>(Arrays.asList(events)));
+		template.setEventTypesToPublish(new HashSet<>(Arrays.asList(events)));
 	}
 
 	static class Foo {
