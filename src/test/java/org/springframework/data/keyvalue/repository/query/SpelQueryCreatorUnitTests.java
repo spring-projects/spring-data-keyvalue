@@ -72,32 +72,32 @@ public class SpelQueryCreatorUnitTests {
 	}
 
 	@Test // DATACMNS-525
-	public void isTrueAssertedPropertlyWhenTrue() throws Exception {
+	public void isTrueAssertedProperlyWhenTrue() throws Exception {
 		assertThat(evaluate("findBySkinChangerIsTrue").against(BRAN), is(true));
 	}
 
 	@Test // DATACMNS-525
-	public void isTrueAssertedPropertlyWhenFalse() throws Exception {
+	public void isTrueAssertedProperlyWhenFalse() throws Exception {
 		assertThat(evaluate("findBySkinChangerIsTrue").against(RICKON), is(false));
 	}
 
 	@Test // DATACMNS-525
-	public void isFalseAssertedPropertlyWhenTrue() throws Exception {
+	public void isFalseAssertedProperlyWhenTrue() throws Exception {
 		assertThat(evaluate("findBySkinChangerIsFalse").against(BRAN), is(false));
 	}
 
 	@Test // DATACMNS-525
-	public void isFalseAssertedPropertlyWhenFalse() throws Exception {
+	public void isFalseAssertedProperlyWhenFalse() throws Exception {
 		assertThat(evaluate("findBySkinChangerIsFalse").against(RICKON), is(true));
 	}
 
 	@Test // DATACMNS-525
-	public void isNullAssertedPropertlyWhenAttributeIsNull() throws Exception {
+	public void isNullAssertedProperlyWhenAttributeIsNull() throws Exception {
 		assertThat(evaluate("findByLastnameIsNull").against(BRAN), is(true));
 	}
 
 	@Test // DATACMNS-525
-	public void isNullAssertedPropertlyWhenAttributeIsNotNull() throws Exception {
+	public void isNullAssertedProperlyWhenAttributeIsNotNull() throws Exception {
 		assertThat(evaluate("findByLastnameIsNull").against(ROBB), is(false));
 	}
 
@@ -400,8 +400,8 @@ public class SpelQueryCreatorUnitTests {
 		SpelExpression expression;
 		Object candidate;
 
-		public Evaluation(SpelExpression expresison) {
-			this.expression = expresison;
+		public Evaluation(SpelExpression expression) {
+			this.expression = expression;
 		}
 
 		public Boolean against(Object candidate) {
