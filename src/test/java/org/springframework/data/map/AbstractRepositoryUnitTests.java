@@ -39,7 +39,7 @@ import org.springframework.data.repository.CrudRepository;
 
 /**
  * Base class for test cases for repository implementations.
- * 
+ *
  * @author Christoph Strobl
  * @author Oliver Gierke
  * @author Thomas Darimont
@@ -98,7 +98,7 @@ public abstract class AbstractRepositoryUnitTests<T extends AbstractRepositoryUn
 
 		repository.save(LENNISTERS);
 
-		Page<Person> page = repository.findByAge(19, new PageRequest(0, 1));
+		Page<Person> page = repository.findByAge(19, PageRequest.of(0, 1));
 		assertThat(page.hasNext(), is(true));
 		assertThat(page.getTotalElements(), is(2L));
 		assertThat(page.getContent(), IsCollectionWithSize.hasSize(1));
@@ -132,7 +132,7 @@ public abstract class AbstractRepositoryUnitTests<T extends AbstractRepositoryUn
 		repository.save(LENNISTERS);
 
 		assertThat(
-				repository.findAll(new Sort(new Sort.Order(Direction.ASC, "age"), new Sort.Order(Direction.DESC, "firstname"))),
+				repository.findAll(Sort.by(new Sort.Order(Direction.ASC, "age"), new Sort.Order(Direction.DESC, "firstname"))),
 				contains(TYRION, JAIME, CERSEI));
 	}
 
@@ -151,7 +151,7 @@ public abstract class AbstractRepositoryUnitTests<T extends AbstractRepositoryUn
 
 		repository.save(LENNISTERS);
 
-		List<PersonSummary> result = repository.findByAgeGreaterThan(0, new Sort("firstname"));
+		List<PersonSummary> result = repository.findByAgeGreaterThan(0, Sort.by("firstname"));
 
 		assertThat(result, hasSize(3));
 		assertThat(result.get(0).getFirstname(), is(CERSEI.getFirstname()));
@@ -162,7 +162,7 @@ public abstract class AbstractRepositoryUnitTests<T extends AbstractRepositoryUn
 
 		repository.save(LENNISTERS);
 
-		List<PersonSummary> result = repository.findByAgeGreaterThan(0, new Sort("firstname"), PersonSummary.class);
+		List<PersonSummary> result = repository.findByAgeGreaterThan(0, Sort.by("firstname"), PersonSummary.class);
 
 		assertThat(result, hasSize(3));
 		assertThat(result.get(0).getFirstname(), is(CERSEI.getFirstname()));

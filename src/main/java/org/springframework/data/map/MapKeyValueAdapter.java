@@ -1,5 +1,5 @@
 /*
- * Copyright 2014-2015 the original author or authors.
+ * Copyright 2014-2017 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -31,7 +31,7 @@ import org.springframework.util.ClassUtils;
 
 /**
  * {@link KeyValueAdapter} implementation for {@link Map}.
- * 
+ *
  * @author Christoph Strobl
  */
 public class MapKeyValueAdapter extends AbstractKeyValueAdapter {
@@ -49,7 +49,7 @@ public class MapKeyValueAdapter extends AbstractKeyValueAdapter {
 
 	/**
 	 * Creates a new {@link MapKeyValueAdapter} using the given {@link Map} as backing store.
-	 * 
+	 *
 	 * @param mapType must not be {@literal null}.
 	 */
 	@SuppressWarnings("rawtypes")
@@ -59,7 +59,7 @@ public class MapKeyValueAdapter extends AbstractKeyValueAdapter {
 
 	/**
 	 * Create new instance of {@link MapKeyValueAdapter} using given dataStore for persistence.
-	 * 
+	 *
 	 * @param store must not be {@literal null}.
 	 */
 	@SuppressWarnings({ "rawtypes", "unchecked" })
@@ -69,7 +69,7 @@ public class MapKeyValueAdapter extends AbstractKeyValueAdapter {
 
 	/**
 	 * Creates a new {@link MapKeyValueAdapter} with the given store and type to be used when creating key spaces.
-	 * 
+	 *
 	 * @param store must not be {@literal null}.
 	 * @param keySpaceMapType must not be {@literal null}.
 	 */
@@ -150,7 +150,7 @@ public class MapKeyValueAdapter extends AbstractKeyValueAdapter {
 	 */
 	@Override
 	public CloseableIterator<Entry<Serializable, Object>> entries(Serializable keyspace) {
-		return new ForwardingCloseableIterator<Entry<Serializable, Object>>(getKeySpaceMap(keyspace).entrySet().iterator());
+		return new ForwardingCloseableIterator<>(getKeySpaceMap(keyspace).entrySet().iterator());
 	}
 
 	/*
@@ -182,7 +182,7 @@ public class MapKeyValueAdapter extends AbstractKeyValueAdapter {
 
 	/**
 	 * Get map associated with given key space.
-	 * 
+	 *
 	 * @param keyspace must not be {@literal null}.
 	 * @return
 	 */

@@ -1,5 +1,5 @@
 /*
- * Copyright 2014-2016 the original author or authors.
+ * Copyright 2014-2017 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -30,7 +30,7 @@ import org.springframework.expression.spel.standard.SpelExpressionParser;
 /**
  * {@link QueryEngine} implementation specific for executing {@link SpelExpression} based {@link KeyValueQuery} against
  * {@link KeyValueAdapter}.
- * 
+ *
  * @author Christoph Strobl
  * @author Oliver Gierke
  * @param <T>
@@ -78,7 +78,7 @@ class SpelQueryEngine<T extends KeyValueAdapter> extends QueryEngine<KeyValueAda
 
 	private static <S> List<S> filterMatchingRange(Iterable<S> source, SpelCriteria criteria, long offset, int rows) {
 
-		List<S> result = new ArrayList<S>();
+		List<S> result = new ArrayList<>();
 
 		boolean compareOffsetAndRows = 0 < offset || 0 <= rows;
 		int remainingRows = rows;

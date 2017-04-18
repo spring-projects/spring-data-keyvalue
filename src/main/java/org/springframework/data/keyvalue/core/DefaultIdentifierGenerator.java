@@ -1,5 +1,5 @@
 /*
- * Copyright 2014-2016 the original author or authors.
+ * Copyright 2014-2017 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -29,7 +29,7 @@ import org.springframework.util.StringUtils;
 
 /**
  * Default implementation of {@link IdentifierGenerator} to generate identifiers of types {@link UUID}, String,
- * 
+ *
  * @author Christoph Strobl
  * @author Oliver Gierke
  */
@@ -37,7 +37,7 @@ enum DefaultIdentifierGenerator implements IdentifierGenerator {
 
 	INSTANCE;
 
-	private final AtomicReference<SecureRandom> secureRandom = new AtomicReference<SecureRandom>(null);
+	private final AtomicReference<SecureRandom> secureRandom = new AtomicReference<>(null);
 
 	/*
 	 * (non-Javadoc)

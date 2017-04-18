@@ -15,12 +15,9 @@
  */
 package org.springframework.data.keyvalue.repository.query;
 
-import static org.hamcrest.core.Is.*;
-import static org.hamcrest.core.IsNot.*;
-import static org.hamcrest.core.IsNull.*;
-import static org.hamcrest.core.IsSame.*;
+import static org.hamcrest.Matchers.*;
 import static org.junit.Assert.*;
-import static org.mockito.ArgumentMatchers.*;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
 import java.lang.reflect.Method;
@@ -86,7 +83,7 @@ public class KeyValuePartTreeQueryUnitTests {
 		KeyValuePartTreeQuery partTreeQuery = new KeyValuePartTreeQuery(qm, DefaultEvaluationContextProvider.INSTANCE,
 				kvOpsMock, SpelQueryCreator.class);
 
-		KeyValueQuery<?> query = partTreeQuery.prepareQuery(new Object[] { new PageRequest(2, 3) });
+		KeyValueQuery<?> query = partTreeQuery.prepareQuery(new Object[] { PageRequest.of(2, 3) });
 
 		assertThat(query.getOffset(), is(6L));
 		assertThat(query.getRows(), is(3));

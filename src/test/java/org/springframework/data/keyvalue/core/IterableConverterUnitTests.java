@@ -15,11 +15,7 @@
  */
 package org.springframework.data.keyvalue.core;
 
-import static org.hamcrest.collection.IsEmptyCollection.*;
-import static org.hamcrest.collection.IsIterableContainingInOrder.*;
-import static org.hamcrest.core.IsInstanceOf.*;
-import static org.hamcrest.core.IsNull.*;
-import static org.hamcrest.core.IsSame.*;
+import static org.hamcrest.Matchers.*;
 import static org.junit.Assert.*;
 import static org.springframework.data.keyvalue.core.IterableConverter.*;
 
@@ -50,7 +46,7 @@ public class IterableConverterUnitTests {
 	@Test // DATAKV-101
 	public void toListShouldReturnSameObjectWhenSourceIsAlreadyListType() {
 
-		List<String> source = new ArrayList<String>();
+		List<String> source = new ArrayList<>();
 
 		assertThat(toList(source), sameInstance(source));
 	}
@@ -58,7 +54,7 @@ public class IterableConverterUnitTests {
 	@Test // DATAKV-101
 	public void toListShouldReturnListWhenSourceIsNonListType() {
 
-		Set<String> source = new HashSet<String>();
+		Set<String> source = new HashSet<>();
 		source.add("tyrion");
 
 		assertThat(toList(source), instanceOf(List.class));
@@ -67,7 +63,7 @@ public class IterableConverterUnitTests {
 	@Test // DATAKV-101
 	public void toListShouldHoldValuesInOrderOfSource() {
 
-		Set<String> source = new LinkedHashSet<String>();
+		Set<String> source = new LinkedHashSet<>();
 		source.add("tyrion");
 		source.add("jaime");
 

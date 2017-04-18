@@ -15,8 +15,7 @@
  */
 package org.springframework.data.keyvalue.core;
 
-import static org.hamcrest.core.Is.*;
-import static org.hamcrest.core.IsNull.*;
+import static org.hamcrest.Matchers.*;
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
 
@@ -47,7 +46,7 @@ public class ForwardingCloseableIteratorUnitTests<K, V> {
 
 		when(iteratorMock.hasNext()).thenReturn(true);
 
-		CloseableIterator<Entry<K, V>> iterator = new ForwardingCloseableIterator<Entry<K, V>>(iteratorMock);
+		CloseableIterator<Entry<K, V>> iterator = new ForwardingCloseableIterator<>(iteratorMock);
 
 		try {
 			assertThat(iterator.hasNext(), is(true));
@@ -63,7 +62,7 @@ public class ForwardingCloseableIteratorUnitTests<K, V> {
 
 		when(iteratorMock.next()).thenReturn((Entry<K, V>) mock(Map.Entry.class));
 
-		CloseableIterator<Entry<K, V>> iterator = new ForwardingCloseableIterator<Entry<K, V>>(iteratorMock);
+		CloseableIterator<Entry<K, V>> iterator = new ForwardingCloseableIterator<>(iteratorMock);
 
 		try {
 			assertThat(iterator.next(), notNullValue());
@@ -78,7 +77,7 @@ public class ForwardingCloseableIteratorUnitTests<K, V> {
 
 		when(iteratorMock.next()).thenThrow(new NoSuchElementException());
 
-		CloseableIterator<Entry<K, V>> iterator = new ForwardingCloseableIterator<Entry<K, V>>(iteratorMock);
+		CloseableIterator<Entry<K, V>> iterator = new ForwardingCloseableIterator<>(iteratorMock);
 
 		try {
 			iterator.next();
@@ -90,7 +89,7 @@ public class ForwardingCloseableIteratorUnitTests<K, V> {
 	@Test // DATAKV-99
 	public void closeShouldDoNothingByDefault() {
 
-		new ForwardingCloseableIterator<Entry<K, V>>(iteratorMock).close();
+		new ForwardingCloseableIterator<>(iteratorMock).close();
 
 		verifyZeroInteractions(iteratorMock);
 	}
@@ -98,7 +97,7 @@ public class ForwardingCloseableIteratorUnitTests<K, V> {
 	@Test // DATAKV-99
 	public void closeShouldInvokeConfiguredCloseAction() {
 
-		new ForwardingCloseableIterator<Entry<K, V>>(iteratorMock, closeActionMock).close();
+		new ForwardingCloseableIterator<>(iteratorMock, closeActionMock).close();
 
 		verify(closeActionMock, times(1)).run();
 	}

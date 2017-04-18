@@ -1,5 +1,5 @@
 /*
- * Copyright 2014 the original author or authors.
+ * Copyright 2014-2017 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,11 +19,12 @@ import org.springframework.data.domain.Sort;
 
 /**
  * @author Christoph Strobl
+ * @author Mark Paluch
  * @param <T> Criteria type
  */
 public class KeyValueQuery<T> {
 
-	private Sort sort;
+	private Sort sort = Sort.unsorted();
 	private long offset = -1;
 	private int rows = -1;
 	private T criteria;
@@ -35,7 +36,7 @@ public class KeyValueQuery<T> {
 
 	/**
 	 * Creates new instance of {@link KeyValueQuery} with given criteria.
-	 * 
+	 *
 	 * @param criteria can be {@literal null}.
 	 */
 	public KeyValueQuery(T criteria) {
@@ -44,7 +45,7 @@ public class KeyValueQuery<T> {
 
 	/**
 	 * Creates new instance of {@link KeyValueQuery} with given {@link Sort}.
-	 * 
+	 *
 	 * @param sort can be {@literal null}.
 	 */
 	public KeyValueQuery(Sort sort) {
@@ -53,7 +54,7 @@ public class KeyValueQuery<T> {
 
 	/**
 	 * Get the criteria object.
-	 * 
+	 *
 	 * @return
 	 */
 	public T getCritieria() {
@@ -62,7 +63,7 @@ public class KeyValueQuery<T> {
 
 	/**
 	 * Get {@link Sort}.
-	 * 
+	 *
 	 * @return
 	 */
 	public Sort getSort() {
@@ -71,7 +72,7 @@ public class KeyValueQuery<T> {
 
 	/**
 	 * Number of elements to skip.
-	 * 
+	 *
 	 * @return negative value if not set.
 	 */
 	public long getOffset() {
@@ -80,7 +81,7 @@ public class KeyValueQuery<T> {
 
 	/**
 	 * Number of elements to read.
-	 * 
+	 *
 	 * @return negative value if not set.
 	 */
 	public int getRows() {
@@ -89,7 +90,7 @@ public class KeyValueQuery<T> {
 
 	/**
 	 * Set the number of elements to skip.
-	 * 
+	 *
 	 * @param offset use negative value for none.
 	 */
 	public void setOffset(long offset) {
@@ -98,8 +99,8 @@ public class KeyValueQuery<T> {
 
 	/**
 	 * Set the number of elements to read.
-	 * 
-	 * @param offset use negative value for all.
+	 *
+	 * @param rows use negative value for all.
 	 */
 	public void setRows(int rows) {
 		this.rows = rows;
@@ -107,7 +108,7 @@ public class KeyValueQuery<T> {
 
 	/**
 	 * Set {@link Sort} to be applied.
-	 * 
+	 *
 	 * @param sort
 	 */
 	public void setSort(Sort sort) {
@@ -116,7 +117,7 @@ public class KeyValueQuery<T> {
 
 	/**
 	 * Add given {@link Sort}.
-	 * 
+	 *
 	 * @param sort {@literal null} {@link Sort} will be ignored.
 	 * @return
 	 */
@@ -127,7 +128,7 @@ public class KeyValueQuery<T> {
 		}
 
 		if (this.sort != null) {
-			this.sort.and(sort);
+			this.sort = this.sort.and(sort);
 		} else {
 			this.sort = sort;
 		}
@@ -135,7 +136,7 @@ public class KeyValueQuery<T> {
 	}
 
 	/**
-	 * @see KeyValueQuery#setOffset(int)
+	 * @see KeyValueQuery#setOffset(long)
 	 * @param offset
 	 * @return
 	 */

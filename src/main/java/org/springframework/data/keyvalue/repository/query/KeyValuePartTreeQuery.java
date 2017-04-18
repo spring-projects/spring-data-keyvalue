@@ -1,5 +1,5 @@
 /*
- * Copyright 2014-2016 the original author or authors.
+ * Copyright 2014-2017 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -41,7 +41,7 @@ import org.springframework.util.ClassUtils;
 /**
  * {@link RepositoryQuery} implementation deriving queries from {@link PartTree} using a predefined
  * {@link AbstractQueryCreator}.
- * 
+ *
  * @author Christoph Strobl
  * @author Oliver Gierke
  * @author Mark Paluch
@@ -56,7 +56,7 @@ public class KeyValuePartTreeQuery implements RepositoryQuery {
 	/**
 	 * Creates a new {@link KeyValuePartTreeQuery} for the given {@link QueryMethod}, {@link EvaluationContextProvider},
 	 * {@link KeyValueOperations} and query creator type.
-	 * 
+	 *
 	 * @param queryMethod must not be {@literal null}.
 	 * @param evaluationContextProvider must not be {@literal null}.
 	 * @param keyValueOperations must not be {@literal null}.
@@ -157,7 +157,7 @@ public class KeyValuePartTreeQuery implements RepositoryQuery {
 			query.setRows(instance.getRows());
 		}
 
-		query.setSort(sort == null || Sort.unsorted().equals(sort) ? instance.getSort() : sort);
+		query.setSort(sort == null || sort.isUnsorted() ? instance.getSort() : sort);
 
 		return query;
 	}
@@ -179,7 +179,7 @@ public class KeyValuePartTreeQuery implements RepositoryQuery {
 
 		PartTree tree = new PartTree(getQueryMethod().getName(), getQueryMethod().getEntityInformation().getJavaType());
 
-		Constructor<? extends AbstractQueryCreator<?, ?>> constructor = (Constructor<? extends AbstractQueryCreator<?, ?>>) ClassUtils
+		Constructor<? extends AbstractQueryCreator<?, ?>> constructor = ClassUtils
 				.getConstructorIfAvailable(queryCreator, PartTree.class, ParameterAccessor.class);
 		KeyValueQuery<?> query = (KeyValueQuery<?>) BeanUtils.instantiateClass(constructor, tree, accessor).createQuery();
 

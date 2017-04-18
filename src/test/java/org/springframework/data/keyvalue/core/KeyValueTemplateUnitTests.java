@@ -15,8 +15,7 @@
  */
 package org.springframework.data.keyvalue.core;
 
-import static org.hamcrest.CoreMatchers.*;
-import static org.hamcrest.collection.IsIterableContainingInAnyOrder.*;
+import static org.hamcrest.Matchers.*;
 import static org.junit.Assert.*;
 import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.*;
@@ -75,7 +74,7 @@ public class KeyValueTemplateUnitTests {
 			"super");
 	private static final SubclassOfTypeWithCustomComposedKeySpaceAnnotation SUBCLASS_OF_ALIASED = new SubclassOfTypeWithCustomComposedKeySpaceAnnotation(
 			"sub");
-	private static final KeyValueQuery<String> STRING_QUERY = new KeyValueQuery<String>("foo == 'two'");
+	private static final KeyValueQuery<String> STRING_QUERY = new KeyValueQuery<>("foo == 'two'");
 
 	private @Mock KeyValueAdapter adapterMock;
 	private KeyValueTemplate template;
@@ -557,7 +556,7 @@ public class KeyValueTemplateUnitTests {
 
 	@SuppressWarnings("rawtypes")
 	private void setEventsToPublish(Class<? extends KeyValueEvent>... events) {
-		template.setEventTypesToPublish(new HashSet<Class<? extends KeyValueEvent>>(Arrays.asList(events)));
+		template.setEventTypesToPublish(new HashSet<>(Arrays.asList(events)));
 	}
 
 	static class Foo {

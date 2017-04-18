@@ -48,17 +48,15 @@ public class SimpleKeyValueRepositoryUnitTests {
 	@Before
 	public void setUp() {
 
-		ReflectionEntityInformation<Foo, String> ei = new ReflectionEntityInformation<Foo, String>(Foo.class);
-		repo = new SimpleKeyValueRepository<Foo, String>(ei, opsMock);
+		ReflectionEntityInformation<Foo, String> ei = new ReflectionEntityInformation<>(Foo.class);
+		repo = new SimpleKeyValueRepository<>(ei, opsMock);
 	}
 
 	@Test // DATACMNS-525
 	public void saveNewWithNumericId() {
 
-		ReflectionEntityInformation<WithNumericId, Integer> ei = new ReflectionEntityInformation<WithNumericId, Integer>(
-				WithNumericId.class);
-		SimpleKeyValueRepository<WithNumericId, Integer> temp = new SimpleKeyValueRepository<WithNumericId, Integer>(ei,
-				opsMock);
+		ReflectionEntityInformation<WithNumericId, Integer> ei = new ReflectionEntityInformation<>(WithNumericId.class);
+		SimpleKeyValueRepository<WithNumericId, Integer> temp = new SimpleKeyValueRepository<>(ei, opsMock);
 
 		WithNumericId withNumericId = new WithNumericId();
 		temp.save(withNumericId);
@@ -129,7 +127,7 @@ public class SimpleKeyValueRepositoryUnitTests {
 	@Test // DATACMNS-525
 	public void findAllWithPageableShouldDelegateToOperationsCorrectlyWhenPageableDoesNotContainSort() {
 
-		repo.findAll(new PageRequest(10, 15));
+		repo.findAll(PageRequest.of(10, 15));
 
 		verify(opsMock, times(1)).findInRange(eq(150L), eq(15), eq(Sort.unsorted()), eq(Foo.class));
 	}
@@ -137,8 +135,8 @@ public class SimpleKeyValueRepositoryUnitTests {
 	@Test // DATACMNS-525
 	public void findAllWithPageableShouldDelegateToOperationsCorrectlyWhenPageableContainsSort() {
 
-		Sort sort = new Sort("for", "bar");
-		repo.findAll(new PageRequest(10, 15, sort));
+		Sort sort = Sort.by("for", "bar");
+		repo.findAll(PageRequest.of(10, 15, sort));
 
 		verify(opsMock, times(1)).findInRange(eq(150L), eq(15), eq(sort), eq(Foo.class));
 	}

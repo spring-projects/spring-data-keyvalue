@@ -1,5 +1,5 @@
 /*
- * Copyright 2014-2016 the original author or authors.
+ * Copyright 2014-2017 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,7 +15,7 @@
  */
 package org.springframework.data.keyvalue.repository.support;
 
-import static org.springframework.data.querydsl.QuerydslUtils.*;
+import static org.springframework.data.querydsl.QuerydslUtils.QUERY_DSL_PRESENT;
 
 import java.io.Serializable;
 import java.lang.reflect.Constructor;
@@ -48,7 +48,7 @@ import org.springframework.util.ClassUtils;
 /**
  * {@link RepositoryFactorySupport} specific of handing
  * {@link org.springframework.data.keyvalue.repository.KeyValueRepository}.
- * 
+ *
  * @author Christoph Strobl
  * @author Oliver Gierke
  */
@@ -63,7 +63,7 @@ public class KeyValueRepositoryFactory extends RepositoryFactorySupport {
 
 	/**
 	 * Creates a new {@link KeyValueRepositoryFactory} for the given {@link KeyValueOperations}.
-	 * 
+	 *
 	 * @param keyValueOperations must not be {@literal null}.
 	 */
 	public KeyValueRepositoryFactory(KeyValueOperations keyValueOperations) {
@@ -73,7 +73,7 @@ public class KeyValueRepositoryFactory extends RepositoryFactorySupport {
 	/**
 	 * Creates a new {@link KeyValueRepositoryFactory} for the given {@link KeyValueOperations} and
 	 * {@link AbstractQueryCreator}-type.
-	 * 
+	 *
 	 * @param keyValueOperations must not be {@literal null}.
 	 * @param queryCreator defaulted to {@link #DEFAULT_QUERY_CREATOR} if {@literal null}.
 	 */
@@ -86,7 +86,7 @@ public class KeyValueRepositoryFactory extends RepositoryFactorySupport {
 	/**
 	 * Creates a new {@link KeyValueRepositoryFactory} for the given {@link KeyValueOperations} and
 	 * {@link AbstractQueryCreator}-type.
-	 * 
+	 *
 	 * @param keyValueOperations must not be {@literal null}.
 	 * @param queryCreator must not be {@literal null}.
 	 * @param repositoryQueryType must not be {@literal null}.
@@ -114,7 +114,7 @@ public class KeyValueRepositoryFactory extends RepositoryFactorySupport {
 	public <T, ID extends Serializable> EntityInformation<T, ID> getEntityInformation(Class<T> domainClass) {
 
 		PersistentEntity<T, ?> entity = (PersistentEntity<T, ?>) context.getPersistentEntity(domainClass).get();
-		PersistentEntityInformation<T, ID> entityInformation = new PersistentEntityInformation<T, ID>(entity);
+		PersistentEntityInformation<T, ID> entityInformation = new PersistentEntityInformation<>(entity);
 
 		return entityInformation;
 	}
@@ -142,7 +142,7 @@ public class KeyValueRepositoryFactory extends RepositoryFactorySupport {
 
 	/**
 	 * Returns whether the given repository interface requires a QueryDsl specific implementation to be chosen.
-	 * 
+	 *
 	 * @param repositoryInterface must not be {@literal null}.
 	 * @return
 	 */
@@ -177,7 +177,7 @@ public class KeyValueRepositoryFactory extends RepositoryFactorySupport {
 		 * {@link KeyValueOperations} and query creator type.
 		 * <p>
 		 * TODO: Key is not considered. Should it?
-		 * 
+		 *
 		 * @param key
 		 * @param evaluationContextProvider must not be {@literal null}.
 		 * @param keyValueOperations must not be {@literal null}.
@@ -210,7 +210,7 @@ public class KeyValueRepositoryFactory extends RepositoryFactorySupport {
 			this.repositoryQueryType = repositoryQueryType;
 		}
 
-		/* 
+		/*
 		 * (non-Javadoc)
 		 * @see org.springframework.data.repository.query.QueryLookupStrategy#resolveQuery(java.lang.reflect.Method, org.springframework.data.repository.core.RepositoryMetadata, org.springframework.data.projection.ProjectionFactory, org.springframework.data.repository.core.NamedQueries)
 		 */

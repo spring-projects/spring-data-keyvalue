@@ -1,5 +1,5 @@
 /*
- * Copyright 2014 the original author or authors.
+ * Copyright 2014-2017 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -44,7 +44,7 @@ public class SimpleKeyValueRepository<T, ID extends Serializable> implements Key
 	/**
 	 * Creates a new {@link SimpleKeyValueRepository} for the given {@link EntityInformation} and
 	 * {@link KeyValueOperations}.
-	 * 
+	 *
 	 * @param metadata must not be {@literal null}.
 	 * @param operations must not be {@literal null}.
 	 */
@@ -75,13 +75,13 @@ public class SimpleKeyValueRepository<T, ID extends Serializable> implements Key
 
 		if (pageable == null) {
 			List<T> result = findAll();
-			return new PageImpl<T>(result, Pageable.unpaged(), result.size());
+			return new PageImpl<>(result, Pageable.unpaged(), result.size());
 		}
 
 		Iterable<T> content = operations.findInRange(pageable.getOffset(), pageable.getPageSize(), pageable.getSort(),
 				entityInformation.getJavaType());
 
-		return new PageImpl<T>(IterableConverter.toList(content), pageable,
+		return new PageImpl<>(IterableConverter.toList(content), pageable,
 				this.operations.count(entityInformation.getJavaType()));
 	}
 
@@ -150,7 +150,7 @@ public class SimpleKeyValueRepository<T, ID extends Serializable> implements Key
 	@Override
 	public Iterable<T> findAll(Iterable<ID> ids) {
 
-		List<T> result = new ArrayList<T>();
+		List<T> result = new ArrayList<>();
 
 		for (ID id : ids) {
 

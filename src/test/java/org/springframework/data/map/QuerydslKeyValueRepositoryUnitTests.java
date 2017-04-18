@@ -37,7 +37,7 @@ import com.google.common.collect.Lists;
 
 /**
  * Unit tests for {@link QuerydslKeyValueRepository}.
- * 
+ *
  * @author Christoph Strobl
  * @author Oliver Gierke
  * @author Thomas Darimont
@@ -66,7 +66,7 @@ public class QuerydslKeyValueRepositoryUnitTests extends AbstractRepositoryUnitT
 	public void findWithPaginationWorksCorrectly() {
 
 		repository.save(LENNISTERS);
-		Page<Person> page1 = repository.findAll(QPerson.person.age.eq(CERSEI.getAge()), new PageRequest(0, 1));
+		Page<Person> page1 = repository.findAll(QPerson.person.age.eq(CERSEI.getAge()), PageRequest.of(0, 1));
 
 		assertThat(page1.getTotalElements(), is(2L));
 		assertThat(page1.getContent(), hasSize(1));
@@ -96,8 +96,8 @@ public class QuerydslKeyValueRepositoryUnitTests extends AbstractRepositoryUnitT
 
 		repository.save(LENNISTERS);
 
-		Iterable<Person> result = repository.findAll(QPerson.person.age.eq(CERSEI.getAge()), new PageRequest(0, 10,
-				Direction.DESC, "firstname"));
+		Iterable<Person> result = repository.findAll(QPerson.person.age.eq(CERSEI.getAge()),
+				PageRequest.of(0, 10, Direction.DESC, "firstname"));
 
 		assertThat(result, contains(JAIME, CERSEI));
 	}
@@ -107,8 +107,8 @@ public class QuerydslKeyValueRepositoryUnitTests extends AbstractRepositoryUnitT
 
 		repository.save(LENNISTERS);
 
-		Iterable<Person> result = repository.findAll(QPerson.person.age.eq(CERSEI.getAge()), new PageRequest(0, 10,
-				new QSort(QPerson.person.firstname.desc())));
+		Iterable<Person> result = repository.findAll(QPerson.person.age.eq(CERSEI.getAge()),
+				PageRequest.of(0, 10, new QSort(QPerson.person.firstname.desc())));
 
 		assertThat(result, contains(JAIME, CERSEI));
 	}
@@ -146,7 +146,7 @@ public class QuerydslKeyValueRepositoryUnitTests extends AbstractRepositoryUnitT
 
 		repository.save(LENNISTERS);
 
-		List<Person> users = Lists.newArrayList(repository.findAll(person.age.gt(0), new Sort(Direction.ASC, "firstname")));
+		List<Person> users = Lists.newArrayList(repository.findAll(person.age.gt(0), Sort.by(Direction.ASC, "firstname")));
 
 		assertThat(users, hasSize(3));
 		assertThat(users.get(0).getFirstname(), is(CERSEI.getFirstname()));
@@ -154,7 +154,7 @@ public class QuerydslKeyValueRepositoryUnitTests extends AbstractRepositoryUnitT
 		assertThat(users, hasItems(CERSEI, JAIME, TYRION));
 	}
 
-	/* 
+	/*
 	 * (non-Javadoc)
 	 * @see org.springframework.data.map.SimpleKeyValueRepositoryUnitTests#getRepository(org.springframework.data.keyvalue.repository.support.KeyValueRepositoryFactory)
 	 */

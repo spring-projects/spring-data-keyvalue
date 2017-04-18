@@ -15,12 +15,7 @@
  */
 package org.springframework.data.keyvalue.core;
 
-import static org.hamcrest.collection.IsCollectionWithSize.*;
-import static org.hamcrest.collection.IsEmptyIterable.*;
-import static org.hamcrest.collection.IsIterableContainingInAnyOrder.*;
-import static org.hamcrest.core.Is.*;
-import static org.hamcrest.core.IsNull.*;
-import static org.hamcrest.core.IsSame.*;
+import static org.hamcrest.Matchers.*;
 import static org.junit.Assert.*;
 
 import java.io.Serializable;
@@ -54,7 +49,7 @@ public class KeyValueTemplateTests {
 	static final Bar BAR_ONE = new Bar("one");
 	static final ClassWithTypeAlias ALIASED = new ClassWithTypeAlias("super");
 	static final SubclassOfAliasedType SUBCLASS_OF_ALIASED = new SubclassOfAliasedType("sub");
-	static final KeyValueQuery<String> STRING_QUERY = new KeyValueQuery<String>("foo == 'two'");
+	static final KeyValueQuery<String> STRING_QUERY = new KeyValueQuery<>("foo == 'two'");
 
 	KeyValueTemplate operations;
 

@@ -18,13 +18,12 @@ package org.springframework.data.keyvalue.core;
 import static org.hamcrest.Matchers.*;
 import static org.hamcrest.Matchers.contains;
 import static org.junit.Assert.*;
-import static org.mockito.ArgumentMatchers.*;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.*;
 
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collection;
 import java.util.List;
 
 import org.junit.Before;
@@ -43,7 +42,7 @@ import org.springframework.expression.spel.support.StandardEvaluationContext;
 
 /**
  * Unit tests for {@link SpelQueryEngine}.
- * 
+ *
  * @author Martin Macko
  * @author Oliver Gierke
  */
@@ -62,7 +61,7 @@ public class SpelQueryEngineUnitTests {
 	@Before
 	public void setUp() {
 
-		engine = new SpelQueryEngine<KeyValueAdapter>();
+		engine = new SpelQueryEngine<>();
 		engine.registerAdapter(adapter);
 	}
 
@@ -72,8 +71,8 @@ public class SpelQueryEngineUnitTests {
 
 		doReturn(people).when(adapter).getAllOf(anyString());
 
-		assertThat((Collection<Person>) engine.execute(createQueryForMethodWithArgs("findByFirstname", "bob"), null, -1,
-				-1, anyString()), contains(BOB_WITH_FIRSTNAME));
+		assertThat(engine.execute(createQueryForMethodWithArgs("findByFirstname", "bob"), null, -1, -1, anyString()),
+				contains(BOB_WITH_FIRSTNAME));
 	}
 
 	@Test // DATAKV-114
@@ -86,7 +85,7 @@ public class SpelQueryEngineUnitTests {
 
 	private static SpelCriteria createQueryForMethodWithArgs(String methodName, Object... args) throws Exception {
 
-		List<Class<?>> types = new ArrayList<Class<?>>(args.length);
+		List<Class<?>> types = new ArrayList<>(args.length);
 
 		for (Object arg : args) {
 			types.add(arg.getClass());
@@ -97,8 +96,8 @@ public class SpelQueryEngineUnitTests {
 		doReturn(method.getReturnType()).when(metadata).getReturnedDomainClass(method);
 
 		PartTree partTree = new PartTree(method.getName(), method.getReturnType());
-		SpelQueryCreator creator = new SpelQueryCreator(partTree, new ParametersParameterAccessor(new QueryMethod(method,
-				metadata, new SpelAwareProxyProjectionFactory()).getParameters(), args));
+		SpelQueryCreator creator = new SpelQueryCreator(partTree, new ParametersParameterAccessor(
+				new QueryMethod(method, metadata, new SpelAwareProxyProjectionFactory()).getParameters(), args));
 
 		return new SpelCriteria(creator.createQuery().getCritieria(), new StandardEvaluationContext(args));
 	}

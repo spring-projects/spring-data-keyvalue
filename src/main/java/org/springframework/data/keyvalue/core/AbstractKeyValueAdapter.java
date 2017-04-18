@@ -1,5 +1,5 @@
 /*
- * Copyright 2014-2016 the original author or authors.
+ * Copyright 2014-2017 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,7 +23,7 @@ import org.springframework.data.keyvalue.core.query.KeyValueQuery;
 /**
  * Base implementation of {@link KeyValueAdapter} holds {@link QueryEngine} to delegate {@literal find} and
  * {@literal count} execution to.
- * 
+ *
  * @author Christoph Strobl
  */
 public abstract class AbstractKeyValueAdapter implements KeyValueAdapter {
@@ -39,18 +39,18 @@ public abstract class AbstractKeyValueAdapter implements KeyValueAdapter {
 
 	/**
 	 * Creates new {@link AbstractKeyValueAdapter} with using the default query engine.
-	 * 
+	 *
 	 * @param engine will be defaulted to {@link SpelQueryEngine} if {@literal null}.
 	 */
 	protected AbstractKeyValueAdapter(QueryEngine<? extends KeyValueAdapter, ?, ?> engine) {
 
-		this.engine = engine != null ? engine : new SpelQueryEngine<KeyValueAdapter>();
+		this.engine = engine != null ? engine : new SpelQueryEngine<>();
 		this.engine.registerAdapter(this);
 	}
 
 	/**
 	 * Get the {@link QueryEngine} used.
-	 * 
+	 *
 	 * @return
 	 */
 	protected QueryEngine<? extends KeyValueAdapter, ?, ?> getQueryEngine() {
@@ -81,7 +81,7 @@ public abstract class AbstractKeyValueAdapter implements KeyValueAdapter {
 	 */
 	@Override
 	public <T> Iterable<T> find(KeyValueQuery<?> query, Serializable keyspace, Class<T> type) {
-		return (Iterable<T>) engine.execute(query, keyspace, type);
+		return engine.execute(query, keyspace, type);
 	}
 
 	/*
