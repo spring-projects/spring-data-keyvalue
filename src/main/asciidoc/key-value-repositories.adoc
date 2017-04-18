@@ -98,7 +98,7 @@ NOTE: The composed annotation needs to inherit `@Persistent`.
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ ElementType.TYPE })
 static @interface CacheCentricAnnotation {
-  
+
   @KeySpace String cacheRegion() default "";
 }
 
@@ -106,7 +106,7 @@ static @interface CacheCentricAnnotation {
 class Customer {
   //...
 }
----- 
+----
 
 [[key-value.template-query]]
 == Querying
@@ -133,7 +133,7 @@ When used without further customization sorting is done using a `SpelPropertyCom
 [source, java]
 ----
 KeyValueQuery<String> query = new KeyValueQuery<String>("lastname == 'baratheon'");
-query.setSort(new Sort(DESC, "age"));
+query.setSort(Sort.by(DESC, "age"));
 List<Person> targaryens = template.find(query, Person.class);
 ----
 

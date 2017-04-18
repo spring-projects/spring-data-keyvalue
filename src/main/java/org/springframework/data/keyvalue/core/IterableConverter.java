@@ -22,9 +22,8 @@ import java.util.List;
 
 /**
  * Converter capable of transforming a given {@link Iterable} into a collection type.
- * 
+ *
  * @author Christoph Strobl
- * @param <T>
  */
 public final class IterableConverter {
 
@@ -32,7 +31,7 @@ public final class IterableConverter {
 
 	/**
 	 * Converts a given {@link Iterable} into a {@link List}
-	 * 
+	 *
 	 * @param source
 	 * @return {@link Collections#emptyList()} when source is {@literal null}.
 	 */
@@ -47,10 +46,10 @@ public final class IterableConverter {
 		}
 
 		if (source instanceof Collection) {
-			return new ArrayList<T>((Collection<T>) source);
+			return new ArrayList<>((Collection<T>) source);
 		}
 
-		List<T> result = new ArrayList<T>();
+		List<T> result = new ArrayList<>();
 		for (T value : source) {
 			result.add(value);
 		}

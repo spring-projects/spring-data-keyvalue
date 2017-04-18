@@ -15,8 +15,13 @@
  */
 package org.springframework.data.map;
 
-import static org.hamcrest.Matchers.*;
-import static org.junit.Assert.*;
+import static org.hamcrest.Matchers.contains;
+import static org.hamcrest.Matchers.containsInAnyOrder;
+import static org.hamcrest.Matchers.hasItem;
+import static org.hamcrest.Matchers.hasItems;
+import static org.hamcrest.Matchers.hasSize;
+import static org.hamcrest.Matchers.is;
+import static org.junit.Assert.assertThat;
 
 import java.util.Arrays;
 import java.util.List;
@@ -24,6 +29,7 @@ import java.util.List;
 import org.hamcrest.collection.IsCollectionWithSize;
 import org.junit.Before;
 import org.junit.Test;
+
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -39,7 +45,7 @@ import org.springframework.data.repository.CrudRepository;
 
 /**
  * Base class for test cases for repository implementations.
- * 
+ *
  * @author Christoph Strobl
  * @author Oliver Gierke
  * @author Thomas Darimont
@@ -98,7 +104,7 @@ public abstract class AbstractRepositoryUnitTests<T extends AbstractRepositoryUn
 
 		repository.save(LENNISTERS);
 
-		Page<Person> page = repository.findByAge(19, new PageRequest(0, 1));
+		Page<Person> page = repository.findByAge(19, PageRequest.of(0, 1));
 		assertThat(page.hasNext(), is(true));
 		assertThat(page.getTotalElements(), is(2L));
 		assertThat(page.getContent(), IsCollectionWithSize.hasSize(1));
@@ -132,7 +138,7 @@ public abstract class AbstractRepositoryUnitTests<T extends AbstractRepositoryUn
 		repository.save(LENNISTERS);
 
 		assertThat(
-				repository.findAll(new Sort(new Sort.Order(Direction.ASC, "age"), new Sort.Order(Direction.DESC, "firstname"))),
+				repository.findAll(Sort.by(new Sort.Order(Direction.ASC, "age"), new Sort.Order(Direction.DESC, "firstname"))),
 				contains(TYRION, JAIME, CERSEI));
 	}
 
@@ -151,7 +157,7 @@ public abstract class AbstractRepositoryUnitTests<T extends AbstractRepositoryUn
 
 		repository.save(LENNISTERS);
 
-		List<PersonSummary> result = repository.findByAgeGreaterThan(0, new Sort("firstname"));
+		List<PersonSummary> result = repository.findByAgeGreaterThan(0, Sort.by("firstname"));
 
 		assertThat(result, hasSize(3));
 		assertThat(result.get(0).getFirstname(), is(CERSEI.getFirstname()));
@@ -162,10 +168,48 @@ public abstract class AbstractRepositoryUnitTests<T extends AbstractRepositoryUn
 
 		repository.save(LENNISTERS);
 
-		List<PersonSummary> result = repository.findByAgeGreaterThan(0, new Sort("firstname"), PersonSummary.class);
+		List<PersonSummary> result = repository.findByAgeGreaterThan(0, Sort.by("firstname"), PersonSummary.class);
 
 		assertThat(result, hasSize(3));
 		assertThat(result.get(0).getFirstname(), is(CERSEI.getFirstname()));
+	}
+
+	@Test // DATAKV-169
+	public void findsByValueInCollectionCorrectly() {
+
+		repository.save(LENNISTERS);
+
+		List<Person> result = repository.findByFirstnameIn(Arrays.asList(CERSEI.getFirstname(), JAIME.getFirstname()));
+
+		assertThat(result, hasSize(2));
+		assertThat(result, is(containsInAnyOrder(CERSEI, JAIME)));
+	}
+
+	@Test // DATAKV-169
+	public void findsByValueInCollectionCorrectlyWhenTargetPathContainsNullValue() {
+
+		repository.save(LENNISTERS);
+		repository.save(new Person(null, 10));
+
+		List<Person> result = repository.findByFirstnameIn(Arrays.asList(CERSEI.getFirstname(), JAIME.getFirstname()));
+
+		assertThat(result, hasSize(2));
+		assertThat(result, is(containsInAnyOrder(CERSEI, JAIME)));
+	}
+
+	@Test // DATAKV-169
+	public void findsByValueInCollectionCorrectlyWhenTargetPathAndCollectionContainNullValue() {
+
+		repository.save(LENNISTERS);
+
+		Person personWithNullAsFirstname = new Person(null, 10);
+		repository.save(personWithNullAsFirstname);
+
+		List<Person> result = repository
+				.findByFirstnameIn(Arrays.asList(CERSEI.getFirstname(), JAIME.getFirstname(), null));
+
+		assertThat(result, hasSize(3));
+		assertThat(result, is(containsInAnyOrder(CERSEI, JAIME, personWithNullAsFirstname)));
 	}
 
 	protected KeyValueRepositoryFactory createKeyValueRepositoryFactory(KeyValueOperations operations) {
@@ -174,7 +218,7 @@ public abstract class AbstractRepositoryUnitTests<T extends AbstractRepositoryUn
 
 	protected abstract T getRepository(KeyValueRepositoryFactory factory);
 
-	public static interface PersonRepository extends CrudRepository<Person, String>, KeyValueRepository<Person, String> {
+	public interface PersonRepository extends CrudRepository<Person, String>, KeyValueRepository<Person, String> {
 
 		List<Person> findByAge(int age);
 
@@ -193,6 +237,8 @@ public abstract class AbstractRepositoryUnitTests<T extends AbstractRepositoryUn
 		List<PersonSummary> findByAgeGreaterThan(int age, Sort sort);
 
 		<T> List<T> findByAgeGreaterThan(int age, Sort sort, Class<T> projectionType);
+
+		List<Person> findByFirstnameIn(List<String> firstname);
 	}
 
 	interface PersonSummary {

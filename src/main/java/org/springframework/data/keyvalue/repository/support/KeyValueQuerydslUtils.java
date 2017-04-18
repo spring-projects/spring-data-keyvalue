@@ -33,7 +33,7 @@ import com.querydsl.core.types.dsl.PathBuilder;
 
 /**
  * Utilities for Querydsl usage.
- * 
+ *
  * @author Christoph Strobl
  * @author Thomas Darimont
  * @author Oliver Gierke
@@ -46,7 +46,7 @@ abstract class KeyValueQuerydslUtils {
 
 	/**
 	 * Transforms a plain {@link Order} into a QueryDsl specific {@link OrderSpecifier}.
-	 * 
+	 *
 	 * @param sort
 	 * @param builder must not be {@literal null}.
 	 * @return empty {@code OrderSpecifier<?>[]} when sort is {@literal null}.
@@ -65,7 +65,7 @@ abstract class KeyValueQuerydslUtils {
 			specifiers = ((QSort) sort).getOrderSpecifiers();
 		} else {
 
-			specifiers = new ArrayList<OrderSpecifier<?>>();
+			specifiers = new ArrayList<>();
 			for (Order order : sort) {
 				specifiers.add(toOrderSpecifier(order, builder));
 			}
@@ -83,7 +83,7 @@ abstract class KeyValueQuerydslUtils {
 
 	/**
 	 * Creates an {@link Expression} for the given {@link Order} property.
-	 * 
+	 *
 	 * @param order must not be {@literal null}.
 	 * @param builder must not be {@literal null}.
 	 * @return
@@ -114,7 +114,7 @@ abstract class KeyValueQuerydslUtils {
 	/**
 	 * Converts the given {@link org.springframework.data.domain.Sort.NullHandling} to the appropriate Querydsl
 	 * {@link NullHandling}.
-	 * 
+	 *
 	 * @param nullHandling must not be {@literal null}.
 	 * @return
 	 */

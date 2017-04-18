@@ -15,13 +15,13 @@
  */
 package org.springframework.data.keyvalue.repository.query;
 
-import static org.hamcrest.core.Is.*;
-import static org.hamcrest.core.IsNot.*;
-import static org.hamcrest.core.IsNull.*;
-import static org.hamcrest.core.IsSame.*;
-import static org.junit.Assert.*;
-import static org.mockito.ArgumentMatchers.*;
-import static org.mockito.Mockito.*;
+import static org.hamcrest.core.Is.is;
+import static org.hamcrest.core.IsNot.not;
+import static org.hamcrest.core.IsNull.notNullValue;
+import static org.hamcrest.core.IsSame.sameInstance;
+import static org.junit.Assert.assertThat;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.when;
 
 import java.lang.reflect.Method;
 import java.util.List;
@@ -31,6 +31,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
+
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.keyvalue.Person;
@@ -86,7 +87,7 @@ public class KeyValuePartTreeQueryUnitTests {
 		KeyValuePartTreeQuery partTreeQuery = new KeyValuePartTreeQuery(qm, DefaultEvaluationContextProvider.INSTANCE,
 				kvOpsMock, SpelQueryCreator.class);
 
-		KeyValueQuery<?> query = partTreeQuery.prepareQuery(new Object[] { new PageRequest(2, 3) });
+		KeyValueQuery<?> query = partTreeQuery.prepareQuery(new Object[] { PageRequest.of(2, 3) });
 
 		assertThat(query.getOffset(), is(6L));
 		assertThat(query.getRows(), is(3));

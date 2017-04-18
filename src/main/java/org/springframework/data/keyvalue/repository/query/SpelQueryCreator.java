@@ -1,5 +1,5 @@
 /*
- * Copyright 2014 the original author or authors.
+ * Copyright 2014-2017 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -24,6 +24,7 @@ import org.springframework.data.repository.query.ParameterAccessor;
 import org.springframework.data.repository.query.parser.AbstractQueryCreator;
 import org.springframework.data.repository.query.parser.Part;
 import org.springframework.data.repository.query.parser.Part.IgnoreCaseType;
+import org.springframework.data.repository.query.parser.Part.Type;
 import org.springframework.data.repository.query.parser.PartTree;
 import org.springframework.data.repository.query.parser.PartTree.OrPart;
 import org.springframework.expression.spel.standard.SpelExpression;
@@ -31,7 +32,7 @@ import org.springframework.expression.spel.standard.SpelExpressionParser;
 
 /**
  * {@link AbstractQueryCreator} to create {@link SpelExpression} based {@link KeyValueQuery}s.
- * 
+ *
  * @author Christoph Strobl
  * @author Oliver Gierke
  */
@@ -43,7 +44,7 @@ public class SpelQueryCreator extends AbstractQueryCreator<KeyValueQuery<SpelExp
 
 	/**
 	 * Creates a new {@link SpelQueryCreator} for the given {@link PartTree} and {@link ParameterAccessor}.
-	 * 
+	 *
 	 * @param tree must not be {@literal null}.
 	 * @param parameters must not be {@literal null}.
 	 */
@@ -84,7 +85,7 @@ public class SpelQueryCreator extends AbstractQueryCreator<KeyValueQuery<SpelExp
 	@Override
 	protected KeyValueQuery<SpelExpression> complete(String criteria, Sort sort) {
 
-		KeyValueQuery<SpelExpression> query = new KeyValueQuery<SpelExpression>(this.expression);
+		KeyValueQuery<SpelExpression> query = new KeyValueQuery<>(this.expression);
 
 		if (sort != null) {
 			query.orderBy(sort);
@@ -107,8 +108,12 @@ public class SpelQueryCreator extends AbstractQueryCreator<KeyValueQuery<SpelExp
 			for (Iterator<Part> partIter = orPart.iterator(); partIter.hasNext();) {
 
 				Part part = partIter.next();
-				partBuilder.append("#it?.");
-				partBuilder.append(part.getProperty().toDotPath().replace(".", "?."));
+
+				if(!requiresInverseLookup(part)) {
+
+					partBuilder.append("#it?.");
+					partBuilder.append(part.getProperty().toDotPath().replace(".", "?."));
+				}
 
 				// TODO: check if we can have caseinsensitive search
 				if (!part.shouldIgnoreCase().equals(IgnoreCaseType.NEVER)) {
@@ -173,6 +178,13 @@ public class SpelQueryCreator extends AbstractQueryCreator<KeyValueQuery<SpelExp
 						partBuilder.append(" matches ").append("[").append(parameterIndex++).append("]");
 						break;
 					case IN:
+
+						partBuilder.append("[").append(parameterIndex++).append("].contains(");
+						partBuilder.append("#it?.");
+						partBuilder.append(part.getProperty().toDotPath().replace(".", "?."));
+						partBuilder.append(")");
+						break;
+
 					case CONTAINING:
 					case NOT_CONTAINING:
 					case NEGATING_SIMPLE_PROPERTY:
@@ -201,5 +213,9 @@ public class SpelQueryCreator extends AbstractQueryCreator<KeyValueQuery<SpelExp
 		}
 
 		return PARSER.parseRaw(sb.toString());
+	}
+
+	private static boolean requiresInverseLookup(Part part) {
+		return part.getType() == Type.IN;
 	}
 }

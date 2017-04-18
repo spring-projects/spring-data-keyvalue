@@ -23,7 +23,7 @@ import org.springframework.context.ApplicationEvent;
  * {@link KeyValueEvent} gets published for operations executed by eg.
  * {@link org.springframework.data.keyvalue.core.KeyValueTemplate}. Use the {@link #getType()} to determine which event
  * has been emitted.
- * 
+ *
  * @author Christoph Strobl
  * @author Thomas Darimont
  * @param <T>
@@ -54,19 +54,19 @@ public class KeyValueEvent<T> extends ApplicationEvent {
 
 	/**
 	 * Create new {@link BeforeGetEvent}.
-	 * 
+	 *
 	 * @param id
 	 * @param keySpace
 	 * @param type
 	 * @return
 	 */
 	public static <T> BeforeGetEvent<T> beforeGet(Serializable id, String keySpace, Class<T> type) {
-		return new BeforeGetEvent<T>(id, keySpace, type);
+		return new BeforeGetEvent<>(id, keySpace, type);
 	}
 
 	/**
 	 * Create new {@link AfterGetEvent}.
-	 * 
+	 *
 	 * @param id
 	 * @param keySpace
 	 * @param type
@@ -74,12 +74,12 @@ public class KeyValueEvent<T> extends ApplicationEvent {
 	 * @return
 	 */
 	public static <T> AfterGetEvent<T> afterGet(Serializable id, String keySpace, Class<T> type, T value) {
-		return new AfterGetEvent<T>(id, keySpace, type, value);
+		return new AfterGetEvent<>(id, keySpace, type, value);
 	}
 
 	/**
 	 * Create new {@link BeforeInsertEvent}.
-	 * 
+	 *
 	 * @param id
 	 * @param keySpace
 	 * @param type
@@ -87,12 +87,12 @@ public class KeyValueEvent<T> extends ApplicationEvent {
 	 * @return
 	 */
 	public static <T> BeforeInsertEvent<T> beforeInsert(Serializable id, String keySpace, Class<? extends T> type, T value) {
-		return new BeforeInsertEvent<T>(id, keySpace, type, value);
+		return new BeforeInsertEvent<>(id, keySpace, type, value);
 	}
 
 	/**
 	 * Create new {@link AfterInsertEvent}.
-	 * 
+	 *
 	 * @param id
 	 * @param keySpace
 	 * @param type
@@ -100,12 +100,12 @@ public class KeyValueEvent<T> extends ApplicationEvent {
 	 * @return
 	 */
 	public static <T> AfterInsertEvent<T> afterInsert(Serializable id, String keySpace, Class<? extends T> type, T value) {
-		return new AfterInsertEvent<T>(id, keySpace, type, value);
+		return new AfterInsertEvent<>(id, keySpace, type, value);
 	}
 
 	/**
 	 * Create new {@link BeforeUpdateEvent}.
-	 * 
+	 *
 	 * @param id
 	 * @param keySpace
 	 * @param type
@@ -113,12 +113,12 @@ public class KeyValueEvent<T> extends ApplicationEvent {
 	 * @return
 	 */
 	public static <T> BeforeUpdateEvent<T> beforeUpdate(Serializable id, String keySpace, Class<? extends T> type, T value) {
-		return new BeforeUpdateEvent<T>(id, keySpace, type, value);
+		return new BeforeUpdateEvent<>(id, keySpace, type, value);
 	}
 
 	/**
 	 * Create new {@link AfterUpdateEvent}.
-	 * 
+	 *
 	 * @param id
 	 * @param keySpace
 	 * @param type
@@ -128,46 +128,46 @@ public class KeyValueEvent<T> extends ApplicationEvent {
 	 */
 	public static <T> AfterUpdateEvent<T> afterUpdate(Serializable id, String keySpace, Class<? extends T> type,
 			T actualValue, Object previousValue) {
-		return new AfterUpdateEvent<T>(id, keySpace, type, actualValue, previousValue);
+		return new AfterUpdateEvent<>(id, keySpace, type, actualValue, previousValue);
 	}
 
 	/**
 	 * Create new {@link BeforeDropKeySpaceEvent}.
-	 * 
+	 *
 	 * @param keySpace
 	 * @param type
 	 * @return
 	 */
 	public static <T> BeforeDropKeySpaceEvent<T> beforeDropKeySpace(String keySpace, Class<? extends T> type) {
-		return new BeforeDropKeySpaceEvent<T>(keySpace, type);
+		return new BeforeDropKeySpaceEvent<>(keySpace, type);
 	}
 
 	/**
 	 * Create new {@link AfterDropKeySpaceEvent}.
-	 * 
+	 *
 	 * @param keySpace
 	 * @param type
 	 * @return
 	 */
 	public static <T> AfterDropKeySpaceEvent<T> afterDropKeySpace(String keySpace, Class<? extends T> type) {
-		return new AfterDropKeySpaceEvent<T>(keySpace, type);
+		return new AfterDropKeySpaceEvent<>(keySpace, type);
 	}
 
 	/**
 	 * Create new {@link BeforeDeleteEvent}.
-	 * 
+	 *
 	 * @param id
 	 * @param keySpace
 	 * @param type
 	 * @return
 	 */
 	public static <T> BeforeDeleteEvent<T> beforeDelete(Serializable id, String keySpace, Class<? extends T> type) {
-		return new BeforeDeleteEvent<T>(id, keySpace, type);
+		return new BeforeDeleteEvent<>(id, keySpace, type);
 	}
 
 	/**
 	 * Create new {@link AfterDeleteEvent}.
-	 * 
+	 *
 	 * @param id
 	 * @param keySpace
 	 * @param type
@@ -175,7 +175,7 @@ public class KeyValueEvent<T> extends ApplicationEvent {
 	 * @return
 	 */
 	public static <T> AfterDeleteEvent<T> afterDelete(Serializable id, String keySpace, Class<? extends T> type, T value) {
-		return new AfterDeleteEvent<T>(id, keySpace, type, value);
+		return new AfterDeleteEvent<>(id, keySpace, type, value);
 	}
 
 	/**
@@ -209,7 +209,7 @@ public class KeyValueEvent<T> extends ApplicationEvent {
 
 		/**
 		 * Get the type of the element the {@link KeyValueEvent} refers to.
-		 * 
+		 *
 		 * @return
 		 */
 		public Class<? extends T> getType() {
@@ -233,7 +233,7 @@ public class KeyValueEvent<T> extends ApplicationEvent {
 
 		/**
 		 * Get the value of the element the {@link KeyValueEvent} refers to. Can be {@literal null}.
-		 * 
+		 *
 		 * @return
 		 */
 		public T getPayload() {
@@ -243,7 +243,7 @@ public class KeyValueEvent<T> extends ApplicationEvent {
 
 	/**
 	 * {@link KeyValueEvent} raised before loading an object by its {@literal key}.
-	 * 
+	 *
 	 * @author Christoph Strobl
 	 * @param <T>
 	 */
@@ -258,7 +258,7 @@ public class KeyValueEvent<T> extends ApplicationEvent {
 
 	/**
 	 * {@link KeyValueEvent} after loading an object by its {@literal key}.
-	 * 
+	 *
 	 * @author Christoph Strobl
 	 * @param <T>
 	 */
@@ -273,7 +273,7 @@ public class KeyValueEvent<T> extends ApplicationEvent {
 
 	/**
 	 * {@link KeyValueEvent} before inserting an object by with a given {@literal key}.
-	 * 
+	 *
 	 * @author Christoph Strobl
 	 * @param <T>
 	 */
@@ -288,7 +288,7 @@ public class KeyValueEvent<T> extends ApplicationEvent {
 
 	/**
 	 * {@link KeyValueEvent} after inserting an object by with a given {@literal key}.
-	 * 
+	 *
 	 * @author Christoph Strobl
 	 * @param <T>
 	 */
@@ -302,7 +302,7 @@ public class KeyValueEvent<T> extends ApplicationEvent {
 
 	/**
 	 * {@link KeyValueEvent} before updating an object by with a given {@literal key}.
-	 * 
+	 *
 	 * @author Christoph Strobl
 	 * @param <T>
 	 */
@@ -316,7 +316,7 @@ public class KeyValueEvent<T> extends ApplicationEvent {
 
 	/**
 	 * {@link KeyValueEvent} after updating an object by with a given {@literal key}.
-	 * 
+	 *
 	 * @author Christoph Strobl
 	 * @param <T>
 	 */
@@ -332,7 +332,7 @@ public class KeyValueEvent<T> extends ApplicationEvent {
 
 		/**
 		 * Get the value before update. Can be {@literal null}.
-		 * 
+		 *
 		 * @return
 		 */
 		public Object before() {
@@ -341,7 +341,7 @@ public class KeyValueEvent<T> extends ApplicationEvent {
 
 		/**
 		 * Get the current value.
-		 * 
+		 *
 		 * @return
 		 */
 		public T after() {
@@ -351,7 +351,7 @@ public class KeyValueEvent<T> extends ApplicationEvent {
 
 	/**
 	 * {@link KeyValueEvent} before removing an object by with a given {@literal key}.
-	 * 
+	 *
 	 * @author Christoph Strobl
 	 * @param <T>
 	 */
@@ -365,7 +365,7 @@ public class KeyValueEvent<T> extends ApplicationEvent {
 
 	/**
 	 * {@link KeyValueEvent} after removing an object by with a given {@literal key}.
-	 * 
+	 *
 	 * @author Christoph Strobl
 	 * @param <T>
 	 */
@@ -379,7 +379,7 @@ public class KeyValueEvent<T> extends ApplicationEvent {
 
 	/**
 	 * {@link KeyValueEvent} before removing all elements in a given {@literal keySpace}.
-	 * 
+	 *
 	 * @author Christoph Strobl
 	 * @param <T>
 	 */
@@ -400,7 +400,7 @@ public class KeyValueEvent<T> extends ApplicationEvent {
 
 	/**
 	 * {@link KeyValueEvent} after removing all elements in a given {@literal keySpace}.
-	 * 
+	 *
 	 * @author Christoph Strobl
 	 * @param <T>
 	 */

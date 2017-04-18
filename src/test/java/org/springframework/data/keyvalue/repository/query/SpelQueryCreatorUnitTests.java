@@ -20,6 +20,7 @@ import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
 
 import java.lang.reflect.Method;
+import java.util.ArrayList;
 import java.util.Date;
 
 import org.joda.time.format.DateTimeFormatter;
@@ -71,32 +72,32 @@ public class SpelQueryCreatorUnitTests {
 	}
 
 	@Test // DATACMNS-525
-	public void isTrueAssertedPropertlyWhenTrue() throws Exception {
+	public void isTrueAssertedProperlyWhenTrue() throws Exception {
 		assertThat(evaluate("findBySkinChangerIsTrue").against(BRAN), is(true));
 	}
 
 	@Test // DATACMNS-525
-	public void isTrueAssertedPropertlyWhenFalse() throws Exception {
+	public void isTrueAssertedProperlyWhenFalse() throws Exception {
 		assertThat(evaluate("findBySkinChangerIsTrue").against(RICKON), is(false));
 	}
 
 	@Test // DATACMNS-525
-	public void isFalseAssertedPropertlyWhenTrue() throws Exception {
+	public void isFalseAssertedProperlyWhenTrue() throws Exception {
 		assertThat(evaluate("findBySkinChangerIsFalse").against(BRAN), is(false));
 	}
 
 	@Test // DATACMNS-525
-	public void isFalseAssertedPropertlyWhenFalse() throws Exception {
+	public void isFalseAssertedProperlyWhenFalse() throws Exception {
 		assertThat(evaluate("findBySkinChangerIsFalse").against(RICKON), is(true));
 	}
 
 	@Test // DATACMNS-525
-	public void isNullAssertedPropertlyWhenAttributeIsNull() throws Exception {
+	public void isNullAssertedProperlyWhenAttributeIsNull() throws Exception {
 		assertThat(evaluate("findByLastnameIsNull").against(BRAN), is(true));
 	}
 
 	@Test // DATACMNS-525
-	public void isNullAssertedPropertlyWhenAttributeIsNotNull() throws Exception {
+	public void isNullAssertedProperlyWhenAttributeIsNotNull() throws Exception {
 		assertThat(evaluate("findByLastnameIsNull").against(ROBB), is(false));
 	}
 
@@ -260,6 +261,51 @@ public class SpelQueryCreatorUnitTests {
 		assertThat(evaluate("findByLastnameMatches", "^s.*w$").against(ROBB), is(false));
 	}
 
+	@Test // DATAKV-169
+	public void inReturnsMatchCorrectly() throws Exception {
+
+		ArrayList<String> list = new ArrayList<>();
+		list.add(ROBB.firstname);
+
+		assertThat(evaluate("findByFirstnameIn", list).against(ROBB), is(true));
+	}
+
+	@Test // DATAKV-169
+	public void inNotMatchingReturnsCorrectly() throws Exception {
+
+		ArrayList<String> list = new ArrayList<>();
+		list.add(ROBB.firstname);
+
+		assertThat(evaluate("findByFirstnameIn", list).against(JON), is(false));
+	}
+
+	@Test // DATAKV-169
+	public void inWithNullCompareValuesCorrectly() throws Exception {
+
+		ArrayList<String> list = new ArrayList<>();
+		list.add(null);
+
+		assertThat(evaluate("findByFirstnameIn", list).against(JON), is(false));
+	}
+
+	@Test // DATAKV-169
+	public void inWithNullSourceValuesMatchesCorrectly() throws Exception {
+
+		ArrayList<String> list = new ArrayList<>();
+		list.add(ROBB.firstname);
+
+		assertThat(evaluate("findByFirstnameIn", list).against(new Person(null, 10)), is(false));
+	}
+
+	@Test // DATAKV-169
+	public void inMatchesNullValuesCorrectly() throws Exception {
+
+		ArrayList<String> list = new ArrayList<>();
+		list.add(null);
+
+		assertThat(evaluate("findByFirstnameIn", list).against(new Person(null, 10)), is(true));
+	}
+
 	private Evaluation evaluate(String methodName, Object... args) throws Exception {
 		return new Evaluation((SpelExpression) createQueryForMethodWithArgs(methodName, args).getCritieria());
 	}
@@ -344,6 +390,9 @@ public class SpelQueryCreatorUnitTests {
 		// Type.REGEX
 		Person findByLastnameMatches(String lastname);
 
+		// Type.IN
+		Person findByFirstnameIn(ArrayList<String> in);
+
 	}
 
 	static class Evaluation {
@@ -351,8 +400,8 @@ public class SpelQueryCreatorUnitTests {
 		SpelExpression expression;
 		Object candidate;
 
-		public Evaluation(SpelExpression expresison) {
-			this.expression = expresison;
+		public Evaluation(SpelExpression expression) {
+			this.expression = expression;
 		}
 
 		public Boolean against(Object candidate) {

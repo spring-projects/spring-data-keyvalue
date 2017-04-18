@@ -23,7 +23,7 @@ import org.springframework.data.keyvalue.core.query.KeyValueQuery;
 /**
  * Base implementation of {@link KeyValueAdapter} holds {@link QueryEngine} to delegate {@literal find} and
  * {@literal count} execution to.
- * 
+ *
  * @author Christoph Strobl
  */
 public abstract class AbstractKeyValueAdapter implements KeyValueAdapter {
@@ -39,18 +39,18 @@ public abstract class AbstractKeyValueAdapter implements KeyValueAdapter {
 
 	/**
 	 * Creates new {@link AbstractKeyValueAdapter} with using the default query engine.
-	 * 
+	 *
 	 * @param engine will be defaulted to {@link SpelQueryEngine} if {@literal null}.
 	 */
 	protected AbstractKeyValueAdapter(QueryEngine<? extends KeyValueAdapter, ?, ?> engine) {
 
-		this.engine = engine != null ? engine : new SpelQueryEngine<KeyValueAdapter>();
+		this.engine = engine != null ? engine : new SpelQueryEngine<>();
 		this.engine.registerAdapter(this);
 	}
 
 	/**
 	 * Get the {@link QueryEngine} used.
-	 * 
+	 *
 	 * @return
 	 */
 	protected QueryEngine<? extends KeyValueAdapter, ?, ?> getQueryEngine() {

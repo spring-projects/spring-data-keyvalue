@@ -34,7 +34,7 @@ import org.springframework.util.ObjectUtils;
 /**
  * {@link AnnotationBasedKeySpaceResolver} looks up {@link Persistent} and checks for presence of either meta or direct
  * usage of {@link KeySpace}. If non found it will default the keyspace to {@link Class#getName()}.
- * 
+ *
  * @author Christoph Strobl
  * @author Oliver Gierke
  */
@@ -142,7 +142,7 @@ enum AnnotationBasedKeySpaceResolver implements KeySpaceResolver {
 		 */
 		public static <T extends Annotation> AnnotationDescriptor<T> findAnnotationDescriptor(Class<?> clazz,
 				Class<T> annotationType) {
-			return findAnnotationDescriptor(clazz, new HashSet<Annotation>(), annotationType);
+			return findAnnotationDescriptor(clazz, new HashSet<>(), annotationType);
 		}
 
 		/**
@@ -165,7 +165,7 @@ enum AnnotationBasedKeySpaceResolver implements KeySpaceResolver {
 
 			// Declared locally?
 			if (AnnotationUtils.isAnnotationDeclaredLocally(annotationType, clazz)) {
-				return new AnnotationDescriptor<T>(clazz, clazz.getAnnotation(annotationType));
+				return new AnnotationDescriptor<>(clazz, clazz.getAnnotation(annotationType));
 			}
 
 			// Declared on a composed annotation (i.e., as a meta-annotation)?
@@ -174,7 +174,7 @@ enum AnnotationBasedKeySpaceResolver implements KeySpaceResolver {
 					AnnotationDescriptor<T> descriptor = findAnnotationDescriptor(composedAnnotation.annotationType(), visited,
 							annotationType);
 					if (descriptor != null) {
-						return new AnnotationDescriptor<T>(clazz, descriptor.getDeclaringClass(), composedAnnotation,
+						return new AnnotationDescriptor<>(clazz, descriptor.getDeclaringClass(), composedAnnotation,
 								descriptor.getAnnotation());
 					}
 				}
@@ -218,7 +218,7 @@ enum AnnotationBasedKeySpaceResolver implements KeySpaceResolver {
 		 */
 		public static UntypedAnnotationDescriptor findAnnotationDescriptorForTypes(Class<?> clazz,
 				Class<? extends Annotation>... annotationTypes) {
-			return findAnnotationDescriptorForTypes(clazz, new HashSet<Annotation>(), annotationTypes);
+			return findAnnotationDescriptorForTypes(clazz, new HashSet<>(), annotationTypes);
 		}
 
 		/**
@@ -301,7 +301,7 @@ enum AnnotationBasedKeySpaceResolver implements KeySpaceResolver {
 		 * &#064;Retention(RetentionPolicy.RUNTIME)
 		 * public @interface RepositoryTests {
 		 * }
-		 * 
+		 *
 		 * &#064;RepositoryTests
 		 * public class UserRepositoryTests {}
 		 * </pre>
