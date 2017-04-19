@@ -1,6 +1,11 @@
 Spring Data KeyValue Changelog
 ==========================
 
+Changes in version 1.1.10.RELEASE (2017-04-19)
+----------------------------------------------
+* DATAKV-172 - Release 1.1.10 (Hopper SR10).
+
+
 Changes in version 1.2.3.RELEASE (2017-04-19)
 ---------------------------------------------
 * DATAKV-171 - Release 1.2.3 (Ingalls SR3).
