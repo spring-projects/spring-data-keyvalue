@@ -1,6 +1,12 @@
 Spring Data KeyValue Changelog
 ==========================
 
+Changes in version 1.2.2.RELEASE (2017-04-19)
+---------------------------------------------
+* DATAKV-169 - Add support for IN keyword in derived queries.
+* DATAKV-164 - Release 1.2.2 (Ingalls SR2).
+
+
 Changes in version 2.0.0.M2 (2017-04-04)
 ----------------------------------------
 * DATAKV-166 - Rename getRepositoryFactoryClassName to getRepositoryFactoryBeanClassName.
