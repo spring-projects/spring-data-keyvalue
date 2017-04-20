@@ -56,8 +56,20 @@ public class KeyValueQuery<T> {
 	 * Get the criteria object.
 	 *
 	 * @return
+	 * @deprecated will be removed in favor of {@link #getCriteria()}.
 	 */
+	@Deprecated
 	public T getCritieria() {
+		return criteria;
+	}
+
+	/**
+	 * Get the criteria object.
+	 *
+	 * @return
+	 * @since 2.0
+	 */
+	public T getCriteria() {
 		return criteria;
 	}
 

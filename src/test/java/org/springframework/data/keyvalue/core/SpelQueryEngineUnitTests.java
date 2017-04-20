@@ -99,7 +99,7 @@ public class SpelQueryEngineUnitTests {
 		SpelQueryCreator creator = new SpelQueryCreator(partTree, new ParametersParameterAccessor(
 				new QueryMethod(method, metadata, new SpelAwareProxyProjectionFactory()).getParameters(), args));
 
-		return new SpelCriteria(creator.createQuery().getCritieria(), new StandardEvaluationContext(args));
+		return new SpelCriteria(creator.createQuery().getCriteria(), new StandardEvaluationContext(args));
 	}
 
 	static interface PersonRepository {

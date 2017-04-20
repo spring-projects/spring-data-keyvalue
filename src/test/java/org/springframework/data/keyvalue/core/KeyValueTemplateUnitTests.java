@@ -216,7 +216,7 @@ public class KeyValueTemplateUnitTests {
 		verify(adapterMock, times(1)).find(captor.capture(), eq(Foo.class.getName()), eq(Foo.class));
 		assertThat(captor.getValue().getOffset(), is(1L));
 		assertThat(captor.getValue().getRows(), is(5));
-		assertThat(captor.getValue().getCritieria(), nullValue());
+		assertThat(captor.getValue().getCriteria(), nullValue());
 	}
 
 	@Test // DATACMNS-525

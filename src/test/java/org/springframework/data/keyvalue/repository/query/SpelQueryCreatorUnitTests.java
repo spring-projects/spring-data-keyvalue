@@ -307,7 +307,7 @@ public class SpelQueryCreatorUnitTests {
 	}
 
 	private Evaluation evaluate(String methodName, Object... args) throws Exception {
-		return new Evaluation((SpelExpression) createQueryForMethodWithArgs(methodName, args).getCritieria());
+		return new Evaluation((SpelExpression) createQueryForMethodWithArgs(methodName, args).getCriteria());
 	}
 
 	private KeyValueQuery<SpelExpression> createQueryForMethodWithArgs(String methodName, Object... args)
@@ -329,7 +329,7 @@ public class SpelQueryCreatorUnitTests {
 				new QueryMethod(method, metadataMock, new SpelAwareProxyProjectionFactory()).getParameters(), args));
 
 		KeyValueQuery<SpelExpression> q = creator.createQuery();
-		q.getCritieria().setEvaluationContext(new StandardEvaluationContext(args));
+		q.getCriteria().setEvaluationContext(new StandardEvaluationContext(args));
 
 		return q;
 	}

@@ -64,8 +64,8 @@ public class KeyValuePartTreeQueryUnitTests {
 
 		Object[] args = new Object[] { "foo" };
 
-		Object first = query.prepareQuery(args).getCritieria();
-		Object second = query.prepareQuery(args).getCritieria();
+		Object first = query.prepareQuery(args).getCriteria();
+		Object second = query.prepareQuery(args).getCriteria();
 
 		assertThat(first, not(sameInstance(second)));
 	}
@@ -121,9 +121,9 @@ public class KeyValuePartTreeQueryUnitTests {
 
 		KeyValueQuery<?> query = partTreeQuery.prepareQuery(new Object[] { "firstname" });
 
-		assertThat(query.getCritieria(), is(notNullValue()));
-		assertThat(query.getCritieria(), IsInstanceOf.instanceOf(SpelCriteria.class));
-		assertThat(((SpelCriteria) query.getCritieria()).getExpression().getExpressionString(),
+		assertThat(query.getCriteria(), is(notNullValue()));
+		assertThat(query.getCriteria(), IsInstanceOf.instanceOf(SpelCriteria.class));
+		assertThat(((SpelCriteria) query.getCriteria()).getExpression().getExpressionString(),
 				is("#it?.firstname?.equals([0])"));
 		assertThat(query.getRows(), is(3));
 	}
