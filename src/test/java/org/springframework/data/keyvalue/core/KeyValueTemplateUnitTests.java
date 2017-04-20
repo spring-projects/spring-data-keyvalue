@@ -270,7 +270,7 @@ public class KeyValueTemplateUnitTests {
 		verify(adapterMock, times(1)).find(captor.capture(), eq(Foo.class.getName()), eq(Foo.class));
 		assertThat(captor.getValue().getOffset(), is(1));
 		assertThat(captor.getValue().getRows(), is(5));
-		assertThat(captor.getValue().getCritieria(), nullValue());
+		assertThat(captor.getValue().getCriteria(), nullValue());
 	}
 
 	/**

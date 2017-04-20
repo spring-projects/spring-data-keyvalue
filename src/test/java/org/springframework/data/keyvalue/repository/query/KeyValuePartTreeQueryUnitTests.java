@@ -63,8 +63,8 @@ public class KeyValuePartTreeQueryUnitTests {
 
 		Object[] args = new Object[] { "foo" };
 
-		Object first = query.prepareQuery(args).getCritieria();
-		Object second = query.prepareQuery(args).getCritieria();
+		Object first = query.prepareQuery(args).getCriteria();
+		Object second = query.prepareQuery(args).getCriteria();
 
 		assertThat(first, not(sameInstance(second)));
 	}

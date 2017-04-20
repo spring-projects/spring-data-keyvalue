@@ -135,7 +135,7 @@ public class KeyValuePartTreeQuery implements RepositoryQuery {
 		ParametersParameterAccessor accessor = new ParametersParameterAccessor(getQueryMethod().getParameters(),
 				parameters);
 
-		Object criteria = instance.getCritieria();
+		Object criteria = instance.getCriteria();
 
 		if (criteria instanceof SpelCriteria || criteria instanceof SpelExpression) {
 

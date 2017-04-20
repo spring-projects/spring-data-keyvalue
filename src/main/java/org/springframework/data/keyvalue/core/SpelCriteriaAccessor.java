@@ -1,5 +1,5 @@
 /*
- * Copyright 2014-2016 the original author or authors.
+ * Copyright 2014-2017 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,7 +22,7 @@ import org.springframework.util.Assert;
 
 /**
  * {@link CriteriaAccessor} implementation capable of {@link SpelExpression}s.
- * 
+ *
  * @author Christoph Strobl
  * @author Oliver Gierke
  */
@@ -32,7 +32,7 @@ class SpelCriteriaAccessor implements CriteriaAccessor<SpelCriteria> {
 
 	/**
 	 * Creates a new {@link SpelCriteriaAccessor} using the given {@link SpelExpressionParser}.
-	 * 
+	 *
 	 * @param parser must not be {@literal null}.
 	 */
 	public SpelCriteriaAccessor(SpelExpressionParser parser) {
@@ -49,22 +49,22 @@ class SpelCriteriaAccessor implements CriteriaAccessor<SpelCriteria> {
 	@Override
 	public SpelCriteria resolve(KeyValueQuery<?> query) {
 
-		if (query.getCritieria() == null) {
+		if (query.getCriteria() == null) {
 			return null;
 		}
 
-		if (query.getCritieria() instanceof SpelExpression) {
-			return new SpelCriteria((SpelExpression) query.getCritieria());
+		if (query.getCriteria() instanceof SpelExpression) {
+			return new SpelCriteria((SpelExpression) query.getCriteria());
 		}
 
-		if (query.getCritieria() instanceof String) {
-			return new SpelCriteria(parser.parseRaw((String) query.getCritieria()));
+		if (query.getCriteria() instanceof String) {
+			return new SpelCriteria(parser.parseRaw((String) query.getCriteria()));
 		}
 
-		if (query.getCritieria() instanceof SpelCriteria) {
-			return (SpelCriteria) query.getCritieria();
+		if (query.getCriteria() instanceof SpelCriteria) {
+			return (SpelCriteria) query.getCriteria();
 		}
 
-		throw new IllegalArgumentException("Cannot create SpelCriteria for " + query.getCritieria());
+		throw new IllegalArgumentException("Cannot create SpelCriteria for " + query.getCriteria());
 	}
 }
