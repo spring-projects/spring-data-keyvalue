@@ -35,7 +35,7 @@ public class KeyValueQuery<T> {
 
 	/**
 	 * Creates new instance of {@link KeyValueQuery} with given criteria.
-	 * 
+	 *
 	 * @param criteria can be {@literal null}.
 	 */
 	public KeyValueQuery(T criteria) {
@@ -44,7 +44,7 @@ public class KeyValueQuery<T> {
 
 	/**
 	 * Creates new instance of {@link KeyValueQuery} with given {@link Sort}.
-	 * 
+	 *
 	 * @param sort can be {@literal null}.
 	 */
 	public KeyValueQuery(Sort sort) {
@@ -53,16 +53,28 @@ public class KeyValueQuery<T> {
 
 	/**
 	 * Get the criteria object.
-	 * 
+	 *
 	 * @return
+	 * @deprecated will be removed in favor of {@link #getCriteria()}.
 	 */
+	@Deprecated
 	public T getCritieria() {
 		return criteria;
 	}
 
 	/**
+	 * Get the criteria object.
+	 *
+	 * @return
+	 * @since 1.2.4
+	 */
+	public T getCriteria() {
+		return criteria;
+	}
+
+	/**
 	 * Get {@link Sort}.
-	 * 
+	 *
 	 * @return
 	 */
 	public Sort getSort() {
@@ -71,7 +83,7 @@ public class KeyValueQuery<T> {
 
 	/**
 	 * Number of elements to skip.
-	 * 
+	 *
 	 * @return negative value if not set.
 	 */
 	public int getOffset() {
@@ -80,7 +92,7 @@ public class KeyValueQuery<T> {
 
 	/**
 	 * Number of elements to read.
-	 * 
+	 *
 	 * @return negative value if not set.
 	 */
 	public int getRows() {
@@ -89,7 +101,7 @@ public class KeyValueQuery<T> {
 
 	/**
 	 * Set the number of elements to skip.
-	 * 
+	 *
 	 * @param offset use negative value for none.
 	 */
 	public void setOffset(int offset) {
@@ -98,8 +110,8 @@ public class KeyValueQuery<T> {
 
 	/**
 	 * Set the number of elements to read.
-	 * 
-	 * @param offset use negative value for all.
+	 *
+	 * @param rows use negative value for all.
 	 */
 	public void setRows(int rows) {
 		this.rows = rows;
@@ -107,7 +119,7 @@ public class KeyValueQuery<T> {
 
 	/**
 	 * Set {@link Sort} to be applied.
-	 * 
+	 *
 	 * @param sort
 	 */
 	public void setSort(Sort sort) {
@@ -116,7 +128,7 @@ public class KeyValueQuery<T> {
 
 	/**
 	 * Add given {@link Sort}.
-	 * 
+	 *
 	 * @param sort {@literal null} {@link Sort} will be ignored.
 	 * @return
 	 */

@@ -1,5 +1,5 @@
 /*
- * Copyright 2014 the original author or authors.
+ * Copyright 2014-2017 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,16 +19,16 @@ import org.springframework.data.keyvalue.core.query.KeyValueQuery;
 
 /**
  * Resolves the criteria object from given {@link KeyValueQuery}.
- * 
+ *
  * @author Christoph Strobl
  * @param <T>
  */
 public interface CriteriaAccessor<T> {
 
 	/**
-	 * Checks and reads {@link KeyValueQuery#getCritieria()} of given {@link KeyValueQuery}. Might also apply additional
+	 * Checks and reads {@link KeyValueQuery#getCriteria()} of given {@link KeyValueQuery}. Might also apply additional
 	 * transformation to match the desired type.
-	 * 
+	 *
 	 * @param query can be {@literal null}.
 	 * @return the criteria extracted from the query.
 	 * @throws IllegalArgumentException in case the criteria is not valid for usage with specific {@link CriteriaAccessor}

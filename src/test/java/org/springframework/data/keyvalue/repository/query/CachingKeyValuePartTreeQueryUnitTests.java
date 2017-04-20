@@ -68,8 +68,8 @@ public class CachingKeyValuePartTreeQueryUnitTests {
 
 		Object[] args = new Object[] { "foo" };
 
-		SpelCriteria first = (SpelCriteria) query.prepareQuery(args).getCritieria();
-		SpelCriteria second = (SpelCriteria) query.prepareQuery(args).getCritieria();
+		SpelCriteria first = (SpelCriteria) query.prepareQuery(args).getCriteria();
+		SpelCriteria second = (SpelCriteria) query.prepareQuery(args).getCriteria();
 
 		assertThat(first.getExpression(), sameInstance(second.getExpression()));
 		assertThat(first.getContext(), not(sameInstance(second.getContext())));
