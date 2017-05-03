@@ -70,7 +70,7 @@ public abstract class AbstractRepositoryUnitTests<T extends AbstractRepositoryUn
 	@Test // DATACMNS-525
 	public void findBy() {
 
-		repository.save(LENNISTERS);
+		repository.saveAll(LENNISTERS);
 
 		assertThat(repository.findByAge(19), hasItems(CERSEI, JAIME));
 	}
@@ -78,7 +78,7 @@ public abstract class AbstractRepositoryUnitTests<T extends AbstractRepositoryUn
 	@Test // DATAKV-137
 	public void findByFirstname() {
 
-		repository.save(LENNISTERS);
+		repository.saveAll(LENNISTERS);
 
 		assertThat(repository.findByFirstname(CERSEI.getFirstname()), hasItems(CERSEI));
 		assertThat(repository.findByFirstname(JAIME.getFirstname()), hasItems(JAIME));
@@ -87,7 +87,7 @@ public abstract class AbstractRepositoryUnitTests<T extends AbstractRepositoryUn
 	@Test // DATACMNS-525, DATAKV-137
 	public void combindedFindUsingAnd() {
 
-		repository.save(LENNISTERS);
+		repository.saveAll(LENNISTERS);
 
 		assertThat(repository.findByFirstnameAndAge(JAIME.getFirstname(), 19), hasItem(JAIME));
 		assertThat(repository.findByFirstnameAndAge(TYRION.getFirstname(), 17), hasItem(TYRION));
@@ -96,7 +96,7 @@ public abstract class AbstractRepositoryUnitTests<T extends AbstractRepositoryUn
 	@Test // DATACMNS-525
 	public void findPage() {
 
-		repository.save(LENNISTERS);
+		repository.saveAll(LENNISTERS);
 
 		Page<Person> page = repository.findByAge(19, PageRequest.of(0, 1));
 		assertThat(page.hasNext(), is(true));
@@ -112,7 +112,7 @@ public abstract class AbstractRepositoryUnitTests<T extends AbstractRepositoryUn
 	@Test // DATACMNS-525
 	public void findByConnectingOr() {
 
-		repository.save(LENNISTERS);
+		repository.saveAll(LENNISTERS);
 
 		assertThat(repository.findByAgeOrFirstname(19, TYRION.getFirstname()), hasItems(CERSEI, JAIME, TYRION));
 	}
@@ -120,7 +120,7 @@ public abstract class AbstractRepositoryUnitTests<T extends AbstractRepositoryUn
 	@Test // DATACMNS-525, DATAKV-137
 	public void singleEntityExecution() {
 
-		repository.save(LENNISTERS);
+		repository.saveAll(LENNISTERS);
 
 		assertThat(repository.findByAgeAndFirstname(TYRION.getAge(), TYRION.getFirstname()), is(TYRION));
 		assertThat(repository.findByAgeAndFirstname(CERSEI.getAge(), CERSEI.getFirstname()), is(CERSEI));
@@ -129,7 +129,7 @@ public abstract class AbstractRepositoryUnitTests<T extends AbstractRepositoryUn
 	@Test // DATACMNS-525
 	public void findAllShouldRespectSort() {
 
-		repository.save(LENNISTERS);
+		repository.saveAll(LENNISTERS);
 
 		assertThat(
 				repository.findAll(Sort.by(new Sort.Order(Direction.ASC, "age"), new Sort.Order(Direction.DESC, "firstname"))),
@@ -139,7 +139,7 @@ public abstract class AbstractRepositoryUnitTests<T extends AbstractRepositoryUn
 	@Test // DATACMNS-525
 	public void derivedFinderShouldRespectSort() {
 
-		repository.save(LENNISTERS);
+		repository.saveAll(LENNISTERS);
 
 		List<Person> result = repository.findByAgeGreaterThanOrderByAgeAscFirstnameDesc(2);
 
@@ -149,7 +149,7 @@ public abstract class AbstractRepositoryUnitTests<T extends AbstractRepositoryUn
 	@Test // DATAKV-121
 	public void projectsResultToInterface() {
 
-		repository.save(LENNISTERS);
+		repository.saveAll(LENNISTERS);
 
 		List<PersonSummary> result = repository.findByAgeGreaterThan(0, Sort.by("firstname"));
 
@@ -160,7 +160,7 @@ public abstract class AbstractRepositoryUnitTests<T extends AbstractRepositoryUn
 	@Test // DATAKV-121
 	public void projectsResultToDynamicInterface() {
 
-		repository.save(LENNISTERS);
+		repository.saveAll(LENNISTERS);
 
 		List<PersonSummary> result = repository.findByAgeGreaterThan(0, Sort.by("firstname"), PersonSummary.class);
 
@@ -171,7 +171,7 @@ public abstract class AbstractRepositoryUnitTests<T extends AbstractRepositoryUn
 	@Test // DATAKV-169
 	public void findsByValueInCollectionCorrectly() {
 
-		repository.save(LENNISTERS);
+		repository.saveAll(LENNISTERS);
 
 		List<Person> result = repository.findByFirstnameIn(Arrays.asList(CERSEI.getFirstname(), JAIME.getFirstname()));
 
@@ -182,7 +182,7 @@ public abstract class AbstractRepositoryUnitTests<T extends AbstractRepositoryUn
 	@Test // DATAKV-169
 	public void findsByValueInCollectionCorrectlyWhenTargetPathContainsNullValue() {
 
-		repository.save(LENNISTERS);
+		repository.saveAll(LENNISTERS);
 		repository.save(new Person(null, 10));
 
 		List<Person> result = repository.findByFirstnameIn(Arrays.asList(CERSEI.getFirstname(), JAIME.getFirstname()));
@@ -194,7 +194,7 @@ public abstract class AbstractRepositoryUnitTests<T extends AbstractRepositoryUn
 	@Test // DATAKV-169
 	public void findsByValueInCollectionCorrectlyWhenTargetPathAndCollectionContainNullValue() {
 
-		repository.save(LENNISTERS);
+		repository.saveAll(LENNISTERS);
 
 		Person personWithNullAsFirstname = new Person(null, 10);
 		repository.save(personWithNullAsFirstname);

@@ -47,7 +47,7 @@ public class QuerydslKeyValueRepositoryUnitTests extends AbstractRepositoryUnitT
 	@Test // DATACMNS-525
 	public void findOneIsExecutedCorrectly() {
 
-		repository.save(LENNISTERS);
+		repository.saveAll(LENNISTERS);
 
 		Person result = repository.findOne(QPerson.person.firstname.eq(CERSEI.getFirstname()));
 		assertThat(result, is(CERSEI));
@@ -56,7 +56,7 @@ public class QuerydslKeyValueRepositoryUnitTests extends AbstractRepositoryUnitT
 	@Test // DATACMNS-525
 	public void findAllIsExecutedCorrectly() {
 
-		repository.save(LENNISTERS);
+		repository.saveAll(LENNISTERS);
 
 		Iterable<Person> result = repository.findAll(QPerson.person.age.eq(CERSEI.getAge()));
 		assertThat(result, containsInAnyOrder(CERSEI, JAIME));
@@ -65,7 +65,7 @@ public class QuerydslKeyValueRepositoryUnitTests extends AbstractRepositoryUnitT
 	@Test // DATACMNS-525
 	public void findWithPaginationWorksCorrectly() {
 
-		repository.save(LENNISTERS);
+		repository.saveAll(LENNISTERS);
 		Page<Person> page1 = repository.findAll(QPerson.person.age.eq(CERSEI.getAge()), PageRequest.of(0, 1));
 
 		assertThat(page1.getTotalElements(), is(2L));
@@ -83,7 +83,7 @@ public class QuerydslKeyValueRepositoryUnitTests extends AbstractRepositoryUnitT
 	@Test // DATACMNS-525
 	public void findAllUsingOrderSpecifierWorksCorrectly() {
 
-		repository.save(LENNISTERS);
+		repository.saveAll(LENNISTERS);
 
 		Iterable<Person> result = repository.findAll(QPerson.person.age.eq(CERSEI.getAge()),
 				QPerson.person.firstname.desc());
@@ -94,7 +94,7 @@ public class QuerydslKeyValueRepositoryUnitTests extends AbstractRepositoryUnitT
 	@Test // DATACMNS-525
 	public void findAllUsingPageableWithSortWorksCorrectly() {
 
-		repository.save(LENNISTERS);
+		repository.saveAll(LENNISTERS);
 
 		Iterable<Person> result = repository.findAll(QPerson.person.age.eq(CERSEI.getAge()),
 				PageRequest.of(0, 10, Direction.DESC, "firstname"));
@@ -105,7 +105,7 @@ public class QuerydslKeyValueRepositoryUnitTests extends AbstractRepositoryUnitT
 	@Test // DATACMNS-525
 	public void findAllUsingPagableWithQSortWorksCorrectly() {
 
-		repository.save(LENNISTERS);
+		repository.saveAll(LENNISTERS);
 
 		Iterable<Person> result = repository.findAll(QPerson.person.age.eq(CERSEI.getAge()),
 				PageRequest.of(0, 10, new QSort(QPerson.person.firstname.desc())));
@@ -116,7 +116,7 @@ public class QuerydslKeyValueRepositoryUnitTests extends AbstractRepositoryUnitT
 	@Test // DATAKV-90
 	public void findAllWithOrderSpecifierWorksCorrectly() {
 
-		repository.save(LENNISTERS);
+		repository.saveAll(LENNISTERS);
 
 		Iterable<Person> result = repository.findAll(new QSort(QPerson.person.firstname.desc()));
 
@@ -126,7 +126,7 @@ public class QuerydslKeyValueRepositoryUnitTests extends AbstractRepositoryUnitT
 	@Test // DATAKV-90
 	public void findAllShouldIgnoreNullOrderSpecifier() {
 
-		repository.save(LENNISTERS);
+		repository.saveAll(LENNISTERS);
 
 		Iterable<Person> result = repository.findAll((QSort) null);
 
@@ -136,7 +136,7 @@ public class QuerydslKeyValueRepositoryUnitTests extends AbstractRepositoryUnitT
 	@Test // DATAKV-95
 	public void executesExistsCorrectly() {
 
-		repository.save(LENNISTERS);
+		repository.saveAll(LENNISTERS);
 
 		assertThat(repository.exists(QPerson.person.age.eq(CERSEI.getAge())), is(true));
 	}
@@ -144,7 +144,7 @@ public class QuerydslKeyValueRepositoryUnitTests extends AbstractRepositoryUnitT
 	@Test // DATAKV-96
 	public void shouldSupportFindAllWithPredicateAndSort() {
 
-		repository.save(LENNISTERS);
+		repository.saveAll(LENNISTERS);
 
 		List<Person> users = Lists.newArrayList(repository.findAll(person.age.gt(0), Sort.by(Direction.ASC, "firstname")));
 

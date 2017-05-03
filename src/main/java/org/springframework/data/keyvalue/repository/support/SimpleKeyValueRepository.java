@@ -107,7 +107,7 @@ public class SimpleKeyValueRepository<T, ID extends Serializable> implements Key
 	 * @see org.springframework.data.repository.CrudRepository#save(java.lang.Iterable)
 	 */
 	@Override
-	public <S extends T> Iterable<S> save(Iterable<S> entities) {
+	public <S extends T> Iterable<S> saveAll(Iterable<S> entities) {
 
 		for (S entity : entities) {
 			save(entity);
@@ -121,7 +121,7 @@ public class SimpleKeyValueRepository<T, ID extends Serializable> implements Key
 	 * @see org.springframework.data.repository.CrudRepository#findOne(java.io.Serializable)
 	 */
 	@Override
-	public Optional<T> findOne(ID id) {
+	public Optional<T> findById(ID id) {
 		return operations.findById(id, entityInformation.getJavaType());
 	}
 
@@ -130,8 +130,8 @@ public class SimpleKeyValueRepository<T, ID extends Serializable> implements Key
 	 * @see org.springframework.data.repository.CrudRepository#exists(java.io.Serializable)
 	 */
 	@Override
-	public boolean exists(ID id) {
-		return findOne(id) != null;
+	public boolean existsById(ID id) {
+		return findById(id) != null;
 	}
 
 	/*
@@ -148,13 +148,13 @@ public class SimpleKeyValueRepository<T, ID extends Serializable> implements Key
 	 * @see org.springframework.data.repository.CrudRepository#findAll(java.lang.Iterable)
 	 */
 	@Override
-	public Iterable<T> findAll(Iterable<ID> ids) {
+	public Iterable<T> findAllById(Iterable<ID> ids) {
 
 		List<T> result = new ArrayList<>();
 
 		for (ID id : ids) {
 
-			Optional<T> candidate = findOne(id);
+			Optional<T> candidate = findById(id);
 
 			if (candidate.isPresent()) {
 				result.add(candidate.get());
@@ -178,7 +178,7 @@ public class SimpleKeyValueRepository<T, ID extends Serializable> implements Key
 	 * @see org.springframework.data.repository.CrudRepository#delete(java.io.Serializable)
 	 */
 	@Override
-	public void delete(ID id) {
+	public void deleteById(ID id) {
 		operations.delete(id, entityInformation.getJavaType());
 	}
 
@@ -188,7 +188,7 @@ public class SimpleKeyValueRepository<T, ID extends Serializable> implements Key
 	 */
 	@Override
 	public void delete(T entity) {
-		delete(entityInformation.getId(entity)
+		deleteById(entityInformation.getId(entity)
 				.orElseThrow(() -> new IllegalArgumentException("Cannot delete entity with 'null' id.")));
 	}
 
@@ -197,7 +197,7 @@ public class SimpleKeyValueRepository<T, ID extends Serializable> implements Key
 	 * @see org.springframework.data.repository.CrudRepository#delete(java.lang.Iterable)
 	 */
 	@Override
-	public void delete(Iterable<? extends T> entities) {
+	public void deleteAll(Iterable<? extends T> entities) {
 
 		for (T entity : entities) {
 			delete(entity);

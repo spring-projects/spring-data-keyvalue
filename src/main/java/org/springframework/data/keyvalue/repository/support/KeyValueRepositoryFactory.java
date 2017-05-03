@@ -111,7 +111,7 @@ public class KeyValueRepositoryFactory extends RepositoryFactorySupport {
 	 */
 	@Override
 	@SuppressWarnings("unchecked")
-	public <T, ID extends Serializable> EntityInformation<T, ID> getEntityInformation(Class<T> domainClass) {
+	public <T, ID> EntityInformation<T, ID> getEntityInformation(Class<T> domainClass) {
 
 		PersistentEntity<T, ?> entity = (PersistentEntity<T, ?>) context.getPersistentEntity(domainClass).get();
 		PersistentEntityInformation<T, ID> entityInformation = new PersistentEntityInformation<>(entity);

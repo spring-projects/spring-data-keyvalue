@@ -83,7 +83,7 @@ public class SimpleKeyValueRepositoryUnitTests {
 		Foo one = new Foo("one");
 		Foo two = new Foo("one");
 
-		repo.save(Arrays.asList(one, two));
+		repo.saveAll(Arrays.asList(one, two));
 		verify(opsMock, times(1)).insert(eq(one));
 		verify(opsMock, times(1)).insert(eq(two));
 	}
@@ -102,7 +102,7 @@ public class SimpleKeyValueRepositoryUnitTests {
 	@Test // DATACMNS-525
 	public void deleteById() {
 
-		repo.delete("one");
+		repo.deleteById("one");
 
 		verify(opsMock, times(1)).delete(eq("one"), eq(Foo.class));
 	}
@@ -119,7 +119,7 @@ public class SimpleKeyValueRepositoryUnitTests {
 	public void findAllIds() {
 
 		when(opsMock.findById(any(Serializable.class), any(Class.class))).thenReturn(Optional.empty());
-		repo.findAll(Arrays.asList("one", "two", "three"));
+		repo.findAllById(Arrays.asList("one", "two", "three"));
 
 		verify(opsMock, times(3)).findById(anyString(), eq(Foo.class));
 	}
