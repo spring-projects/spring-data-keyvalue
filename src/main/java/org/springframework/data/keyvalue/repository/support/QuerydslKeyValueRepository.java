@@ -15,10 +15,12 @@
  */
 package org.springframework.data.keyvalue.repository.support;
 
-import static org.springframework.data.keyvalue.repository.support.KeyValueQuerydslUtils.toOrderSpecifier;
+import static org.springframework.data.keyvalue.repository.support.KeyValueQuerydslUtils.*;
 
 import java.io.Serializable;
+import java.util.Optional;
 
+import org.springframework.dao.IncorrectResultSizeDataAccessException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
@@ -34,6 +36,7 @@ import org.springframework.util.ObjectUtils;
 
 import com.querydsl.collections.AbstractCollQuery;
 import com.querydsl.collections.CollQuery;
+import com.querydsl.core.NonUniqueResultException;
 import com.querydsl.core.types.EntityPath;
 import com.querydsl.core.types.OrderSpecifier;
 import com.querydsl.core.types.Predicate;
@@ -91,8 +94,13 @@ public class QuerydslKeyValueRepository<T, ID extends Serializable> extends Simp
 	 * @see org.springframework.data.querydsl.QueryDslPredicateExecutor#findOne(com.mysema.query.types.Predicate)
 	 */
 	@Override
-	public T findOne(Predicate predicate) {
-		return prepareQuery(predicate).fetchOne();
+	public Optional<T> findOne(Predicate predicate) {
+
+		try {
+			return Optional.ofNullable(prepareQuery(predicate).fetchOne());
+		} catch (NonUniqueResultException o_O) {
+			throw new IncorrectResultSizeDataAccessException("Expected one or no result but found more than one!", 1, o_O);
+		}
 	}
 
 	/*

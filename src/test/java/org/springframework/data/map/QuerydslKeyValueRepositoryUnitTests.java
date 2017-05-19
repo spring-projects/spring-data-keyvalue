@@ -15,12 +15,16 @@
  */
 package org.springframework.data.map;
 
+import static org.assertj.core.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.*;
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertThat;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.junit.Test;
+import org.springframework.dao.IncorrectResultSizeDataAccessException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
@@ -49,8 +53,8 @@ public class QuerydslKeyValueRepositoryUnitTests extends AbstractRepositoryUnitT
 
 		repository.saveAll(LENNISTERS);
 
-		Person result = repository.findOne(QPerson.person.firstname.eq(CERSEI.getFirstname()));
-		assertThat(result, is(CERSEI));
+		Optional<Person> result = repository.findOne(QPerson.person.firstname.eq(CERSEI.getFirstname()));
+		assertThat(result).hasValue(CERSEI);
 	}
 
 	@Test // DATACMNS-525
@@ -152,6 +156,15 @@ public class QuerydslKeyValueRepositoryUnitTests extends AbstractRepositoryUnitT
 		assertThat(users.get(0).getFirstname(), is(CERSEI.getFirstname()));
 		assertThat(users.get(2).getFirstname(), is(TYRION.getFirstname()));
 		assertThat(users, hasItems(CERSEI, JAIME, TYRION));
+	}
+
+	@Test // DATAKV-179
+	public void throwsExceptionIfMoreThanOneResultIsFound() {
+
+		repository.saveAll(LENNISTERS);
+
+		assertThatExceptionOfType(IncorrectResultSizeDataAccessException.class) //
+				.isThrownBy(() -> repository.findOne(person.firstname.contains("e")));
 	}
 
 	/*
