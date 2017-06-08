@@ -1,6 +1,12 @@
 Spring Data KeyValue Changelog
 ==========================
 
+Changes in version 1.2.4.RELEASE (2017-06-08)
+---------------------------------------------
+* DATAKV-174 - Release 1.2.4 (Ingalls SR4).
+* DATAKV-170 - Rename KeyValueQuery.getCritieria to getCriteria.
+
+
 Changes in version 1.1.11.RELEASE (2017-06-07)
 ----------------------------------------------
 * DATAKV-173 - Release 1.1.11 (Hopper SR11).
