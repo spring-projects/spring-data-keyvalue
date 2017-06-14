@@ -1,6 +1,12 @@
 Spring Data KeyValue Changelog
 ==========================
 
+Changes in version 2.0.0.M4 (2017-06-14)
+----------------------------------------
+* DATAKV-179 - Adapt to API changes in QuerydslPredicateExecutor.
+* DATAKV-178 - Release 2.0 M4 (Kay).
+
+
 Changes in version 1.2.4.RELEASE (2017-06-08)
 ---------------------------------------------
 * DATAKV-174 - Release 1.2.4 (Ingalls SR4).
