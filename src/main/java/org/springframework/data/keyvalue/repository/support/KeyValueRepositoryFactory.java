@@ -51,6 +51,7 @@ import org.springframework.util.ClassUtils;
  *
  * @author Christoph Strobl
  * @author Oliver Gierke
+ * @author Mark Paluch
  */
 public class KeyValueRepositoryFactory extends RepositoryFactorySupport {
 
@@ -113,10 +114,9 @@ public class KeyValueRepositoryFactory extends RepositoryFactorySupport {
 	@SuppressWarnings("unchecked")
 	public <T, ID> EntityInformation<T, ID> getEntityInformation(Class<T> domainClass) {
 
-		PersistentEntity<T, ?> entity = (PersistentEntity<T, ?>) context.getPersistentEntity(domainClass).get();
-		PersistentEntityInformation<T, ID> entityInformation = new PersistentEntityInformation<>(entity);
+		PersistentEntity<T, ?> entity = (PersistentEntity<T, ?>) context.getRequiredPersistentEntity(domainClass);
 
-		return entityInformation;
+		return new PersistentEntityInformation<>(entity);
 	}
 
 	/*

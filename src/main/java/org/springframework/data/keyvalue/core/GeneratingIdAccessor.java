@@ -1,5 +1,5 @@
 /*
- * Copyright 2014 the original author or authors.
+ * Copyright 2014-2017 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,9 +15,6 @@
  */
 package org.springframework.data.keyvalue.core;
 
-import java.io.Serializable;
-import java.util.Optional;
-
 import org.springframework.data.mapping.IdentifierAccessor;
 import org.springframework.data.mapping.PersistentProperty;
 import org.springframework.data.mapping.PersistentPropertyAccessor;
@@ -26,8 +23,9 @@ import org.springframework.util.Assert;
 /**
  * {@link IdentifierAccessor} adding a {@link #getOrGenerateIdentifier()} to automatically generate an identifier and
  * set it on the underling bean instance.
- * 
+ *
  * @author Oliver Gierke
+ * @author Mark Paluch
  * @see #getOrGenerateIdentifier()
  */
 class GeneratingIdAccessor implements IdentifierAccessor {
@@ -39,7 +37,7 @@ class GeneratingIdAccessor implements IdentifierAccessor {
 	/**
 	 * Creates a new {@link GeneratingIdAccessor} using the given {@link PersistentPropertyAccessor}, identifier property
 	 * and {@link IdentifierGenerator}.
-	 * 
+	 *
 	 * @param accessor must not be {@literal null}.
 	 * @param identifierProperty must not be {@literal null}.
 	 * @param generator must not be {@literal null}.
@@ -61,26 +59,26 @@ class GeneratingIdAccessor implements IdentifierAccessor {
 	 * @see org.springframework.data.keyvalue.core.IdentifierAccessor#getIdentifier()
 	 */
 	@Override
-	public Optional<Object> getIdentifier() {
+	public Object getIdentifier() {
 		return accessor.getProperty(identifierProperty);
 	}
 
 	/**
 	 * Returns the identifier value of the backing bean or generates a new one using the configured
 	 * {@link IdentifierGenerator}.
-	 * 
+	 *
 	 * @return
 	 */
 	public Object getOrGenerateIdentifier() {
 
-		Optional<Object> existingIdentifier = getIdentifier();
+		Object existingIdentifier = getIdentifier();
 
-		if (existingIdentifier.isPresent()) {
-			return existingIdentifier.get();
+		if (existingIdentifier != null) {
+			return existingIdentifier;
 		}
 
 		Object generatedIdentifier = generator.generateIdentifierOfType(identifierProperty.getTypeInformation());
-		accessor.setProperty(identifierProperty, Optional.ofNullable(generatedIdentifier));
+		accessor.setProperty(identifierProperty, generatedIdentifier);
 
 		return generatedIdentifier;
 	}

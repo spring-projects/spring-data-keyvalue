@@ -46,6 +46,7 @@ import org.springframework.util.ObjectUtils;
  * @author Christoph Strobl
  * @author Oliver Gierke
  * @author Thomas Darimont
+ * @author Mark Paluch
  */
 public class KeyValueTemplate implements KeyValueOperations, ApplicationEventPublisherAware {
 
@@ -134,8 +135,7 @@ public class KeyValueTemplate implements KeyValueOperations, ApplicationEventPub
 		KeyValuePersistentEntity<?, ?> entity = getKeyValuePersistentEntity(objectToInsert);
 
 		GeneratingIdAccessor generatingIdAccessor = new GeneratingIdAccessor(entity.getPropertyAccessor(objectToInsert),
-				entity.getIdProperty()
-						.orElseThrow(() -> new IllegalArgumentException("Unable to extract 'id' for object to be deleted")),
+				entity.getIdProperty(),
 				identifierGenerator);
 		Object id = generatingIdAccessor.getOrGenerateIdentifier();
 
@@ -144,10 +144,7 @@ public class KeyValueTemplate implements KeyValueOperations, ApplicationEventPub
 	}
 
 	private KeyValuePersistentEntity<?, ?> getKeyValuePersistentEntity(Object objectToInsert) {
-
-		return this.mappingContext.getPersistentEntity(ClassUtils.getUserClass(objectToInsert))
-				.orElseThrow(() -> new IllegalArgumentException(
-						String.format("Unable to find PersistentEntity for %s", ObjectUtils.nullSafeClassName(objectToInsert))));
+		return this.mappingContext.getRequiredPersistentEntity(ClassUtils.getUserClass(objectToInsert));
 	}
 
 	/*
@@ -197,7 +194,7 @@ public class KeyValueTemplate implements KeyValueOperations, ApplicationEventPub
 					String.format("Cannot determine id for type %s", ClassUtils.getUserClass(objectToUpdate)));
 		}
 
-		update((Serializable) entity.getIdentifierAccessor(objectToUpdate).getIdentifier().get(), objectToUpdate);
+		update((Serializable) entity.getIdentifierAccessor(objectToUpdate).getRequiredIdentifier(), objectToUpdate);
 	}
 
 	/*
@@ -331,8 +328,7 @@ public class KeyValueTemplate implements KeyValueOperations, ApplicationEventPub
 		Class<T> type = (Class<T>) ClassUtils.getUserClass(objectToDelete);
 		KeyValuePersistentEntity<?, ?> entity = getKeyValuePersistentEntity(objectToDelete);
 
-		return delete((Serializable) entity.getIdentifierAccessor(objectToDelete).getIdentifier()
-				.orElseThrow(() -> new IllegalArgumentException("Unable to extract 'id' for object to be deleted")), type);
+		return delete((Serializable) entity.getIdentifierAccessor(objectToDelete).getIdentifier(), type);
 	}
 
 	/*
@@ -485,7 +481,7 @@ public class KeyValueTemplate implements KeyValueOperations, ApplicationEventPub
 	}
 
 	private String resolveKeySpace(Class<?> type) {
-		return this.mappingContext.getPersistentEntity(type).get().getKeySpace();
+		return this.mappingContext.getRequiredPersistentEntity(type).getKeySpace();
 	}
 
 	private RuntimeException resolveExceptionIfPossible(RuntimeException e) {

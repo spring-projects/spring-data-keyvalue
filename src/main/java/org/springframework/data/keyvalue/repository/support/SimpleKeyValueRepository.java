@@ -33,6 +33,7 @@ import org.springframework.util.Assert;
 /**
  * @author Christoph Strobl
  * @author Oliver Gierke
+ * @author Mark Paluch
  * @param <T>
  * @param <ID>
  */
@@ -97,7 +98,7 @@ public class SimpleKeyValueRepository<T, ID extends Serializable> implements Key
 		if (entityInformation.isNew(entity)) {
 			operations.insert(entity);
 		} else {
-			operations.update(entityInformation.getId(entity).get(), entity);
+			operations.update(entityInformation.getRequiredId(entity), entity);
 		}
 		return entity;
 	}
@@ -188,8 +189,7 @@ public class SimpleKeyValueRepository<T, ID extends Serializable> implements Key
 	 */
 	@Override
 	public void delete(T entity) {
-		deleteById(entityInformation.getId(entity)
-				.orElseThrow(() -> new IllegalArgumentException("Cannot delete entity with 'null' id.")));
+		deleteById(entityInformation.getRequiredId(entity));
 	}
 
 	/*
