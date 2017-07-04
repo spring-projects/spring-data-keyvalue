@@ -29,12 +29,14 @@ import org.springframework.data.repository.query.parser.PartTree;
 import org.springframework.data.repository.query.parser.PartTree.OrPart;
 import org.springframework.expression.spel.standard.SpelExpression;
 import org.springframework.expression.spel.standard.SpelExpressionParser;
+import org.springframework.util.StringUtils;
 
 /**
  * {@link AbstractQueryCreator} to create {@link SpelExpression} based {@link KeyValueQuery}s.
  *
  * @author Christoph Strobl
  * @author Oliver Gierke
+ * @author Mark Paluch
  */
 public class SpelQueryCreator extends AbstractQueryCreator<KeyValueQuery<SpelExpression>, String> {
 
@@ -109,7 +111,7 @@ public class SpelQueryCreator extends AbstractQueryCreator<KeyValueQuery<SpelExp
 
 				Part part = partIter.next();
 
-				if(!requiresInverseLookup(part)) {
+				if (!requiresInverseLookup(part)) {
 
 					partBuilder.append("#it?.");
 					partBuilder.append(part.getProperty().toDotPath().replace(".", "?."));
@@ -212,7 +214,7 @@ public class SpelQueryCreator extends AbstractQueryCreator<KeyValueQuery<SpelExp
 			}
 		}
 
-		return PARSER.parseRaw(sb.toString());
+		return !StringUtils.hasText(sb) ? null : PARSER.parseRaw(sb.toString());
 	}
 
 	private static boolean requiresInverseLookup(Part part) {
