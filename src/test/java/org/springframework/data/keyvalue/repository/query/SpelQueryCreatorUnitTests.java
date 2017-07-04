@@ -306,6 +306,13 @@ public class SpelQueryCreatorUnitTests {
 		assertThat(evaluate("findByFirstnameIn", list).against(new Person(null, 10)), is(true));
 	}
 
+	@Test // DATAKV-185
+	public void noDerivedQueryArgumentsMatchesAlways() throws Exception {
+
+		assertThat(evaluate("findBy").against(JON), is(true));
+		assertThat(evaluate("findBy").against(null), is(true));
+	}
+
 	private Evaluation evaluate(String methodName, Object... args) throws Exception {
 		return new Evaluation((SpelExpression) createQueryForMethodWithArgs(methodName, args).getCriteria());
 	}
@@ -335,6 +342,9 @@ public class SpelQueryCreatorUnitTests {
 	}
 
 	static interface PersonRepository {
+
+		// No arguments
+		Person findBy();
 
 		// Type.SIMPLE_PROPERTY
 		Person findByFirstname(String firstname);

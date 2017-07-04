@@ -214,7 +214,7 @@ public class SpelQueryCreator extends AbstractQueryCreator<KeyValueQuery<SpelExp
 			}
 		}
 
-		return !StringUtils.hasText(sb) ? null : PARSER.parseRaw(sb.toString());
+		return StringUtils.hasText(sb) ? PARSER.parseRaw(sb.toString()) : PARSER.parseRaw("true");
 	}
 
 	private static boolean requiresInverseLookup(Part part) {
