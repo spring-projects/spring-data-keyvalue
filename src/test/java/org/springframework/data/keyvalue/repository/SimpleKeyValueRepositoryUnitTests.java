@@ -15,6 +15,7 @@
  */
 package org.springframework.data.keyvalue.repository;
 
+import static org.junit.Assert.*;
 import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.*;
 
@@ -122,6 +123,17 @@ public class SimpleKeyValueRepositoryUnitTests {
 		repo.findAllById(Arrays.asList("one", "two", "three"));
 
 		verify(opsMock, times(3)).findById(anyString(), eq(Foo.class));
+	}
+
+	@Test // DATAKV-186
+	public void existsById() {
+		when(opsMock.findById(any(Serializable.class), any(Class.class))).thenReturn(Optional.empty());
+		assertFalse(repo.existsById("one"));
+
+		when(opsMock.findById(any(Serializable.class), any(Class.class))).thenReturn(Optional.of(new Foo()));
+		assertTrue(repo.existsById("one"));
+
+		verify(opsMock, times(2)).findById(anyString(), eq(Foo.class));
 	}
 
 	@Test // DATACMNS-525

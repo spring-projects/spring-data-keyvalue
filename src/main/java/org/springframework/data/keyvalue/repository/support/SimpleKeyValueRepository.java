@@ -132,7 +132,7 @@ public class SimpleKeyValueRepository<T, ID extends Serializable> implements Key
 	 */
 	@Override
 	public boolean existsById(ID id) {
-		return findById(id) != null;
+		return findById(id).isPresent();
 	}
 
 	/*
