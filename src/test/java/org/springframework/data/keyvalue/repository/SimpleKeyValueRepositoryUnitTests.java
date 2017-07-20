@@ -15,8 +15,11 @@
  */
 package org.springframework.data.keyvalue.repository;
 
+import static org.hamcrest.core.Is.*;
 import static org.junit.Assert.*;
-import static org.mockito.ArgumentMatchers.*;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.*;
 
 import java.io.Serializable;
@@ -39,6 +42,7 @@ import org.springframework.data.repository.core.support.ReflectionEntityInformat
 
 /**
  * @author Christoph Strobl
+ * @author Eugene Nikiforov
  */
 @RunWith(MockitoJUnitRunner.class)
 public class SimpleKeyValueRepositoryUnitTests {
@@ -126,14 +130,17 @@ public class SimpleKeyValueRepositoryUnitTests {
 	}
 
 	@Test // DATAKV-186
-	public void existsById() {
+	public void existsByIdReturnsFalseForEmptyOptional() {
+
 		when(opsMock.findById(any(Serializable.class), any(Class.class))).thenReturn(Optional.empty());
-		assertFalse(repo.existsById("one"));
+		assertThat(repo.existsById("one"), is(false));
+	}
+
+	@Test // DATAKV-186
+	public void existsByIdReturnsTrueWhenOptionalValuePresent() {
 
 		when(opsMock.findById(any(Serializable.class), any(Class.class))).thenReturn(Optional.of(new Foo()));
 		assertTrue(repo.existsById("one"));
-
-		verify(opsMock, times(2)).findById(anyString(), eq(Foo.class));
 	}
 
 	@Test // DATACMNS-525
