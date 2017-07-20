@@ -15,7 +15,6 @@
  */
 package org.springframework.data.keyvalue.repository.support;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -38,7 +37,7 @@ import org.springframework.util.Assert;
  * @param <T>
  * @param <ID>
  */
-public class SimpleKeyValueRepository<T, ID extends Serializable> implements KeyValueRepository<T, ID> {
+public class SimpleKeyValueRepository<T, ID> implements KeyValueRepository<T, ID> {
 
 	private final KeyValueOperations operations;
 	private final EntityInformation<T, ID> entityInformation;
