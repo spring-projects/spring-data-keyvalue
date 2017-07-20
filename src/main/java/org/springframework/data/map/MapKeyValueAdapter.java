@@ -15,7 +15,6 @@
  */
 package org.springframework.data.map;
 
-import java.io.Serializable;
 import java.util.Collection;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -36,9 +35,9 @@ import org.springframework.util.ClassUtils;
  */
 public class MapKeyValueAdapter extends AbstractKeyValueAdapter {
 
-	@SuppressWarnings("rawtypes")//
+	@SuppressWarnings("rawtypes") //
 	private final Class<? extends Map> keySpaceMapType;
-	private final Map<Serializable, Map<Serializable, Object>> store;
+	private final Map<String, Map<Object, Object>> store;
 
 	/**
 	 * Create new {@link MapKeyValueAdapter} using {@link ConcurrentHashMap} as backing store type.
@@ -54,7 +53,7 @@ public class MapKeyValueAdapter extends AbstractKeyValueAdapter {
 	 */
 	@SuppressWarnings("rawtypes")
 	public MapKeyValueAdapter(Class<? extends Map> mapType) {
-		this(CollectionFactory.<Serializable, Map<Serializable, Object>> createMap(mapType, 100), mapType);
+		this(CollectionFactory.createMap(mapType, 100), mapType);
 	}
 
 	/**
@@ -63,7 +62,7 @@ public class MapKeyValueAdapter extends AbstractKeyValueAdapter {
 	 * @param store must not be {@literal null}.
 	 */
 	@SuppressWarnings({ "rawtypes", "unchecked" })
-	public MapKeyValueAdapter(Map<Serializable, Map<Serializable, Object>> store) {
+	public MapKeyValueAdapter(Map<String, Map<Object, Object>> store) {
 		this(store, (Class<? extends Map>) ClassUtils.getUserClass(store));
 	}
 
@@ -74,7 +73,7 @@ public class MapKeyValueAdapter extends AbstractKeyValueAdapter {
 	 * @param keySpaceMapType must not be {@literal null}.
 	 */
 	@SuppressWarnings("rawtypes")
-	private MapKeyValueAdapter(Map<Serializable, Map<Serializable, Object>> store, Class<? extends Map> keySpaceMapType) {
+	private MapKeyValueAdapter(Map<String, Map<Object, Object>> store, Class<? extends Map> keySpaceMapType) {
 
 		Assert.notNull(store, "Store must not be null.");
 		Assert.notNull(keySpaceMapType, "Map type to be used for key spaces must not be null!");
@@ -85,10 +84,10 @@ public class MapKeyValueAdapter extends AbstractKeyValueAdapter {
 
 	/*
 	 * (non-Javadoc)
-	 * @see org.springframework.data.keyvalue.core.KeyValueAdapter#put(java.io.Serializable, java.lang.Object, java.io.Serializable)
+	 * @see org.springframework.data.keyvalue.core.KeyValueAdapter#put(java.lang.Object, java.lang.Object, java.lang.String)
 	 */
 	@Override
-	public Object put(Serializable id, Object item, Serializable keyspace) {
+	public Object put(Object id, Object item, String keyspace) {
 
 		Assert.notNull(id, "Cannot add item with null id.");
 		Assert.notNull(keyspace, "Cannot add item for null collection.");
@@ -98,27 +97,27 @@ public class MapKeyValueAdapter extends AbstractKeyValueAdapter {
 
 	/*
 	 * (non-Javadoc)
-	 * @see org.springframework.data.keyvalue.core.KeyValueAdapter#contains(java.io.Serializable, java.io.Serializable)
+	 * @see org.springframework.data.keyvalue.core.KeyValueAdapter#contains(java.lang.Object, java.lang.String)
 	 */
 	@Override
-	public boolean contains(Serializable id, Serializable keyspace) {
+	public boolean contains(Object id, String keyspace) {
 		return get(id, keyspace) != null;
 	}
 
 	/* (non-Javadoc)
-	 * @see org.springframework.data.keyvalue.core.KeyValueAdapter#count(java.io.Serializable)
+	 * @see org.springframework.data.keyvalue.core.KeyValueAdapter#count(java.lang.String)
 	 */
 	@Override
-	public long count(Serializable keyspace) {
+	public long count(String keyspace) {
 		return getKeySpaceMap(keyspace).size();
 	}
 
 	/*
 	 * (non-Javadoc)
-	 * @see org.springframework.data.keyvalue.core.KeyValueAdapter#get(java.io.Serializable, java.io.Serializable)
+	 * @see org.springframework.data.keyvalue.core.KeyValueAdapter#get(java.lang.Object, java.lang.String)
 	 */
 	@Override
-	public Object get(Serializable id, Serializable keyspace) {
+	public Object get(Object id, String keyspace) {
 
 		Assert.notNull(id, "Cannot get item with null id.");
 		return getKeySpaceMap(keyspace).get(id);
@@ -126,10 +125,10 @@ public class MapKeyValueAdapter extends AbstractKeyValueAdapter {
 
 	/*
 	 * (non-Javadoc)
-	 * @see org.springframework.data.keyvalue.core.KeyValueAdapter#delete(java.io.Serializable, java.io.Serializable)
+	 * @see org.springframework.data.keyvalue.core.KeyValueAdapter#delete(java.lang.Object, java.lang.String)
 	 */
 	@Override
-	public Object delete(Serializable id, Serializable keyspace) {
+	public Object delete(Object id, String keyspace) {
 
 		Assert.notNull(id, "Cannot delete item with null id.");
 		return getKeySpaceMap(keyspace).remove(id);
@@ -137,28 +136,28 @@ public class MapKeyValueAdapter extends AbstractKeyValueAdapter {
 
 	/*
 	 * (non-Javadoc)
-	 * @see org.springframework.data.keyvalue.core.KeyValueAdapter#getAllOf(java.io.Serializable)
+	 * @see org.springframework.data.keyvalue.core.KeyValueAdapter#getAllOf(java.lang.String)
 	 */
 	@Override
-	public Collection<?> getAllOf(Serializable keyspace) {
+	public Collection<?> getAllOf(String keyspace) {
 		return getKeySpaceMap(keyspace).values();
 	}
 
 	/*
 	 * (non-Javadoc)
-	 * @see org.springframework.data.keyvalue.core.KeyValueAdapter#entries(java.io.Serializable)
+	 * @see org.springframework.data.keyvalue.core.KeyValueAdapter#entries(java.lang.String)
 	 */
 	@Override
-	public CloseableIterator<Entry<Serializable, Object>> entries(Serializable keyspace) {
+	public CloseableIterator<Entry<Object, Object>> entries(String keyspace) {
 		return new ForwardingCloseableIterator<>(getKeySpaceMap(keyspace).entrySet().iterator());
 	}
 
 	/*
 	 * (non-Javadoc)
-	 * @see org.springframework.data.keyvalue.core.KeyValueAdapter#deleteAllOf(java.io.Serializable)
+	 * @see org.springframework.data.keyvalue.core.KeyValueAdapter#deleteAllOf(java.lang.String)
 	 */
 	@Override
-	public void deleteAllOf(Serializable keyspace) {
+	public void deleteAllOf(String keyspace) {
 		getKeySpaceMap(keyspace).clear();
 	}
 
@@ -186,11 +185,11 @@ public class MapKeyValueAdapter extends AbstractKeyValueAdapter {
 	 * @param keyspace must not be {@literal null}.
 	 * @return
 	 */
-	protected Map<Serializable, Object> getKeySpaceMap(Serializable keyspace) {
+	protected Map<Object, Object> getKeySpaceMap(String keyspace) {
 
 		Assert.notNull(keyspace, "Collection must not be null for lookup.");
 
-		Map<Serializable, Object> map = store.get(keyspace);
+		Map<Object, Object> map = store.get(keyspace);
 
 		if (map != null) {
 			return map;
@@ -200,7 +199,7 @@ public class MapKeyValueAdapter extends AbstractKeyValueAdapter {
 		return store.get(keyspace);
 	}
 
-	private void addMapForKeySpace(Serializable keyspace) {
-		store.put(keyspace, CollectionFactory.<Serializable, Object> createMap(keySpaceMapType, 1000));
+	private void addMapForKeySpace(String keyspace) {
+		store.put(keyspace, CollectionFactory.createMap(keySpaceMapType, 1000));
 	}
 }

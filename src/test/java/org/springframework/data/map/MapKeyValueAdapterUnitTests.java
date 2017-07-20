@@ -22,7 +22,6 @@ import static org.hamcrest.core.IsNull.*;
 import static org.junit.Assert.*;
 import static org.springframework.data.keyvalue.test.util.IsEntry.*;
 
-import java.io.Serializable;
 import java.util.Map;
 
 import org.junit.Before;
@@ -148,7 +147,7 @@ public class MapKeyValueAdapterUnitTests {
 		adapter.put("1", object1, COLLECTION_1);
 		adapter.put("2", object2, COLLECTION_1);
 
-		CloseableIterator<Map.Entry<Serializable, Object>> iterator = adapter.entries(COLLECTION_1);
+		CloseableIterator<Map.Entry<Object, Object>> iterator = adapter.entries(COLLECTION_1);
 
 		assertThat(iterator.next(), isEntry("1", object1));
 		assertThat(iterator.next(), isEntry("2", object2));
@@ -166,7 +165,7 @@ public class MapKeyValueAdapterUnitTests {
 		adapter.put("1", object1, COLLECTION_1);
 		adapter.put("2", object2, COLLECTION_2);
 
-		CloseableIterator<Map.Entry<Serializable, Object>> iterator = adapter.entries(COLLECTION_1);
+		CloseableIterator<Map.Entry<Object, Object>> iterator = adapter.entries(COLLECTION_1);
 
 		assertThat(iterator.next(), isEntry("1", object1));
 		assertThat(iterator.hasNext(), is(false));

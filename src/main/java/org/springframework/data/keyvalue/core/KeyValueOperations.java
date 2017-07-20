@@ -1,5 +1,5 @@
 /*
- * Copyright 2014 the original author or authors.
+ * Copyright 2014-2017 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,7 +15,6 @@
  */
 package org.springframework.data.keyvalue.core;
 
-import java.io.Serializable;
 import java.util.Optional;
 
 import org.springframework.beans.factory.DisposableBean;
@@ -45,7 +44,7 @@ public interface KeyValueOperations extends DisposableBean {
 	 * @param id must not be {@literal null}.
 	 * @param objectToInsert must not be {@literal null}.
 	 */
-	void insert(Serializable id, Object objectToInsert);
+	void insert(Object id, Object objectToInsert);
 
 	/**
 	 * Get all elements of given type. Respects {@link KeySpace} if present and therefore returns all elements that can be
@@ -74,7 +73,7 @@ public interface KeyValueOperations extends DisposableBean {
 	 * @param type must not be {@literal null}.
 	 * @return null if not found.
 	 */
-	<T> Optional<T> findById(Serializable id, Class<T> type);
+	<T> Optional<T> findById(Object id, Class<T> type);
 
 	/**
 	 * Execute operation against underlying store.
@@ -126,7 +125,7 @@ public interface KeyValueOperations extends DisposableBean {
 	 * @param id must not be {@literal null}.
 	 * @param objectToUpdate must not be {@literal null}.
 	 */
-	void update(Serializable id, Object objectToUpdate);
+	void update(Object id, Object objectToUpdate);
 
 	/**
 	 * Remove all elements of type. Respects {@link KeySpace} if present and therefore removes all elements that can be
@@ -149,7 +148,7 @@ public interface KeyValueOperations extends DisposableBean {
 	 * @param type must not be {@literal null}.
 	 * @return the deleted item or {@literal null} if no match found.
 	 */
-	<T> T delete(Serializable id, Class<T> type);
+	<T> T delete(Object id, Class<T> type);
 
 	/**
 	 * Total number of elements with given type available. Respects {@link KeySpace} if present and therefore counts all

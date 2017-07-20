@@ -15,8 +15,6 @@
  */
 package org.springframework.data.keyvalue.core.event;
 
-import java.io.Serializable;
-
 import org.springframework.context.ApplicationEvent;
 
 /**
@@ -60,7 +58,7 @@ public class KeyValueEvent<T> extends ApplicationEvent {
 	 * @param type
 	 * @return
 	 */
-	public static <T> BeforeGetEvent<T> beforeGet(Serializable id, String keySpace, Class<T> type) {
+	public static <T> BeforeGetEvent<T> beforeGet(Object id, String keySpace, Class<T> type) {
 		return new BeforeGetEvent<>(id, keySpace, type);
 	}
 
@@ -73,7 +71,7 @@ public class KeyValueEvent<T> extends ApplicationEvent {
 	 * @param value
 	 * @return
 	 */
-	public static <T> AfterGetEvent<T> afterGet(Serializable id, String keySpace, Class<T> type, T value) {
+	public static <T> AfterGetEvent<T> afterGet(Object id, String keySpace, Class<T> type, T value) {
 		return new AfterGetEvent<>(id, keySpace, type, value);
 	}
 
@@ -86,7 +84,7 @@ public class KeyValueEvent<T> extends ApplicationEvent {
 	 * @param value
 	 * @return
 	 */
-	public static <T> BeforeInsertEvent<T> beforeInsert(Serializable id, String keySpace, Class<? extends T> type, T value) {
+	public static <T> BeforeInsertEvent<T> beforeInsert(Object id, String keySpace, Class<? extends T> type, T value) {
 		return new BeforeInsertEvent<>(id, keySpace, type, value);
 	}
 
@@ -99,7 +97,7 @@ public class KeyValueEvent<T> extends ApplicationEvent {
 	 * @param value
 	 * @return
 	 */
-	public static <T> AfterInsertEvent<T> afterInsert(Serializable id, String keySpace, Class<? extends T> type, T value) {
+	public static <T> AfterInsertEvent<T> afterInsert(Object id, String keySpace, Class<? extends T> type, T value) {
 		return new AfterInsertEvent<>(id, keySpace, type, value);
 	}
 
@@ -112,7 +110,7 @@ public class KeyValueEvent<T> extends ApplicationEvent {
 	 * @param value
 	 * @return
 	 */
-	public static <T> BeforeUpdateEvent<T> beforeUpdate(Serializable id, String keySpace, Class<? extends T> type, T value) {
+	public static <T> BeforeUpdateEvent<T> beforeUpdate(Object id, String keySpace, Class<? extends T> type, T value) {
 		return new BeforeUpdateEvent<>(id, keySpace, type, value);
 	}
 
@@ -126,8 +124,8 @@ public class KeyValueEvent<T> extends ApplicationEvent {
 	 * @param previousValue
 	 * @return
 	 */
-	public static <T> AfterUpdateEvent<T> afterUpdate(Serializable id, String keySpace, Class<? extends T> type,
-			T actualValue, Object previousValue) {
+	public static <T> AfterUpdateEvent<T> afterUpdate(Object id, String keySpace, Class<? extends T> type, T actualValue,
+			Object previousValue) {
 		return new AfterUpdateEvent<>(id, keySpace, type, actualValue, previousValue);
 	}
 
@@ -161,7 +159,7 @@ public class KeyValueEvent<T> extends ApplicationEvent {
 	 * @param type
 	 * @return
 	 */
-	public static <T> BeforeDeleteEvent<T> beforeDelete(Serializable id, String keySpace, Class<? extends T> type) {
+	public static <T> BeforeDeleteEvent<T> beforeDelete(Object id, String keySpace, Class<? extends T> type) {
 		return new BeforeDeleteEvent<>(id, keySpace, type);
 	}
 
@@ -174,7 +172,7 @@ public class KeyValueEvent<T> extends ApplicationEvent {
 	 * @param value
 	 * @return
 	 */
-	public static <T> AfterDeleteEvent<T> afterDelete(Serializable id, String keySpace, Class<? extends T> type, T value) {
+	public static <T> AfterDeleteEvent<T> afterDelete(Object id, String keySpace, Class<? extends T> type, T value) {
 		return new AfterDeleteEvent<>(id, keySpace, type, value);
 	}
 
@@ -185,16 +183,17 @@ public class KeyValueEvent<T> extends ApplicationEvent {
 	@SuppressWarnings("serial")
 	abstract static class KeyBasedEvent<T> extends KeyValueEvent<T> {
 
-		private Serializable key;
+		private Object key;
 		private Class<? extends T> type;
 
-		protected KeyBasedEvent(Serializable key, String keySpace, Class<? extends T> type) {
+		protected KeyBasedEvent(Object key, String keySpace, Class<? extends T> type) {
 
 			super(type, keySpace);
 			this.key = key;
+			this.type = type;
 		}
 
-		public Serializable getKey() {
+		public Object getKey() {
 			return key;
 		}
 
@@ -203,7 +202,7 @@ public class KeyValueEvent<T> extends ApplicationEvent {
 		 * @see java.util.EventObject#getSource()
 		 */
 		@Override
-		public Serializable getSource() {
+		public Object getSource() {
 			return getKey();
 		}
 
@@ -226,7 +225,7 @@ public class KeyValueEvent<T> extends ApplicationEvent {
 
 		private final T payload;
 
-		public KeyBasedEventWithPayload(Serializable key, String keySpace, Class<? extends T> type, T payload) {
+		public KeyBasedEventWithPayload(Object key, String keySpace, Class<? extends T> type, T payload) {
 			super(key, keySpace, type);
 			this.payload = payload;
 		}
@@ -250,7 +249,7 @@ public class KeyValueEvent<T> extends ApplicationEvent {
 	@SuppressWarnings("serial")
 	public static class BeforeGetEvent<T> extends KeyBasedEvent<T> {
 
-		protected BeforeGetEvent(Serializable key, String keySpace, Class<T> type) {
+		protected BeforeGetEvent(Object key, String keySpace, Class<T> type) {
 			super(key, keySpace, type);
 		}
 
@@ -265,7 +264,7 @@ public class KeyValueEvent<T> extends ApplicationEvent {
 	@SuppressWarnings("serial")
 	public static class AfterGetEvent<T> extends KeyBasedEventWithPayload<T> {
 
-		protected AfterGetEvent(Serializable key, String keyspace, Class<T> type, T payload) {
+		protected AfterGetEvent(Object key, String keyspace, Class<T> type, T payload) {
 			super(key, keyspace, type, payload);
 		}
 
@@ -280,7 +279,7 @@ public class KeyValueEvent<T> extends ApplicationEvent {
 	@SuppressWarnings("serial")
 	public static class BeforeInsertEvent<T> extends KeyBasedEventWithPayload<T> {
 
-		public BeforeInsertEvent(Serializable key, String keySpace, Class<? extends T> type, T payload) {
+		public BeforeInsertEvent(Object key, String keySpace, Class<? extends T> type, T payload) {
 			super(key, keySpace, type, payload);
 
 		}
@@ -295,7 +294,7 @@ public class KeyValueEvent<T> extends ApplicationEvent {
 	@SuppressWarnings("serial")
 	public static class AfterInsertEvent<T> extends KeyBasedEventWithPayload<T> {
 
-		public AfterInsertEvent(Serializable key, String keySpace, Class<? extends T> type, T payload) {
+		public AfterInsertEvent(Object key, String keySpace, Class<? extends T> type, T payload) {
 			super(key, keySpace, type, payload);
 		}
 	}
@@ -309,7 +308,7 @@ public class KeyValueEvent<T> extends ApplicationEvent {
 	@SuppressWarnings("serial")
 	public static class BeforeUpdateEvent<T> extends KeyBasedEventWithPayload<T> {
 
-		public BeforeUpdateEvent(Serializable key, String keySpace, Class<? extends T> type, T payload) {
+		public BeforeUpdateEvent(Object key, String keySpace, Class<? extends T> type, T payload) {
 			super(key, keySpace, type, payload);
 		}
 	}
@@ -325,7 +324,7 @@ public class KeyValueEvent<T> extends ApplicationEvent {
 
 		private final Object existing;
 
-		public AfterUpdateEvent(Serializable key, String keySpace, Class<? extends T> type, T payload, Object existing) {
+		public AfterUpdateEvent(Object key, String keySpace, Class<? extends T> type, T payload, Object existing) {
 			super(key, keySpace, type, payload);
 			this.existing = existing;
 		}
@@ -358,7 +357,7 @@ public class KeyValueEvent<T> extends ApplicationEvent {
 	@SuppressWarnings("serial")
 	public static class BeforeDeleteEvent<T> extends KeyBasedEvent<T> {
 
-		public BeforeDeleteEvent(Serializable key, String keySpace, Class<? extends T> type) {
+		public BeforeDeleteEvent(Object key, String keySpace, Class<? extends T> type) {
 			super(key, keySpace, type);
 		}
 	}
@@ -372,7 +371,7 @@ public class KeyValueEvent<T> extends ApplicationEvent {
 	@SuppressWarnings("serial")
 	public static class AfterDeleteEvent<T> extends KeyBasedEventWithPayload<T> {
 
-		public AfterDeleteEvent(Serializable key, String keySpace, Class<? extends T> type, T payload) {
+		public AfterDeleteEvent(Object key, String keySpace, Class<? extends T> type, T payload) {
 			super(key, keySpace, type, payload);
 		}
 	}

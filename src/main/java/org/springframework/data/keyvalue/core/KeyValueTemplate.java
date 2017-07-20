@@ -15,7 +15,6 @@
  */
 package org.springframework.data.keyvalue.core;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -38,7 +37,6 @@ import org.springframework.data.mapping.context.MappingContext;
 import org.springframework.util.Assert;
 import org.springframework.util.ClassUtils;
 import org.springframework.util.CollectionUtils;
-import org.springframework.util.ObjectUtils;
 
 /**
  * Basic implementation of {@link KeyValueOperations}.
@@ -135,11 +133,10 @@ public class KeyValueTemplate implements KeyValueOperations, ApplicationEventPub
 		KeyValuePersistentEntity<?, ?> entity = getKeyValuePersistentEntity(objectToInsert);
 
 		GeneratingIdAccessor generatingIdAccessor = new GeneratingIdAccessor(entity.getPropertyAccessor(objectToInsert),
-				entity.getIdProperty(),
-				identifierGenerator);
+				entity.getIdProperty(), identifierGenerator);
 		Object id = generatingIdAccessor.getOrGenerateIdentifier();
 
-		insert((Serializable) id, objectToInsert);
+		insert(id, objectToInsert);
 		return objectToInsert;
 	}
 
@@ -149,10 +146,10 @@ public class KeyValueTemplate implements KeyValueOperations, ApplicationEventPub
 
 	/*
 	 * (non-Javadoc)
-	 * @see org.springframework.data.keyvalue.core.KeyValueOperations#insert(java.io.Serializable, java.lang.Object)
+	 * @see org.springframework.data.keyvalue.core.KeyValueOperations#insert(java.lang.Object, java.lang.Object)
 	 */
 	@Override
-	public void insert(final Serializable id, final Object objectToInsert) {
+	public void insert(final Object id, final Object objectToInsert) {
 
 		Assert.notNull(id, "Id for object to be inserted must not be null!");
 		Assert.notNull(objectToInsert, "Object to be inserted must not be null!");
@@ -194,15 +191,15 @@ public class KeyValueTemplate implements KeyValueOperations, ApplicationEventPub
 					String.format("Cannot determine id for type %s", ClassUtils.getUserClass(objectToUpdate)));
 		}
 
-		update((Serializable) entity.getIdentifierAccessor(objectToUpdate).getRequiredIdentifier(), objectToUpdate);
+		update(entity.getIdentifierAccessor(objectToUpdate).getRequiredIdentifier(), objectToUpdate);
 	}
 
 	/*
 	 * (non-Javadoc)
-	 * @see org.springframework.data.keyvalue.core.KeyValueOperations#update(java.io.Serializable, java.lang.Object)
+	 * @see org.springframework.data.keyvalue.core.KeyValueOperations#update(java.lang.Object, java.lang.Object)
 	 */
 	@Override
-	public void update(final Serializable id, final Object objectToUpdate) {
+	public void update(final Object id, final Object objectToUpdate) {
 
 		Assert.notNull(id, "Id for object to be inserted must not be null!");
 		Assert.notNull(objectToUpdate, "Object to be updated must not be null!");
@@ -258,10 +255,10 @@ public class KeyValueTemplate implements KeyValueOperations, ApplicationEventPub
 
 	/*
 	 * (non-Javadoc)
-	 * @see org.springframework.data.keyvalue.core.KeyValueOperations#findById(java.io.Serializable, java.lang.Class)
+	 * @see org.springframework.data.keyvalue.core.KeyValueOperations#findById(java.lang.Object, java.lang.Class)
 	 */
 	@Override
-	public <T> Optional<T> findById(final Serializable id, final Class<T> type) {
+	public <T> Optional<T> findById(final Object id, final Class<T> type) {
 
 		Assert.notNull(id, "Id for object to be inserted must not be null!");
 		Assert.notNull(type, "Type to fetch must not be null!");
@@ -328,15 +325,15 @@ public class KeyValueTemplate implements KeyValueOperations, ApplicationEventPub
 		Class<T> type = (Class<T>) ClassUtils.getUserClass(objectToDelete);
 		KeyValuePersistentEntity<?, ?> entity = getKeyValuePersistentEntity(objectToDelete);
 
-		return delete((Serializable) entity.getIdentifierAccessor(objectToDelete).getIdentifier(), type);
+		return delete(entity.getIdentifierAccessor(objectToDelete).getIdentifier(), type);
 	}
 
 	/*
 	 * (non-Javadoc)
-	 * @see org.springframework.data.keyvalue.core.KeyValueOperations#delete(java.io.Serializable, java.lang.Class)
+	 * @see org.springframework.data.keyvalue.core.KeyValueOperations#delete(java.lang.Object, java.lang.Class)
 	 */
 	@Override
-	public <T> T delete(final Serializable id, final Class<T> type) {
+	public <T> T delete(final Object id, final Class<T> type) {
 
 		Assert.notNull(id, "Id for object to be deleted must not be null!");
 		Assert.notNull(type, "Type to delete must not be null!");

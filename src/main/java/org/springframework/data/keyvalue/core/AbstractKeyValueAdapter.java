@@ -15,7 +15,6 @@
  */
 package org.springframework.data.keyvalue.core;
 
-import java.io.Serializable;
 import java.util.Collection;
 
 import org.springframework.data.keyvalue.core.query.KeyValueQuery;
@@ -59,46 +58,46 @@ public abstract class AbstractKeyValueAdapter implements KeyValueAdapter {
 
 	/*
 	 * (non-Javadoc)
-	 * @see org.springframework.data.keyvalue.core.KeyValueAdapter#get(java.io.Serializable, java.io.Serializable, java.lang.Class)
+	 * @see org.springframework.data.keyvalue.core.KeyValueAdapter#get(java.lang.Object, java.lang.String, java.lang.Class)
 	 */
 	@Override
-	public <T> T get(Serializable id, Serializable keyspace, Class<T> type) {
+	public <T> T get(Object id, String keyspace, Class<T> type) {
 		return (T) get(id, keyspace);
 	}
 
 	/*
 	 * (non-Javadoc)
-	 * @see org.springframework.data.keyvalue.core.KeyValueAdapter#get(java.io.Serializable, java.io.Serializable, java.lang.Class)
+	 * @see org.springframework.data.keyvalue.core.KeyValueAdapter#delete(java.lang.Object, java.lang.String, java.lang.Class)
 	 */
 	@Override
-	public <T> T delete(Serializable id, Serializable keyspace, Class<T> type) {
+	public <T> T delete(Object id, String keyspace, Class<T> type) {
 		return (T) delete(id, keyspace);
 	}
 
 	/*
 	 * (non-Javadoc)
-	 * @see org.springframework.data.keyvalue.core.KeyValueAdapter#get(java.io.Serializable, java.io.Serializable, java.lang.Class)
+	 * @see org.springframework.data.keyvalue.core.KeyValueAdapter#find(org.springframework.data.keyvalue.core.query.KeyValueQuery, java.lang.String, java.lang.Class)
 	 */
 	@Override
-	public <T> Iterable<T> find(KeyValueQuery<?> query, Serializable keyspace, Class<T> type) {
+	public <T> Iterable<T> find(KeyValueQuery<?> query, String keyspace, Class<T> type) {
 		return engine.execute(query, keyspace, type);
 	}
 
 	/*
 	 * (non-Javadoc)
-	 * @see org.springframework.data.keyvalue.core.KeyValueAdapter#find(org.springframework.data.keyvalue.core.query.KeyValueQuery, java.io.Serializable)
+	 * @see org.springframework.data.keyvalue.core.KeyValueAdapter#find(org.springframework.data.keyvalue.core.query.KeyValueQuery, java.lang.String)
 	 */
 	@Override
-	public Collection<?> find(KeyValueQuery<?> query, Serializable keyspace) {
+	public Collection<?> find(KeyValueQuery<?> query, String keyspace) {
 		return engine.execute(query, keyspace);
 	}
 
 	/*
 	 * (non-Javadoc)
-	 * @see org.springframework.data.keyvalue.core.KeyValueAdapter#count(org.springframework.data.keyvalue.core.query.KeyValueQuery, java.io.Serializable)
+	 * @see org.springframework.data.keyvalue.core.KeyValueAdapter#count(org.springframework.data.keyvalue.core.query.KeyValueQuery, java.lang.String)
 	 */
 	@Override
-	public long count(KeyValueQuery<?> query, Serializable keyspace) {
+	public long count(KeyValueQuery<?> query, String keyspace) {
 		return engine.count(query, keyspace);
 	}
 }

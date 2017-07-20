@@ -15,7 +15,6 @@
  */
 package org.springframework.data.keyvalue.core;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -48,19 +47,19 @@ class SpelQueryEngine<T extends KeyValueAdapter> extends QueryEngine<KeyValueAda
 
 	/*
 	 * (non-Javadoc)
-	 * @see org.springframework.data.keyvalue.core.QueryEngine#execute(java.lang.Object, java.lang.Object, int, int, java.io.Serializable)
+	 * @see org.springframework.data.keyvalue.core.QueryEngine#execute(java.lang.Object, java.lang.Object, int, int, java.lang.String)
 	 */
 	@Override
-	public Collection<?> execute(SpelCriteria criteria, Comparator<?> sort, long offset, int rows, Serializable keyspace) {
+	public Collection<?> execute(SpelCriteria criteria, Comparator<?> sort, long offset, int rows, String keyspace) {
 		return sortAndFilterMatchingRange(getAdapter().getAllOf(keyspace), criteria, sort, offset, rows);
 	}
 
 	/*
 	 * (non-Javadoc)
-	 * @see org.springframework.data.keyvalue.core.QueryEngine#count(java.lang.Object, java.io.Serializable)
+	 * @see org.springframework.data.keyvalue.core.QueryEngine#count(java.lang.Object, java.lang.String)
 	 */
 	@Override
-	public long count(SpelCriteria criteria, Serializable keyspace) {
+	public long count(SpelCriteria criteria, String keyspace) {
 		return filterMatchingRange(getAdapter().getAllOf(keyspace), criteria, -1, -1).size();
 	}
 
@@ -93,8 +92,8 @@ class SpelQueryEngine<T extends KeyValueAdapter> extends QueryEngine<KeyValueAda
 					matches = criteria.getExpression().getValue(criteria.getContext(), candidate, Boolean.class);
 				} catch (SpelEvaluationException e) {
 					criteria.getContext().setVariable("it", candidate);
-					matches = criteria.getExpression().getValue(criteria.getContext()) == null ? false : criteria.getExpression()
-							.getValue(criteria.getContext(), Boolean.class);
+					matches = criteria.getExpression().getValue(criteria.getContext()) == null ? false
+							: criteria.getExpression().getValue(criteria.getContext(), Boolean.class);
 				}
 			}
 

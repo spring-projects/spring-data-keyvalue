@@ -1,5 +1,5 @@
 /*
- * Copyright 2014-2016 the original author or authors.
+ * Copyright 2014-2017 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,7 +15,6 @@
  */
 package org.springframework.data.keyvalue.core;
 
-import java.io.Serializable;
 import java.util.Collection;
 
 import org.springframework.data.keyvalue.core.query.KeyValueQuery;
@@ -48,7 +47,7 @@ public abstract class QueryEngine<ADAPTER extends KeyValueAdapter, CRITERIA, SOR
 	 * @param keyspace
 	 * @return
 	 */
-	public Collection<?> execute(KeyValueQuery<?> query, Serializable keyspace) {
+	public Collection<?> execute(KeyValueQuery<?> query, String keyspace) {
 
 		CRITERIA criteria = this.criteriaAccessor != null ? this.criteriaAccessor.resolve(query) : null;
 		SORT sort = this.sortAccessor != null ? this.sortAccessor.resolve(query) : null;
@@ -63,7 +62,7 @@ public abstract class QueryEngine<ADAPTER extends KeyValueAdapter, CRITERIA, SOR
 	 * @param keyspace
 	 * @return
 	 */
-	public <T> Collection<T> execute(KeyValueQuery<?> query, Serializable keyspace, Class<T> type) {
+	public <T> Collection<T> execute(KeyValueQuery<?> query, String keyspace, Class<T> type) {
 
 		CRITERIA criteria = this.criteriaAccessor != null ? this.criteriaAccessor.resolve(query) : null;
 		SORT sort = this.sortAccessor != null ? this.sortAccessor.resolve(query) : null;
@@ -78,7 +77,7 @@ public abstract class QueryEngine<ADAPTER extends KeyValueAdapter, CRITERIA, SOR
 	 * @param keyspace
 	 * @return
 	 */
-	public long count(KeyValueQuery<?> query, Serializable keyspace) {
+	public long count(KeyValueQuery<?> query, String keyspace) {
 
 		CRITERIA criteria = this.criteriaAccessor != null ? this.criteriaAccessor.resolve(query) : null;
 		return count(criteria, keyspace);
@@ -92,7 +91,7 @@ public abstract class QueryEngine<ADAPTER extends KeyValueAdapter, CRITERIA, SOR
 	 * @param keyspace
 	 * @return
 	 */
-	public abstract Collection<?> execute(CRITERIA criteria, SORT sort, long offset, int rows, Serializable keyspace);
+	public abstract Collection<?> execute(CRITERIA criteria, SORT sort, long offset, int rows, String keyspace);
 
 	/**
 	 * @param criteria
@@ -104,7 +103,7 @@ public abstract class QueryEngine<ADAPTER extends KeyValueAdapter, CRITERIA, SOR
 	 * @return
 	 * @since 1.1
 	 */
-	public <T> Collection<T> execute(CRITERIA criteria, SORT sort, long offset, int rows, Serializable keyspace,
+	public <T> Collection<T> execute(CRITERIA criteria, SORT sort, long offset, int rows, String keyspace,
 			Class<T> type) {
 		return (Collection<T>) execute(criteria, sort, offset, rows, keyspace);
 	}
@@ -114,7 +113,7 @@ public abstract class QueryEngine<ADAPTER extends KeyValueAdapter, CRITERIA, SOR
 	 * @param keyspace
 	 * @return
 	 */
-	public abstract long count(CRITERIA criteria, Serializable keyspace);
+	public abstract long count(CRITERIA criteria, String keyspace);
 
 	/**
 	 * Get the {@link KeyValueAdapter} used.
