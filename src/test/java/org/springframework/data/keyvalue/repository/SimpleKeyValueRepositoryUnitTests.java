@@ -22,7 +22,9 @@ import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.*;
 
-import java.io.Serializable;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
 import java.util.Arrays;
 import java.util.Optional;
 
@@ -86,7 +88,7 @@ public class SimpleKeyValueRepositoryUnitTests {
 	public void multipleSave() {
 
 		Foo one = new Foo("one");
-		Foo two = new Foo("one");
+		Foo two = new Foo("two");
 
 		repo.saveAll(Arrays.asList(one, two));
 		verify(opsMock, times(1)).insert(eq(one));
@@ -121,25 +123,28 @@ public class SimpleKeyValueRepositoryUnitTests {
 	}
 
 	@Test // DATACMNS-525
+	@SuppressWarnings("unchecked")
 	public void findAllIds() {
 
-		when(opsMock.findById(any(Serializable.class), any(Class.class))).thenReturn(Optional.empty());
+		when(opsMock.findById(any(), any(Class.class))).thenReturn(Optional.empty());
 		repo.findAllById(Arrays.asList("one", "two", "three"));
 
 		verify(opsMock, times(3)).findById(anyString(), eq(Foo.class));
 	}
 
 	@Test // DATAKV-186
+	@SuppressWarnings("unchecked")
 	public void existsByIdReturnsFalseForEmptyOptional() {
 
-		when(opsMock.findById(any(Serializable.class), any(Class.class))).thenReturn(Optional.empty());
+		when(opsMock.findById(any(), any(Class.class))).thenReturn(Optional.empty());
 		assertThat(repo.existsById("one"), is(false));
 	}
 
 	@Test // DATAKV-186
+	@SuppressWarnings("unchecked")
 	public void existsByIdReturnsTrueWhenOptionalValuePresent() {
 
-		when(opsMock.findById(any(Serializable.class), any(Class.class))).thenReturn(Optional.of(new Foo()));
+		when(opsMock.findById(any(), any(Class.class))).thenReturn(Optional.of(new Foo()));
 		assertTrue(repo.existsById("one"));
 	}
 
@@ -168,6 +173,8 @@ public class SimpleKeyValueRepositoryUnitTests {
 		verify(opsMock, times(1)).findAll(eq(Foo.class));
 	}
 
+	@Data
+	@NoArgsConstructor
 	static class Foo {
 
 		private @Id String id;
@@ -175,65 +182,20 @@ public class SimpleKeyValueRepositoryUnitTests {
 		private String name;
 		private Bar bar;
 
-		public Foo() {
-
-		}
-
 		public Foo(String name) {
 			this.name = name;
 		}
-
-		public String getId() {
-			return id;
-		}
-
-		public void setId(String id) {
-			this.id = id;
-		}
-
-		public Long getLongValue() {
-			return longValue;
-		}
-
-		public void setLongValue(Long longValue) {
-			this.longValue = longValue;
-		}
-
-		public String getName() {
-			return name;
-		}
-
-		public void setName(String name) {
-			this.name = name;
-		}
-
-		public Bar getBar() {
-			return bar;
-		}
-
-		public void setBar(Bar bar) {
-			this.bar = bar;
-		}
-
 	}
 
+	@Data
 	static class Bar {
 
 		private String bar;
-
-		public String getBar() {
-			return bar;
-		}
-
-		public void setBar(String bar) {
-			this.bar = bar;
-		}
 	}
 
 	@Persistent
 	static class WithNumericId {
 
 		@Id Integer id;
-
 	}
 }

@@ -20,7 +20,7 @@ interface KeyValueOperations {
 
     void delete(Class<?> type);                                   <3>
 
-    <T> T findById(Serializable id, Class<T> type);               <4>
+    <T> T findById(Object id, Class<T> type);                     <4>
 
     <T> Iterable<T> findAllOf(Class<T> type);                     <5>
 

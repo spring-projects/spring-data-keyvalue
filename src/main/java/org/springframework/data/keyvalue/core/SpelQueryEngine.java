@@ -17,7 +17,6 @@ package org.springframework.data.keyvalue.core;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
@@ -32,9 +31,10 @@ import org.springframework.expression.spel.standard.SpelExpressionParser;
  *
  * @author Christoph Strobl
  * @author Oliver Gierke
+ * @author Mark Paluch
  * @param <T>
  */
-class SpelQueryEngine<T extends KeyValueAdapter> extends QueryEngine<KeyValueAdapter, SpelCriteria, Comparator<?>> {
+class SpelQueryEngine extends QueryEngine<KeyValueAdapter, SpelCriteria, Comparator<?>> {
 
 	private static final SpelExpressionParser PARSER = new SpelExpressionParser();
 
@@ -63,13 +63,13 @@ class SpelQueryEngine<T extends KeyValueAdapter> extends QueryEngine<KeyValueAda
 		return filterMatchingRange(getAdapter().getAllOf(keyspace), criteria, -1, -1).size();
 	}
 
-	@SuppressWarnings({ "unchecked", "rawtypes" })
+	@SuppressWarnings("unchecked")
 	private List<?> sortAndFilterMatchingRange(Iterable<?> source, SpelCriteria criteria, Comparator sort, long offset,
 			int rows) {
 
 		List<?> tmp = IterableConverter.toList(source);
 		if (sort != null) {
-			Collections.sort(tmp, sort);
+			tmp.sort(sort);
 		}
 
 		return filterMatchingRange(tmp, criteria, offset, rows);

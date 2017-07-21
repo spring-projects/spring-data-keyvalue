@@ -67,7 +67,7 @@ public class KeyValueTemplate implements KeyValueOperations, ApplicationEventPub
 	 * @param adapter must not be {@literal null}.
 	 */
 	public KeyValueTemplate(KeyValueAdapter adapter) {
-		this(adapter, new KeyValueMappingContext());
+		this(adapter, new KeyValueMappingContext<>());
 	}
 
 	/**
@@ -149,28 +149,24 @@ public class KeyValueTemplate implements KeyValueOperations, ApplicationEventPub
 	 * @see org.springframework.data.keyvalue.core.KeyValueOperations#insert(java.lang.Object, java.lang.Object)
 	 */
 	@Override
-	public void insert(final Object id, final Object objectToInsert) {
+	public void insert(Object id, Object objectToInsert) {
 
 		Assert.notNull(id, "Id for object to be inserted must not be null!");
 		Assert.notNull(objectToInsert, "Object to be inserted must not be null!");
 
-		final String keyspace = resolveKeySpace(objectToInsert.getClass());
+		String keyspace = resolveKeySpace(objectToInsert.getClass());
 
 		potentiallyPublishEvent(KeyValueEvent.beforeInsert(id, keyspace, objectToInsert.getClass(), objectToInsert));
 
-		execute(new KeyValueCallback<Void>() {
+		execute((KeyValueCallback<Void>) adapter -> {
 
-			@Override
-			public Void doInKeyValue(KeyValueAdapter adapter) {
-
-				if (adapter.contains(id, keyspace)) {
-					throw new DuplicateKeyException(
-							String.format("Cannot insert existing object with id %s!. Please use update.", id));
-				}
-
-				adapter.put(id, objectToInsert, keyspace);
-				return null;
+			if (adapter.contains(id, keyspace)) {
+				throw new DuplicateKeyException(
+						String.format("Cannot insert existing object with id %s!. Please use update.", id));
 			}
+
+			adapter.put(id, objectToInsert, keyspace);
+			return null;
 		});
 
 		potentiallyPublishEvent(KeyValueEvent.afterInsert(id, keyspace, objectToInsert.getClass(), objectToInsert));
@@ -199,22 +195,16 @@ public class KeyValueTemplate implements KeyValueOperations, ApplicationEventPub
 	 * @see org.springframework.data.keyvalue.core.KeyValueOperations#update(java.lang.Object, java.lang.Object)
 	 */
 	@Override
-	public void update(final Object id, final Object objectToUpdate) {
+	public void update(Object id, Object objectToUpdate) {
 
 		Assert.notNull(id, "Id for object to be inserted must not be null!");
 		Assert.notNull(objectToUpdate, "Object to be updated must not be null!");
 
-		final String keyspace = resolveKeySpace(objectToUpdate.getClass());
+		String keyspace = resolveKeySpace(objectToUpdate.getClass());
 
 		potentiallyPublishEvent(KeyValueEvent.beforeUpdate(id, keyspace, objectToUpdate.getClass(), objectToUpdate));
 
-		Object existing = execute(new KeyValueCallback<Object>() {
-
-			@Override
-			public Object doInKeyValue(KeyValueAdapter adapter) {
-				return adapter.put(id, objectToUpdate, keyspace);
-			}
-		});
+		Object existing = execute(adapter -> adapter.put(id, objectToUpdate, keyspace));
 
 		potentiallyPublishEvent(
 				KeyValueEvent.afterUpdate(id, keyspace, objectToUpdate.getClass(), objectToUpdate, existing));
@@ -225,7 +215,7 @@ public class KeyValueTemplate implements KeyValueOperations, ApplicationEventPub
 	 * @see org.springframework.data.keyvalue.core.KeyValueOperations#findAllOf(java.lang.Class)
 	 */
 	@Override
-	public <T> Iterable<T> findAll(final Class<T> type) {
+	public <T> Iterable<T> findAll(Class<T> type) {
 
 		Assert.notNull(type, "Type to fetch must not be null!");
 
@@ -258,29 +248,24 @@ public class KeyValueTemplate implements KeyValueOperations, ApplicationEventPub
 	 * @see org.springframework.data.keyvalue.core.KeyValueOperations#findById(java.lang.Object, java.lang.Class)
 	 */
 	@Override
-	public <T> Optional<T> findById(final Object id, final Class<T> type) {
+	public <T> Optional<T> findById(Object id, Class<T> type) {
 
 		Assert.notNull(id, "Id for object to be inserted must not be null!");
 		Assert.notNull(type, "Type to fetch must not be null!");
 
-		final String keyspace = resolveKeySpace(type);
+		String keyspace = resolveKeySpace(type);
 
 		potentiallyPublishEvent(KeyValueEvent.beforeGet(id, keyspace, type));
 
-		T result = execute(new KeyValueCallback<T>() {
+		T result = execute(adapter -> {
 
-			@SuppressWarnings("unchecked")
-			@Override
-			public T doInKeyValue(KeyValueAdapter adapter) {
+			Object value = adapter.get(id, keyspace, type);
 
-				Object result = adapter.get(id, keyspace, type);
-
-				if (result == null || typeCheck(type, result)) {
-					return (T) result;
-				}
-
-				return null;
+			if (value == null || typeCheck(type, value)) {
+				return type.cast(value);
 			}
+
+			return null;
 		});
 
 		potentiallyPublishEvent(KeyValueEvent.afterGet(id, keyspace, type, result));
@@ -293,22 +278,18 @@ public class KeyValueTemplate implements KeyValueOperations, ApplicationEventPub
 	 * @see org.springframework.data.keyvalue.core.KeyValueOperations#delete(java.lang.Class)
 	 */
 	@Override
-	public void delete(final Class<?> type) {
+	public void delete(Class<?> type) {
 
 		Assert.notNull(type, "Type to delete must not be null!");
 
-		final String keyspace = resolveKeySpace(type);
+		String keyspace = resolveKeySpace(type);
 
 		potentiallyPublishEvent(KeyValueEvent.beforeDropKeySpace(keyspace, type));
 
-		execute(new KeyValueCallback<Void>() {
+		execute((KeyValueCallback<Void>) adapter -> {
 
-			@Override
-			public Void doInKeyValue(KeyValueAdapter adapter) {
-
-				adapter.deleteAllOf(keyspace);
-				return null;
-			}
+			adapter.deleteAllOf(keyspace);
+			return null;
 		});
 
 		potentiallyPublishEvent(KeyValueEvent.afterDropKeySpace(keyspace, type));
@@ -333,22 +314,16 @@ public class KeyValueTemplate implements KeyValueOperations, ApplicationEventPub
 	 * @see org.springframework.data.keyvalue.core.KeyValueOperations#delete(java.lang.Object, java.lang.Class)
 	 */
 	@Override
-	public <T> T delete(final Object id, final Class<T> type) {
+	public <T> T delete(Object id, Class<T> type) {
 
 		Assert.notNull(id, "Id for object to be deleted must not be null!");
 		Assert.notNull(type, "Type to delete must not be null!");
 
-		final String keyspace = resolveKeySpace(type);
+		String keyspace = resolveKeySpace(type);
 
 		potentiallyPublishEvent(KeyValueEvent.beforeDelete(id, keyspace, type));
 
-		T result = execute(new KeyValueCallback<T>() {
-
-			@Override
-			public T doInKeyValue(KeyValueAdapter adapter) {
-				return (T) adapter.delete(id, keyspace, type);
-			}
-		});
+		T result = execute(adapter -> (T) adapter.delete(id, keyspace, type));
 
 		potentiallyPublishEvent(KeyValueEvent.afterDelete(id, keyspace, type, result));
 
@@ -387,29 +362,24 @@ public class KeyValueTemplate implements KeyValueOperations, ApplicationEventPub
 	 * @see org.springframework.data.keyvalue.core.KeyValueOperations#find(org.springframework.data.keyvalue.core.query.KeyValueQuery, java.lang.Class)
 	 */
 	@Override
-	public <T> Iterable<T> find(final KeyValueQuery<?> query, final Class<T> type) {
+	public <T> Iterable<T> find(KeyValueQuery<?> query, Class<T> type) {
 
-		return execute(new KeyValueCallback<Iterable<T>>() {
+		return execute((KeyValueCallback<Iterable<T>>) adapter -> {
 
-			@SuppressWarnings("unchecked")
-			@Override
-			public Iterable<T> doInKeyValue(KeyValueAdapter adapter) {
-
-				Iterable<?> result = adapter.find(query, resolveKeySpace(type), type);
-				if (result == null) {
-					return Collections.emptySet();
-				}
-
-				List<T> filtered = new ArrayList<>();
-
-				for (Object candidate : result) {
-					if (typeCheck(type, candidate)) {
-						filtered.add((T) candidate);
-					}
-				}
-
-				return filtered;
+			Iterable<?> result = adapter.find(query, resolveKeySpace(type), type);
+			if (result == null) {
+				return Collections.emptySet();
 			}
+
+			List<T> filtered = new ArrayList<>();
+
+			for (Object candidate : result) {
+				if (typeCheck(type, candidate)) {
+					filtered.add(type.cast(candidate));
+				}
+			}
+
+			return filtered;
 		});
 	}
 
@@ -448,15 +418,9 @@ public class KeyValueTemplate implements KeyValueOperations, ApplicationEventPub
 	 * @see org.springframework.data.keyvalue.core.KeyValueOperations#count(org.springframework.data.keyvalue.core.query.KeyValueQuery, java.lang.Class)
 	 */
 	@Override
-	public long count(final KeyValueQuery<?> query, final Class<?> type) {
+	public long count(KeyValueQuery<?> query, Class<?> type) {
 
-		return execute(new KeyValueCallback<Long>() {
-
-			@Override
-			public Long doInKeyValue(KeyValueAdapter adapter) {
-				return adapter.count(query, resolveKeySpace(type));
-			}
-		});
+		return execute(adapter -> adapter.count(query, resolveKeySpace(type)));
 	}
 
 	/*
@@ -500,6 +464,6 @@ public class KeyValueTemplate implements KeyValueOperations, ApplicationEventPub
 	}
 
 	private static boolean typeCheck(Class<?> requiredType, Object candidate) {
-		return candidate == null ? true : ClassUtils.isAssignable(requiredType, candidate.getClass());
+		return candidate == null || ClassUtils.isAssignable(requiredType, candidate.getClass());
 	}
 }

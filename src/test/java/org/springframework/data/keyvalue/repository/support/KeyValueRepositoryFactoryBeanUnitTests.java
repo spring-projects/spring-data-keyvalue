@@ -19,8 +19,6 @@ import static org.hamcrest.CoreMatchers.*;
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
 
-import java.io.Serializable;
-
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -33,8 +31,9 @@ import org.springframework.data.repository.query.parser.AbstractQueryCreator;
 
 /**
  * Unit tests for {@link KeyValueRepositoryFactoryBean}.
- * 
+ *
  * @author Oliver Gierke
+ * @author Mark Paluch
  */
 public class KeyValueRepositoryFactoryBeanUnitTests {
 
@@ -44,7 +43,7 @@ public class KeyValueRepositoryFactoryBeanUnitTests {
 
 	@Before
 	public void setUp() {
-		this.factoryBean = new KeyValueRepositoryFactoryBean<Repository<Object, Serializable>, Object, Serializable>(
+		this.factoryBean = new KeyValueRepositoryFactoryBean<Repository<Object, Object>, Object, Object>(
 				SampleRepository.class);
 	}
 
@@ -87,8 +86,7 @@ public class KeyValueRepositoryFactoryBeanUnitTests {
 
 		Class<? extends AbstractQueryCreator<?, ?>> creatorType = (Class<? extends AbstractQueryCreator<?, ?>>) mock(
 				AbstractQueryCreator.class).getClass();
-		Class<? extends RepositoryQuery> queryType = (Class<? extends RepositoryQuery>) mock(KeyValuePartTreeQuery.class)
-				.getClass();
+		Class<? extends RepositoryQuery> queryType = mock(KeyValuePartTreeQuery.class).getClass();
 
 		factoryBean.setQueryCreator(creatorType);
 		factoryBean.setKeyValueOperations(mock(KeyValueOperations.class));
@@ -102,5 +100,5 @@ public class KeyValueRepositoryFactoryBeanUnitTests {
 		factoryBean.setQueryType(null);
 	}
 
-	interface SampleRepository extends Repository<Object, Serializable> {}
+	interface SampleRepository extends Repository<Object, Object> {}
 }

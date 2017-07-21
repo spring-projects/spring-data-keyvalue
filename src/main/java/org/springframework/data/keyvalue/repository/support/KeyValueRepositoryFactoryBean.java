@@ -1,5 +1,5 @@
 /*
- * Copyright 2014-2016 the original author or authors.
+ * Copyright 2014-2017 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,8 +15,6 @@
  */
 package org.springframework.data.keyvalue.repository.support;
 
-import java.io.Serializable;
-
 import org.springframework.data.keyvalue.core.KeyValueOperations;
 import org.springframework.data.keyvalue.repository.KeyValueRepository;
 import org.springframework.data.keyvalue.repository.config.QueryCreatorType;
@@ -30,11 +28,12 @@ import org.springframework.util.Assert;
 
 /**
  * {@link org.springframework.beans.factory.FactoryBean} to create {@link KeyValueRepository}.
- * 
+ *
  * @author Christoph Strobl
  * @author Oliver Gierke
+ * @author Mark Paluch
  */
-public class KeyValueRepositoryFactoryBean<T extends Repository<S, ID>, S, ID extends Serializable>
+public class KeyValueRepositoryFactoryBean<T extends Repository<S, ID>, S, ID>
 		extends RepositoryFactoryBeanSupport<T, S, ID> {
 
 	private KeyValueOperations operations;
@@ -43,7 +42,7 @@ public class KeyValueRepositoryFactoryBean<T extends Repository<S, ID>, S, ID ex
 
 	/**
 	 * Creates a new {@link KeyValueRepositoryFactoryBean} for the given repository interface.
-	 * 
+	 *
 	 * @param repositoryInterface must not be {@literal null}.
 	 */
 	public KeyValueRepositoryFactoryBean(Class<? extends T> repositoryInterface) {
@@ -52,7 +51,7 @@ public class KeyValueRepositoryFactoryBean<T extends Repository<S, ID>, S, ID ex
 
 	/**
 	 * Configures the {@link KeyValueOperations} to be used for the repositories.
-	 * 
+	 *
 	 * @param operations must not be {@literal null}.
 	 */
 	public void setKeyValueOperations(KeyValueOperations operations) {
@@ -73,7 +72,7 @@ public class KeyValueRepositoryFactoryBean<T extends Repository<S, ID>, S, ID ex
 
 	/**
 	 * Configures the {@link QueryCreatorType} to be used.
-	 * 
+	 *
 	 * @param queryCreator must not be {@literal null}.
 	 */
 	public void setQueryCreator(Class<? extends AbstractQueryCreator<?, ?>> queryCreator) {

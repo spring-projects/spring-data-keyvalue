@@ -45,6 +45,7 @@ import org.springframework.expression.spel.support.StandardEvaluationContext;
  *
  * @author Martin Macko
  * @author Oliver Gierke
+ * @author Mark Paluch
  */
 @RunWith(MockitoJUnitRunner.class)
 public class SpelQueryEngineUnitTests {
@@ -54,14 +55,14 @@ public class SpelQueryEngineUnitTests {
 
 	@Mock KeyValueAdapter adapter;
 
-	SpelQueryEngine<KeyValueAdapter> engine;
+	SpelQueryEngine engine;
 
 	Iterable<Person> people = Arrays.asList(BOB_WITH_FIRSTNAME, MIKE_WITHOUT_FIRSTNAME);
 
 	@Before
 	public void setUp() {
 
-		engine = new SpelQueryEngine<>();
+		engine = new SpelQueryEngine();
 		engine.registerAdapter(adapter);
 	}
 
@@ -102,7 +103,7 @@ public class SpelQueryEngineUnitTests {
 		return new SpelCriteria(creator.createQuery().getCriteria(), new StandardEvaluationContext(args));
 	}
 
-	static interface PersonRepository {
+	interface PersonRepository {
 		Person findByFirstname(String firstname);
 	}
 

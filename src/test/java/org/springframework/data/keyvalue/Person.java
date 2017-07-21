@@ -15,8 +15,6 @@
  */
 package org.springframework.data.keyvalue;
 
-import java.io.Serializable;
-
 import org.springframework.data.annotation.Id;
 import org.springframework.util.ObjectUtils;
 
@@ -26,9 +24,7 @@ import com.querydsl.core.annotations.QueryEntity;
  * @author Christoph Strobl
  */
 @QueryEntity
-public class Person implements Serializable {
-
-	private static final long serialVersionUID = 4212763002445358314L;
+public class Person {
 
 	private @Id String id;
 	private String firstname;

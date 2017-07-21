@@ -24,6 +24,7 @@ import org.springframework.data.keyvalue.core.query.KeyValueQuery;
  * {@literal count} execution to.
  *
  * @author Christoph Strobl
+ * @author Mark Paluch
  */
 public abstract class AbstractKeyValueAdapter implements KeyValueAdapter {
 
@@ -43,7 +44,7 @@ public abstract class AbstractKeyValueAdapter implements KeyValueAdapter {
 	 */
 	protected AbstractKeyValueAdapter(QueryEngine<? extends KeyValueAdapter, ?, ?> engine) {
 
-		this.engine = engine != null ? engine : new SpelQueryEngine<>();
+		this.engine = engine != null ? engine : new SpelQueryEngine();
 		this.engine.registerAdapter(this);
 	}
 
@@ -62,7 +63,7 @@ public abstract class AbstractKeyValueAdapter implements KeyValueAdapter {
 	 */
 	@Override
 	public <T> T get(Object id, String keyspace, Class<T> type) {
-		return (T) get(id, keyspace);
+		return type.cast(get(id, keyspace));
 	}
 
 	/*
@@ -71,7 +72,7 @@ public abstract class AbstractKeyValueAdapter implements KeyValueAdapter {
 	 */
 	@Override
 	public <T> T delete(Object id, String keyspace, Class<T> type) {
-		return (T) delete(id, keyspace);
+		return type.cast(delete(id, keyspace));
 	}
 
 	/*

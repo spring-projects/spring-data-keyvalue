@@ -119,7 +119,7 @@ public class SimpleKeyValueRepository<T, ID> implements KeyValueRepository<T, ID
 
 	/*
 	 * (non-Javadoc)
-	 * @see org.springframework.data.repository.CrudRepository#findOne(java.io.Serializable)
+	 * @see org.springframework.data.repository.CrudRepository#findOne(java.lang.Object)
 	 */
 	@Override
 	public Optional<T> findById(ID id) {
@@ -128,7 +128,7 @@ public class SimpleKeyValueRepository<T, ID> implements KeyValueRepository<T, ID
 
 	/*
 	 * (non-Javadoc)
-	 * @see org.springframework.data.repository.CrudRepository#exists(java.io.Serializable)
+	 * @see org.springframework.data.repository.CrudRepository#exists(java.lang.Object)
 	 */
 	@Override
 	public boolean existsById(ID id) {
@@ -176,7 +176,7 @@ public class SimpleKeyValueRepository<T, ID> implements KeyValueRepository<T, ID
 
 	/*
 	 * (non-Javadoc)
-	 * @see org.springframework.data.repository.CrudRepository#delete(java.io.Serializable)
+	 * @see org.springframework.data.repository.CrudRepository#delete(java.lang.Object)
 	 */
 	@Override
 	public void deleteById(ID id) {

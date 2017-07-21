@@ -54,126 +54,126 @@ public class KeyValueEvent<T> extends ApplicationEvent {
 	 * Create new {@link BeforeGetEvent}.
 	 *
 	 * @param id
-	 * @param keySpace
+	 * @param keyspace
 	 * @param type
 	 * @return
 	 */
-	public static <T> BeforeGetEvent<T> beforeGet(Object id, String keySpace, Class<T> type) {
-		return new BeforeGetEvent<>(id, keySpace, type);
+	public static <T> BeforeGetEvent<T> beforeGet(Object id, String keyspace, Class<T> type) {
+		return new BeforeGetEvent<>(id, keyspace, type);
 	}
 
 	/**
 	 * Create new {@link AfterGetEvent}.
 	 *
 	 * @param id
-	 * @param keySpace
+	 * @param keyspace
 	 * @param type
 	 * @param value
 	 * @return
 	 */
-	public static <T> AfterGetEvent<T> afterGet(Object id, String keySpace, Class<T> type, T value) {
-		return new AfterGetEvent<>(id, keySpace, type, value);
+	public static <T> AfterGetEvent<T> afterGet(Object id, String keyspace, Class<T> type, T value) {
+		return new AfterGetEvent<>(id, keyspace, type, value);
 	}
 
 	/**
 	 * Create new {@link BeforeInsertEvent}.
 	 *
 	 * @param id
-	 * @param keySpace
+	 * @param keyspace
 	 * @param type
 	 * @param value
 	 * @return
 	 */
-	public static <T> BeforeInsertEvent<T> beforeInsert(Object id, String keySpace, Class<? extends T> type, T value) {
-		return new BeforeInsertEvent<>(id, keySpace, type, value);
+	public static <T> BeforeInsertEvent<T> beforeInsert(Object id, String keyspace, Class<? extends T> type, T value) {
+		return new BeforeInsertEvent<>(id, keyspace, type, value);
 	}
 
 	/**
 	 * Create new {@link AfterInsertEvent}.
 	 *
 	 * @param id
-	 * @param keySpace
+	 * @param keyspace
 	 * @param type
 	 * @param value
 	 * @return
 	 */
-	public static <T> AfterInsertEvent<T> afterInsert(Object id, String keySpace, Class<? extends T> type, T value) {
-		return new AfterInsertEvent<>(id, keySpace, type, value);
+	public static <T> AfterInsertEvent<T> afterInsert(Object id, String keyspace, Class<? extends T> type, T value) {
+		return new AfterInsertEvent<>(id, keyspace, type, value);
 	}
 
 	/**
 	 * Create new {@link BeforeUpdateEvent}.
 	 *
 	 * @param id
-	 * @param keySpace
+	 * @param keyspace
 	 * @param type
 	 * @param value
 	 * @return
 	 */
-	public static <T> BeforeUpdateEvent<T> beforeUpdate(Object id, String keySpace, Class<? extends T> type, T value) {
-		return new BeforeUpdateEvent<>(id, keySpace, type, value);
+	public static <T> BeforeUpdateEvent<T> beforeUpdate(Object id, String keyspace, Class<? extends T> type, T value) {
+		return new BeforeUpdateEvent<>(id, keyspace, type, value);
 	}
 
 	/**
 	 * Create new {@link AfterUpdateEvent}.
 	 *
 	 * @param id
-	 * @param keySpace
+	 * @param keyspace
 	 * @param type
 	 * @param actualValue
 	 * @param previousValue
 	 * @return
 	 */
-	public static <T> AfterUpdateEvent<T> afterUpdate(Object id, String keySpace, Class<? extends T> type, T actualValue,
+	public static <T> AfterUpdateEvent<T> afterUpdate(Object id, String keyspace, Class<? extends T> type, T actualValue,
 			Object previousValue) {
-		return new AfterUpdateEvent<>(id, keySpace, type, actualValue, previousValue);
+		return new AfterUpdateEvent<>(id, keyspace, type, actualValue, previousValue);
 	}
 
 	/**
 	 * Create new {@link BeforeDropKeySpaceEvent}.
 	 *
-	 * @param keySpace
+	 * @param keyspace
 	 * @param type
 	 * @return
 	 */
-	public static <T> BeforeDropKeySpaceEvent<T> beforeDropKeySpace(String keySpace, Class<? extends T> type) {
-		return new BeforeDropKeySpaceEvent<>(keySpace, type);
+	public static <T> BeforeDropKeySpaceEvent<T> beforeDropKeySpace(String keyspace, Class<? extends T> type) {
+		return new BeforeDropKeySpaceEvent<>(keyspace, type);
 	}
 
 	/**
 	 * Create new {@link AfterDropKeySpaceEvent}.
 	 *
-	 * @param keySpace
+	 * @param keyspace
 	 * @param type
 	 * @return
 	 */
-	public static <T> AfterDropKeySpaceEvent<T> afterDropKeySpace(String keySpace, Class<? extends T> type) {
-		return new AfterDropKeySpaceEvent<>(keySpace, type);
+	public static <T> AfterDropKeySpaceEvent<T> afterDropKeySpace(String keyspace, Class<? extends T> type) {
+		return new AfterDropKeySpaceEvent<>(keyspace, type);
 	}
 
 	/**
 	 * Create new {@link BeforeDeleteEvent}.
 	 *
 	 * @param id
-	 * @param keySpace
+	 * @param keyspace
 	 * @param type
 	 * @return
 	 */
-	public static <T> BeforeDeleteEvent<T> beforeDelete(Object id, String keySpace, Class<? extends T> type) {
-		return new BeforeDeleteEvent<>(id, keySpace, type);
+	public static <T> BeforeDeleteEvent<T> beforeDelete(Object id, String keyspace, Class<? extends T> type) {
+		return new BeforeDeleteEvent<>(id, keyspace, type);
 	}
 
 	/**
 	 * Create new {@link AfterDeleteEvent}.
 	 *
 	 * @param id
-	 * @param keySpace
+	 * @param keyspace
 	 * @param type
 	 * @param value
 	 * @return
 	 */
-	public static <T> AfterDeleteEvent<T> afterDelete(Object id, String keySpace, Class<? extends T> type, T value) {
-		return new AfterDeleteEvent<>(id, keySpace, type, value);
+	public static <T> AfterDeleteEvent<T> afterDelete(Object id, String keyspace, Class<? extends T> type, T value) {
+		return new AfterDeleteEvent<>(id, keyspace, type, value);
 	}
 
 	/**
@@ -186,9 +186,9 @@ public class KeyValueEvent<T> extends ApplicationEvent {
 		private Object key;
 		private Class<? extends T> type;
 
-		protected KeyBasedEvent(Object key, String keySpace, Class<? extends T> type) {
+		protected KeyBasedEvent(Object key, String keyspace, Class<? extends T> type) {
 
-			super(type, keySpace);
+			super(type, keyspace);
 			this.key = key;
 			this.type = type;
 		}
@@ -225,8 +225,8 @@ public class KeyValueEvent<T> extends ApplicationEvent {
 
 		private final T payload;
 
-		public KeyBasedEventWithPayload(Object key, String keySpace, Class<? extends T> type, T payload) {
-			super(key, keySpace, type);
+		public KeyBasedEventWithPayload(Object key, String keyspace, Class<? extends T> type, T payload) {
+			super(key, keyspace, type);
 			this.payload = payload;
 		}
 
@@ -249,8 +249,8 @@ public class KeyValueEvent<T> extends ApplicationEvent {
 	@SuppressWarnings("serial")
 	public static class BeforeGetEvent<T> extends KeyBasedEvent<T> {
 
-		protected BeforeGetEvent(Object key, String keySpace, Class<T> type) {
-			super(key, keySpace, type);
+		protected BeforeGetEvent(Object key, String keyspace, Class<T> type) {
+			super(key, keyspace, type);
 		}
 
 	}
@@ -279,8 +279,8 @@ public class KeyValueEvent<T> extends ApplicationEvent {
 	@SuppressWarnings("serial")
 	public static class BeforeInsertEvent<T> extends KeyBasedEventWithPayload<T> {
 
-		public BeforeInsertEvent(Object key, String keySpace, Class<? extends T> type, T payload) {
-			super(key, keySpace, type, payload);
+		public BeforeInsertEvent(Object key, String keyspace, Class<? extends T> type, T payload) {
+			super(key, keyspace, type, payload);
 
 		}
 	}
@@ -294,8 +294,8 @@ public class KeyValueEvent<T> extends ApplicationEvent {
 	@SuppressWarnings("serial")
 	public static class AfterInsertEvent<T> extends KeyBasedEventWithPayload<T> {
 
-		public AfterInsertEvent(Object key, String keySpace, Class<? extends T> type, T payload) {
-			super(key, keySpace, type, payload);
+		public AfterInsertEvent(Object key, String keyspace, Class<? extends T> type, T payload) {
+			super(key, keyspace, type, payload);
 		}
 	}
 
@@ -308,8 +308,8 @@ public class KeyValueEvent<T> extends ApplicationEvent {
 	@SuppressWarnings("serial")
 	public static class BeforeUpdateEvent<T> extends KeyBasedEventWithPayload<T> {
 
-		public BeforeUpdateEvent(Object key, String keySpace, Class<? extends T> type, T payload) {
-			super(key, keySpace, type, payload);
+		public BeforeUpdateEvent(Object key, String keyspace, Class<? extends T> type, T payload) {
+			super(key, keyspace, type, payload);
 		}
 	}
 
@@ -324,8 +324,8 @@ public class KeyValueEvent<T> extends ApplicationEvent {
 
 		private final Object existing;
 
-		public AfterUpdateEvent(Object key, String keySpace, Class<? extends T> type, T payload, Object existing) {
-			super(key, keySpace, type, payload);
+		public AfterUpdateEvent(Object key, String keyspace, Class<? extends T> type, T payload, Object existing) {
+			super(key, keyspace, type, payload);
 			this.existing = existing;
 		}
 
@@ -357,8 +357,8 @@ public class KeyValueEvent<T> extends ApplicationEvent {
 	@SuppressWarnings("serial")
 	public static class BeforeDeleteEvent<T> extends KeyBasedEvent<T> {
 
-		public BeforeDeleteEvent(Object key, String keySpace, Class<? extends T> type) {
-			super(key, keySpace, type);
+		public BeforeDeleteEvent(Object key, String keyspace, Class<? extends T> type) {
+			super(key, keyspace, type);
 		}
 	}
 
@@ -371,13 +371,13 @@ public class KeyValueEvent<T> extends ApplicationEvent {
 	@SuppressWarnings("serial")
 	public static class AfterDeleteEvent<T> extends KeyBasedEventWithPayload<T> {
 
-		public AfterDeleteEvent(Object key, String keySpace, Class<? extends T> type, T payload) {
-			super(key, keySpace, type, payload);
+		public AfterDeleteEvent(Object key, String keyspace, Class<? extends T> type, T payload) {
+			super(key, keyspace, type, payload);
 		}
 	}
 
 	/**
-	 * {@link KeyValueEvent} before removing all elements in a given {@literal keySpace}.
+	 * {@link KeyValueEvent} before removing all elements in a given {@literal keyspace}.
 	 *
 	 * @author Christoph Strobl
 	 * @param <T>
@@ -385,8 +385,8 @@ public class KeyValueEvent<T> extends ApplicationEvent {
 	@SuppressWarnings("serial")
 	public static class BeforeDropKeySpaceEvent<T> extends KeyValueEvent<T> {
 
-		public BeforeDropKeySpaceEvent(String keySpace, Class<? extends T> type) {
-			super(type, keySpace);
+		public BeforeDropKeySpaceEvent(String keyspace, Class<? extends T> type) {
+			super(type, keyspace);
 		}
 
 		@Override
@@ -398,7 +398,7 @@ public class KeyValueEvent<T> extends ApplicationEvent {
 	}
 
 	/**
-	 * {@link KeyValueEvent} after removing all elements in a given {@literal keySpace}.
+	 * {@link KeyValueEvent} after removing all elements in a given {@literal keyspace}.
 	 *
 	 * @author Christoph Strobl
 	 * @param <T>
@@ -406,8 +406,8 @@ public class KeyValueEvent<T> extends ApplicationEvent {
 	@SuppressWarnings("serial")
 	public static class AfterDropKeySpaceEvent<T> extends KeyValueEvent<T> {
 
-		public AfterDropKeySpaceEvent(String keySpace, Class<? extends T> type) {
-			super(type, keySpace);
+		public AfterDropKeySpaceEvent(String keyspace, Class<? extends T> type) {
+			super(type, keyspace);
 		}
 
 		@Override

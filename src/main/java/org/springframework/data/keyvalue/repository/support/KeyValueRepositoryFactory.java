@@ -17,7 +17,6 @@ package org.springframework.data.keyvalue.repository.support;
 
 import static org.springframework.data.querydsl.QuerydslUtils.QUERY_DSL_PRESENT;
 
-import java.io.Serializable;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
 import java.util.Optional;
@@ -126,7 +125,7 @@ public class KeyValueRepositoryFactory extends RepositoryFactorySupport {
 	@Override
 	protected Object getTargetRepository(RepositoryInformation repositoryInformation) {
 
-		EntityInformation<?, Serializable> entityInformation = getEntityInformation(repositoryInformation.getDomainType());
+		EntityInformation<?, ?> entityInformation = getEntityInformation(repositoryInformation.getDomainType());
 		return super.getTargetRepositoryViaReflection(repositoryInformation, entityInformation, keyValueOperations);
 	}
 

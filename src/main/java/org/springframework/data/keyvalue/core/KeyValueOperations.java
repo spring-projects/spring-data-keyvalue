@@ -25,14 +25,14 @@ import org.springframework.data.mapping.context.MappingContext;
 
 /**
  * Interface that specifies a basic set of key/value operations. Implemented by {@link KeyValueTemplate}.
- * 
+ *
  * @author Christoph Strobl
  */
 public interface KeyValueOperations extends DisposableBean {
 
 	/**
 	 * Add given object. Object needs to have id property to which a generated value will be assigned.
-	 * 
+	 *
 	 * @param objectToInsert
 	 * @return
 	 */
@@ -40,7 +40,7 @@ public interface KeyValueOperations extends DisposableBean {
 
 	/**
 	 * Add object with given id.
-	 * 
+	 *
 	 * @param id must not be {@literal null}.
 	 * @param objectToInsert must not be {@literal null}.
 	 */
@@ -49,7 +49,7 @@ public interface KeyValueOperations extends DisposableBean {
 	/**
 	 * Get all elements of given type. Respects {@link KeySpace} if present and therefore returns all elements that can be
 	 * assigned to requested type.
-	 * 
+	 *
 	 * @param type must not be {@literal null}.
 	 * @return empty iterable if no elements found.
 	 */
@@ -58,7 +58,7 @@ public interface KeyValueOperations extends DisposableBean {
 	/**
 	 * Get all elements ordered by sort. Respects {@link KeySpace} if present and therefore returns all elements that can
 	 * be assigned to requested type.
-	 * 
+	 *
 	 * @param sort must not be {@literal null}.
 	 * @param type must not be {@literal null}.
 	 * @return
@@ -68,16 +68,16 @@ public interface KeyValueOperations extends DisposableBean {
 	/**
 	 * Get element of given type with given id. Respects {@link KeySpace} if present and therefore returns all elements
 	 * that can be assigned to requested type.
-	 * 
+	 *
 	 * @param id must not be {@literal null}.
 	 * @param type must not be {@literal null}.
-	 * @return null if not found.
+	 * @return {@link Optional#empty()} if not found.
 	 */
 	<T> Optional<T> findById(Object id, Class<T> type);
 
 	/**
 	 * Execute operation against underlying store.
-	 * 
+	 *
 	 * @param action must not be {@literal null}.
 	 * @return
 	 */
@@ -86,7 +86,7 @@ public interface KeyValueOperations extends DisposableBean {
 	/**
 	 * Get all elements matching the given query. <br />
 	 * Respects {@link KeySpace} if present and therefore returns all elements that can be assigned to requested type..
-	 * 
+	 *
 	 * @param query must not be {@literal null}.
 	 * @param type must not be {@literal null}.
 	 * @return empty iterable if no match found.
@@ -96,7 +96,7 @@ public interface KeyValueOperations extends DisposableBean {
 	/**
 	 * Get all elements in given range. Respects {@link KeySpace} if present and therefore returns all elements that can
 	 * be assigned to requested type.
-	 * 
+	 *
 	 * @param offset
 	 * @param rows
 	 * @param type must not be {@literal null}.
@@ -107,7 +107,7 @@ public interface KeyValueOperations extends DisposableBean {
 	/**
 	 * Get all elements in given range ordered by sort. Respects {@link KeySpace} if present and therefore returns all
 	 * elements that can be assigned to requested type.
-	 * 
+	 *
 	 * @param offset
 	 * @param rows
 	 * @param sort
@@ -130,7 +130,7 @@ public interface KeyValueOperations extends DisposableBean {
 	/**
 	 * Remove all elements of type. Respects {@link KeySpace} if present and therefore removes all elements that can be
 	 * assigned to requested type.
-	 * 
+	 *
 	 * @param type must not be {@literal null}.
 	 */
 	void delete(Class<?> type);
@@ -143,7 +143,7 @@ public interface KeyValueOperations extends DisposableBean {
 
 	/**
 	 * Delete item of type with given id.
-	 * 
+	 *
 	 * @param id must not be {@literal null}.
 	 * @param type must not be {@literal null}.
 	 * @return the deleted item or {@literal null} if no match found.
@@ -153,7 +153,7 @@ public interface KeyValueOperations extends DisposableBean {
 	/**
 	 * Total number of elements with given type available. Respects {@link KeySpace} if present and therefore counts all
 	 * elements that can be assigned to requested type.
-	 * 
+	 *
 	 * @param type must not be {@literal null}.
 	 * @return
 	 */
@@ -162,7 +162,7 @@ public interface KeyValueOperations extends DisposableBean {
 	/**
 	 * Total number of elements matching given query. Respects {@link KeySpace} if present and therefore counts all
 	 * elements that can be assigned to requested type.
-	 * 
+	 *
 	 * @param query
 	 * @param type
 	 * @return

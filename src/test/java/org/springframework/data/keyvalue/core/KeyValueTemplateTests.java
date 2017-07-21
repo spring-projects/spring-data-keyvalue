@@ -18,6 +18,9 @@ package org.springframework.data.keyvalue.core;
 import static org.hamcrest.Matchers.*;
 import static org.junit.Assert.*;
 
+import lombok.AllArgsConstructor;
+import lombok.Data;
+
 import java.io.Serializable;
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
@@ -35,11 +38,11 @@ import org.springframework.data.annotation.Persistent;
 import org.springframework.data.keyvalue.annotation.KeySpace;
 import org.springframework.data.keyvalue.core.query.KeyValueQuery;
 import org.springframework.data.map.MapKeyValueAdapter;
-import org.springframework.util.ObjectUtils;
 
 /**
  * @author Christoph Strobl
  * @author Oliver Gierke
+ * @author Mark Paluch
  */
 public class KeyValueTemplateTests {
 
@@ -212,116 +215,31 @@ public class KeyValueTemplateTests {
 		assertThat(operations.findAll(ALIASED.getClass()), containsInAnyOrder(ALIASED, SUBCLASS_OF_ALIASED));
 	}
 
-	static class Foo implements Serializable {
-
-		private static final long serialVersionUID = -8912754229220128922L;
+	@Data
+	@AllArgsConstructor
+	static class Foo {
 
 		String foo;
 
-		public Foo(String foo) {
-			this.foo = foo;
-		}
-
-		public String getFoo() {
-			return foo;
-		}
-
-		@Override
-		public int hashCode() {
-			return ObjectUtils.nullSafeHashCode(this.foo);
-		}
-
-		@Override
-		public boolean equals(Object obj) {
-			if (this == obj) {
-				return true;
-			}
-			if (obj == null) {
-				return false;
-			}
-			if (!(obj instanceof Foo)) {
-				return false;
-			}
-			Foo other = (Foo) obj;
-			return ObjectUtils.nullSafeEquals(this.foo, other.foo);
-		}
-
 	}
 
-	static class Bar implements Serializable {
+	@Data
+	@AllArgsConstructor
+	static class Bar {
 
-		private static final long serialVersionUID = 196011921826060210L;
 		String bar;
-
-		public Bar(String bar) {
-			this.bar = bar;
-		}
-
-		public String getBar() {
-			return bar;
-		}
-
-		@Override
-		public int hashCode() {
-			return ObjectUtils.nullSafeHashCode(this.bar);
-		}
-
-		@Override
-		public boolean equals(Object obj) {
-			if (this == obj) {
-				return true;
-			}
-			if (obj == null) {
-				return false;
-			}
-			if (!(obj instanceof Bar)) {
-				return false;
-			}
-			Bar other = (Bar) obj;
-			return ObjectUtils.nullSafeEquals(this.bar, other.bar);
-		}
-
 	}
 
+	@Data
 	static class ClassWithStringId implements Serializable {
 
 		private static final long serialVersionUID = -7481030649267602830L;
 		@Id String id;
 		String value;
-
-		@Override
-		public int hashCode() {
-			final int prime = 31;
-			int result = 1;
-			result = prime * result + ObjectUtils.nullSafeHashCode(this.id);
-			result = prime * result + ObjectUtils.nullSafeHashCode(this.value);
-			return result;
-		}
-
-		@Override
-		public boolean equals(Object obj) {
-			if (this == obj) {
-				return true;
-			}
-			if (obj == null) {
-				return false;
-			}
-			if (!(obj instanceof ClassWithStringId)) {
-				return false;
-			}
-			ClassWithStringId other = (ClassWithStringId) obj;
-			if (!ObjectUtils.nullSafeEquals(this.id, other.id)) {
-				return false;
-			}
-			if (!ObjectUtils.nullSafeEquals(this.value, other.value)) {
-				return false;
-			}
-			return true;
-		}
-
 	}
 
 	@ExplicitKeySpace(name = "aliased")
+	@Data
 	static class ClassWithTypeAlias implements Serializable {
 
 		private static final long serialVersionUID = -5921943364908784571L;
@@ -331,53 +249,6 @@ public class KeyValueTemplateTests {
 		public ClassWithTypeAlias(String name) {
 			this.name = name;
 		}
-
-		public String getId() {
-			return id;
-		}
-
-		public void setId(String id) {
-			this.id = id;
-		}
-
-		public String getName() {
-			return name;
-		}
-
-		public void setName(String name) {
-			this.name = name;
-		}
-
-		@Override
-		public int hashCode() {
-			final int prime = 31;
-			int result = 1;
-			result = prime * result + ObjectUtils.nullSafeHashCode(this.id);
-			result = prime * result + ObjectUtils.nullSafeHashCode(this.name);
-			return result;
-		}
-
-		@Override
-		public boolean equals(Object obj) {
-			if (this == obj) {
-				return true;
-			}
-			if (obj == null) {
-				return false;
-			}
-			if (!(obj instanceof ClassWithTypeAlias)) {
-				return false;
-			}
-			ClassWithTypeAlias other = (ClassWithTypeAlias) obj;
-			if (!ObjectUtils.nullSafeEquals(this.id, other.id)) {
-				return false;
-			}
-			if (!ObjectUtils.nullSafeEquals(this.name, other.name)) {
-				return false;
-			}
-			return true;
-		}
-
 	}
 
 	static class SubclassOfAliasedType extends ClassWithTypeAlias {

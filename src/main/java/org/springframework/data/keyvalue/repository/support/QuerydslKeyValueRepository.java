@@ -17,7 +17,6 @@ package org.springframework.data.keyvalue.repository.support;
 
 import static org.springframework.data.keyvalue.repository.support.KeyValueQuerydslUtils.*;
 
-import java.io.Serializable;
 import java.util.Optional;
 
 import org.springframework.dao.IncorrectResultSizeDataAccessException;
@@ -51,7 +50,7 @@ import com.querydsl.core.types.dsl.PathBuilder;
  * @param <T> the domain type to manage
  * @param <ID> the identifier type of the domain type
  */
-public class QuerydslKeyValueRepository<T, ID extends Serializable> extends SimpleKeyValueRepository<T, ID>
+public class QuerydslKeyValueRepository<T, ID> extends SimpleKeyValueRepository<T, ID>
 		implements QuerydslPredicateExecutor<T> {
 
 	private static final EntityPathResolver DEFAULT_ENTITY_PATH_RESOLVER = SimpleEntityPathResolver.INSTANCE;

@@ -20,7 +20,9 @@ import static org.junit.Assert.*;
 import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.*;
 
-import java.io.Serializable;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
@@ -54,12 +56,12 @@ import org.springframework.data.keyvalue.core.event.KeyValueEvent.BeforeGetEvent
 import org.springframework.data.keyvalue.core.event.KeyValueEvent.BeforeInsertEvent;
 import org.springframework.data.keyvalue.core.event.KeyValueEvent.BeforeUpdateEvent;
 import org.springframework.data.keyvalue.core.query.KeyValueQuery;
-import org.springframework.util.ObjectUtils;
 
 /**
  * @author Christoph Strobl
  * @author Thomas Darimont
  * @author Oliver Gierke
+ * @author Mark Paluch
  */
 @RunWith(MockitoJUnitRunner.Silent.class)
 public class KeyValueTemplateUnitTests {
@@ -179,9 +181,9 @@ public class KeyValueTemplateUnitTests {
 		verify(adapterMock, times(1)).get("1", Foo.class.getName(), Foo.class);
 	}
 
-	@Test(expected = IllegalArgumentException.class) // DATACMNS-525
+	@Test(expected = IllegalArgumentException.class) // DATACMNS-525, DATAKV-187
 	public void findByIdShouldThrowExceptionWhenGivenNullId() {
-		template.findById((Serializable) null, Foo.class);
+		template.findById(null, Foo.class);
 	}
 
 	@Test // DATACMNS-525
@@ -383,7 +385,7 @@ public class KeyValueTemplateUnitTests {
 		verifyZeroInteractions(publisherMock);
 	}
 
-	@Test // DATAKV-91, DATAKV-104
+	@Test // DATAKV-91, DATAKV-104, DATAKV-187
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	public void shouldPublishBeforeInsertEventCorrectly() {
 
@@ -396,12 +398,12 @@ public class KeyValueTemplateUnitTests {
 		verify(publisherMock, times(1)).publishEvent(captor.capture());
 		verifyNoMoreInteractions(publisherMock);
 
-		assertThat(captor.getValue().getKey(), is((Serializable) "1"));
+		assertThat(captor.getValue().getKey(), is("1"));
 		assertThat(captor.getValue().getKeyspace(), is(Foo.class.getName()));
 		assertThat(captor.getValue().getPayload(), is((Object) FOO_ONE));
 	}
 
-	@Test // DATAKV-91, DATAKV-104
+	@Test // DATAKV-91, DATAKV-104, DATAKV-187
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	public void shouldPublishAfterInsertEventCorrectly() {
 
@@ -414,12 +416,12 @@ public class KeyValueTemplateUnitTests {
 		verify(publisherMock, times(1)).publishEvent(captor.capture());
 		verifyNoMoreInteractions(publisherMock);
 
-		assertThat(captor.getValue().getKey(), is((Serializable) "1"));
+		assertThat(captor.getValue().getKey(), is("1"));
 		assertThat(captor.getValue().getKeyspace(), is(Foo.class.getName()));
 		assertThat(captor.getValue().getPayload(), is((Object) FOO_ONE));
 	}
 
-	@Test // DATAKV-91, DATAKV-104
+	@Test // DATAKV-91, DATAKV-104, DATAKV-187
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	public void shouldPublishBeforeUpdateEventCorrectly() {
 
@@ -432,12 +434,12 @@ public class KeyValueTemplateUnitTests {
 		verify(publisherMock, times(1)).publishEvent(captor.capture());
 		verifyNoMoreInteractions(publisherMock);
 
-		assertThat(captor.getValue().getKey(), is((Serializable) "1"));
+		assertThat(captor.getValue().getKey(), is("1"));
 		assertThat(captor.getValue().getKeyspace(), is(Foo.class.getName()));
 		assertThat(captor.getValue().getPayload(), is((Object) FOO_ONE));
 	}
 
-	@Test // DATAKV-91, DATAKV-104
+	@Test // DATAKV-91, DATAKV-104, DATAKV-187
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	public void shouldPublishAfterUpdateEventCorrectly() {
 
@@ -450,12 +452,12 @@ public class KeyValueTemplateUnitTests {
 		verify(publisherMock, times(1)).publishEvent(captor.capture());
 		verifyNoMoreInteractions(publisherMock);
 
-		assertThat(captor.getValue().getKey(), is((Serializable) "1"));
+		assertThat(captor.getValue().getKey(), is("1"));
 		assertThat(captor.getValue().getKeyspace(), is(Foo.class.getName()));
 		assertThat(captor.getValue().getPayload(), is((Object) FOO_ONE));
 	}
 
-	@Test // DATAKV-91, DATAKV-104
+	@Test // DATAKV-91, DATAKV-104, DATAKV-187
 	@SuppressWarnings({ "rawtypes", "unchecked" })
 	public void shouldPublishBeforeDeleteEventCorrectly() {
 
@@ -468,11 +470,11 @@ public class KeyValueTemplateUnitTests {
 		verify(publisherMock, times(1)).publishEvent(captor.capture());
 		verifyNoMoreInteractions(publisherMock);
 
-		assertThat(captor.getValue().getKey(), is((Serializable) "1"));
+		assertThat(captor.getValue().getKey(), is("1"));
 		assertThat(captor.getValue().getKeyspace(), is(Foo.class.getName()));
 	}
 
-	@Test // DATAKV-91, DATAKV-104
+	@Test // DATAKV-91, DATAKV-104, DATAKV-187
 	@SuppressWarnings({ "rawtypes", "unchecked" })
 	public void shouldPublishAfterDeleteEventCorrectly() {
 
@@ -486,12 +488,12 @@ public class KeyValueTemplateUnitTests {
 		verify(publisherMock, times(1)).publishEvent(captor.capture());
 		verifyNoMoreInteractions(publisherMock);
 
-		assertThat(captor.getValue().getKey(), is((Serializable) "1"));
+		assertThat(captor.getValue().getKey(), is("1"));
 		assertThat(captor.getValue().getKeyspace(), is(Foo.class.getName()));
 		assertThat(captor.getValue().getPayload(), is((Object) FOO_ONE));
 	}
 
-	@Test // DATAKV-91, DATAKV-104
+	@Test // DATAKV-91, DATAKV-104, DATAKV-187
 	@SuppressWarnings({ "rawtypes", "unchecked" })
 	public void shouldPublishBeforeGetEventCorrectly() {
 
@@ -506,7 +508,7 @@ public class KeyValueTemplateUnitTests {
 		verify(publisherMock, times(1)).publishEvent(captor.capture());
 		verifyNoMoreInteractions(publisherMock);
 
-		assertThat(captor.getValue().getKey(), is((Serializable) "1"));
+		assertThat(captor.getValue().getKey(), is("1"));
 		assertThat(captor.getValue().getKeyspace(), is(Foo.class.getName()));
 	}
 
@@ -525,12 +527,12 @@ public class KeyValueTemplateUnitTests {
 		verify(publisherMock, times(1)).publishEvent(captor.capture());
 		verifyNoMoreInteractions(publisherMock);
 
-		assertThat(captor.getValue().getKey(), is((Serializable) "1"));
+		assertThat(captor.getValue().getKey(), is("1"));
 		assertThat(captor.getValue().getKeyspace(), is(Foo.class.getName()));
 		assertThat(captor.getValue().getPayload(), is((Object) FOO_ONE));
 	}
 
-	@Test // DATAKV-91, DATAKV-104
+	@Test // DATAKV-91, DATAKV-104, DATAKV-187
 	@SuppressWarnings({ "rawtypes", "unchecked" })
 	public void shouldPublishDropKeyspaceEventCorrectly() {
 
@@ -559,108 +561,24 @@ public class KeyValueTemplateUnitTests {
 		template.setEventTypesToPublish(new HashSet<>(Arrays.asList(events)));
 	}
 
+	@Data
+	@AllArgsConstructor
 	static class Foo {
 
 		String foo;
-
-		public Foo(String foo) {
-			this.foo = foo;
-		}
-
-		public String getFoo() {
-			return foo;
-		}
-
-		@Override
-		public int hashCode() {
-			return ObjectUtils.nullSafeHashCode(this.foo);
-		}
-
-		@Override
-		public boolean equals(Object obj) {
-			if (this == obj) {
-				return true;
-			}
-			if (obj == null) {
-				return false;
-			}
-			if (!(obj instanceof Foo)) {
-				return false;
-			}
-			Foo other = (Foo) obj;
-			return ObjectUtils.nullSafeEquals(this.foo, other.foo);
-		}
-
 	}
 
+	@Data
+	@AllArgsConstructor
 	class Bar {
 
 		String bar;
-
-		public Bar(String bar) {
-			this.bar = bar;
-		}
-
-		public String getBar() {
-			return bar;
-		}
-
-		@Override
-		public int hashCode() {
-			return ObjectUtils.nullSafeHashCode(this.bar);
-		}
-
-		@Override
-		public boolean equals(Object obj) {
-			if (this == obj) {
-				return true;
-			}
-			if (obj == null) {
-				return false;
-			}
-			if (!(obj instanceof Bar)) {
-				return false;
-			}
-			Bar other = (Bar) obj;
-			return ObjectUtils.nullSafeEquals(this.bar, other.bar);
-		}
-
 	}
 
+	@Data
 	static class ClassWithStringId {
 
 		@Id String id;
 		String value;
-
-		@Override
-		public int hashCode() {
-			final int prime = 31;
-			int result = 1;
-			result = prime * result + ObjectUtils.nullSafeHashCode(this.id);
-			result = prime * result + ObjectUtils.nullSafeHashCode(this.value);
-			return result;
-		}
-
-		@Override
-		public boolean equals(Object obj) {
-			if (this == obj) {
-				return true;
-			}
-			if (obj == null) {
-				return false;
-			}
-			if (!(obj instanceof ClassWithStringId)) {
-				return false;
-			}
-			ClassWithStringId other = (ClassWithStringId) obj;
-			if (!ObjectUtils.nullSafeEquals(this.id, other.id)) {
-				return false;
-			}
-			if (!ObjectUtils.nullSafeEquals(this.value, other.value)) {
-				return false;
-			}
-			return true;
-		}
-
 	}
 }
