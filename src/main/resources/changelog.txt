@@ -1,6 +1,15 @@
 Spring Data KeyValue Changelog
 ==========================
 
+Changes in version 2.0.0.RC1 (2017-07-25)
+-----------------------------------------
+* DATAKV-187 - Remove restriction of ID type to be Serializable.
+* DATAKV-186 - Incorrect behavior of SimpleKeyValueRepository.existsById(…) due to changes with Optional.
+* DATAKV-185 - Adapt to changes in SpEL parser.
+* DATAKV-184 - Adapt to API changes in mapping subsystem.
+* DATAKV-183 - Release 2.0 RC1 (Kay).
+
+
 Changes in version 1.2.5.RELEASE (2017-07-24)
 ---------------------------------------------
 * DATAKV-182 - Release 1.2.5 (Ingalls SR5).
