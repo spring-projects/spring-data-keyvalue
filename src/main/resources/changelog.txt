@@ -1,6 +1,11 @@
 Spring Data KeyValue Changelog
 ==========================
 
+Changes in version 2.0.0.RC2 (2017-07-25)
+-----------------------------------------
+* DATAKV-189 - Release 2.0 RC2 (Kay).
+
+
 Changes in version 2.0.0.RC1 (2017-07-25)
 -----------------------------------------
 * DATAKV-187 - Remove restriction of ID type to be Serializable.
