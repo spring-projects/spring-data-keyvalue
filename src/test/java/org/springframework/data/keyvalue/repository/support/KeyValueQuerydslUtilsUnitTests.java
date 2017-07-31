@@ -70,7 +70,7 @@ public class KeyValueQuerydslUtilsUnitTests {
 		OrderSpecifier<?>[] specifiers = toOrderSpecifier(sort, builder);
 
 		assertThat(specifiers,
-				IsArrayContainingInOrder.<OrderSpecifier<?>> arrayContaining(QPerson.person.firstname.asc()));
+				IsArrayContainingInOrder.arrayContaining(QPerson.person.firstname.asc()));
 	}
 
 	@Test // DATACMNS-525
@@ -81,7 +81,7 @@ public class KeyValueQuerydslUtilsUnitTests {
 		OrderSpecifier<?>[] specifiers = toOrderSpecifier(sort, builder);
 
 		assertThat(specifiers,
-				IsArrayContainingInOrder.<OrderSpecifier<?>> arrayContaining(QPerson.person.firstname.desc()));
+				IsArrayContainingInOrder.arrayContaining(QPerson.person.firstname.desc()));
 	}
 
 	@Test // DATACMNS-525
@@ -91,7 +91,7 @@ public class KeyValueQuerydslUtilsUnitTests {
 
 		OrderSpecifier<?>[] specifiers = toOrderSpecifier(sort, builder);
 
-		assertThat(specifiers, IsArrayContainingInOrder.<OrderSpecifier<?>> arrayContaining(QPerson.person.firstname.desc(),
+		assertThat(specifiers, IsArrayContainingInOrder.arrayContaining(QPerson.person.firstname.desc(),
 				QPerson.person.age.asc()));
 	}
 
@@ -103,6 +103,6 @@ public class KeyValueQuerydslUtilsUnitTests {
 		OrderSpecifier<?>[] specifiers = toOrderSpecifier(sort, builder);
 
 		assertThat(specifiers,
-				IsArrayContainingInOrder.<OrderSpecifier<?>> arrayContaining(QPerson.person.firstname.desc().nullsLast()));
+				IsArrayContainingInOrder.arrayContaining(QPerson.person.firstname.desc().nullsLast()));
 	}
 }

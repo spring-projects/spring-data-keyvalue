@@ -35,8 +35,8 @@ public class SpelPropertyComperatorUnitTests {
 
 	private static final SpelExpressionParser PARSER = new SpelExpressionParser();
 
-	private static final SomeType ONE = new SomeType("one", Integer.valueOf(1), 1);
-	private static final SomeType TWO = new SomeType("two", Integer.valueOf(2), 2);
+	private static final SomeType ONE = new SomeType("one", 1, 1);
+	private static final SomeType TWO = new SomeType("two", 2, 2);
 	private static final WrapperType WRAPPER_ONE = new WrapperType("w-one", ONE);
 	private static final WrapperType WRAPPER_TWO = new WrapperType("w-two", TWO);
 

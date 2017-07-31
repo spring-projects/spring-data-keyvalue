@@ -13,14 +13,14 @@ The primary goal of the http://projects.spring.io/spring-data[Spring Data] proje
 
 ## Quick Start
 
-Download the jar though Maven:
+Download the jar through Maven:
 
 [source, xml]
 ----
 <dependency>
   <groupId>org.springframework.data</groupId>
   <artifactId>spring-data-keyvalue</artifactId>
-  <version>0.1.0.BUILD-SNAPSHOT</version>
+  <version>${version}</version>
 </dependency>
 ----
 

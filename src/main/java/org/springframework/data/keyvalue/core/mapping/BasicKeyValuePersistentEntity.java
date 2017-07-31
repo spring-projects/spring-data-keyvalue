@@ -1,5 +1,5 @@
 /*
- * Copyright 2015 the original author or authors.
+ * Copyright 2015-2017 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -48,8 +48,9 @@ public class BasicKeyValuePersistentEntity<T, P extends KeyValuePersistentProper
 
 		String keySpace = AnnotationBasedKeySpaceResolver.INSTANCE.resolveKeySpace(type);
 
-		if (StringUtils.hasText(keySpace))
+		if (StringUtils.hasText(keySpace)) {
 			return keySpace;
+		}
 
 		return (fallback == null ? DEFAULT_FALLBACK_RESOLVER : fallback).resolveKeySpace(type);
 	}

@@ -17,9 +17,6 @@ package org.springframework.data.keyvalue.repository;
 
 import static org.hamcrest.core.Is.*;
 import static org.junit.Assert.*;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.*;
 
 import lombok.Data;

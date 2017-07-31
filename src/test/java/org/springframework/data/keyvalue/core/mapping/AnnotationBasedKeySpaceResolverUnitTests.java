@@ -52,11 +52,6 @@ public class AnnotationBasedKeySpaceResolverUnitTests {
 		assertThat(resolver.resolveKeySpace(EntityWithDefaultKeySpace.class), is("daenerys"));
 	}
 
-	@Test // DATACMNS-525
-	public void shouldResolveKeySpaceCorrectly() {
-		assertThat(resolver.resolveKeySpace(EntityWithSetKeySpace.class), is("viserys"));
-	}
-
 	@Test // DATAKV-105
 	public void shouldReturnNullWhenNoKeySpaceFoundOnComposedPersistentAnnotation() {
 		assertThat(resolver.resolveKeySpace(TypeWithInhteritedPersistentAnnotationNotHavingKeySpace.class), nullValue());
@@ -92,38 +87,22 @@ public class AnnotationBasedKeySpaceResolverUnitTests {
 		assertThat(resolver.resolveKeySpace(EntityWithInheritedKeySpaceUsingAliasFor.class), is("viserys"));
 	}
 
-	@PersistentAnnotationWithExplicitKeySpace
+	@PersistentAnnotationWithExplicitKeySpaceUsingAliasFor
 	static class EntityWithDefaultKeySpace {
 
 	}
 
-	@PersistentAnnotationWithExplicitKeySpace(firstname = "viserys")
-	static class EntityWithSetKeySpace {
-
-	}
-
-	static class EntityWithInheritedKeySpace extends EntityWithSetKeySpace {
-
-	}
-
-	@PersistentAnnotationWithExplicitKeySpace(firstname = "viserys")
+	@PersistentAnnotationWithExplicitKeySpaceUsingAliasFor(firstname = "viserys")
 	static class EntityWithSetKeySpaceUsingAliasFor {
+
+	}
+
+	static class EntityWithInheritedKeySpace extends EntityWithSetKeySpaceUsingAliasFor {
 
 	}
 
 	static class EntityWithInheritedKeySpaceUsingAliasFor extends EntityWithSetKeySpaceUsingAliasFor {
 
-	}
-
-	@Persistent
-	@Retention(RetentionPolicy.RUNTIME)
-	@Target({ ElementType.TYPE })
-	static @interface PersistentAnnotationWithExplicitKeySpace {
-
-		@KeySpace
-		String firstname() default "daenerys";
-
-		String lastnamne() default "targaryen";
 	}
 
 	@Persistent

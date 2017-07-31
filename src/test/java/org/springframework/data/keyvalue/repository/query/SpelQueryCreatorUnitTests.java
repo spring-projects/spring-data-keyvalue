@@ -314,7 +314,7 @@ public class SpelQueryCreatorUnitTests {
 	}
 
 	private Evaluation evaluate(String methodName, Object... args) throws Exception {
-		return new Evaluation((SpelExpression) createQueryForMethodWithArgs(methodName, args).getCriteria());
+		return new Evaluation(createQueryForMethodWithArgs(methodName, args).getCriteria());
 	}
 
 	private KeyValueQuery<SpelExpression> createQueryForMethodWithArgs(String methodName, Object... args)

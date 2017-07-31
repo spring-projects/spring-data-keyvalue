@@ -1,5 +1,5 @@
 /*
- * Copyright 2014 the original author or authors.
+ * Copyright 2014-2017 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,6 +20,7 @@ import java.util.NoSuchElementException;
 import org.springframework.dao.DataAccessException;
 import org.springframework.dao.DataRetrievalFailureException;
 import org.springframework.dao.support.PersistenceExceptionTranslator;
+import org.springframework.util.Assert;
 
 /**
  * Simple {@link PersistenceExceptionTranslator} implementation for key/value stores that converts the given runtime
@@ -34,19 +35,21 @@ public class KeyValuePersistenceExceptionTranslator implements PersistenceExcept
 	 * @see org.springframework.dao.support.PersistenceExceptionTranslator#translateExceptionIfPossible(java.lang.RuntimeException)
 	 */
 	@Override
-	public DataAccessException translateExceptionIfPossible(RuntimeException e) {
+	public DataAccessException translateExceptionIfPossible(RuntimeException exception) {
 
-		if (e == null || e instanceof DataAccessException) {
-			return (DataAccessException) e;
+		Assert.notNull(exception, "Exception must not be null!");
+
+		if (exception instanceof DataAccessException) {
+			return (DataAccessException) exception;
 		}
 
-		if (e instanceof NoSuchElementException || e instanceof IndexOutOfBoundsException
-				|| e instanceof IllegalStateException) {
-			return new DataRetrievalFailureException(e.getMessage(), e);
+		if (exception instanceof NoSuchElementException || exception instanceof IndexOutOfBoundsException
+				|| exception instanceof IllegalStateException) {
+			return new DataRetrievalFailureException(exception.getMessage(), exception);
 		}
 
-		if (e.getClass().getName().startsWith("java")) {
-			return new UncategorizedKeyValueException(e.getMessage(), e);
+		if (exception.getClass().getName().startsWith("java")) {
+			return new UncategorizedKeyValueException(exception.getMessage(), exception);
 		}
 		return null;
 	}
