@@ -154,12 +154,7 @@ public class SimpleKeyValueRepository<T, ID> implements KeyValueRepository<T, ID
 		List<T> result = new ArrayList<>();
 
 		for (ID id : ids) {
-
-			Optional<T> candidate = findById(id);
-
-			if (candidate.isPresent()) {
-				result.add(candidate.get());
-			}
+			findById(id).ifPresent(result::add);
 		}
 
 		return result;

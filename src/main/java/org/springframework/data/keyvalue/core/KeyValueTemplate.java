@@ -219,27 +219,22 @@ public class KeyValueTemplate implements KeyValueOperations, ApplicationEventPub
 
 		Assert.notNull(type, "Type to fetch must not be null!");
 
-		return execute(new KeyValueCallback<Iterable<T>>() {
+		return execute(adapter -> {
 
-			@SuppressWarnings("unchecked")
-			@Override
-			public Iterable<T> doInKeyValue(KeyValueAdapter adapter) {
+			Iterable<?> values = adapter.getAllOf(resolveKeySpace(type));
 
-				Iterable<?> values = adapter.getAllOf(resolveKeySpace(type));
-
-				if (values == null) {
-					return Collections.emptySet();
-				}
-
-				ArrayList<T> filtered = new ArrayList<>();
-				for (Object candidate : values) {
-					if (typeCheck(type, candidate)) {
-						filtered.add((T) candidate);
-					}
-				}
-
-				return filtered;
+			if (values == null) {
+				return Collections.emptySet();
 			}
+
+			ArrayList<T> filtered = new ArrayList<>();
+			for (Object candidate : values) {
+				if (typeCheck(type, candidate)) {
+					filtered.add((T) candidate);
+				}
+			}
+
+			return filtered;
 		});
 	}
 
@@ -323,7 +318,7 @@ public class KeyValueTemplate implements KeyValueOperations, ApplicationEventPub
 
 		potentiallyPublishEvent(KeyValueEvent.beforeDelete(id, keyspace, type));
 
-		T result = execute(adapter -> (T) adapter.delete(id, keyspace, type));
+		T result = execute(adapter -> adapter.delete(id, keyspace, type));
 
 		potentiallyPublishEvent(KeyValueEvent.afterDelete(id, keyspace, type, result));
 

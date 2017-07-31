@@ -18,7 +18,6 @@ package org.springframework.data.keyvalue.repository.query;
 import static org.hamcrest.core.IsNot.*;
 import static org.hamcrest.core.IsSame.*;
 import static org.junit.Assert.*;
-import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.*;
 
 import java.lang.reflect.Method;

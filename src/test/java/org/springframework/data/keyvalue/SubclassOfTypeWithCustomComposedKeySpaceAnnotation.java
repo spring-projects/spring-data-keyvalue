@@ -1,5 +1,5 @@
 /*
- * Copyright 2015 the original author or authors.
+ * Copyright 2015-2017 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,10 +18,13 @@ package org.springframework.data.keyvalue;
 import org.springframework.data.keyvalue.annotation.KeySpace;
 
 /**
- * Class that inherits its {@link KeySpace} from a super class annotated with a custom {@link CustomKeySpaceAnnotation} annotation.
+ * Class that inherits its {@link KeySpace} from a super class annotated with a custom {@link CustomKeySpaceAnnotation}
+ * annotation.
+ * 
  * @author Christoph Strobl
  */
-public class SubclassOfTypeWithCustomComposedKeySpaceAnnotation extends TypeWithCustomComposedKeySpaceAnnotation {
+public class SubclassOfTypeWithCustomComposedKeySpaceAnnotation
+		extends TypeWithCustomComposedKeySpaceAnnotationUsingAliasFor {
 
 	public SubclassOfTypeWithCustomComposedKeySpaceAnnotation(String name) {
 		super(name);

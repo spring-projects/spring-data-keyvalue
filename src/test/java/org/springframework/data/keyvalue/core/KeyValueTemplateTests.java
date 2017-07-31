@@ -32,6 +32,7 @@ import java.util.Optional;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+import org.springframework.core.annotation.AliasFor;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.annotation.Persistent;
@@ -261,12 +262,13 @@ public class KeyValueTemplateTests {
 
 	}
 
+	@KeySpace
 	@Persistent
 	@Retention(RetentionPolicy.RUNTIME)
 	@Target({ ElementType.TYPE })
-	static @interface ExplicitKeySpace {
+	@interface ExplicitKeySpace {
 
-		@KeySpace
+		@AliasFor(annotation = KeySpace.class, value = "value")
 		String name() default "";
 
 	}

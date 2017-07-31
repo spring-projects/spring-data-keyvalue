@@ -1,5 +1,5 @@
 /*
- * Copyright 2014 the original author or authors.
+ * Copyright 2014-2017 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -109,18 +109,11 @@ public class SpelPropertyComparator<T> implements Comparator<T> {
 	 */
 	protected String buildExpressionForPath() {
 
-		StringBuilder rawExpression = new StringBuilder(
-				"new org.springframework.util.comparator.NullSafeComparator(new org.springframework.util.comparator.ComparableComparator(), "
-						+ Boolean.toString(this.nullsFirst) + ").compare(");
+		String rawExpression = "new org.springframework.util.comparator.NullSafeComparator(new org.springframework.util.comparator.ComparableComparator(), "
+				+ Boolean.toString(this.nullsFirst) + ").compare(" + "#arg1?." + (path != null ? path.replace(".", "?.") : "")
+				+ "," + "#arg2?." + (path != null ? path.replace(".", "?.") : "") + ")";
 
-		rawExpression.append("#arg1?.");
-		rawExpression.append(path != null ? path.replace(".", "?.") : "");
-		rawExpression.append(",");
-		rawExpression.append("#arg2?.");
-		rawExpression.append(path != null ? path.replace(".", "?.") : "");
-		rawExpression.append(")");
-
-		return rawExpression.toString();
+		return rawExpression;
 	}
 
 	/*

@@ -88,18 +88,20 @@ template.findAllOf(User.class);   <2>
 [[key-value.keyspaces-custom]]
 === Custom KeySpace Annotation
 
-It is possible to compose own `KeySpace` annotations for a more domain centric usage by annotating one of the attibutes with `@KeySpace`.
+It is possible to compose own `KeySpace` annotations for a more domain centric usage by annotating one of the attributes with `@AliasFor`.
 
 NOTE: The composed annotation needs to inherit `@Persistent`.
 
 [source, java]
 ----
+@Keyspace
 @Persistent
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ ElementType.TYPE })
 static @interface CacheCentricAnnotation {
 
-  @KeySpace String cacheRegion() default "";
+  @AliasFor(annotation = KeySpace.class, attribute = "value")
+  String cacheRegion() default "";
 }
 
 @CacheCentricAnnotation(cacheRegion = "customers")

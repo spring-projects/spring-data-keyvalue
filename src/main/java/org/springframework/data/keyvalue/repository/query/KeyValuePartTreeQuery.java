@@ -157,7 +157,7 @@ public class KeyValuePartTreeQuery implements RepositoryQuery {
 			query.setRows(instance.getRows());
 		}
 
-		query.setSort(sort == null || sort.isUnsorted() ? instance.getSort() : sort);
+		query.setSort(sort.isUnsorted() ? instance.getSort() : sort);
 
 		return query;
 	}

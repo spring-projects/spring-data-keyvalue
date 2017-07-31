@@ -76,7 +76,7 @@ public class QuerydslKeyValueRepositoryUnitTests extends AbstractRepositoryUnitT
 		assertThat(page1.getContent(), hasSize(1));
 		assertThat(page1.hasNext(), is(true));
 
-		Page<Person> page2 = ((QPersonRepository) repository).findAll(QPerson.person.age.eq(CERSEI.getAge()),
+		Page<Person> page2 = repository.findAll(QPerson.person.age.eq(CERSEI.getAge()),
 				page1.nextPageable());
 
 		assertThat(page2.getTotalElements(), is(2L));

@@ -101,7 +101,7 @@ enum DefaultIdentifierGenerator implements IdentifierGenerator {
 		private static final List<String> SECURE_RANDOM_ALGORITHMS_WINDOWS = Arrays.asList("SHA1PRNG", "Windows-PRNG");
 
 		static List<String> secureRandomAlgorithmNames() {
-			return OPERATING_SYSTEM_NAME.indexOf("win") >= 0 ? SECURE_RANDOM_ALGORITHMS_WINDOWS
+			return OPERATING_SYSTEM_NAME.contains("win") ? SECURE_RANDOM_ALGORITHMS_WINDOWS
 					: SECURE_RANDOM_ALGORITHMS_LINUX_OSX_SOLARIS;
 		}
 	}
