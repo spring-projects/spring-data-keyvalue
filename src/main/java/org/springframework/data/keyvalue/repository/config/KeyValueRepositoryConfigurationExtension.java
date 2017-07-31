@@ -1,5 +1,5 @@
 /*
- * Copyright 2014-2016 the original author or authors.
+ * Copyright 2014-2017 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -35,6 +35,7 @@ import org.springframework.data.repository.config.AnnotationRepositoryConfigurat
 import org.springframework.data.repository.config.RepositoryConfigurationExtension;
 import org.springframework.data.repository.config.RepositoryConfigurationExtensionSupport;
 import org.springframework.data.repository.config.RepositoryConfigurationSource;
+import org.springframework.util.CollectionUtils;
 
 /**
  * {@link RepositoryConfigurationExtension} for {@link KeyValueRepository}.
@@ -80,7 +81,7 @@ public abstract class KeyValueRepositoryConfigurationExtension extends Repositor
 	 */
 	@Override
 	protected Collection<Class<?>> getIdentifyingTypes() {
-		return Collections.<Class<?>> singleton(KeyValueRepository.class);
+		return Collections.singleton(KeyValueRepository.class);
 	}
 
 	/*
@@ -109,9 +110,10 @@ public abstract class KeyValueRepositoryConfigurationExtension extends Repositor
 
 		AnnotationMetadata metadata = config.getEnableAnnotationMetadata();
 
-		Map<String, Object> queryCreatorAnnotationAttributes = metadata.getAnnotationAttributes(QueryCreatorType.class.getName());
+		Map<String, Object> queryCreatorAnnotationAttributes = metadata
+				.getAnnotationAttributes(QueryCreatorType.class.getName());
 
-		if (queryCreatorAnnotationAttributes == null) {
+		if (CollectionUtils.isEmpty(queryCreatorAnnotationAttributes)) {
 			return SpelQueryCreator.class;
 		}
 
@@ -130,7 +132,8 @@ public abstract class KeyValueRepositoryConfigurationExtension extends Repositor
 
 		AnnotationMetadata metadata = config.getEnableAnnotationMetadata();
 
-		Map<String, Object> queryCreatorAnnotationAttributes = metadata.getAnnotationAttributes(QueryCreatorType.class.getName());
+		Map<String, Object> queryCreatorAnnotationAttributes = metadata
+				.getAnnotationAttributes(QueryCreatorType.class.getName());
 
 		if (queryCreatorAnnotationAttributes == null) {
 			return KeyValuePartTreeQuery.class;
@@ -163,7 +166,8 @@ public abstract class KeyValueRepositoryConfigurationExtension extends Repositor
 			AbstractBeanDefinition beanDefinition = getDefaultKeyValueTemplateBeanDefinition(configurationSource);
 
 			if (beanDefinition != null) {
-				registerIfNotAlreadyRegistered(beanDefinition, registry, keyValueTemplateName.get(), configurationSource.getSource());
+				registerIfNotAlreadyRegistered(beanDefinition, registry, keyValueTemplateName.get(),
+						configurationSource.getSource());
 			}
 		}
 	}

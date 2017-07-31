@@ -15,10 +15,11 @@
  */
 package org.springframework.data.keyvalue.core;
 
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Comparator;
 import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import org.springframework.data.keyvalue.core.query.KeyValueQuery;
 import org.springframework.expression.spel.SpelEvaluationException;
@@ -60,7 +61,7 @@ class SpelQueryEngine extends QueryEngine<KeyValueAdapter, SpelCriteria, Compara
 	 */
 	@Override
 	public long count(SpelCriteria criteria, String keyspace) {
-		return filterMatchingRange(getAdapter().getAllOf(keyspace), criteria, -1, -1).size();
+		return filterMatchingRange(IterableConverter.toList(getAdapter().getAllOf(keyspace)), criteria, -1, -1).size();
 	}
 
 	@SuppressWarnings("unchecked")
@@ -75,44 +76,35 @@ class SpelQueryEngine extends QueryEngine<KeyValueAdapter, SpelCriteria, Compara
 		return filterMatchingRange(tmp, criteria, offset, rows);
 	}
 
-	private static <S> List<S> filterMatchingRange(Iterable<S> source, SpelCriteria criteria, long offset, int rows) {
+	private static <S> List<S> filterMatchingRange(List<S> source, SpelCriteria criteria, long offset, int rows) {
 
-		List<S> result = new ArrayList<>();
+		Stream<S> stream = source.stream();
 
-		boolean compareOffsetAndRows = 0 < offset || 0 <= rows;
-		int remainingRows = rows;
-		int curPos = 0;
-
-		for (S candidate : source) {
-
-			boolean matches = criteria == null;
-
-			if (!matches) {
-				try {
-					matches = criteria.getExpression().getValue(criteria.getContext(), candidate, Boolean.class);
-				} catch (SpelEvaluationException e) {
-					criteria.getContext().setVariable("it", candidate);
-					matches = criteria.getExpression().getValue(criteria.getContext()) == null ? false
-							: criteria.getExpression().getValue(criteria.getContext(), Boolean.class);
-				}
-			}
-
-			if (matches) {
-				if (compareOffsetAndRows) {
-					if (curPos >= offset && rows > 0) {
-						result.add(candidate);
-						remainingRows--;
-						if (remainingRows <= 0) {
-							break;
-						}
-					}
-					curPos++;
-				} else {
-					result.add(candidate);
-				}
-			}
+		if (criteria != null) {
+			stream = stream.filter(it -> evaluateExpression(criteria, it));
+		}
+		if (offset > 0) {
+			stream = stream.skip(offset);
+		}
+		if (rows > 0) {
+			stream = stream.limit(rows);
 		}
 
-		return result;
+		return stream.collect(Collectors.toList());
+	}
+
+	static boolean evaluateExpression(SpelCriteria criteria, Object candidate) {
+
+		boolean matches = false;
+
+		try {
+			matches = criteria.getExpression().getValue(criteria.getContext(), candidate, Boolean.class);
+		} catch (SpelEvaluationException e) {
+			criteria.getContext().setVariable("it", candidate);
+			matches = criteria.getExpression().getValue(criteria.getContext()) == null ? false
+					: criteria.getExpression().getValue(criteria.getContext(), Boolean.class);
+		}
+
+		return matches;
 	}
 }

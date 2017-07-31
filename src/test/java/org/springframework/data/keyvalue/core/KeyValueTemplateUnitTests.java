@@ -17,7 +17,6 @@ package org.springframework.data.keyvalue.core;
 
 import static org.hamcrest.Matchers.*;
 import static org.junit.Assert.*;
-import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.*;
 
 import lombok.AllArgsConstructor;
@@ -35,7 +34,6 @@ import org.junit.Test;
 import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
 import org.mockito.ArgumentCaptor;
-import org.mockito.Matchers;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 import org.springframework.context.ApplicationEventPublisher;
@@ -43,7 +41,6 @@ import org.springframework.dao.DuplicateKeyException;
 import org.springframework.dao.InvalidDataAccessApiUsageException;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.keyvalue.SubclassOfTypeWithCustomComposedKeySpaceAnnotation;
-import org.springframework.data.keyvalue.TypeWithCustomComposedKeySpaceAnnotation;
 import org.springframework.data.keyvalue.TypeWithCustomComposedKeySpaceAnnotationUsingAliasFor;
 import org.springframework.data.keyvalue.core.event.KeyValueEvent;
 import org.springframework.data.keyvalue.core.event.KeyValueEvent.AfterDeleteEvent;
@@ -70,11 +67,9 @@ public class KeyValueTemplateUnitTests {
 
 	private static final Foo FOO_ONE = new Foo("one");
 	private static final Foo FOO_TWO = new Foo("two");
-	private static final TypeWithCustomComposedKeySpaceAnnotation ALIASED = new TypeWithCustomComposedKeySpaceAnnotation(
-			"super");
 	private static final TypeWithCustomComposedKeySpaceAnnotationUsingAliasFor ALIASED_USING_ALIAS_FOR = new TypeWithCustomComposedKeySpaceAnnotationUsingAliasFor(
 			"super");
-	private static final SubclassOfTypeWithCustomComposedKeySpaceAnnotation SUBCLASS_OF_ALIASED = new SubclassOfTypeWithCustomComposedKeySpaceAnnotation(
+	private static final SubclassOfTypeWithCustomComposedKeySpaceAnnotation SUBCLASS_OF_ALIASED_USING_ALIAS_FOR = new SubclassOfTypeWithCustomComposedKeySpaceAnnotation(
 			"sub");
 	private static final KeyValueQuery<String> STRING_QUERY = new KeyValueQuery<>("foo == 'two'");
 
@@ -300,34 +295,35 @@ public class KeyValueTemplateUnitTests {
 	@Test // DATACMNS-525
 	public void insertShouldRespectTypeAlias() {
 
-		template.insert("1", ALIASED);
+		template.insert("1", ALIASED_USING_ALIAS_FOR);
 
-		verify(adapterMock, times(1)).put("1", ALIASED, "aliased");
+		verify(adapterMock, times(1)).put("1", ALIASED_USING_ALIAS_FOR, "aliased");
 	}
 
 	@Test // DATACMNS-525
 	public void insertShouldRespectTypeAliasOnSubClass() {
 
-		template.insert("1", SUBCLASS_OF_ALIASED);
+		template.insert("1", SUBCLASS_OF_ALIASED_USING_ALIAS_FOR);
 
-		verify(adapterMock, times(1)).put("1", SUBCLASS_OF_ALIASED, "aliased");
+		verify(adapterMock, times(1)).put("1", SUBCLASS_OF_ALIASED_USING_ALIAS_FOR, "aliased");
 	}
 
 	@SuppressWarnings({ "rawtypes", "unchecked" })
 	@Test // DATACMNS-525
 	public void findAllOfShouldRespectTypeAliasAndFilterNonMatchingTypes() {
 
-		Collection foo = Arrays.asList(ALIASED, SUBCLASS_OF_ALIASED);
+		Collection foo = Arrays.asList(ALIASED_USING_ALIAS_FOR, SUBCLASS_OF_ALIASED_USING_ALIAS_FOR);
 		when(adapterMock.getAllOf("aliased")).thenReturn(foo);
 
-		assertThat(template.findAll(SUBCLASS_OF_ALIASED.getClass()), containsInAnyOrder(SUBCLASS_OF_ALIASED));
+		assertThat(template.findAll(SUBCLASS_OF_ALIASED_USING_ALIAS_FOR.getClass()),
+				containsInAnyOrder(SUBCLASS_OF_ALIASED_USING_ALIAS_FOR));
 	}
 
 	@Test // DATACMNS-525
 	public void insertSouldRespectTypeAliasAndFilterNonMatching() {
 
-		template.insert("1", ALIASED);
-		assertThat(template.findById("1", SUBCLASS_OF_ALIASED.getClass()), is(Optional.empty()));
+		template.insert("1", ALIASED_USING_ALIAS_FOR);
+		assertThat(template.findById("1", SUBCLASS_OF_ALIASED_USING_ALIAS_FOR.getClass()), is(Optional.empty()));
 	}
 
 	@Test(expected = IllegalArgumentException.class) // DATACMNS-525
@@ -359,7 +355,7 @@ public class KeyValueTemplateUnitTests {
 	@SuppressWarnings("rawtypes")
 	public void shouldNotPublishEventsWhenEventsToPublishIsSetToEmptyList() {
 
-		template.setEventTypesToPublish(Collections.<Class<? extends KeyValueEvent>> emptySet());
+		template.setEventTypesToPublish(Collections.emptySet());
 
 		template.insert("1", FOO_ONE);
 
@@ -371,7 +367,7 @@ public class KeyValueTemplateUnitTests {
 
 		template.insert("1", FOO_ONE);
 
-		verify(publisherMock, atLeastOnce()).publishEvent(Matchers.any(KeyValueEvent.class));
+		verify(publisherMock, atLeastOnce()).publishEvent(any());
 	}
 
 	@Test // DATAKV-91, DATAKV-104
@@ -400,7 +396,7 @@ public class KeyValueTemplateUnitTests {
 
 		assertThat(captor.getValue().getKey(), is("1"));
 		assertThat(captor.getValue().getKeyspace(), is(Foo.class.getName()));
-		assertThat(captor.getValue().getPayload(), is((Object) FOO_ONE));
+		assertThat(captor.getValue().getPayload(), is(FOO_ONE));
 	}
 
 	@Test // DATAKV-91, DATAKV-104, DATAKV-187

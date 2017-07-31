@@ -38,7 +38,7 @@ public class KeyValuePersistenceExceptionTranslatorUnitTests {
 				instanceOf(DataRetrievalFailureException.class));
 	}
 
-	@Test // DATACMNS-525
+	@Test(expected = IllegalArgumentException.class) // DATACMNS-525, DATAKV-192
 	public void translateExeptionShouldReturnNullWhenGivenNull() {
 		assertThat(translator.translateExceptionIfPossible(null), nullValue());
 	}
