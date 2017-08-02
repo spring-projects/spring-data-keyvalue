@@ -186,7 +186,7 @@ public class KeyValueEvent<T> extends ApplicationEvent {
 		private Object key;
 		private Class<? extends T> type;
 
-		protected KeyBasedEvent(Object key, String keyspace, Class<? extends T> type) {
+		KeyBasedEvent(Object key, String keyspace, Class<? extends T> type) {
 
 			super(type, keyspace);
 			this.key = key;
@@ -225,7 +225,7 @@ public class KeyValueEvent<T> extends ApplicationEvent {
 
 		private final T payload;
 
-		public KeyBasedEventWithPayload(Object key, String keyspace, Class<? extends T> type, T payload) {
+		KeyBasedEventWithPayload(Object key, String keyspace, Class<? extends T> type, T payload) {
 			super(key, keyspace, type);
 			this.payload = payload;
 		}

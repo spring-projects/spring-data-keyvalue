@@ -1,5 +1,5 @@
 /*
- * Copyright 2016 the original author or authors.
+ * Copyright 2016-2017 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,16 +15,19 @@
  */
 package org.springframework.data.keyvalue;
 
+import lombok.Data;
+
 import org.springframework.data.annotation.Id;
 import org.springframework.data.annotation.Persistent;
-import org.springframework.util.ObjectUtils;
 
 /**
  * A {@link Persistent} type with {@link CustomKeySpaceAnnotationWithAliasFor}.
- * 
+ *
  * @author Christoph Strobl
+ * @author Mark Paluch
  */
 @CustomKeySpaceAnnotationWithAliasFor(name = "aliased")
+@Data
 public class TypeWithCustomComposedKeySpaceAnnotationUsingAliasFor {
 
 	@Id String id;
@@ -33,51 +36,4 @@ public class TypeWithCustomComposedKeySpaceAnnotationUsingAliasFor {
 	public TypeWithCustomComposedKeySpaceAnnotationUsingAliasFor(String name) {
 		this.name = name;
 	}
-
-	public String getId() {
-		return id;
-	}
-
-	public void setId(String id) {
-		this.id = id;
-	}
-
-	public String getName() {
-		return name;
-	}
-
-	public void setName(String name) {
-		this.name = name;
-	}
-
-	@Override
-	public int hashCode() {
-		final int prime = 31;
-		int result = 1;
-		result = prime * result + ObjectUtils.nullSafeHashCode(this.id);
-		result = prime * result + ObjectUtils.nullSafeHashCode(this.name);
-		return result;
-	}
-
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj) {
-			return true;
-		}
-		if (obj == null) {
-			return false;
-		}
-		if (!(obj instanceof TypeWithCustomComposedKeySpaceAnnotationUsingAliasFor)) {
-			return false;
-		}
-		TypeWithCustomComposedKeySpaceAnnotationUsingAliasFor other = (TypeWithCustomComposedKeySpaceAnnotationUsingAliasFor) obj;
-		if (!ObjectUtils.nullSafeEquals(this.id, other.id)) {
-			return false;
-		}
-		if (!ObjectUtils.nullSafeEquals(this.name, other.name)) {
-			return false;
-		}
-		return true;
-	}
-
 }

@@ -19,6 +19,8 @@ import static org.hamcrest.core.Is.*;
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
 
+import lombok.Data;
+
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Date;
@@ -43,6 +45,7 @@ import org.springframework.util.ObjectUtils;
 
 /**
  * @author Christoph Strobl
+ * @author Mark Paluch
  */
 @RunWith(MockitoJUnitRunner.class)
 public class SpelQueryCreatorUnitTests {
@@ -341,7 +344,8 @@ public class SpelQueryCreatorUnitTests {
 		return q;
 	}
 
-	static interface PersonRepository {
+	@SuppressWarnings("unused")
+	interface PersonRepository {
 
 		// No arguments
 		Person findBy();
@@ -423,9 +427,9 @@ public class SpelQueryCreatorUnitTests {
 			expression.getEvaluationContext().setVariable("it", candidate);
 			return expression.getValue(Boolean.class);
 		}
-
 	}
 
+	@Data
 	static class Person {
 
 		private @Id String id;
@@ -440,54 +444,6 @@ public class SpelQueryCreatorUnitTests {
 			super();
 			this.firstname = firstname;
 			this.age = age;
-		}
-
-		public String getId() {
-			return id;
-		}
-
-		public void setId(String id) {
-			this.id = id;
-		}
-
-		public String getFirstname() {
-			return firstname;
-		}
-
-		public void setFirstname(String firstname) {
-			this.firstname = firstname;
-		}
-
-		public String getLastname() {
-			return lastname;
-		}
-
-		public void setLastname(String lastname) {
-			this.lastname = lastname;
-		}
-
-		public int getAge() {
-			return age;
-		}
-
-		public void setAge(int age) {
-			this.age = age;
-		}
-
-		public Date getBirthday() {
-			return birthday;
-		}
-
-		public void setBirthday(Date birthday) {
-			this.birthday = birthday;
-		}
-
-		public boolean isSkinChanger() {
-			return isSkinChanger;
-		}
-
-		public void setSkinChanger(boolean isSkinChanger) {
-			this.isSkinChanger = isSkinChanger;
 		}
 
 		public Person skinChanger(boolean isSkinChanger) {

@@ -31,8 +31,8 @@ public interface CriteriaAccessor<T> {
 	 *
 	 * @param query can be {@literal null}.
 	 * @return the criteria extracted from the query.
-	 * @throws IllegalArgumentException in case the criteria is not valid for usage with specific {@link CriteriaAccessor}
-	 *           .
+	 * @throws IllegalArgumentException in case the criteria is not valid for usage with specific
+	 *           {@link CriteriaAccessor}.
 	 */
 	T resolve(KeyValueQuery<?> query);
 }

@@ -165,7 +165,7 @@ public class SimpleKeyValueRepositoryUnitTests {
 	@Test // DATACMNS-525
 	public void findAllShouldFallbackToFindAllOfWhenGivenNullPageable() {
 
-		repo.findAll((Pageable) null);
+		repo.findAll(Pageable.unpaged());
 
 		verify(opsMock, times(1)).findAll(eq(Foo.class));
 	}

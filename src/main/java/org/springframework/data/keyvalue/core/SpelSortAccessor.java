@@ -39,7 +39,7 @@ class SpelSortAccessor implements SortAccessor<Comparator<?>> {
 	/**
 	 * @param parser must not be {@literal null}.
 	 */
-	public SpelSortAccessor(SpelExpressionParser parser) {
+	SpelSortAccessor(SpelExpressionParser parser) {
 
 		Assert.notNull(parser, "SpelExpressionParser must not be null!");
 		this.parser = parser;
@@ -66,7 +66,7 @@ class SpelSortAccessor implements SortAccessor<Comparator<?>> {
 
 				spelSort.desc();
 
-				if (order.getNullHandling() != null && !NullHandling.NATIVE.equals(order.getNullHandling())) {
+				if (!NullHandling.NATIVE.equals(order.getNullHandling())) {
 					spelSort = NullHandling.NULLS_FIRST.equals(order.getNullHandling()) ? spelSort.nullsFirst()
 							: spelSort.nullsLast();
 				}

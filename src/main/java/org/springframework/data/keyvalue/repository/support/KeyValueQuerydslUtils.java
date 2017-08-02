@@ -51,7 +51,7 @@ abstract class KeyValueQuerydslUtils {
 	 * @param builder must not be {@literal null}.
 	 * @return empty {@code OrderSpecifier<?>[]} when sort is {@literal null}.
 	 */
-	public static OrderSpecifier<?>[] toOrderSpecifier(Sort sort, PathBuilder<?> builder) {
+	static OrderSpecifier<?>[] toOrderSpecifier(Sort sort, PathBuilder<?> builder) {
 
 		Assert.notNull(builder, "Builder must not be 'null'.");
 

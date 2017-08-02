@@ -74,7 +74,9 @@ public class SimpleKeyValueRepository<T, ID> implements KeyValueRepository<T, ID
 	@Override
 	public Page<T> findAll(Pageable pageable) {
 
-		if (pageable == null) {
+		Assert.notNull(pageable, "Pageable must not be null!");
+
+		if (pageable.isUnpaged()) {
 			List<T> result = findAll();
 			return new PageImpl<>(result, Pageable.unpaged(), result.size());
 		}
@@ -110,9 +112,7 @@ public class SimpleKeyValueRepository<T, ID> implements KeyValueRepository<T, ID
 	@Override
 	public <S extends T> Iterable<S> saveAll(Iterable<S> entities) {
 
-		for (S entity : entities) {
-			save(entity);
-		}
+		entities.forEach(this::save);
 
 		return entities;
 	}
@@ -153,9 +153,7 @@ public class SimpleKeyValueRepository<T, ID> implements KeyValueRepository<T, ID
 
 		List<T> result = new ArrayList<>();
 
-		for (ID id : ids) {
-			findById(id).ifPresent(result::add);
-		}
+		ids.forEach(id -> findById(id).ifPresent(result::add));
 
 		return result;
 	}
@@ -193,10 +191,7 @@ public class SimpleKeyValueRepository<T, ID> implements KeyValueRepository<T, ID
 	 */
 	@Override
 	public void deleteAll(Iterable<? extends T> entities) {
-
-		for (T entity : entities) {
-			delete(entity);
-		}
+		entities.forEach(this::delete);
 	}
 
 	/*

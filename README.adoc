@@ -47,7 +47,7 @@ class AppConfig { … }
 
 NOTE: it is possible to change the used `java.util.Map` implementation via `@EnableMapRepositories(mapType=….class)`.
 
-Create the domain type and use `@KeySpace` to explicitly group values into one region. By default the types class name is used.
+Create the domain type and use `@KeySpace` to explicitly group values into one region. By default, the type class name is used.
 
 [source, java]
 ----

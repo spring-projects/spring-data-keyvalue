@@ -128,7 +128,7 @@ public class KeyValuePartTreeQueryUnitTests {
 		assertThat(query.getRows(), is(3));
 	}
 
-	static interface Repo {
+	interface Repo {
 
 		List<Person> findByFirstname(String firstname);
 

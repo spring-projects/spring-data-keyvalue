@@ -42,7 +42,7 @@ class GeneratingIdAccessor implements IdentifierAccessor {
 	 * @param identifierProperty must not be {@literal null}.
 	 * @param generator must not be {@literal null}.
 	 */
-	public GeneratingIdAccessor(PersistentPropertyAccessor accessor, PersistentProperty<?> identifierProperty,
+	GeneratingIdAccessor(PersistentPropertyAccessor accessor, PersistentProperty<?> identifierProperty,
 			IdentifierGenerator generator) {
 
 		Assert.notNull(accessor, "PersistentPropertyAccessor must not be null!");
@@ -69,7 +69,7 @@ class GeneratingIdAccessor implements IdentifierAccessor {
 	 *
 	 * @return
 	 */
-	public Object getOrGenerateIdentifier() {
+	Object getOrGenerateIdentifier() {
 
 		Object existingIdentifier = getIdentifier();
 

@@ -18,6 +18,7 @@ package org.springframework.data.keyvalue.core;
 import static org.hamcrest.Matchers.*;
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.any;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -414,7 +415,7 @@ public class KeyValueTemplateUnitTests {
 
 		assertThat(captor.getValue().getKey(), is("1"));
 		assertThat(captor.getValue().getKeyspace(), is(Foo.class.getName()));
-		assertThat(captor.getValue().getPayload(), is((Object) FOO_ONE));
+		assertThat(captor.getValue().getPayload(), is(FOO_ONE));
 	}
 
 	@Test // DATAKV-91, DATAKV-104, DATAKV-187
@@ -432,7 +433,7 @@ public class KeyValueTemplateUnitTests {
 
 		assertThat(captor.getValue().getKey(), is("1"));
 		assertThat(captor.getValue().getKeyspace(), is(Foo.class.getName()));
-		assertThat(captor.getValue().getPayload(), is((Object) FOO_ONE));
+		assertThat(captor.getValue().getPayload(), is(FOO_ONE));
 	}
 
 	@Test // DATAKV-91, DATAKV-104, DATAKV-187
@@ -450,7 +451,7 @@ public class KeyValueTemplateUnitTests {
 
 		assertThat(captor.getValue().getKey(), is("1"));
 		assertThat(captor.getValue().getKeyspace(), is(Foo.class.getName()));
-		assertThat(captor.getValue().getPayload(), is((Object) FOO_ONE));
+		assertThat(captor.getValue().getPayload(), is(FOO_ONE));
 	}
 
 	@Test // DATAKV-91, DATAKV-104, DATAKV-187
@@ -486,7 +487,7 @@ public class KeyValueTemplateUnitTests {
 
 		assertThat(captor.getValue().getKey(), is("1"));
 		assertThat(captor.getValue().getKeyspace(), is(Foo.class.getName()));
-		assertThat(captor.getValue().getPayload(), is((Object) FOO_ONE));
+		assertThat(captor.getValue().getPayload(), is(FOO_ONE));
 	}
 
 	@Test // DATAKV-91, DATAKV-104, DATAKV-187
@@ -525,7 +526,7 @@ public class KeyValueTemplateUnitTests {
 
 		assertThat(captor.getValue().getKey(), is("1"));
 		assertThat(captor.getValue().getKeyspace(), is(Foo.class.getName()));
-		assertThat(captor.getValue().getPayload(), is((Object) FOO_ONE));
+		assertThat(captor.getValue().getPayload(), is(FOO_ONE));
 	}
 
 	@Test // DATAKV-91, DATAKV-104, DATAKV-187
@@ -552,8 +553,9 @@ public class KeyValueTemplateUnitTests {
 		verify(adapterMock, times(1)).put("1", ALIASED_USING_ALIAS_FOR, "aliased");
 	}
 
+	@SafeVarargs
 	@SuppressWarnings("rawtypes")
-	private void setEventsToPublish(Class<? extends KeyValueEvent>... events) {
+	private final void setEventsToPublish(Class<? extends KeyValueEvent>... events) {
 		template.setEventTypesToPublish(new HashSet<>(Arrays.asList(events)));
 	}
 

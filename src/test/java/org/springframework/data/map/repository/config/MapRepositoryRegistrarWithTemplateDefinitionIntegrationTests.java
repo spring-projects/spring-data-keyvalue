@@ -18,6 +18,8 @@ package org.springframework.data.map.repository.config;
 import static org.hamcrest.core.IsNull.*;
 import static org.junit.Assert.*;
 
+import lombok.Data;
+
 import java.util.List;
 
 import org.junit.Test;
@@ -35,8 +37,9 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 /**
  * Integration tests for {@link MapRepositoriesRegistrar} with complete defaulting.
- * 
+ *
  * @author Christoph Strobl
+ * @author Mark Paluch
  */
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration
@@ -59,30 +62,14 @@ public class MapRepositoryRegistrarWithTemplateDefinitionIntegrationTests {
 		assertThat(repo, notNullValue());
 	}
 
+	@Data
 	static class Person {
 
 		@Id String id;
 		String firstname;
-
-		public String getId() {
-			return id;
-		}
-
-		public void setId(String id) {
-			this.id = id;
-		}
-
-		public String getFirstname() {
-			return firstname;
-		}
-
-		public void setFirstname(String firstname) {
-			this.firstname = firstname;
-		}
-
 	}
 
-	static interface PersonRepository extends CrudRepository<Person, String> {
+	interface PersonRepository extends CrudRepository<Person, String> {
 
 		List<Person> findByFirstname(String firstname);
 	}

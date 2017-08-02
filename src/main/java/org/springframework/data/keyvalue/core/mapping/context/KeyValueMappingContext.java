@@ -1,5 +1,5 @@
 /*
- * Copyright 2014-2015 the original author or authors.
+ * Copyright 2014-2017 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -28,9 +28,10 @@ import org.springframework.data.util.TypeInformation;
 /**
  * Default implementation of a {@link MappingContext} using {@link KeyValuePersistentEntity} and
  * {@link KeyValuePersistentProperty} as primary abstractions.
- * 
+ *
  * @author Christoph Strobl
  * @author Oliver Gierke
+ * @author Mark Paluch
  */
 public class KeyValueMappingContext<E extends KeyValuePersistentEntity<?, P>, P extends KeyValuePersistentProperty<P>>
 		extends AbstractMappingContext<E, P> {
@@ -39,7 +40,7 @@ public class KeyValueMappingContext<E extends KeyValuePersistentEntity<?, P>, P 
 
 	/**
 	 * Configures the {@link KeySpaceResolver} to be used if not explicit key space is annotated to the domain type.
-	 * 
+	 *
 	 * @param fallbackKeySpaceResolver can be {@literal null}.
 	 */
 	public void setFallbackKeySpaceResolver(KeySpaceResolver fallbackKeySpaceResolver) {
@@ -47,11 +48,13 @@ public class KeyValueMappingContext<E extends KeyValuePersistentEntity<?, P>, P 
 	}
 
 	@Override
+	@SuppressWarnings("unchecked")
 	protected <T> E createPersistentEntity(TypeInformation<T> typeInformation) {
 		return (E) new BasicKeyValuePersistentEntity<T, P>(typeInformation, fallbackKeySpaceResolver);
 	}
 
 	@Override
+	@SuppressWarnings("unchecked")
 	protected P createPersistentProperty(Property property, E owner, SimpleTypeHolder simpleTypeHolder) {
 		return (P) new KeyValuePersistentProperty(property, owner, simpleTypeHolder);
 	}

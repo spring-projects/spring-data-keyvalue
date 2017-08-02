@@ -26,6 +26,7 @@ import org.springframework.data.mapping.model.SimpleTypeHolder;
  * Most trivial implementation of {@link PersistentProperty}.
  *
  * @author Christoph Strobl
+ * @author Mark Paluch
  */
 public class KeyValuePersistentProperty<P extends KeyValuePersistentProperty<P>>
 		extends AnnotationBasedPersistentProperty<P> {
@@ -40,6 +41,7 @@ public class KeyValuePersistentProperty<P extends KeyValuePersistentProperty<P>>
 	 * @see org.springframework.data.mapping.model.AbstractPersistentProperty#createAssociation()
 	 */
 	@Override
+	@SuppressWarnings("unchecked")
 	protected Association<P> createAssociation() {
 		return new Association<>((P) this, null);
 	}

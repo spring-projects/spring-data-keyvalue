@@ -56,7 +56,6 @@ public abstract class AbstractRepositoryUnitTests<T extends AbstractRepositoryUn
 	protected final QPerson person = QPerson.person;
 
 	protected T repository;
-	protected KeyValueRepositoryFactory factory;
 
 	@Before
 	public void setup() {

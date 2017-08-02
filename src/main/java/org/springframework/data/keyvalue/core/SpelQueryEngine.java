@@ -93,18 +93,14 @@ class SpelQueryEngine extends QueryEngine<KeyValueAdapter, SpelCriteria, Compara
 		return stream.collect(Collectors.toList());
 	}
 
-	static boolean evaluateExpression(SpelCriteria criteria, Object candidate) {
-
-		boolean matches = false;
+	private static boolean evaluateExpression(SpelCriteria criteria, Object candidate) {
 
 		try {
-			matches = criteria.getExpression().getValue(criteria.getContext(), candidate, Boolean.class);
+			return criteria.getExpression().getValue(criteria.getContext(), candidate, Boolean.class);
 		} catch (SpelEvaluationException e) {
 			criteria.getContext().setVariable("it", candidate);
-			matches = criteria.getExpression().getValue(criteria.getContext()) == null ? false
+			return criteria.getExpression().getValue(criteria.getContext()) == null ? false
 					: criteria.getExpression().getValue(criteria.getContext(), Boolean.class);
 		}
-
-		return matches;
 	}
 }

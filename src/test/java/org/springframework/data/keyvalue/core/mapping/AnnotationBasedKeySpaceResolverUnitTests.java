@@ -34,7 +34,7 @@ import org.springframework.data.keyvalue.annotation.KeySpace;
 
 /**
  * Unit tests for {@link AnnotationBasedKeySpaceResolver}.
- * 
+ *
  * @author Christoph Strobl
  * @author Oliver Gierke
  */
@@ -114,7 +114,7 @@ public class AnnotationBasedKeySpaceResolverUnitTests {
 		@AliasFor(annotation = KeySpace.class, attribute = "value")
 		String firstname() default "daenerys";
 
-		String lastnamne() default "targaryen";
+		String lastname() default "targaryen";
 
 	}
 

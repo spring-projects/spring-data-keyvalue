@@ -42,7 +42,7 @@ public class ForwardingCloseableIteratorUnitTests<K, V> {
 	@Mock Runnable closeActionMock;
 
 	@Test // DATAKV-99
-	public void hasNextShoudDelegateToWrappedIterator() {
+	public void hasNextShouldDelegateToWrappedIterator() {
 
 		when(iteratorMock.hasNext()).thenReturn(true);
 
@@ -58,7 +58,7 @@ public class ForwardingCloseableIteratorUnitTests<K, V> {
 
 	@Test // DATAKV-99
 	@SuppressWarnings("unchecked")
-	public void nextShoudDelegateToWrappedIterator() {
+	public void nextShouldDelegateToWrappedIterator() {
 
 		when(iteratorMock.next()).thenReturn((Entry<K, V>) mock(Map.Entry.class));
 
@@ -73,7 +73,7 @@ public class ForwardingCloseableIteratorUnitTests<K, V> {
 	}
 
 	@Test(expected = NoSuchElementException.class) // DATAKV-99
-	public void nextShoudThrowErrorWhenWrappedIteratorHasNoMoreElements() {
+	public void nextShouldThrowErrorWhenWrappedIteratorHasNoMoreElements() {
 
 		when(iteratorMock.next()).thenThrow(new NoSuchElementException());
 

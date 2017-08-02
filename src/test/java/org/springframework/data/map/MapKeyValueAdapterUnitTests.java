@@ -22,12 +22,13 @@ import static org.hamcrest.core.IsNull.*;
 import static org.junit.Assert.*;
 import static org.springframework.data.keyvalue.test.util.IsEntry.*;
 
+import lombok.Data;
+
 import java.util.Map;
 
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.data.util.CloseableIterator;
-import org.springframework.util.ObjectUtils;
 
 /**
  * @author Christoph Strobl
@@ -171,6 +172,7 @@ public class MapKeyValueAdapterUnitTests {
 		assertThat(iterator.hasNext(), is(false));
 	}
 
+	@Data
 	static class SimpleObject {
 
 		protected String stringValue;
@@ -179,29 +181,6 @@ public class MapKeyValueAdapterUnitTests {
 
 		SimpleObject(String value) {
 			this.stringValue = value;
-		}
-
-		@Override
-		public int hashCode() {
-			final int prime = 31;
-			int result = 1;
-			result = prime * ObjectUtils.nullSafeHashCode(this.stringValue);
-			return result;
-		}
-
-		@Override
-		public boolean equals(Object obj) {
-			if (this == obj) {
-				return true;
-			}
-			if (obj == null) {
-				return false;
-			}
-			if (!(obj instanceof SimpleObject)) {
-				return false;
-			}
-			SimpleObject that = (SimpleObject) obj;
-			return ObjectUtils.nullSafeEquals(this.stringValue, that.stringValue);
 		}
 	}
 

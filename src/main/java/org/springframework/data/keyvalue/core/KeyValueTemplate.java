@@ -140,10 +140,6 @@ public class KeyValueTemplate implements KeyValueOperations, ApplicationEventPub
 		return objectToInsert;
 	}
 
-	private KeyValuePersistentEntity<?, ?> getKeyValuePersistentEntity(Object objectToInsert) {
-		return this.mappingContext.getRequiredPersistentEntity(ClassUtils.getUserClass(objectToInsert));
-	}
-
 	/*
 	 * (non-Javadoc)
 	 * @see org.springframework.data.keyvalue.core.KeyValueOperations#insert(java.lang.Object, java.lang.Object)
@@ -230,7 +226,7 @@ public class KeyValueTemplate implements KeyValueOperations, ApplicationEventPub
 			ArrayList<T> filtered = new ArrayList<>();
 			for (Object candidate : values) {
 				if (typeCheck(type, candidate)) {
-					filtered.add((T) candidate);
+					filtered.add(type.cast(candidate));
 				}
 			}
 
@@ -436,6 +432,12 @@ public class KeyValueTemplate implements KeyValueOperations, ApplicationEventPub
 		this.adapter.clear();
 	}
 
+	@SuppressWarnings("unchecked")
+	private KeyValuePersistentEntity<?, ?> getKeyValuePersistentEntity(Object objectToInsert) {
+		return this.mappingContext.getRequiredPersistentEntity(ClassUtils.getUserClass(objectToInsert));
+	}
+
+	@SuppressWarnings("unchecked")
 	private String resolveKeySpace(Class<?> type) {
 		return this.mappingContext.getRequiredPersistentEntity(type).getKeySpace();
 	}

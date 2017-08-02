@@ -21,7 +21,7 @@ import org.springframework.data.keyvalue.core.query.KeyValueQuery;
 
 /**
  * Base implementation for accessing and executing {@link KeyValueQuery} against a {@link KeyValueAdapter}.
- * 
+ *
  * @author Christoph Strobl
  * @param <ADAPTER>
  * @param <CRITERIA>
@@ -42,7 +42,7 @@ public abstract class QueryEngine<ADAPTER extends KeyValueAdapter, CRITERIA, SOR
 
 	/**
 	 * Extract query attributes and delegate to concrete execution.
-	 * 
+	 *
 	 * @param query
 	 * @param keyspace
 	 * @return
@@ -57,7 +57,7 @@ public abstract class QueryEngine<ADAPTER extends KeyValueAdapter, CRITERIA, SOR
 
 	/**
 	 * Extract query attributes and delegate to concrete execution.
-	 * 
+	 *
 	 * @param query
 	 * @param keyspace
 	 * @return
@@ -72,7 +72,7 @@ public abstract class QueryEngine<ADAPTER extends KeyValueAdapter, CRITERIA, SOR
 
 	/**
 	 * Extract query attributes and delegate to concrete execution.
-	 * 
+	 *
 	 * @param query
 	 * @param keyspace
 	 * @return
@@ -103,6 +103,7 @@ public abstract class QueryEngine<ADAPTER extends KeyValueAdapter, CRITERIA, SOR
 	 * @return
 	 * @since 1.1
 	 */
+	@SuppressWarnings("unchecked")
 	public <T> Collection<T> execute(CRITERIA criteria, SORT sort, long offset, int rows, String keyspace,
 			Class<T> type) {
 		return (Collection<T>) execute(criteria, sort, offset, rows, keyspace);
@@ -117,7 +118,7 @@ public abstract class QueryEngine<ADAPTER extends KeyValueAdapter, CRITERIA, SOR
 
 	/**
 	 * Get the {@link KeyValueAdapter} used.
-	 * 
+	 *
 	 * @return
 	 */
 	protected ADAPTER getAdapter() {
