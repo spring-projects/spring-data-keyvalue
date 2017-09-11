@@ -1,6 +1,13 @@
 Spring Data KeyValue Changelog
 ==========================
 
+Changes in version 2.0.0.RC3 (2017-09-11)
+-----------------------------------------
+* DATAKV-192 - Move codebase to Java8 API.
+* DATAKV-190 - Release 2.0 RC3 (Kay).
+* DATAKV-175 - Remove deprecated KeyValueQuery.getCritieria method.
+
+
 Changes in version 1.2.7.RELEASE (2017-09-11)
 ---------------------------------------------
 * DATAKV-191 - Release 1.2.7 (Ingalls SR7).
