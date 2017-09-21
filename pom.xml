@@ -18,6 +18,7 @@
 
 	<properties>
 		<springdata.commons>2.0.0.BUILD-SNAPSHOT</springdata.commons>
+		<java-module-name>spring.data.keyvalue</java-module-name>
 	</properties>
 
 	<dependencies>
