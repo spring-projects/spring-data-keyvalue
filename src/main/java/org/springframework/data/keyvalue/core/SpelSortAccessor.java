@@ -32,14 +32,16 @@ import org.springframework.util.Assert;
  * @author Oliver Gierke
  * @author Mark Paluch
  */
-class SpelSortAccessor implements SortAccessor<Comparator<?>> {
+public class SpelSortAccessor implements SortAccessor<Comparator<?>> {
 
 	private final SpelExpressionParser parser;
 
 	/**
+	 * Creates a new {@link SpelSortAccessor} given {@link SpelExpressionParser}.
+	 *
 	 * @param parser must not be {@literal null}.
 	 */
-	SpelSortAccessor(SpelExpressionParser parser) {
+	public SpelSortAccessor(SpelExpressionParser parser) {
 
 		Assert.notNull(parser, "SpelExpressionParser must not be null!");
 		this.parser = parser;

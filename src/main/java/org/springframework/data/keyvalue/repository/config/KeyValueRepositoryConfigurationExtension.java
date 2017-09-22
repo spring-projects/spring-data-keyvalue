@@ -42,6 +42,7 @@ import org.springframework.util.CollectionUtils;
  *
  * @author Christoph Strobl
  * @author Oliver Gierke
+ * @author Mark Paluch
  */
 public abstract class KeyValueRepositoryConfigurationExtension extends RepositoryConfigurationExtensionSupport {
 
@@ -96,7 +97,7 @@ public abstract class KeyValueRepositoryConfigurationExtension extends Repositor
 		builder.addPropertyReference("keyValueOperations", attributes.getString(KEY_VALUE_TEMPLATE_BEAN_REF_ATTRIBUTE));
 		builder.addPropertyValue("queryCreator", getQueryCreatorType(config));
 		builder.addPropertyValue("queryType", getQueryType(config));
-		builder.addPropertyReference("mappingContext", MAPPING_CONTEXT_BEAN_NAME);
+		builder.addPropertyReference("mappingContext", getMappingContextBeanRef());
 	}
 
 	/**
@@ -155,7 +156,7 @@ public abstract class KeyValueRepositoryConfigurationExtension extends Repositor
 		RootBeanDefinition mappingContextDefinition = new RootBeanDefinition(KeyValueMappingContext.class);
 		mappingContextDefinition.setSource(configurationSource.getSource());
 
-		registerIfNotAlreadyRegistered(mappingContextDefinition, registry, MAPPING_CONTEXT_BEAN_NAME, configurationSource);
+		registerIfNotAlreadyRegistered(mappingContextDefinition, registry, getMappingContextBeanRef(), configurationSource);
 
 		Optional<String> keyValueTemplateName = configurationSource.getAttribute(KEY_VALUE_TEMPLATE_BEAN_REF_ATTRIBUTE);
 
@@ -176,11 +177,32 @@ public abstract class KeyValueRepositoryConfigurationExtension extends Repositor
 	 * Get the default {@link RootBeanDefinition} for {@link org.springframework.data.keyvalue.core.KeyValueTemplate}.
 	 *
 	 * @return {@literal null} to explicitly not register a template.
+	 * @see #getDefaultKeyValueTemplateRef()
 	 */
 	protected AbstractBeanDefinition getDefaultKeyValueTemplateBeanDefinition(
 			RepositoryConfigurationSource configurationSource) {
 		return null;
 	}
 
+	/**
+	 * Returns the {@link org.springframework.data.keyvalue.core.KeyValueTemplate} bean name to potentially register a
+	 * default {@link org.springframework.data.keyvalue.core.KeyValueTemplate} bean if no bean is registered with the
+	 * returned name.
+	 * 
+	 * @return the default {@link org.springframework.data.keyvalue.core.KeyValueTemplate} bean name.
+	 * @see #getDefaultKeyValueTemplateBeanDefinition(RepositoryConfigurationSource)
+	 */
 	protected abstract String getDefaultKeyValueTemplateRef();
+
+	/**
+	 * Returns the {@link org.springframework.data.mapping.context.MappingContext} bean name to potentially register a
+	 * default mapping context bean if no bean is registered with the returned name. Defaults to
+	 * {@link MAPPING_CONTEXT_BEAN_NAME}.
+	 * 
+	 * @return the {@link org.springframework.data.mapping.context.MappingContext} bean name.
+	 * @since 2.0
+	 */
+	protected String getMappingContextBeanRef() {
+		return MAPPING_CONTEXT_BEAN_NAME;
+	}
 }

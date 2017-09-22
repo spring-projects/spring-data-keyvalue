@@ -175,18 +175,42 @@ public class KeyValuePartTreeQuery implements RepositoryQuery {
 		throw new IllegalStateException(String.format("Cannot retrieve SpelExpression from %s", criteria));
 	}
 
+	/**
+	 * Create a {@link KeyValueQuery} given {@link ParameterAccessor}.
+	 *
+	 * @param accessor must not be {@literal null}.
+	 * @return the {@link KeyValueQuery}.
+	 */
 	public KeyValueQuery<?> createQuery(ParameterAccessor accessor) {
 
 		PartTree tree = new PartTree(getQueryMethod().getName(), getQueryMethod().getEntityInformation().getJavaType());
 
-		Constructor<? extends AbstractQueryCreator<?, ?>> constructor = ClassUtils
-				.getConstructorIfAvailable(queryCreator, PartTree.class, ParameterAccessor.class);
-		KeyValueQuery<?> query = (KeyValueQuery<?>) BeanUtils.instantiateClass(constructor, tree, accessor).createQuery();
+		AbstractQueryCreator<? extends KeyValueQuery<?>, ?> queryCreator = createQueryCreator(tree, accessor);
+
+		KeyValueQuery<?> query = queryCreator.createQuery();
 
 		if (tree.isLimiting()) {
 			query.setRows(tree.getMaxResults());
 		}
 		return query;
+	}
+
+	/**
+	 * Constructs a {@link AbstractQueryCreator} for repository query creation. Subclasses may override this method to
+	 * customize query creator construction.
+	 *
+	 * @param tree must not be {@literal null}.
+	 * @param accessor must not be {@literal null}.
+	 * @return the {@link AbstractQueryCreator} object.
+	 * @since 2.0
+	 */
+	protected AbstractQueryCreator<? extends KeyValueQuery<?>, ?> createQueryCreator(PartTree tree,
+			ParameterAccessor accessor) {
+
+		Constructor<? extends AbstractQueryCreator<?, ?>> constructor = ClassUtils.getConstructorIfAvailable(queryCreator,
+				PartTree.class, ParameterAccessor.class);
+
+		return (AbstractQueryCreator<KeyValueQuery<?>, ?>) BeanUtils.instantiateClass(constructor, tree, accessor);
 	}
 
 	/*
