@@ -37,6 +37,7 @@ import com.querydsl.core.types.dsl.PathBuilder;
  * @author Christoph Strobl
  * @author Thomas Darimont
  * @author Oliver Gierke
+ * @author Mark Paluch
  */
 abstract class KeyValueQuerydslUtils {
 
@@ -47,17 +48,14 @@ abstract class KeyValueQuerydslUtils {
 	/**
 	 * Transforms a plain {@link Order} into a QueryDsl specific {@link OrderSpecifier}.
 	 *
-	 * @param sort
+	 * @param sort must not be {@literal null}.
 	 * @param builder must not be {@literal null}.
 	 * @return empty {@code OrderSpecifier<?>[]} when sort is {@literal null}.
 	 */
 	static OrderSpecifier<?>[] toOrderSpecifier(Sort sort, PathBuilder<?> builder) {
 
-		Assert.notNull(builder, "Builder must not be 'null'.");
-
-		if (sort == null) {
-			return new OrderSpecifier<?>[0];
-		}
+		Assert.notNull(sort, "Sort must not be null.");
+		Assert.notNull(builder, "Builder must not be null.");
 
 		List<OrderSpecifier<?>> specifiers = null;
 

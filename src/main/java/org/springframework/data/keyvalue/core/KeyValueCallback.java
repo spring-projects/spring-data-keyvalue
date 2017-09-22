@@ -1,5 +1,5 @@
 /*
- * Copyright 2014 the original author or authors.
+ * Copyright 2014-2017 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,11 +15,14 @@
  */
 package org.springframework.data.keyvalue.core;
 
+import org.springframework.lang.Nullable;
+
 /**
  * Generic callback interface for code that operates on a {@link KeyValueAdapter}. This is particularly useful for
  * delegating code that needs to work closely on the underlying key/value store implementation.
  * 
  * @author Christoph Strobl
+ * @author Mark Paluch
  * @param <T>
  */
 public interface KeyValueCallback<T> {
@@ -31,5 +34,6 @@ public interface KeyValueCallback<T> {
 	 * @param adapter
 	 * @return
 	 */
+	@Nullable
 	T doInKeyValue(KeyValueAdapter adapter);
 }

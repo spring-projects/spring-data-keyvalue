@@ -39,6 +39,7 @@ import com.querydsl.core.types.dsl.PathBuilder;
  * @author Christoph Strobl
  * @author Thomas Darimont
  * @author Oliver Gierke
+ * @author Mark Paluch
  */
 public class KeyValueQuerydslUtilsUnitTests {
 
@@ -57,9 +58,9 @@ public class KeyValueQuerydslUtilsUnitTests {
 		toOrderSpecifier(Sort.by("firstname"), null);
 	}
 
-	@Test // DATACMNS-525
-	public void toOrderSpecifierReturnsEmptyArrayWhenSortIsNull() {
-		assertThat(toOrderSpecifier(null, builder), arrayWithSize(0));
+	@Test // DATACMNS-525, DATAKV-197
+	public void toOrderSpecifierReturnsEmptyArrayWhenSortIsUnsorted() {
+		assertThat(toOrderSpecifier(Sort.unsorted(), builder), arrayWithSize(0));
 	}
 
 	@Test // DATACMNS-525

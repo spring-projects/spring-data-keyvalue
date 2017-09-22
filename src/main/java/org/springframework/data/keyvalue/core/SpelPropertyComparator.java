@@ -19,12 +19,15 @@ import java.util.Comparator;
 
 import org.springframework.expression.spel.standard.SpelExpression;
 import org.springframework.expression.spel.standard.SpelExpressionParser;
+import org.springframework.lang.Nullable;
+import org.springframework.util.Assert;
 
 /**
  * {@link Comparator} implementation using {@link SpelExpression}.
  *
  * @author Christoph Strobl
  * @author Oliver Gierke
+ * @author Mark Paluch
  * @param <T>
  */
 public class SpelPropertyComparator<T> implements Comparator<T> {
@@ -34,15 +37,18 @@ public class SpelPropertyComparator<T> implements Comparator<T> {
 
 	private boolean asc = true;
 	private boolean nullsFirst = true;
-	private SpelExpression expression;
+	private @Nullable SpelExpression expression;
 
 	/**
-	 * Create new {@link SpelPropertyComparator} for the given property path an {@link SpelExpressionParser}..
+	 * Create new {@link SpelPropertyComparator} for the given property path an {@link SpelExpressionParser}.
 	 * 
 	 * @param path must not be {@literal null} or empty.
 	 * @param parser must not be {@literal null}.
 	 */
 	public SpelPropertyComparator(String path, SpelExpressionParser parser) {
+
+		Assert.hasText(path, "Path must not be null or empty!");
+		Assert.notNull(parser, "SpelExpressionParser must not be null!");
 
 		this.path = path;
 		this.parser = parser;
@@ -109,9 +115,9 @@ public class SpelPropertyComparator<T> implements Comparator<T> {
 	 */
 	protected String buildExpressionForPath() {
 
-		String rawExpression = "new org.springframework.util.comparator.NullSafeComparator(new org.springframework.util.comparator.ComparableComparator(), "
-				+ Boolean.toString(this.nullsFirst) + ").compare(" + "#arg1?." + (path != null ? path.replace(".", "?.") : "")
-				+ "," + "#arg2?." + (path != null ? path.replace(".", "?.") : "") + ")";
+		String rawExpression = String.format(
+				"new org.springframework.util.comparator.NullSafeComparator(new org.springframework.util.comparator.ComparableComparator(), %s).compare(#arg1?.%s,#arg2?.%s)",
+				Boolean.toString(this.nullsFirst), path.replace(".", "?."), path.replace(".", "?."));
 
 		return rawExpression;
 	}
@@ -120,6 +126,7 @@ public class SpelPropertyComparator<T> implements Comparator<T> {
 	 * (non-Javadoc)
 	 * @see java.util.Comparator#compare(java.lang.Object, java.lang.Object)
 	 */
+	@SuppressWarnings("ConstantConditions")
 	@Override
 	public int compare(T arg1, T arg2) {
 

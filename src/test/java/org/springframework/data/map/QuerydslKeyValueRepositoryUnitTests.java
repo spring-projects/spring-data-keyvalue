@@ -45,6 +45,7 @@ import com.google.common.collect.Lists;
  * @author Christoph Strobl
  * @author Oliver Gierke
  * @author Thomas Darimont
+ * @author Mark Paluch
  */
 public class QuerydslKeyValueRepositoryUnitTests extends AbstractRepositoryUnitTests<QPersonRepository> {
 
@@ -76,8 +77,7 @@ public class QuerydslKeyValueRepositoryUnitTests extends AbstractRepositoryUnitT
 		assertThat(page1.getContent(), hasSize(1));
 		assertThat(page1.hasNext(), is(true));
 
-		Page<Person> page2 = repository.findAll(QPerson.person.age.eq(CERSEI.getAge()),
-				page1.nextPageable());
+		Page<Person> page2 = repository.findAll(QPerson.person.age.eq(CERSEI.getAge()), page1.nextPageable());
 
 		assertThat(page2.getTotalElements(), is(2L));
 		assertThat(page2.getContent(), hasSize(1));
@@ -127,12 +127,17 @@ public class QuerydslKeyValueRepositoryUnitTests extends AbstractRepositoryUnitT
 		assertThat(result, contains(TYRION, JAIME, CERSEI));
 	}
 
-	@Test // DATAKV-90
-	public void findAllShouldIgnoreNullOrderSpecifier() {
+	@Test(expected = IllegalArgumentException.class) // DATAKV-90, DATAKV-197
+	public void findAllShouldRequireSort() {
+		repository.findAll((QSort) null);
+	}
+
+	@Test // DATAKV-90, DATAKV-197
+	public void findAllShouldAllowUnsortedFindAll() {
 
 		repository.saveAll(LENNISTERS);
 
-		Iterable<Person> result = repository.findAll((QSort) null);
+		Iterable<Person> result = repository.findAll(Sort.unsorted());
 
 		assertThat(result, containsInAnyOrder(TYRION, JAIME, CERSEI));
 	}

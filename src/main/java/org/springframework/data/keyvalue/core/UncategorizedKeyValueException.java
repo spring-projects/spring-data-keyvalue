@@ -1,5 +1,5 @@
 /*
- * Copyright 2014 the original author or authors.
+ * Copyright 2014-2017 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,12 +18,22 @@ package org.springframework.data.keyvalue.core;
 import org.springframework.dao.UncategorizedDataAccessException;
 
 /**
+ * Normal superclass when we can't distinguish anything more specific than "something went wrong with the underlying
+ * resource".
+ * 
  * @author Christoph Strobl
+ * @author Mark Paluch
  */
 public class UncategorizedKeyValueException extends UncategorizedDataAccessException {
 
 	private static final long serialVersionUID = -8087116071859122297L;
 
+	/**
+	 * Creates a new {@link UncategorizedKeyValueException}.
+	 * 
+	 * @param msg the detail message.
+	 * @param cause the root cause (usually from using a underlying data access API).
+	 */
 	public UncategorizedKeyValueException(String msg, Throwable cause) {
 		super(msg, cause);
 	}

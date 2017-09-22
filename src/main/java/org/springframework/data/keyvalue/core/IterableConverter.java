@@ -24,6 +24,7 @@ import java.util.List;
  * Converter capable of transforming a given {@link Iterable} into a collection type.
  *
  * @author Christoph Strobl
+ * @author Mark Paluch
  */
 public final class IterableConverter {
 
@@ -36,10 +37,6 @@ public final class IterableConverter {
 	 * @return {@link Collections#emptyList()} when source is {@literal null}.
 	 */
 	public static <T> List<T> toList(Iterable<T> source) {
-
-		if (source == null) {
-			return Collections.emptyList();
-		}
 
 		if (source instanceof List) {
 			return (List<T>) source;

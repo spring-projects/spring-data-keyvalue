@@ -21,12 +21,14 @@ import java.util.Map;
 import org.springframework.beans.factory.DisposableBean;
 import org.springframework.data.keyvalue.core.query.KeyValueQuery;
 import org.springframework.data.util.CloseableIterator;
+import org.springframework.lang.Nullable;
 
 /**
  * {@link KeyValueAdapter} unifies access and shields the underlying key/value specific implementation.
  * 
  * @author Christoph Strobl
  * @author Thomas Darimont
+ * @author Mark Paluch
  */
 public interface KeyValueAdapter extends DisposableBean {
 
@@ -55,33 +57,41 @@ public interface KeyValueAdapter extends DisposableBean {
 	 * @param keyspace must not be {@literal null}.
 	 * @return {@literal null} in case no matching item exists.
 	 */
+	@Nullable
 	Object get(Object id, String keyspace);
 
 	/**
-	 * @param id
-	 * @param keyspace
-	 * @param type
-	 * @return
+	 * Get the object with given id from keyspace.
+	 * 
+	 * @param id must not be {@literal null}.
+	 * @param keyspace must not be {@literal null}.
+	 * @param type must not be {@literal null}.
+	 * @return {@literal null} in case no matching item exists.
 	 * @since 1.1
 	 */
+	@Nullable
 	<T> T get(Object id, String keyspace, Class<T> type);
 
 	/**
-	 * Delete and return the obect with given type and id.
+	 * Delete and return the object with given type and id.
 	 * 
 	 * @param id must not be {@literal null}.
 	 * @param keyspace must not be {@literal null}.
 	 * @return {@literal null} if object could not be found
 	 */
+	@Nullable
 	Object delete(Object id, String keyspace);
 
 	/**
-	 * @param id
-	 * @param keyspace
-	 * @param type
-	 * @return
+	 * Delete and return the object with given type and id.
+	 * 
+	 * @param id must not be {@literal null}.
+	 * @param keyspace must not be {@literal null}.
+	 * @param type must not be {@literal null}.
+	 * @return {@literal null} if object could not be found
 	 * @since 1.1
 	 */
+	@Nullable
 	<T> T delete(Object id, String keyspace, Class<T> type);
 
 	/**
@@ -95,7 +105,7 @@ public interface KeyValueAdapter extends DisposableBean {
 	/**
 	 * Returns a {@link CloseableIterator} that iterates over all entries.
 	 * 
-	 * @param keyspace
+	 * @param keyspace must not be {@literal null}.
 	 * @return
 	 */
 	CloseableIterator<Map.Entry<Object, Object>> entries(String keyspace);
@@ -115,17 +125,17 @@ public interface KeyValueAdapter extends DisposableBean {
 	/**
 	 * Find all matching objects within {@literal keyspace}.
 	 * 
-	 * @param query
+	 * @param query must not be {@literal null}.
 	 * @param keyspace must not be {@literal null}.
 	 * @return empty {@link Collection} if no match found.
 	 */
 	Iterable<?> find(KeyValueQuery<?> query, String keyspace);
 
 	/**
-	 * @param query
-	 * @param keyspace
-	 * @param type
-	 * @return
+	 * @param query must not be {@literal null}.
+	 * @param keyspace must not be {@literal null}.
+	 * @param type must not be {@literal null}.
+	 * @return empty {@link Collection} if no match found.
 	 * @since 1.1
 	 */
 	<T> Iterable<T> find(KeyValueQuery<?> query, String keyspace, Class<T> type);
@@ -134,13 +144,14 @@ public interface KeyValueAdapter extends DisposableBean {
 	 * Count number of objects within {@literal keyspace}.
 	 * 
 	 * @param keyspace must not be {@literal null}.
+	 * @return
 	 */
 	long count(String keyspace);
 
 	/**
 	 * Count all matching objects within {@literal keyspace}.
 	 * 
-	 * @param query
+	 * @param query must not be {@literal null}.
 	 * @param keyspace must not be {@literal null}.
 	 * @return
 	 */

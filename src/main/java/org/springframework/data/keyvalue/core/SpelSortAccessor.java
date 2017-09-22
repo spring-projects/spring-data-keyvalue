@@ -53,7 +53,7 @@ class SpelSortAccessor implements SortAccessor<Comparator<?>> {
 	@Override
 	public Comparator<?> resolve(KeyValueQuery<?> query) {
 
-		if (query == null || query.getSort() == null || query.getSort().isUnsorted()) {
+		if (query.getSort().isUnsorted()) {
 			return null;
 		}
 

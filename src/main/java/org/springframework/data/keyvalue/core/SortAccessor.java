@@ -1,5 +1,5 @@
 /*
- * Copyright 2014 the original author or authors.
+ * Copyright 2014-2017 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,6 +23,7 @@ import org.springframework.data.keyvalue.core.query.KeyValueQuery;
  * representation that can be used by the {@link QueryEngine} implementation.
  * 
  * @author Christoph Strobl
+ * @author Mark Paluch
  * @param <T>
  */
 public interface SortAccessor<T> {
@@ -31,7 +32,7 @@ public interface SortAccessor<T> {
 	 * Reads {@link KeyValueQuery#getSort()} of given {@link KeyValueQuery} and applies required transformation to match
 	 * the desired type.
 	 * 
-	 * @param query can be {@literal null}.
+	 * @param query must not be {@literal null}.
 	 * @return {@literal null} in case {@link Sort} has not been defined on {@link KeyValueQuery}.
 	 */
 	T resolve(KeyValueQuery<?> query);

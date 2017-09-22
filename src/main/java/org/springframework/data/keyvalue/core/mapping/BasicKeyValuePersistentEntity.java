@@ -17,6 +17,7 @@ package org.springframework.data.keyvalue.core.mapping;
 
 import org.springframework.data.mapping.model.BasicPersistentEntity;
 import org.springframework.data.util.TypeInformation;
+import org.springframework.lang.Nullable;
 import org.springframework.util.StringUtils;
 
 /**
@@ -24,6 +25,7 @@ import org.springframework.util.StringUtils;
  * 
  * @author Christoph Strobl
  * @author Oliver Gierke
+ * @author Mark Paluch
  * @param <T>
  */
 public class BasicKeyValuePersistentEntity<T, P extends KeyValuePersistentProperty<P>>
@@ -37,14 +39,15 @@ public class BasicKeyValuePersistentEntity<T, P extends KeyValuePersistentProper
 	 * @param information must not be {@literal null}.
 	 * @param keySpaceResolver can be {@literal null}.
 	 */
-	public BasicKeyValuePersistentEntity(TypeInformation<T> information, KeySpaceResolver fallbackKeySpaceResolver) {
+	public BasicKeyValuePersistentEntity(TypeInformation<T> information,
+			@Nullable KeySpaceResolver fallbackKeySpaceResolver) {
 
 		super(information);
 
 		this.keyspace = detectKeySpace(information.getType(), fallbackKeySpaceResolver);
 	}
 
-	private static String detectKeySpace(Class<?> type, KeySpaceResolver fallback) {
+	private static String detectKeySpace(Class<?> type, @Nullable KeySpaceResolver fallback) {
 
 		String keySpace = AnnotationBasedKeySpaceResolver.INSTANCE.resolveKeySpace(type);
 

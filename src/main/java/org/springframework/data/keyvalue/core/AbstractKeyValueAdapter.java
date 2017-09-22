@@ -18,6 +18,7 @@ package org.springframework.data.keyvalue.core;
 import java.util.Collection;
 
 import org.springframework.data.keyvalue.core.query.KeyValueQuery;
+import org.springframework.lang.Nullable;
 
 /**
  * Base implementation of {@link KeyValueAdapter} holds {@link QueryEngine} to delegate {@literal find} and
@@ -42,7 +43,7 @@ public abstract class AbstractKeyValueAdapter implements KeyValueAdapter {
 	 *
 	 * @param engine will be defaulted to {@link SpelQueryEngine} if {@literal null}.
 	 */
-	protected AbstractKeyValueAdapter(QueryEngine<? extends KeyValueAdapter, ?, ?> engine) {
+	protected AbstractKeyValueAdapter(@Nullable QueryEngine<? extends KeyValueAdapter, ?, ?> engine) {
 
 		this.engine = engine != null ? engine : new SpelQueryEngine();
 		this.engine.registerAdapter(this);
@@ -61,6 +62,7 @@ public abstract class AbstractKeyValueAdapter implements KeyValueAdapter {
 	 * (non-Javadoc)
 	 * @see org.springframework.data.keyvalue.core.KeyValueAdapter#get(java.lang.Object, java.lang.String, java.lang.Class)
 	 */
+	@Nullable
 	@Override
 	public <T> T get(Object id, String keyspace, Class<T> type) {
 		return type.cast(get(id, keyspace));
@@ -70,6 +72,7 @@ public abstract class AbstractKeyValueAdapter implements KeyValueAdapter {
 	 * (non-Javadoc)
 	 * @see org.springframework.data.keyvalue.core.KeyValueAdapter#delete(java.lang.Object, java.lang.String, java.lang.Class)
 	 */
+	@Nullable
 	@Override
 	public <T> T delete(Object id, String keyspace, Class<T> type) {
 		return type.cast(delete(id, keyspace));

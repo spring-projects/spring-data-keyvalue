@@ -89,7 +89,7 @@ public class SpelQueryCreator extends AbstractQueryCreator<KeyValueQuery<SpelExp
 
 		KeyValueQuery<SpelExpression> query = new KeyValueQuery<>(this.expression);
 
-		if (sort != null) {
+		if (sort.isSorted()) {
 			query.orderBy(sort);
 		}
 

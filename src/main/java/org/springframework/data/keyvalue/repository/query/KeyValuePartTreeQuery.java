@@ -35,6 +35,7 @@ import org.springframework.data.repository.query.parser.AbstractQueryCreator;
 import org.springframework.data.repository.query.parser.PartTree;
 import org.springframework.expression.EvaluationContext;
 import org.springframework.expression.spel.standard.SpelExpression;
+import org.springframework.lang.Nullable;
 import org.springframework.util.Assert;
 import org.springframework.util.ClassUtils;
 
@@ -94,6 +95,7 @@ public class KeyValuePartTreeQuery implements RepositoryQuery {
 	 * @param parameters
 	 * @param query
 	 */
+	@Nullable
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	protected Object doExecute(Object[] parameters, KeyValueQuery<?> query) {
 
@@ -179,8 +181,12 @@ public class KeyValuePartTreeQuery implements RepositoryQuery {
 
 		PartTree tree = new PartTree(getQueryMethod().getName(), getQueryMethod().getEntityInformation().getJavaType());
 
-		Constructor<? extends AbstractQueryCreator<?, ?>> constructor = ClassUtils
-				.getConstructorIfAvailable(queryCreator, PartTree.class, ParameterAccessor.class);
+		Constructor<? extends AbstractQueryCreator<?, ?>> constructor = ClassUtils.getConstructorIfAvailable(queryCreator,
+				PartTree.class, ParameterAccessor.class);
+
+		Assert.state(constructor != null, String.format("Constructor %s(PartTree, ParameterAccessor) not available!",
+				ClassUtils.getShortName(queryCreator)));
+
 		KeyValueQuery<?> query = (KeyValueQuery<?>) BeanUtils.instantiateClass(constructor, tree, accessor).createQuery();
 
 		if (tree.isLimiting()) {

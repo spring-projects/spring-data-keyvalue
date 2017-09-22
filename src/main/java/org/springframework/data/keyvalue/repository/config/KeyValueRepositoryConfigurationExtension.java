@@ -35,6 +35,7 @@ import org.springframework.data.repository.config.AnnotationRepositoryConfigurat
 import org.springframework.data.repository.config.RepositoryConfigurationExtension;
 import org.springframework.data.repository.config.RepositoryConfigurationExtensionSupport;
 import org.springframework.data.repository.config.RepositoryConfigurationSource;
+import org.springframework.lang.Nullable;
 import org.springframework.util.CollectionUtils;
 
 /**
@@ -42,6 +43,7 @@ import org.springframework.util.CollectionUtils;
  *
  * @author Christoph Strobl
  * @author Oliver Gierke
+ * @author Mark Paluch
  */
 public abstract class KeyValueRepositoryConfigurationExtension extends RepositoryConfigurationExtensionSupport {
 
@@ -177,6 +179,7 @@ public abstract class KeyValueRepositoryConfigurationExtension extends Repositor
 	 *
 	 * @return {@literal null} to explicitly not register a template.
 	 */
+	@Nullable
 	protected AbstractBeanDefinition getDefaultKeyValueTemplateBeanDefinition(
 			RepositoryConfigurationSource configurationSource) {
 		return null;

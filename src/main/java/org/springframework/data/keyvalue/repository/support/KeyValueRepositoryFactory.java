@@ -15,7 +15,7 @@
  */
 package org.springframework.data.keyvalue.repository.support;
 
-import static org.springframework.data.querydsl.QuerydslUtils.QUERY_DSL_PRESENT;
+import static org.springframework.data.querydsl.QuerydslUtils.*;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
@@ -41,6 +41,7 @@ import org.springframework.data.repository.query.QueryLookupStrategy.Key;
 import org.springframework.data.repository.query.QueryMethod;
 import org.springframework.data.repository.query.RepositoryQuery;
 import org.springframework.data.repository.query.parser.AbstractQueryCreator;
+import org.springframework.lang.Nullable;
 import org.springframework.util.Assert;
 import org.springframework.util.ClassUtils;
 
@@ -75,7 +76,7 @@ public class KeyValueRepositoryFactory extends RepositoryFactorySupport {
 	 * {@link AbstractQueryCreator}-type.
 	 *
 	 * @param keyValueOperations must not be {@literal null}.
-	 * @param queryCreator defaulted to {@link #DEFAULT_QUERY_CREATOR} if {@literal null}.
+	 * @param queryCreator must not be {@literal null}.
 	 */
 	public KeyValueRepositoryFactory(KeyValueOperations keyValueOperations,
 			Class<? extends AbstractQueryCreator<?, ?>> queryCreator) {
@@ -154,9 +155,10 @@ public class KeyValueRepositoryFactory extends RepositoryFactorySupport {
 	 * @see org.springframework.data.repository.core.support.RepositoryFactorySupport#getQueryLookupStrategy(org.springframework.data.repository.query.QueryLookupStrategy.Key, org.springframework.data.repository.query.EvaluationContextProvider)
 	 */
 	@Override
-	protected Optional<QueryLookupStrategy> getQueryLookupStrategy(Key key, EvaluationContextProvider evaluationContextProvider) {
-		return Optional.of(new KeyValueQueryLookupStrategy(key, evaluationContextProvider, this.keyValueOperations, this.queryCreator,
-				this.repositoryQueryType));
+	protected Optional<QueryLookupStrategy> getQueryLookupStrategy(@Nullable Key key,
+			EvaluationContextProvider evaluationContextProvider) {
+		return Optional.of(new KeyValueQueryLookupStrategy(key, evaluationContextProvider, this.keyValueOperations,
+				this.queryCreator, this.repositoryQueryType));
 	}
 
 	/**
@@ -194,7 +196,7 @@ public class KeyValueRepositoryFactory extends RepositoryFactorySupport {
 		 * @param queryCreator
 		 * @since 1.1
 		 */
-		public KeyValueQueryLookupStrategy(Key key, EvaluationContextProvider evaluationContextProvider,
+		public KeyValueQueryLookupStrategy(@Nullable Key key, EvaluationContextProvider evaluationContextProvider,
 				KeyValueOperations keyValueOperations, Class<? extends AbstractQueryCreator<?, ?>> queryCreator,
 				Class<? extends RepositoryQuery> repositoryQueryType) {
 
@@ -223,6 +225,11 @@ public class KeyValueRepositoryFactory extends RepositoryFactorySupport {
 			Constructor<? extends KeyValuePartTreeQuery> constructor = (Constructor<? extends KeyValuePartTreeQuery>) ClassUtils
 					.getConstructorIfAvailable(this.repositoryQueryType, QueryMethod.class, EvaluationContextProvider.class,
 							KeyValueOperations.class, Class.class);
+
+			Assert.state(constructor != null,
+					String.format(
+							"Constructor %s(QueryMethod, EvaluationContextProvider, KeyValueOperations, Class) not available!",
+							ClassUtils.getShortName(this.repositoryQueryType)));
 
 			return BeanUtils.instantiateClass(constructor, queryMethod, evaluationContextProvider, this.keyValueOperations,
 					this.queryCreator);

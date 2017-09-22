@@ -1,5 +1,5 @@
 /*
- * Copyright 2015 the original author or authors.
+ * Copyright 2015-2017 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,11 +15,14 @@
  */
 package org.springframework.data.keyvalue.core.mapping;
 
+import org.springframework.lang.Nullable;
+
 /**
  * {@link KeySpaceResolver} determines the {@literal keyspace} a given type is assigned to. A keyspace in this context
  * is a specific region/collection/grouping of elements sharing a common keyrange. <br />
  * 
  * @author Christoph Strobl
+ * @author Mark Paluch
  */
 public interface KeySpaceResolver {
 
@@ -29,5 +32,6 @@ public interface KeySpaceResolver {
 	 * @param type must not be {@literal null}.
 	 * @return
 	 */
+	@Nullable
 	String resolveKeySpace(Class<?> type);
 }

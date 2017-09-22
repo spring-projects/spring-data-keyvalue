@@ -30,13 +30,9 @@ import org.junit.Test;
 
 /**
  * @author Christoph Strobl
+ * @author Mark Paluch
  */
 public class IterableConverterUnitTests {
-
-	@Test // DATAKV-101
-	public void toListShouldReturnEmptyListWhenSourceIsNull() {
-		assertThat(toList(null), notNullValue());
-	}
 
 	@Test // DATAKV-101
 	public void toListShouldReturnEmptyListWhenSourceEmpty() {

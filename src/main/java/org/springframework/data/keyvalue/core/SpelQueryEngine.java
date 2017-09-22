@@ -25,6 +25,7 @@ import org.springframework.data.keyvalue.core.query.KeyValueQuery;
 import org.springframework.expression.spel.SpelEvaluationException;
 import org.springframework.expression.spel.standard.SpelExpression;
 import org.springframework.expression.spel.standard.SpelExpressionParser;
+import org.springframework.lang.Nullable;
 
 /**
  * {@link QueryEngine} implementation specific for executing {@link SpelExpression} based {@link KeyValueQuery} against
@@ -52,7 +53,7 @@ class SpelQueryEngine extends QueryEngine<KeyValueAdapter, SpelCriteria, Compara
 	 */
 	@Override
 	public Collection<?> execute(SpelCriteria criteria, Comparator<?> sort, long offset, int rows, String keyspace) {
-		return sortAndFilterMatchingRange(getAdapter().getAllOf(keyspace), criteria, sort, offset, rows);
+		return sortAndFilterMatchingRange(getRequiredAdapter().getAllOf(keyspace), criteria, sort, offset, rows);
 	}
 
 	/*
@@ -61,12 +62,13 @@ class SpelQueryEngine extends QueryEngine<KeyValueAdapter, SpelCriteria, Compara
 	 */
 	@Override
 	public long count(SpelCriteria criteria, String keyspace) {
-		return filterMatchingRange(IterableConverter.toList(getAdapter().getAllOf(keyspace)), criteria, -1, -1).size();
+		return filterMatchingRange(IterableConverter.toList(getRequiredAdapter().getAllOf(keyspace)), criteria, -1, -1)
+				.size();
 	}
 
 	@SuppressWarnings("unchecked")
-	private List<?> sortAndFilterMatchingRange(Iterable<?> source, SpelCriteria criteria, Comparator sort, long offset,
-			int rows) {
+	private List<?> sortAndFilterMatchingRange(Iterable<?> source, SpelCriteria criteria, @Nullable Comparator sort,
+			long offset, int rows) {
 
 		List<?> tmp = IterableConverter.toList(source);
 		if (sort != null) {
@@ -76,7 +78,8 @@ class SpelQueryEngine extends QueryEngine<KeyValueAdapter, SpelCriteria, Compara
 		return filterMatchingRange(tmp, criteria, offset, rows);
 	}
 
-	private static <S> List<S> filterMatchingRange(List<S> source, SpelCriteria criteria, long offset, int rows) {
+	private static <S> List<S> filterMatchingRange(List<S> source, @Nullable SpelCriteria criteria, long offset,
+			int rows) {
 
 		Stream<S> stream = source.stream();
 
@@ -93,6 +96,7 @@ class SpelQueryEngine extends QueryEngine<KeyValueAdapter, SpelCriteria, Compara
 		return stream.collect(Collectors.toList());
 	}
 
+	@SuppressWarnings("ConstantConditions")
 	private static boolean evaluateExpression(SpelCriteria criteria, Object candidate) {
 
 		try {
