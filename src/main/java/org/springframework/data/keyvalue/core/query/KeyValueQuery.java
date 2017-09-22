@@ -16,6 +16,8 @@
 package org.springframework.data.keyvalue.core.query;
 
 import org.springframework.data.domain.Sort;
+import org.springframework.lang.Nullable;
+import org.springframework.util.Assert;
 
 /**
  * @author Christoph Strobl
@@ -27,7 +29,7 @@ public class KeyValueQuery<T> {
 	private Sort sort = Sort.unsorted();
 	private long offset = -1;
 	private int rows = -1;
-	private T criteria;
+	private @Nullable T criteria;
 
 	/**
 	 * Creates new instance of {@link KeyValueQuery}.
@@ -39,17 +41,17 @@ public class KeyValueQuery<T> {
 	 *
 	 * @param criteria can be {@literal null}.
 	 */
-	public KeyValueQuery(T criteria) {
+	public KeyValueQuery(@Nullable T criteria) {
 		this.criteria = criteria;
 	}
 
 	/**
 	 * Creates new instance of {@link KeyValueQuery} with given {@link Sort}.
 	 *
-	 * @param sort can be {@literal null}.
+	 * @param sort must not be {@literal null}.
 	 */
 	public KeyValueQuery(Sort sort) {
-		this.sort = sort;
+		setSort(sort);
 	}
 
 	/**
@@ -58,6 +60,7 @@ public class KeyValueQuery<T> {
 	 * @return
 	 * @since 2.0
 	 */
+	@Nullable
 	public T getCriteria() {
 		return criteria;
 	}
@@ -113,26 +116,28 @@ public class KeyValueQuery<T> {
 	 * @param sort
 	 */
 	public void setSort(Sort sort) {
+
+		Assert.notNull(sort, "Sort must not be null!");
+
 		this.sort = sort;
 	}
 
 	/**
 	 * Add given {@link Sort}.
 	 *
-	 * @param sort {@literal null} {@link Sort} will be ignored.
+	 * @param sort must not be {@literal null}.
 	 * @return
 	 */
 	public KeyValueQuery<T> orderBy(Sort sort) {
 
-		if (sort == null) {
-			return this;
-		}
+		Assert.notNull(sort, "Sort must not be null!");
 
-		if (this.sort != null) {
+		if (this.sort.isSorted()) {
 			this.sort = this.sort.and(sort);
 		} else {
 			this.sort = sort;
 		}
+
 		return this;
 	}
 
@@ -142,7 +147,9 @@ public class KeyValueQuery<T> {
 	 * @return
 	 */
 	public KeyValueQuery<T> skip(long offset) {
+
 		setOffset(offset);
+
 		return this;
 	}
 

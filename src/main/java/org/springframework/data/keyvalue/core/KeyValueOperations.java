@@ -22,11 +22,13 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.keyvalue.annotation.KeySpace;
 import org.springframework.data.keyvalue.core.query.KeyValueQuery;
 import org.springframework.data.mapping.context.MappingContext;
+import org.springframework.lang.Nullable;
 
 /**
  * Interface that specifies a basic set of key/value operations. Implemented by {@link KeyValueTemplate}.
  *
  * @author Christoph Strobl
+ * @author Mark Paluch
  */
 public interface KeyValueOperations extends DisposableBean {
 
@@ -81,6 +83,7 @@ public interface KeyValueOperations extends DisposableBean {
 	 * @param action must not be {@literal null}.
 	 * @return
 	 */
+	@Nullable
 	<T> T execute(KeyValueCallback<T> action);
 
 	/**
@@ -139,6 +142,7 @@ public interface KeyValueOperations extends DisposableBean {
 	 * @param objectToDelete must not be {@literal null}.
 	 * @return
 	 */
+	@Nullable
 	<T> T delete(T objectToDelete);
 
 	/**
@@ -148,6 +152,7 @@ public interface KeyValueOperations extends DisposableBean {
 	 * @param type must not be {@literal null}.
 	 * @return the deleted item or {@literal null} if no match found.
 	 */
+	@Nullable
 	<T> T delete(Object id, Class<T> type);
 
 	/**

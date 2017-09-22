@@ -24,6 +24,7 @@ import org.springframework.data.repository.core.support.RepositoryFactoryBeanSup
 import org.springframework.data.repository.core.support.RepositoryFactorySupport;
 import org.springframework.data.repository.query.RepositoryQuery;
 import org.springframework.data.repository.query.parser.AbstractQueryCreator;
+import org.springframework.lang.Nullable;
 import org.springframework.util.Assert;
 
 /**
@@ -36,9 +37,9 @@ import org.springframework.util.Assert;
 public class KeyValueRepositoryFactoryBean<T extends Repository<S, ID>, S, ID>
 		extends RepositoryFactoryBeanSupport<T, S, ID> {
 
-	private KeyValueOperations operations;
-	private Class<? extends AbstractQueryCreator<?, ?>> queryCreator;
-	private Class<? extends RepositoryQuery> repositoryQueryType;
+	private @Nullable KeyValueOperations operations;
+	private @Nullable Class<? extends AbstractQueryCreator<?, ?>> queryCreator;
+	private @Nullable Class<? extends RepositoryQuery> repositoryQueryType;
 
 	/**
 	 * Creates a new {@link KeyValueRepositoryFactoryBean} for the given repository interface.

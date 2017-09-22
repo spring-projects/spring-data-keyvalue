@@ -24,6 +24,7 @@ import org.springframework.data.mapping.context.MappingContext;
 import org.springframework.data.mapping.model.Property;
 import org.springframework.data.mapping.model.SimpleTypeHolder;
 import org.springframework.data.util.TypeInformation;
+import org.springframework.lang.Nullable;
 
 /**
  * Default implementation of a {@link MappingContext} using {@link KeyValuePersistentEntity} and
@@ -36,7 +37,7 @@ import org.springframework.data.util.TypeInformation;
 public class KeyValueMappingContext<E extends KeyValuePersistentEntity<?, P>, P extends KeyValuePersistentProperty<P>>
 		extends AbstractMappingContext<E, P> {
 
-	private KeySpaceResolver fallbackKeySpaceResolver;
+	private @Nullable KeySpaceResolver fallbackKeySpaceResolver;
 
 	/**
 	 * Configures the {@link KeySpaceResolver} to be used if not explicit key space is annotated to the domain type.

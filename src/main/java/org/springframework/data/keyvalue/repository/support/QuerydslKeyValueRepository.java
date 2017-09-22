@@ -30,6 +30,7 @@ import org.springframework.data.querydsl.EntityPathResolver;
 import org.springframework.data.querydsl.QuerydslPredicateExecutor;
 import org.springframework.data.querydsl.SimpleEntityPathResolver;
 import org.springframework.data.repository.core.EntityInformation;
+import org.springframework.lang.Nullable;
 import org.springframework.util.Assert;
 import org.springframework.util.ObjectUtils;
 
@@ -47,6 +48,7 @@ import com.querydsl.core.types.dsl.PathBuilder;
  * @author Christoph Strobl
  * @author Oliver Gierke
  * @author Thomas Darimont
+ * @author Mark Paluch
  * @param <T> the domain type to manage
  * @param <ID> the identifier type of the domain type
  */
@@ -55,7 +57,6 @@ public class QuerydslKeyValueRepository<T, ID> extends SimpleKeyValueRepository<
 
 	private static final EntityPathResolver DEFAULT_ENTITY_PATH_RESOLVER = SimpleEntityPathResolver.INSTANCE;
 
-	private final EntityPath<T> path;
 	private final PathBuilder<T> builder;
 
 	/**
@@ -84,7 +85,7 @@ public class QuerydslKeyValueRepository<T, ID> extends SimpleKeyValueRepository<
 
 		Assert.notNull(resolver, "EntityPathResolver must not be null!");
 
-		this.path = resolver.createPath(entityInformation.getJavaType());
+		EntityPath<T> path = resolver.createPath(entityInformation.getJavaType());
 		this.builder = new PathBuilder<>(path.getType(), path.getMetadata());
 	}
 
@@ -142,12 +143,12 @@ public class QuerydslKeyValueRepository<T, ID> extends SimpleKeyValueRepository<
 
 		AbstractCollQuery<T, ?> query = prepareQuery(predicate);
 
-		if (pageable != null) {
+		if (pageable.isPaged() || pageable.getSort().isSorted()) {
 
 			query.offset(pageable.getOffset());
 			query.limit(pageable.getPageSize());
 
-			if (pageable.getSort() != null) {
+			if (pageable.getSort().isSorted()) {
 				query.orderBy(toOrderSpecifier(pageable.getSort(), builder));
 			}
 		}
@@ -196,7 +197,7 @@ public class QuerydslKeyValueRepository<T, ID> extends SimpleKeyValueRepository<
 	 * @param predicate
 	 * @return
 	 */
-	protected AbstractCollQuery<T, ?> prepareQuery(Predicate predicate) {
+	protected AbstractCollQuery<T, ?> prepareQuery(@Nullable Predicate predicate) {
 
 		CollQuery<T> query = new CollQuery<>();
 		query.from(builder, findAll());

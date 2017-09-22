@@ -19,6 +19,7 @@ import org.springframework.core.annotation.AnnotatedElementUtils;
 import org.springframework.core.annotation.AnnotationUtils;
 import org.springframework.data.annotation.Persistent;
 import org.springframework.data.keyvalue.annotation.KeySpace;
+import org.springframework.lang.Nullable;
 import org.springframework.util.Assert;
 import org.springframework.util.ClassUtils;
 
@@ -28,6 +29,7 @@ import org.springframework.util.ClassUtils;
  *
  * @author Christoph Strobl
  * @author Oliver Gierke
+ * @author Mark Paluch
  */
 enum AnnotationBasedKeySpaceResolver implements KeySpaceResolver {
 
@@ -38,6 +40,7 @@ enum AnnotationBasedKeySpaceResolver implements KeySpaceResolver {
 	 * @see org.springframework.data.keyvalue.core.KeySpaceResolver#resolveKeySpace(java.lang.Class)
 	 */
 	@Override
+	@Nullable
 	public String resolveKeySpace(Class<?> type) {
 
 		Assert.notNull(type, "Type for keyspace for null!");
@@ -48,6 +51,7 @@ enum AnnotationBasedKeySpaceResolver implements KeySpaceResolver {
 		return keySpace != null ? keySpace.toString() : null;
 	}
 
+	@Nullable
 	private static Object getKeySpace(Class<?> type) {
 
 		KeySpace keyspace = AnnotatedElementUtils.findMergedAnnotation(type, KeySpace.class);

@@ -16,6 +16,7 @@
 package org.springframework.data.keyvalue.core.event;
 
 import org.springframework.context.ApplicationEvent;
+import org.springframework.lang.Nullable;
 
 /**
  * {@link KeyValueEvent} gets published for operations executed by eg.
@@ -24,6 +25,7 @@ import org.springframework.context.ApplicationEvent;
  *
  * @author Christoph Strobl
  * @author Thomas Darimont
+ * @author Mark Paluch
  * @param <T>
  */
 public class KeyValueEvent<T> extends ApplicationEvent {
@@ -71,7 +73,7 @@ public class KeyValueEvent<T> extends ApplicationEvent {
 	 * @param value
 	 * @return
 	 */
-	public static <T> AfterGetEvent<T> afterGet(Object id, String keyspace, Class<T> type, T value) {
+	public static <T> AfterGetEvent<T> afterGet(Object id, String keyspace, Class<T> type, @Nullable T value) {
 		return new AfterGetEvent<>(id, keyspace, type, value);
 	}
 
@@ -125,7 +127,7 @@ public class KeyValueEvent<T> extends ApplicationEvent {
 	 * @return
 	 */
 	public static <T> AfterUpdateEvent<T> afterUpdate(Object id, String keyspace, Class<? extends T> type, T actualValue,
-			Object previousValue) {
+			@Nullable Object previousValue) {
 		return new AfterUpdateEvent<>(id, keyspace, type, actualValue, previousValue);
 	}
 
@@ -172,7 +174,8 @@ public class KeyValueEvent<T> extends ApplicationEvent {
 	 * @param value
 	 * @return
 	 */
-	public static <T> AfterDeleteEvent<T> afterDelete(Object id, String keyspace, Class<? extends T> type, T value) {
+	public static <T> AfterDeleteEvent<T> afterDelete(Object id, String keyspace, Class<? extends T> type,
+			@Nullable T value) {
 		return new AfterDeleteEvent<>(id, keyspace, type, value);
 	}
 
@@ -223,9 +226,9 @@ public class KeyValueEvent<T> extends ApplicationEvent {
 	@SuppressWarnings("serial")
 	abstract static class KeyBasedEventWithPayload<T> extends KeyBasedEvent<T> {
 
-		private final T payload;
+		private final @Nullable T payload;
 
-		KeyBasedEventWithPayload(Object key, String keyspace, Class<? extends T> type, T payload) {
+		KeyBasedEventWithPayload(Object key, String keyspace, Class<? extends T> type, @Nullable T payload) {
 			super(key, keyspace, type);
 			this.payload = payload;
 		}
@@ -235,6 +238,7 @@ public class KeyValueEvent<T> extends ApplicationEvent {
 		 *
 		 * @return
 		 */
+		@Nullable
 		public T getPayload() {
 			return payload;
 		}
@@ -264,7 +268,7 @@ public class KeyValueEvent<T> extends ApplicationEvent {
 	@SuppressWarnings("serial")
 	public static class AfterGetEvent<T> extends KeyBasedEventWithPayload<T> {
 
-		protected AfterGetEvent(Object key, String keyspace, Class<T> type, T payload) {
+		protected AfterGetEvent(Object key, String keyspace, Class<T> type, @Nullable T payload) {
 			super(key, keyspace, type, payload);
 		}
 
@@ -279,7 +283,7 @@ public class KeyValueEvent<T> extends ApplicationEvent {
 	@SuppressWarnings("serial")
 	public static class BeforeInsertEvent<T> extends KeyBasedEventWithPayload<T> {
 
-		public BeforeInsertEvent(Object key, String keyspace, Class<? extends T> type, T payload) {
+		public BeforeInsertEvent(Object key, String keyspace, Class<? extends T> type, @Nullable T payload) {
 			super(key, keyspace, type, payload);
 
 		}
@@ -294,7 +298,7 @@ public class KeyValueEvent<T> extends ApplicationEvent {
 	@SuppressWarnings("serial")
 	public static class AfterInsertEvent<T> extends KeyBasedEventWithPayload<T> {
 
-		public AfterInsertEvent(Object key, String keyspace, Class<? extends T> type, T payload) {
+		public AfterInsertEvent(Object key, String keyspace, Class<? extends T> type, @Nullable T payload) {
 			super(key, keyspace, type, payload);
 		}
 	}
@@ -308,7 +312,7 @@ public class KeyValueEvent<T> extends ApplicationEvent {
 	@SuppressWarnings("serial")
 	public static class BeforeUpdateEvent<T> extends KeyBasedEventWithPayload<T> {
 
-		public BeforeUpdateEvent(Object key, String keyspace, Class<? extends T> type, T payload) {
+		public BeforeUpdateEvent(Object key, String keyspace, Class<? extends T> type, @Nullable T payload) {
 			super(key, keyspace, type, payload);
 		}
 	}
@@ -322,9 +326,10 @@ public class KeyValueEvent<T> extends ApplicationEvent {
 	@SuppressWarnings("serial")
 	public static class AfterUpdateEvent<T> extends KeyBasedEventWithPayload<T> {
 
-		private final Object existing;
+		private final @Nullable Object existing;
 
-		public AfterUpdateEvent(Object key, String keyspace, Class<? extends T> type, T payload, Object existing) {
+		public AfterUpdateEvent(Object key, String keyspace, Class<? extends T> type, T payload,
+				@Nullable Object existing) {
 			super(key, keyspace, type, payload);
 			this.existing = existing;
 		}
@@ -334,6 +339,7 @@ public class KeyValueEvent<T> extends ApplicationEvent {
 		 *
 		 * @return
 		 */
+		@Nullable
 		public Object before() {
 			return existing;
 		}
@@ -371,7 +377,7 @@ public class KeyValueEvent<T> extends ApplicationEvent {
 	@SuppressWarnings("serial")
 	public static class AfterDeleteEvent<T> extends KeyBasedEventWithPayload<T> {
 
-		public AfterDeleteEvent(Object key, String keyspace, Class<? extends T> type, T payload) {
+		public AfterDeleteEvent(Object key, String keyspace, Class<? extends T> type, @Nullable T payload) {
 			super(key, keyspace, type, payload);
 		}
 	}

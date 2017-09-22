@@ -1,5 +1,5 @@
 /*
- * Copyright 2015 the original author or authors.
+ * Copyright 2015-2017 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,6 +18,7 @@ package org.springframework.data.keyvalue.core;
 import java.util.Iterator;
 
 import org.springframework.data.util.CloseableIterator;
+import org.springframework.lang.Nullable;
 import org.springframework.util.Assert;
 
 /**
@@ -26,13 +27,14 @@ import org.springframework.util.Assert;
  * @author Christoph Strobl
  * @author Thomas Darimont
  * @author Oliver Gierke
+ * @author Mark Paluch
  * @param <K>
  * @param <V>
  */
 public class ForwardingCloseableIterator<T> implements CloseableIterator<T> {
 
 	private final Iterator<? extends T> delegate;
-	private final Runnable closeHandler;
+	private final @Nullable Runnable closeHandler;
 
 	/**
 	 * Creates a new {@link ForwardingCloseableIterator}.
@@ -50,7 +52,7 @@ public class ForwardingCloseableIterator<T> implements CloseableIterator<T> {
 	 * @param delegate must not be {@literal null}.
 	 * @param closeHandler may be {@literal null}.
 	 */
-	public ForwardingCloseableIterator(Iterator<? extends T> delegate, Runnable closeHandler) {
+	public ForwardingCloseableIterator(Iterator<? extends T> delegate, @Nullable Runnable closeHandler) {
 
 		Assert.notNull(delegate, "Delegate iterator must not be null!");
 

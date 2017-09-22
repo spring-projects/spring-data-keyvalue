@@ -21,17 +21,19 @@ import org.springframework.data.repository.query.EvaluationContextProvider;
 import org.springframework.data.repository.query.QueryMethod;
 import org.springframework.data.repository.query.parser.AbstractQueryCreator;
 import org.springframework.data.repository.query.parser.PartTree;
+import org.springframework.lang.Nullable;
 
 /**
  * {@link KeyValuePartTreeQuery} implementation deriving queries from {@link PartTree} using a predefined
  * {@link AbstractQueryCreator} that caches the once created query.
  * 
  * @author Christoph Strobl
+ * @author Mark Paluch
  * @since 1.1
  */
 public class CachingKeyValuePartTreeQuery extends KeyValuePartTreeQuery {
 
-	private KeyValueQuery<?> cachedQuery;
+	private @Nullable KeyValueQuery<?> cachedQuery;
 
 	public CachingKeyValuePartTreeQuery(QueryMethod queryMethod, EvaluationContextProvider evaluationContextProvider,
 			KeyValueOperations keyValueOperations, Class<? extends AbstractQueryCreator<?, ?>> queryCreator) {

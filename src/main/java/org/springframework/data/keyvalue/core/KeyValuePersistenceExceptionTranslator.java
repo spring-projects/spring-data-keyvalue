@@ -20,6 +20,7 @@ import java.util.NoSuchElementException;
 import org.springframework.dao.DataAccessException;
 import org.springframework.dao.DataRetrievalFailureException;
 import org.springframework.dao.support.PersistenceExceptionTranslator;
+import org.springframework.lang.Nullable;
 import org.springframework.util.Assert;
 
 /**
@@ -27,6 +28,7 @@ import org.springframework.util.Assert;
  * exception to an appropriate exception from the {@code org.springframework.dao} hierarchy.
  * 
  * @author Christoph Strobl
+ * @author Mark Paluch
  */
 public class KeyValuePersistenceExceptionTranslator implements PersistenceExceptionTranslator {
 
@@ -34,6 +36,7 @@ public class KeyValuePersistenceExceptionTranslator implements PersistenceExcept
 	 * (non-Javadoc)
 	 * @see org.springframework.dao.support.PersistenceExceptionTranslator#translateExceptionIfPossible(java.lang.RuntimeException)
 	 */
+	@Nullable
 	@Override
 	public DataAccessException translateExceptionIfPossible(RuntimeException exception) {
 
@@ -51,6 +54,7 @@ public class KeyValuePersistenceExceptionTranslator implements PersistenceExcept
 		if (exception.getClass().getName().startsWith("java")) {
 			return new UncategorizedKeyValueException(exception.getMessage(), exception);
 		}
+
 		return null;
 	}
 }

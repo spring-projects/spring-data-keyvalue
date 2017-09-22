@@ -21,6 +21,7 @@ import org.springframework.data.keyvalue.core.query.KeyValueQuery;
  * Resolves the criteria object from given {@link KeyValueQuery}.
  *
  * @author Christoph Strobl
+ * @author Mark Paluch
  * @param <T>
  */
 public interface CriteriaAccessor<T> {
@@ -29,7 +30,7 @@ public interface CriteriaAccessor<T> {
 	 * Checks and reads {@link KeyValueQuery#getCriteria()} of given {@link KeyValueQuery}. Might also apply additional
 	 * transformation to match the desired type.
 	 *
-	 * @param query can be {@literal null}.
+	 * @param query must not be {@literal null}.
 	 * @return the criteria extracted from the query.
 	 * @throws IllegalArgumentException in case the criteria is not valid for usage with specific
 	 *           {@link CriteriaAccessor}.

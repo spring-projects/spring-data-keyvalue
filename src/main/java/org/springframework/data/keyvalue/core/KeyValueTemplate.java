@@ -34,6 +34,7 @@ import org.springframework.data.keyvalue.core.mapping.KeyValuePersistentProperty
 import org.springframework.data.keyvalue.core.mapping.context.KeyValueMappingContext;
 import org.springframework.data.keyvalue.core.query.KeyValueQuery;
 import org.springframework.data.mapping.context.MappingContext;
+import org.springframework.lang.Nullable;
 import org.springframework.util.Assert;
 import org.springframework.util.ClassUtils;
 import org.springframework.util.CollectionUtils;
@@ -55,7 +56,7 @@ public class KeyValueTemplate implements KeyValueOperations, ApplicationEventPub
 	private final IdentifierGenerator identifierGenerator;
 
 	private PersistenceExceptionTranslator exceptionTranslator = DEFAULT_PERSISTENCE_EXCEPTION_TRANSLATOR;
-	private ApplicationEventPublisher eventPublisher;
+	private @Nullable ApplicationEventPublisher eventPublisher;
 	private boolean publishEvents = true;
 	private @SuppressWarnings("rawtypes") Set<Class<? extends KeyValueEvent>> eventTypesToPublish = Collections
 			.emptySet();
@@ -215,13 +216,9 @@ public class KeyValueTemplate implements KeyValueOperations, ApplicationEventPub
 
 		Assert.notNull(type, "Type to fetch must not be null!");
 
-		return execute(adapter -> {
+		return executeRequired(adapter -> {
 
 			Iterable<?> values = adapter.getAllOf(resolveKeySpace(type));
-
-			if (values == null) {
-				return Collections.emptySet();
-			}
 
 			ArrayList<T> filtered = new ArrayList<>();
 			for (Object candidate : values) {
@@ -336,6 +333,7 @@ public class KeyValueTemplate implements KeyValueOperations, ApplicationEventPub
 	 * (non-Javadoc)
 	 * @see org.springframework.data.keyvalue.core.KeyValueOperations#execute(org.springframework.data.keyvalue.core.KeyValueCallback)
 	 */
+	@Nullable
 	@Override
 	public <T> T execute(KeyValueCallback<T> action) {
 
@@ -348,6 +346,24 @@ public class KeyValueTemplate implements KeyValueOperations, ApplicationEventPub
 		}
 	}
 
+	/**
+	 * Execute {@link KeyValueCallback} and require a non-{@literal null} return value.
+	 * 
+	 * @param action
+	 * @param <T>
+	 * @return
+	 */
+	protected <T> T executeRequired(KeyValueCallback<T> action) {
+
+		T result = execute(action);
+
+		if (result != null) {
+			return result;
+		}
+
+		throw new IllegalStateException(String.format("KeyValueCallback %s returned null value!", action));
+	}
+
 	/*
 	 * (non-Javadoc)
 	 * @see org.springframework.data.keyvalue.core.KeyValueOperations#find(org.springframework.data.keyvalue.core.query.KeyValueQuery, java.lang.Class)
@@ -355,12 +371,9 @@ public class KeyValueTemplate implements KeyValueOperations, ApplicationEventPub
 	@Override
 	public <T> Iterable<T> find(KeyValueQuery<?> query, Class<T> type) {
 
-		return execute((KeyValueCallback<Iterable<T>>) adapter -> {
+		return executeRequired((KeyValueCallback<Iterable<T>>) adapter -> {
 
 			Iterable<?> result = adapter.find(query, resolveKeySpace(type), type);
-			if (result == null) {
-				return Collections.emptySet();
-			}
 
 			List<T> filtered = new ArrayList<>();
 
@@ -410,8 +423,7 @@ public class KeyValueTemplate implements KeyValueOperations, ApplicationEventPub
 	 */
 	@Override
 	public long count(KeyValueQuery<?> query, Class<?> type) {
-
-		return execute(adapter -> adapter.count(query, resolveKeySpace(type)));
+		return executeRequired(adapter -> adapter.count(query, resolveKeySpace(type)));
 	}
 
 	/*
@@ -460,7 +472,7 @@ public class KeyValueTemplate implements KeyValueOperations, ApplicationEventPub
 		}
 	}
 
-	private static boolean typeCheck(Class<?> requiredType, Object candidate) {
+	private static boolean typeCheck(Class<?> requiredType, @Nullable Object candidate) {
 		return candidate == null || ClassUtils.isAssignable(requiredType, candidate.getClass());
 	}
 }
