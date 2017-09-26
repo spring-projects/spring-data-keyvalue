@@ -348,7 +348,7 @@ public class KeyValueTemplate implements KeyValueOperations, ApplicationEventPub
 
 	/**
 	 * Execute {@link KeyValueCallback} and require a non-{@literal null} return value.
-	 * 
+	 *
 	 * @param action
 	 * @param <T>
 	 * @return

@@ -16,6 +16,7 @@
 package org.springframework.data.keyvalue.core;
 
 import org.springframework.data.keyvalue.core.query.KeyValueQuery;
+import org.springframework.lang.Nullable;
 
 /**
  * Resolves the criteria object from given {@link KeyValueQuery}.
@@ -31,9 +32,10 @@ public interface CriteriaAccessor<T> {
 	 * transformation to match the desired type.
 	 *
 	 * @param query must not be {@literal null}.
-	 * @return the criteria extracted from the query.
+	 * @return the criteria extracted from the query. Can be {@literal null}.
 	 * @throws IllegalArgumentException in case the criteria is not valid for usage with specific
 	 *           {@link CriteriaAccessor}.
 	 */
+	@Nullable
 	T resolve(KeyValueQuery<?> query);
 }

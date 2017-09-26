@@ -17,6 +17,7 @@ package org.springframework.data.keyvalue.core;
 
 import org.springframework.data.domain.Sort;
 import org.springframework.data.keyvalue.core.query.KeyValueQuery;
+import org.springframework.lang.Nullable;
 
 /**
  * Resolves the {@link Sort} object from given {@link KeyValueQuery} and potentially converts it into a store specific
@@ -35,5 +36,6 @@ public interface SortAccessor<T> {
 	 * @param query must not be {@literal null}.
 	 * @return {@literal null} in case {@link Sort} has not been defined on {@link KeyValueQuery}.
 	 */
+	@Nullable
 	T resolve(KeyValueQuery<?> query);
 }

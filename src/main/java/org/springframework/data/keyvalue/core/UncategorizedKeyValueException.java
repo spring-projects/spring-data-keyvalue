@@ -20,7 +20,7 @@ import org.springframework.dao.UncategorizedDataAccessException;
 /**
  * Normal superclass when we can't distinguish anything more specific than "something went wrong with the underlying
  * resource".
- * 
+ *
  * @author Christoph Strobl
  * @author Mark Paluch
  */
@@ -30,7 +30,7 @@ public class UncategorizedKeyValueException extends UncategorizedDataAccessExcep
 
 	/**
 	 * Creates a new {@link UncategorizedKeyValueException}.
-	 * 
+	 *
 	 * @param msg the detail message.
 	 * @param cause the root cause (usually from using a underlying data access API).
 	 */
