@@ -52,7 +52,7 @@ public class KeyValuePartTreeQuery implements RepositoryQuery {
 	private final EvaluationContextProvider evaluationContextProvider;
 	private final QueryMethod queryMethod;
 	private final KeyValueOperations keyValueOperations;
-	private final Class<? extends AbstractQueryCreator<?, ?>> queryCreator;
+	private final QueryCreatorFactory<AbstractQueryCreator<KeyValueQuery<?>, ?>> queryCreatorFactory;
 
 	/**
 	 * Creates a new {@link KeyValuePartTreeQuery} for the given {@link QueryMethod}, {@link EvaluationContextProvider},
@@ -66,15 +66,33 @@ public class KeyValuePartTreeQuery implements RepositoryQuery {
 	public KeyValuePartTreeQuery(QueryMethod queryMethod, EvaluationContextProvider evaluationContextProvider,
 			KeyValueOperations keyValueOperations, Class<? extends AbstractQueryCreator<?, ?>> queryCreator) {
 
+		this(queryMethod, evaluationContextProvider, keyValueOperations,
+				new ConstructorCachingQueryCreatorFactory(queryCreator));
+	}
+
+	/**
+	 * Creates a new {@link KeyValuePartTreeQuery} for the given {@link QueryMethod}, {@link EvaluationContextProvider},
+	 * {@link KeyValueOperations} using the given {@link QueryCreatorFactory} producing the {@link AbstractQueryCreator}
+	 * in charge of altering the query.
+	 *
+	 * @param queryMethod must not be {@literal null}.
+	 * @param evaluationContextProvider must not be {@literal null}.
+	 * @param keyValueOperations must not be {@literal null}.
+	 * @param queryCreatorFactory must not be {@literal null}.
+	 * @since 2.0
+	 */
+	public KeyValuePartTreeQuery(QueryMethod queryMethod, EvaluationContextProvider evaluationContextProvider,
+			KeyValueOperations keyValueOperations, QueryCreatorFactory queryCreatorFactory) {
+
 		Assert.notNull(queryMethod, "Query method must not be null!");
 		Assert.notNull(evaluationContextProvider, "EvaluationContextprovider must not be null!");
 		Assert.notNull(keyValueOperations, "KeyValueOperations must not be null!");
-		Assert.notNull(queryCreator, "QueryCreator type must not be null!");
+		Assert.notNull(queryCreatorFactory, "QueryCreatorFactory type must not be null!");
 
 		this.queryMethod = queryMethod;
 		this.keyValueOperations = keyValueOperations;
 		this.evaluationContextProvider = evaluationContextProvider;
-		this.queryCreator = queryCreator;
+		this.queryCreatorFactory = queryCreatorFactory;
 	}
 
 	/*
@@ -187,7 +205,8 @@ public class KeyValuePartTreeQuery implements RepositoryQuery {
 
 		PartTree tree = new PartTree(getQueryMethod().getName(), getQueryMethod().getEntityInformation().getJavaType());
 
-		AbstractQueryCreator<? extends KeyValueQuery<?>, ?> queryCreator = createQueryCreator(tree, accessor);
+		AbstractQueryCreator<? extends KeyValueQuery<?>, ?> queryCreator = queryCreatorFactory.queryCreatorFor(tree,
+				accessor);
 
 		KeyValueQuery<?> query = queryCreator.createQuery();
 
@@ -197,24 +216,6 @@ public class KeyValuePartTreeQuery implements RepositoryQuery {
 		return query;
 	}
 
-	/**
-	 * Constructs a {@link AbstractQueryCreator} for repository query creation. Subclasses may override this method to
-	 * customize query creator construction.
-	 *
-	 * @param tree must not be {@literal null}.
-	 * @param accessor must not be {@literal null}.
-	 * @return the {@link AbstractQueryCreator} object.
-	 * @since 2.0
-	 */
-	protected AbstractQueryCreator<? extends KeyValueQuery<?>, ?> createQueryCreator(PartTree tree,
-			ParameterAccessor accessor) {
-
-		Constructor<? extends AbstractQueryCreator<?, ?>> constructor = ClassUtils.getConstructorIfAvailable(queryCreator,
-				PartTree.class, ParameterAccessor.class);
-
-		return (AbstractQueryCreator<KeyValueQuery<?>, ?>) BeanUtils.instantiateClass(constructor, tree, accessor);
-	}
-
 	/*
 	 * (non-Javadoc)
 	 * @see org.springframework.data.repository.query.RepositoryQuery#getQueryMethod()
@@ -222,5 +223,45 @@ public class KeyValuePartTreeQuery implements RepositoryQuery {
 	@Override
 	public QueryMethod getQueryMethod() {
 		return queryMethod;
+	}
+
+	/**
+	 * Factory class for obtaining {@link AbstractQueryCreator} instances for a given {@link PartTree} and
+	 * {@link ParameterAccessor}.
+	 *
+	 * @author Christoph Strobl
+	 * @since 2.0
+	 */
+	public interface QueryCreatorFactory<T extends AbstractQueryCreator> {
+
+		T queryCreatorFor(PartTree partTree, ParameterAccessor accessor);
+	}
+
+	/**
+	 * {@link QueryCreatorFactory} implementation instantiating {@link AbstractQueryCreator} via reflection. Looks up and
+	 * caches the constructor on creation.
+	 *
+	 * @author Christoph Strobl
+	 * @since 2.0
+	 */
+	private static class ConstructorCachingQueryCreatorFactory
+			implements QueryCreatorFactory<AbstractQueryCreator<KeyValueQuery<?>, ?>> {
+
+		private final Class<?> type;
+		private final @Nullable Constructor<? extends AbstractQueryCreator<?, ?>> constructor;
+
+		ConstructorCachingQueryCreatorFactory(Class<? extends AbstractQueryCreator<?, ?>> type) {
+
+			this.type = type;
+			this.constructor = ClassUtils.getConstructorIfAvailable(type, PartTree.class, ParameterAccessor.class);
+		}
+
+		@Override
+		public AbstractQueryCreator<KeyValueQuery<?>, ?> queryCreatorFor(PartTree partTree, ParameterAccessor accessor) {
+
+			Assert.state(constructor != null,
+					() -> String.format("No constructor (PartTree, ParameterAccessor) could be found on type %s!", type));
+			return (AbstractQueryCreator<KeyValueQuery<?>, ?>) BeanUtils.instantiateClass(constructor, partTree, accessor);
+		}
 	}
 }
