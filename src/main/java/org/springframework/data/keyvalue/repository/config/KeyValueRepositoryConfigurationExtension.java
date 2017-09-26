@@ -35,6 +35,7 @@ import org.springframework.data.repository.config.AnnotationRepositoryConfigurat
 import org.springframework.data.repository.config.RepositoryConfigurationExtension;
 import org.springframework.data.repository.config.RepositoryConfigurationExtensionSupport;
 import org.springframework.data.repository.config.RepositoryConfigurationSource;
+import org.springframework.lang.Nullable;
 import org.springframework.util.CollectionUtils;
 
 /**
@@ -104,7 +105,7 @@ public abstract class KeyValueRepositoryConfigurationExtension extends Repositor
 	 * Detects the query creator type to be used for the factory to set. Will lookup a {@link QueryCreatorType} annotation
 	 * on the {@code @Enable}-annotation or use {@link SpelQueryCreator} if not found.
 	 *
-	 * @param config
+	 * @param config must not be {@literal null}.
 	 * @return
 	 */
 	private static Class<?> getQueryCreatorType(AnnotationRepositoryConfigurationSource config) {
@@ -179,6 +180,7 @@ public abstract class KeyValueRepositoryConfigurationExtension extends Repositor
 	 * @return {@literal null} to explicitly not register a template.
 	 * @see #getDefaultKeyValueTemplateRef()
 	 */
+	@Nullable
 	protected AbstractBeanDefinition getDefaultKeyValueTemplateBeanDefinition(
 			RepositoryConfigurationSource configurationSource) {
 		return null;
@@ -188,8 +190,9 @@ public abstract class KeyValueRepositoryConfigurationExtension extends Repositor
 	 * Returns the {@link org.springframework.data.keyvalue.core.KeyValueTemplate} bean name to potentially register a
 	 * default {@link org.springframework.data.keyvalue.core.KeyValueTemplate} bean if no bean is registered with the
 	 * returned name.
-	 * 
-	 * @return the default {@link org.springframework.data.keyvalue.core.KeyValueTemplate} bean name.
+	 *
+	 * @return the default {@link org.springframework.data.keyvalue.core.KeyValueTemplate} bean name. Never
+	 *         {@literal null}.
 	 * @see #getDefaultKeyValueTemplateBeanDefinition(RepositoryConfigurationSource)
 	 */
 	protected abstract String getDefaultKeyValueTemplateRef();
@@ -198,8 +201,8 @@ public abstract class KeyValueRepositoryConfigurationExtension extends Repositor
 	 * Returns the {@link org.springframework.data.mapping.context.MappingContext} bean name to potentially register a
 	 * default mapping context bean if no bean is registered with the returned name. Defaults to
 	 * {@link MAPPING_CONTEXT_BEAN_NAME}.
-	 * 
-	 * @return the {@link org.springframework.data.mapping.context.MappingContext} bean name.
+	 *
+	 * @return the {@link org.springframework.data.mapping.context.MappingContext} bean name. Never {@literal null}.
 	 * @since 2.0
 	 */
 	protected String getMappingContextBeanRef() {
