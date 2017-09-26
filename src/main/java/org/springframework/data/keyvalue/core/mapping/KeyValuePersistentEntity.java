@@ -16,6 +16,7 @@
 package org.springframework.data.keyvalue.core.mapping;
 
 import org.springframework.data.mapping.model.MutablePersistentEntity;
+import org.springframework.lang.Nullable;
 
 /**
  * @author Christoph Strobl
@@ -27,7 +28,8 @@ public interface KeyValuePersistentEntity<T, P extends KeyValuePersistentPropert
 	/**
 	 * Get the {@literal keySpace} a given entity assigns to.
 	 * 
-	 * @return never {@literal null}.
+	 * @return can be {@literal null}.
 	 */
+	@Nullable
 	String getKeySpace();
 }

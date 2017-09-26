@@ -33,7 +33,7 @@ public class BasicKeyValuePersistentEntity<T, P extends KeyValuePersistentProper
 
 	private static final KeySpaceResolver DEFAULT_FALLBACK_RESOLVER = ClassNameKeySpaceResolver.INSTANCE;
 
-	private final String keyspace;
+	private final @Nullable String keyspace;
 
 	/**
 	 * @param information must not be {@literal null}.
@@ -47,6 +47,7 @@ public class BasicKeyValuePersistentEntity<T, P extends KeyValuePersistentProper
 		this.keyspace = detectKeySpace(information.getType(), fallbackKeySpaceResolver);
 	}
 
+	@Nullable
 	private static String detectKeySpace(Class<?> type, @Nullable KeySpaceResolver fallback) {
 
 		String keySpace = AnnotationBasedKeySpaceResolver.INSTANCE.resolveKeySpace(type);

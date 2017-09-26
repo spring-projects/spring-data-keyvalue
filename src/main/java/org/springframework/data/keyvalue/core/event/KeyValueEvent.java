@@ -347,8 +347,9 @@ public class KeyValueEvent<T> extends ApplicationEvent {
 		/**
 		 * Get the current value.
 		 *
-		 * @return
+		 * @return can be {@literal null}.
 		 */
+		@Nullable
 		public T after() {
 			return getPayload();
 		}
