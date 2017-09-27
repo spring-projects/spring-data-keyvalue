@@ -5,9 +5,9 @@ Oliver Gierke; Thomas Darimont; Christoph Strobl;
 :toc:
 :toc-placement!:
 :spring-data-commons-docs: https://raw.githubusercontent.com/spring-projects/spring-data-commons/master/src/main/asciidoc
-:spring-framework-docs: http://docs.spring.io/spring-framework/docs/current/spring-framework-reference/html
+:spring-framework-docs: http://docs.spring.io/spring-framework/docs/{springVersion}/spring-framework-reference/
 
-(C) 2008-2014 The original authors.
+(C) 2008-2017 The original authors.
 
 NOTE: Copies of this document may be made for your own use and for distribution to others, provided that you do not charge any fee for such copies and further provided that each copy contains this Copyright Notice, whether distributed in print or electronically.
 

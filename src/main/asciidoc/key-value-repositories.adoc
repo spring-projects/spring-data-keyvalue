@@ -1,4 +1,4 @@
-:spring-framework-docs: http://docs.spring.io/spring-framework/docs/current/spring-framework-reference/html
+:spring-framework-docs: http://docs.spring.io/spring-framework/docs/{springVersion}/spring-framework-reference/
 
 [[key-value]]
 = Key Value Repositories
@@ -40,7 +40,7 @@ interface KeyValueOperations {
 [[key-value.template-configuration]]
 == Configuring The KeyValueTemplate
 
-In its very basic shape the `KeyValueTemplate` uses a `MapAdapter` wrapping a `ConcurrentHashMap` using link:{spring-framework-docs}/expressions.html[Spring Expression Language] to perform queries and sorting.
+In its very basic shape the `KeyValueTemplate` uses a `MapAdapter` wrapping a `ConcurrentHashMap` using link:{spring-framework-docs}core.html#expressions[Spring Expression Language] to perform queries and sorting.
 
 NOTE: The used `KeyValueAdapter` does the heavy lifting when it comes to storing and retrieving data. The data structure used will influence performance and/or multi threading behavior.
 
@@ -116,7 +116,7 @@ class Customer {
 Query execution is managed by the `QueryEngine`. As mentioned before it is possible to instruct the `KeyValueAdapter` to use an implementation specific `QueryEngine` that allows access to native functionality.
 When used without further customization queries are be executed using a `SpELQueryEngine`.
 
-NOTE: For performance reasons, we highly recommend to have at least Spring 4.1.2 or better to make use of link:{spring-framework-docs}/expressions.html#expressions-spel-compilation[compiled SpEL Expressions]. Please use the `-Dspring.expression.compiler.mode=IMMEDIATE` switch to turn it on.
+NOTE: For performance reasons, we highly recommend to have at least Spring 4.1.2 or better to make use of link:{spring-framework-docs}core.html#expressions-spel-compilation[compiled SpEL Expressions]. Please use the `-Dspring.expression.compiler.mode=IMMEDIATE` switch to turn it on.
 
 [source, java]
 ----
