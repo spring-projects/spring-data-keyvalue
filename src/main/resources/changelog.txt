@@ -1,6 +1,15 @@
 Spring Data KeyValue Changelog
 ==========================
 
+Changes in version 2.0.0.RELEASE (2017-10-02)
+---------------------------------------------
+* DATAKV-198 - Adapt to changed Spring Framework 5 documentation structure.
+* DATAKV-197 - Introduce nullable annotations for API validation.
+* DATAKV-196 - Open up configuration and repository components for extension.
+* DATAKV-195 - Add explicit automatic module name for Java 9.
+* DATAKV-194 - Release 2.0 GA (Kay).
+
+
 Changes in version 2.0.0.RC3 (2017-09-11)
 -----------------------------------------
 * DATAKV-192 - Move codebase to Java8 API.
