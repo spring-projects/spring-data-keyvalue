@@ -1,5 +1,5 @@
 /*
- * Copyright 2014 the original author or authors.
+ * Copyright 2014-2018 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -27,7 +27,7 @@ import org.springframework.data.annotation.Persistent;
 /**
  * Marker interface for methods with {@link Persistent} annotations indicating the presence of a dedicated keyspace the
  * entity should reside in. If present the value will be picked up for resolving the keyspace.
- * 
+ *
  * <pre>
  * <code>
  * &#64;Persistent
@@ -35,24 +35,24 @@ import org.springframework.data.annotation.Persistent;
  * &#64;Retention(RetentionPolicy.RUNTIME)
  * &#64;Target({ ElementType.TYPE })
  * public &#64;interface Document {
- * 
+ *
  * 		&#64;KeySpace
  * 		String collection() default "person";
- * } 
+ * }
  * </code>
  * </pre>
- * 
+ *
  * Can also be directly used on types to indicate the keyspace.
- * 
+ *
  * <pre>
  * <code>
  * &#64;KeySpace("persons")
  * public class Foo {
- * 
- * } 
+ *
+ * }
  * </code>
  * </pre>
- * 
+ *
  * @author Christoph Strobl
  */
 @Documented

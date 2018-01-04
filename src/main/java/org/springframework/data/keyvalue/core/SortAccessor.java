@@ -1,5 +1,5 @@
 /*
- * Copyright 2014-2017 the original author or authors.
+ * Copyright 2014-2018 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,7 +22,7 @@ import org.springframework.lang.Nullable;
 /**
  * Resolves the {@link Sort} object from given {@link KeyValueQuery} and potentially converts it into a store specific
  * representation that can be used by the {@link QueryEngine} implementation.
- * 
+ *
  * @author Christoph Strobl
  * @author Mark Paluch
  * @param <T>
@@ -32,7 +32,7 @@ public interface SortAccessor<T> {
 	/**
 	 * Reads {@link KeyValueQuery#getSort()} of given {@link KeyValueQuery} and applies required transformation to match
 	 * the desired type.
-	 * 
+	 *
 	 * @param query must not be {@literal null}.
 	 * @return {@literal null} in case {@link Sort} has not been defined on {@link KeyValueQuery}.
 	 */

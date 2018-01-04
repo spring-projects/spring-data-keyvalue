@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2017 the original author or authors.
+ * Copyright 2015-2018 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,7 +23,7 @@ import org.springframework.util.Assert;
 
 /**
  * Forwards {@link CloseableIterator} invocations to the configured {@link Iterator} delegate.
- * 
+ *
  * @author Christoph Strobl
  * @author Thomas Darimont
  * @author Oliver Gierke
@@ -38,7 +38,7 @@ public class ForwardingCloseableIterator<T> implements CloseableIterator<T> {
 
 	/**
 	 * Creates a new {@link ForwardingCloseableIterator}.
-	 * 
+	 *
 	 * @param delegate must not be {@literal null}.
 	 */
 	public ForwardingCloseableIterator(Iterator<? extends T> delegate) {
@@ -48,7 +48,7 @@ public class ForwardingCloseableIterator<T> implements CloseableIterator<T> {
 	/**
 	 * Creates a new {@link ForwardingCloseableIterator} that invokes the configured {@code closeHandler} on
 	 * {@link #close()}.
-	 * 
+	 *
 	 * @param delegate must not be {@literal null}.
 	 * @param closeHandler may be {@literal null}.
 	 */

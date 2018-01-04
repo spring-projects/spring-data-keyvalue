@@ -1,5 +1,5 @@
 /*
- * Copyright 2014-2017 the original author or authors.
+ * Copyright 2014-2018 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -25,7 +25,7 @@ import org.springframework.lang.Nullable;
 
 /**
  * {@link KeyValueAdapter} unifies access and shields the underlying key/value specific implementation.
- * 
+ *
  * @author Christoph Strobl
  * @author Thomas Darimont
  * @author Mark Paluch
@@ -34,7 +34,7 @@ public interface KeyValueAdapter extends DisposableBean {
 
 	/**
 	 * Add object with given id to keyspace.
-	 * 
+	 *
 	 * @param id must not be {@literal null}.
 	 * @param keyspace must not be {@literal null}.
 	 * @return the item previously associated with the id.
@@ -43,7 +43,7 @@ public interface KeyValueAdapter extends DisposableBean {
 
 	/**
 	 * Check if a object with given id exists in keyspace.
-	 * 
+	 *
 	 * @param id must not be {@literal null}.
 	 * @param keyspace must not be {@literal null}.
 	 * @return true if item of type with id exists.
@@ -52,7 +52,7 @@ public interface KeyValueAdapter extends DisposableBean {
 
 	/**
 	 * Get the object with given id from keyspace.
-	 * 
+	 *
 	 * @param id must not be {@literal null}.
 	 * @param keyspace must not be {@literal null}.
 	 * @return {@literal null} in case no matching item exists.
@@ -62,7 +62,7 @@ public interface KeyValueAdapter extends DisposableBean {
 
 	/**
 	 * Get the object with given id from keyspace.
-	 * 
+	 *
 	 * @param id must not be {@literal null}.
 	 * @param keyspace must not be {@literal null}.
 	 * @param type must not be {@literal null}.
@@ -74,7 +74,7 @@ public interface KeyValueAdapter extends DisposableBean {
 
 	/**
 	 * Delete and return the object with given type and id.
-	 * 
+	 *
 	 * @param id must not be {@literal null}.
 	 * @param keyspace must not be {@literal null}.
 	 * @return {@literal null} if object could not be found
@@ -84,7 +84,7 @@ public interface KeyValueAdapter extends DisposableBean {
 
 	/**
 	 * Delete and return the object with given type and id.
-	 * 
+	 *
 	 * @param id must not be {@literal null}.
 	 * @param keyspace must not be {@literal null}.
 	 * @param type must not be {@literal null}.
@@ -96,7 +96,7 @@ public interface KeyValueAdapter extends DisposableBean {
 
 	/**
 	 * Get all elements for given keyspace.
-	 * 
+	 *
 	 * @param keyspace must not be {@literal null}.
 	 * @return empty {@link Collection} if nothing found.
 	 */
@@ -104,7 +104,7 @@ public interface KeyValueAdapter extends DisposableBean {
 
 	/**
 	 * Returns a {@link CloseableIterator} that iterates over all entries.
-	 * 
+	 *
 	 * @param keyspace must not be {@literal null}.
 	 * @return
 	 */
@@ -112,7 +112,7 @@ public interface KeyValueAdapter extends DisposableBean {
 
 	/**
 	 * Remove all objects of given type.
-	 * 
+	 *
 	 * @param keyspace must not be {@literal null}.
 	 */
 	void deleteAllOf(String keyspace);
@@ -124,7 +124,7 @@ public interface KeyValueAdapter extends DisposableBean {
 
 	/**
 	 * Find all matching objects within {@literal keyspace}.
-	 * 
+	 *
 	 * @param query must not be {@literal null}.
 	 * @param keyspace must not be {@literal null}.
 	 * @return empty {@link Collection} if no match found.
@@ -142,7 +142,7 @@ public interface KeyValueAdapter extends DisposableBean {
 
 	/**
 	 * Count number of objects within {@literal keyspace}.
-	 * 
+	 *
 	 * @param keyspace must not be {@literal null}.
 	 * @return
 	 */
@@ -150,7 +150,7 @@ public interface KeyValueAdapter extends DisposableBean {
 
 	/**
 	 * Count all matching objects within {@literal keyspace}.
-	 * 
+	 *
 	 * @param query must not be {@literal null}.
 	 * @param keyspace must not be {@literal null}.
 	 * @return

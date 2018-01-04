@@ -1,5 +1,5 @@
 /*
- * Copyright 2016 the original author or authors.
+ * Copyright 2016-2018 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,7 +23,7 @@ import org.springframework.util.Assert;
 /**
  * {@link SpelCriteria} allows to pass on a {@link SpelExpression} and {@link EvaluationContext} to the actual query
  * processor. This decouples the {@link SpelExpression} from the context it is used in.
- * 
+ *
  * @author Christoph Strobl
  * @author Oliver Gierke
  */
@@ -34,7 +34,7 @@ public class SpelCriteria {
 
 	/**
 	 * Creates a new {@link SpelCriteria} for the given {@link SpelExpression}.
-	 * 
+	 *
 	 * @param expression must not be {@literal null}.
 	 */
 	public SpelCriteria(SpelExpression expression) {
@@ -43,7 +43,7 @@ public class SpelCriteria {
 
 	/**
 	 * Creates new {@link SpelCriteria}.
-	 * 
+	 *
 	 * @param expression must not be {@literal null}.
 	 * @param context must not be {@literal null}.
 	 */

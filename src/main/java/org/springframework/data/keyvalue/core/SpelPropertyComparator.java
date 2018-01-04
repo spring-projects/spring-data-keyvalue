@@ -1,5 +1,5 @@
 /*
- * Copyright 2014-2017 the original author or authors.
+ * Copyright 2014-2018 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -41,7 +41,7 @@ public class SpelPropertyComparator<T> implements Comparator<T> {
 
 	/**
 	 * Create new {@link SpelPropertyComparator} for the given property path an {@link SpelExpressionParser}.
-	 * 
+	 *
 	 * @param path must not be {@literal null} or empty.
 	 * @param parser must not be {@literal null}.
 	 */
@@ -56,7 +56,7 @@ public class SpelPropertyComparator<T> implements Comparator<T> {
 
 	/**
 	 * Sort {@literal ascending}.
-	 * 
+	 *
 	 * @return
 	 */
 	public SpelPropertyComparator<T> asc() {
@@ -66,7 +66,7 @@ public class SpelPropertyComparator<T> implements Comparator<T> {
 
 	/**
 	 * Sort {@literal descending}.
-	 * 
+	 *
 	 * @return
 	 */
 	public SpelPropertyComparator<T> desc() {
@@ -76,7 +76,7 @@ public class SpelPropertyComparator<T> implements Comparator<T> {
 
 	/**
 	 * Sort {@literal null} values first.
-	 * 
+	 *
 	 * @return
 	 */
 	public SpelPropertyComparator<T> nullsFirst() {
@@ -86,7 +86,7 @@ public class SpelPropertyComparator<T> implements Comparator<T> {
 
 	/**
 	 * Sort {@literal null} values last.
-	 * 
+	 *
 	 * @return
 	 */
 	public SpelPropertyComparator<T> nullsLast() {
@@ -96,7 +96,7 @@ public class SpelPropertyComparator<T> implements Comparator<T> {
 
 	/**
 	 * Parse values to {@link SpelExpression}
-	 * 
+	 *
 	 * @return
 	 */
 	protected SpelExpression getExpression() {
@@ -110,7 +110,7 @@ public class SpelPropertyComparator<T> implements Comparator<T> {
 
 	/**
 	 * Create the expression raw value.
-	 * 
+	 *
 	 * @return
 	 */
 	protected String buildExpressionForPath() {
@@ -140,7 +140,7 @@ public class SpelPropertyComparator<T> implements Comparator<T> {
 
 	/**
 	 * Get dot path to property.
-	 * 
+	 *
 	 * @return
 	 */
 	public String getPath() {

@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2017 the original author or authors.
+ * Copyright 2015-2018 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,7 +20,7 @@ import org.springframework.lang.Nullable;
 /**
  * {@link KeySpaceResolver} determines the {@literal keyspace} a given type is assigned to. A keyspace in this context
  * is a specific region/collection/grouping of elements sharing a common keyrange. <br />
- * 
+ *
  * @author Christoph Strobl
  * @author Mark Paluch
  */
@@ -28,7 +28,7 @@ public interface KeySpaceResolver {
 
 	/**
 	 * Determine the {@literal keySpace} to use for a given type.
-	 * 
+	 *
 	 * @param type must not be {@literal null}.
 	 * @return
 	 */

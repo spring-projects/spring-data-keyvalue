@@ -1,5 +1,5 @@
 /*
- * Copyright 2014-2017 the original author or authors.
+ * Copyright 2014-2018 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,7 +20,7 @@ import org.springframework.lang.Nullable;
 /**
  * Generic callback interface for code that operates on a {@link KeyValueAdapter}. This is particularly useful for
  * delegating code that needs to work closely on the underlying key/value store implementation.
- * 
+ *
  * @author Christoph Strobl
  * @author Mark Paluch
  * @param <T>
@@ -30,7 +30,7 @@ public interface KeyValueCallback<T> {
 	/**
 	 * Gets called by {@code KeyValueTemplate#execute(KeyValueCallback)}. Allows for returning a result object created
 	 * within the callback, i.e. a domain object or a collection of domain objects.
-	 * 
+	 *
 	 * @param adapter
 	 * @return
 	 */
