@@ -31,13 +31,17 @@ import org.springframework.data.annotation.Persistent;
  * <pre>
  * <code>
  * &#64;Persistent
- * &#64;Documented
  * &#64;Retention(RetentionPolicy.RUNTIME)
  * &#64;Target({ ElementType.TYPE })
- * public &#64;interface Document {
+ * static @interface CacheCentricAnnotation {
  *
- * 		&#64;KeySpace
- * 		String collection() default "person";
+ *   &#64;AliasFor(annotation = KeySpace.class, attribute = "value")
+ *   String cacheRegion() default "";
+ * }
+ *
+ * &#64;CacheCentricAnnotation(cacheRegion = "customers")
+ * class Customer {
+ *   //...
  * }
  * </code>
  * </pre>
@@ -54,11 +58,15 @@ import org.springframework.data.annotation.Persistent;
  * </pre>
  *
  * @author Christoph Strobl
+ * @author Mark Paluch
  */
 @Documented
 @Retention(RetentionPolicy.RUNTIME)
 @Target(value = { METHOD, TYPE })
 public @interface KeySpace {
 
+	/**
+	 * @return dedicated keyspace the entity should reside in.
+	 */
 	String value() default "";
 }
