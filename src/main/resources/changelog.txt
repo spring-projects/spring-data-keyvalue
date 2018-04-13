@@ -1,6 +1,12 @@
 Spring Data KeyValue Changelog
 ==========================
 
+Changes in version 2.1.0.M2 (2018-04-13)
+----------------------------------------
+* DATAKV-213 - KeySpace javadoc references unsupported example.
+* DATAKV-209 - Release 2.1 M2 (Lovelace).
+
+
 Changes in version 2.0.6.RELEASE (2018-04-04)
 ---------------------------------------------
 * DATAKV-213 - KeySpace javadoc references unsupported example.
