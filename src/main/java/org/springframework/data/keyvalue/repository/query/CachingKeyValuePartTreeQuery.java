@@ -17,8 +17,8 @@ package org.springframework.data.keyvalue.repository.query;
 
 import org.springframework.data.keyvalue.core.KeyValueOperations;
 import org.springframework.data.keyvalue.core.query.KeyValueQuery;
-import org.springframework.data.repository.query.EvaluationContextProvider;
 import org.springframework.data.repository.query.QueryMethod;
+import org.springframework.data.repository.query.QueryMethodEvaluationContextProvider;
 import org.springframework.data.repository.query.parser.AbstractQueryCreator;
 import org.springframework.data.repository.query.parser.PartTree;
 import org.springframework.lang.Nullable;
@@ -35,8 +35,9 @@ public class CachingKeyValuePartTreeQuery extends KeyValuePartTreeQuery {
 
 	private @Nullable KeyValueQuery<?> cachedQuery;
 
-	public CachingKeyValuePartTreeQuery(QueryMethod queryMethod, EvaluationContextProvider evaluationContextProvider,
-			KeyValueOperations keyValueOperations, Class<? extends AbstractQueryCreator<?, ?>> queryCreator) {
+	public CachingKeyValuePartTreeQuery(QueryMethod queryMethod,
+			QueryMethodEvaluationContextProvider evaluationContextProvider, KeyValueOperations keyValueOperations,
+			Class<? extends AbstractQueryCreator<?, ?>> queryCreator) {
 		super(queryMethod, evaluationContextProvider, keyValueOperations, queryCreator);
 	}
 

@@ -36,8 +36,8 @@ import org.springframework.data.keyvalue.core.SpelCriteria;
 import org.springframework.data.keyvalue.core.query.KeyValueQuery;
 import org.springframework.data.projection.ProjectionFactory;
 import org.springframework.data.repository.core.RepositoryMetadata;
-import org.springframework.data.repository.query.DefaultEvaluationContextProvider;
 import org.springframework.data.repository.query.QueryMethod;
+import org.springframework.data.repository.query.QueryMethodEvaluationContextProvider;
 
 /**
  * @author Christoph Strobl
@@ -59,7 +59,7 @@ public class KeyValuePartTreeQueryUnitTests {
 		QueryMethod qm = new QueryMethod(Repo.class.getMethod("findByFirstname", String.class), metadataMock,
 				projectionFactoryMock);
 
-		KeyValuePartTreeQuery query = new KeyValuePartTreeQuery(qm, DefaultEvaluationContextProvider.INSTANCE, kvOpsMock,
+		KeyValuePartTreeQuery query = new KeyValuePartTreeQuery(qm, QueryMethodEvaluationContextProvider.DEFAULT, kvOpsMock,
 				SpelQueryCreator.class);
 
 		Object[] args = new Object[] { "foo" };
@@ -80,7 +80,7 @@ public class KeyValuePartTreeQueryUnitTests {
 		QueryMethod qm = new QueryMethod(Repo.class.getMethod("findBy", Pageable.class), metadataMock,
 				projectionFactoryMock);
 
-		KeyValuePartTreeQuery partTreeQuery = new KeyValuePartTreeQuery(qm, DefaultEvaluationContextProvider.INSTANCE,
+		KeyValuePartTreeQuery partTreeQuery = new KeyValuePartTreeQuery(qm, QueryMethodEvaluationContextProvider.DEFAULT,
 				kvOpsMock, SpelQueryCreator.class);
 
 		KeyValueQuery<?> query = partTreeQuery.prepareQuery(new Object[] { PageRequest.of(2, 3) });
@@ -98,7 +98,7 @@ public class KeyValuePartTreeQueryUnitTests {
 
 		QueryMethod qm = new QueryMethod(Repo.class.getMethod("findTop3By"), metadataMock, projectionFactoryMock);
 
-		KeyValuePartTreeQuery partTreeQuery = new KeyValuePartTreeQuery(qm, DefaultEvaluationContextProvider.INSTANCE,
+		KeyValuePartTreeQuery partTreeQuery = new KeyValuePartTreeQuery(qm, QueryMethodEvaluationContextProvider.DEFAULT,
 				kvOpsMock, SpelQueryCreator.class);
 
 		KeyValueQuery<?> query = partTreeQuery.prepareQuery(new Object[] {});
@@ -116,7 +116,7 @@ public class KeyValuePartTreeQueryUnitTests {
 		QueryMethod qm = new QueryMethod(Repo.class.getMethod("findTop3ByFirstname", String.class), metadataMock,
 				projectionFactoryMock);
 
-		KeyValuePartTreeQuery partTreeQuery = new KeyValuePartTreeQuery(qm, DefaultEvaluationContextProvider.INSTANCE,
+		KeyValuePartTreeQuery partTreeQuery = new KeyValuePartTreeQuery(qm, QueryMethodEvaluationContextProvider.DEFAULT,
 				kvOpsMock, SpelQueryCreator.class);
 
 		KeyValueQuery<?> query = partTreeQuery.prepareQuery(new Object[] { "firstname" });

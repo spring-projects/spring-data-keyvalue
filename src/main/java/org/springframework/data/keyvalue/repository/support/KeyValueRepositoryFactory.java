@@ -35,12 +35,13 @@ import org.springframework.data.repository.core.RepositoryInformation;
 import org.springframework.data.repository.core.RepositoryMetadata;
 import org.springframework.data.repository.core.support.PersistentEntityInformation;
 import org.springframework.data.repository.core.support.RepositoryFactorySupport;
-import org.springframework.data.repository.query.EvaluationContextProvider;
 import org.springframework.data.repository.query.QueryLookupStrategy;
 import org.springframework.data.repository.query.QueryLookupStrategy.Key;
 import org.springframework.data.repository.query.QueryMethod;
+import org.springframework.data.repository.query.QueryMethodEvaluationContextProvider;
 import org.springframework.data.repository.query.RepositoryQuery;
 import org.springframework.data.repository.query.parser.AbstractQueryCreator;
+import org.springframework.data.spel.EvaluationContextProvider;
 import org.springframework.lang.Nullable;
 import org.springframework.util.Assert;
 import org.springframework.util.ClassUtils;
@@ -156,7 +157,7 @@ public class KeyValueRepositoryFactory extends RepositoryFactorySupport {
 	 */
 	@Override
 	protected Optional<QueryLookupStrategy> getQueryLookupStrategy(@Nullable Key key,
-			EvaluationContextProvider evaluationContextProvider) {
+			QueryMethodEvaluationContextProvider evaluationContextProvider) {
 		return Optional.of(new KeyValueQueryLookupStrategy(key, evaluationContextProvider, this.keyValueOperations,
 				this.queryCreator, this.repositoryQueryType));
 	}
@@ -167,7 +168,7 @@ public class KeyValueRepositoryFactory extends RepositoryFactorySupport {
 	 */
 	private static class KeyValueQueryLookupStrategy implements QueryLookupStrategy {
 
-		private EvaluationContextProvider evaluationContextProvider;
+		private QueryMethodEvaluationContextProvider evaluationContextProvider;
 		private KeyValueOperations keyValueOperations;
 
 		private Class<? extends AbstractQueryCreator<?, ?>> queryCreator;
@@ -184,7 +185,7 @@ public class KeyValueRepositoryFactory extends RepositoryFactorySupport {
 		 * @param keyValueOperations must not be {@literal null}.
 		 * @param queryCreator must not be {@literal null}.
 		 */
-		public KeyValueQueryLookupStrategy(Key key, EvaluationContextProvider evaluationContextProvider,
+		public KeyValueQueryLookupStrategy(Key key, QueryMethodEvaluationContextProvider evaluationContextProvider,
 				KeyValueOperations keyValueOperations, Class<? extends AbstractQueryCreator<?, ?>> queryCreator) {
 			this(key, evaluationContextProvider, keyValueOperations, queryCreator, KeyValuePartTreeQuery.class);
 		}
@@ -196,8 +197,9 @@ public class KeyValueRepositoryFactory extends RepositoryFactorySupport {
 		 * @param queryCreator
 		 * @since 1.1
 		 */
-		public KeyValueQueryLookupStrategy(@Nullable Key key, EvaluationContextProvider evaluationContextProvider,
-				KeyValueOperations keyValueOperations, Class<? extends AbstractQueryCreator<?, ?>> queryCreator,
+		public KeyValueQueryLookupStrategy(@Nullable Key key,
+				QueryMethodEvaluationContextProvider evaluationContextProvider, KeyValueOperations keyValueOperations,
+				Class<? extends AbstractQueryCreator<?, ?>> queryCreator,
 				Class<? extends RepositoryQuery> repositoryQueryType) {
 
 			Assert.notNull(evaluationContextProvider, "EvaluationContextProvider must not be null!");
@@ -223,8 +225,8 @@ public class KeyValueRepositoryFactory extends RepositoryFactorySupport {
 			QueryMethod queryMethod = new QueryMethod(method, metadata, factory);
 
 			Constructor<? extends KeyValuePartTreeQuery> constructor = (Constructor<? extends KeyValuePartTreeQuery>) ClassUtils
-					.getConstructorIfAvailable(this.repositoryQueryType, QueryMethod.class, EvaluationContextProvider.class,
-							KeyValueOperations.class, Class.class);
+					.getConstructorIfAvailable(this.repositoryQueryType, QueryMethod.class,
+							QueryMethodEvaluationContextProvider.class, KeyValueOperations.class, Class.class);
 
 			Assert.state(constructor != null,
 					String.format(

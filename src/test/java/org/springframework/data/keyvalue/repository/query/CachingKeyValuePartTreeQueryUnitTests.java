@@ -18,6 +18,7 @@ package org.springframework.data.keyvalue.repository.query;
 import static org.hamcrest.core.IsNot.*;
 import static org.hamcrest.core.IsSame.*;
 import static org.junit.Assert.*;
+import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.*;
 
 import java.lang.reflect.Method;
@@ -33,8 +34,8 @@ import org.springframework.data.keyvalue.core.KeyValueOperations;
 import org.springframework.data.keyvalue.core.SpelCriteria;
 import org.springframework.data.projection.ProjectionFactory;
 import org.springframework.data.repository.core.RepositoryMetadata;
-import org.springframework.data.repository.query.DefaultEvaluationContextProvider;
 import org.springframework.data.repository.query.QueryMethod;
+import org.springframework.data.repository.query.QueryMethodEvaluationContextProvider;
 
 /**
  * Unit tests for {@link CachingKeyValuePartTreeQuery}.
@@ -62,7 +63,7 @@ public class CachingKeyValuePartTreeQueryUnitTests {
 		QueryMethod qm = new QueryMethod(Repo.class.getMethod("findByFirstname", String.class), metadataMock,
 				projectionFactoryMock);
 
-		KeyValuePartTreeQuery query = new CachingKeyValuePartTreeQuery(qm, DefaultEvaluationContextProvider.INSTANCE,
+		KeyValuePartTreeQuery query = new CachingKeyValuePartTreeQuery(qm, QueryMethodEvaluationContextProvider.DEFAULT,
 				kvOpsMock, SpelQueryCreator.class);
 
 		Object[] args = new Object[] { "foo" };

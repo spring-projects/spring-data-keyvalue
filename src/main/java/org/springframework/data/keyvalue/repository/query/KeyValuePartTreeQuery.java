@@ -25,14 +25,15 @@ import org.springframework.data.keyvalue.core.IterableConverter;
 import org.springframework.data.keyvalue.core.KeyValueOperations;
 import org.springframework.data.keyvalue.core.SpelCriteria;
 import org.springframework.data.keyvalue.core.query.KeyValueQuery;
-import org.springframework.data.repository.query.EvaluationContextProvider;
 import org.springframework.data.repository.query.ParameterAccessor;
 import org.springframework.data.repository.query.ParametersParameterAccessor;
 import org.springframework.data.repository.query.QueryMethod;
+import org.springframework.data.repository.query.QueryMethodEvaluationContextProvider;
 import org.springframework.data.repository.query.RepositoryQuery;
 import org.springframework.data.repository.query.ResultProcessor;
 import org.springframework.data.repository.query.parser.AbstractQueryCreator;
 import org.springframework.data.repository.query.parser.PartTree;
+import org.springframework.data.spel.EvaluationContextProvider;
 import org.springframework.expression.EvaluationContext;
 import org.springframework.expression.spel.standard.SpelExpression;
 import org.springframework.lang.Nullable;
@@ -49,7 +50,7 @@ import org.springframework.util.ClassUtils;
  */
 public class KeyValuePartTreeQuery implements RepositoryQuery {
 
-	private final EvaluationContextProvider evaluationContextProvider;
+	private final QueryMethodEvaluationContextProvider evaluationContextProvider;
 	private final QueryMethod queryMethod;
 	private final KeyValueOperations keyValueOperations;
 	private final QueryCreatorFactory<AbstractQueryCreator<KeyValueQuery<?>, ?>> queryCreatorFactory;
@@ -63,7 +64,7 @@ public class KeyValuePartTreeQuery implements RepositoryQuery {
 	 * @param keyValueOperations must not be {@literal null}.
 	 * @param queryCreator must not be {@literal null}.
 	 */
-	public KeyValuePartTreeQuery(QueryMethod queryMethod, EvaluationContextProvider evaluationContextProvider,
+	public KeyValuePartTreeQuery(QueryMethod queryMethod, QueryMethodEvaluationContextProvider evaluationContextProvider,
 			KeyValueOperations keyValueOperations, Class<? extends AbstractQueryCreator<?, ?>> queryCreator) {
 
 		this(queryMethod, evaluationContextProvider, keyValueOperations,
@@ -81,7 +82,7 @@ public class KeyValuePartTreeQuery implements RepositoryQuery {
 	 * @param queryCreatorFactory must not be {@literal null}.
 	 * @since 2.0
 	 */
-	public KeyValuePartTreeQuery(QueryMethod queryMethod, EvaluationContextProvider evaluationContextProvider,
+	public KeyValuePartTreeQuery(QueryMethod queryMethod, QueryMethodEvaluationContextProvider evaluationContextProvider,
 			KeyValueOperations keyValueOperations, QueryCreatorFactory queryCreatorFactory) {
 
 		Assert.notNull(queryMethod, "Query method must not be null!");
