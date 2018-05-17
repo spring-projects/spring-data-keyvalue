@@ -1,6 +1,12 @@
 Spring Data KeyValue Changelog
 ==========================
 
+Changes in version 2.1.0.M3 (2018-05-17)
+----------------------------------------
+* DATAKV-219 - Adapt to SpEL extension API changes in Spring Data Commons.
+* DATAKV-216 - Release 2.1 M3 (Lovelace).
+
+
 Changes in version 2.0.7.RELEASE (2018-05-08)
 ---------------------------------------------
 * DATAKV-215 - Release 2.0.7 (Kay SR7).
