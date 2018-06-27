@@ -1,36 +1,35 @@
-= Spring Data Key Value - Reference Documentation
-Oliver Gierke; Thomas Darimont; Christoph Strobl;
+= Spring Data Key-Value Reference Guide
+Oliver Gierke; Thomas Darimont; Christoph Strobl; Jay Bryant
 :revnumber: {version}
 :revdate: {localdate}
-:toc:
-:toc-placement!:
+:linkcss:
+:doctype: book
+:docinfo: shared
+:toc: left
+:toclevels: 4
+:source-highlighter: prettify
+:icons: font
+:imagesdir: images
+ifdef::backend-epub3[:front-cover-image: image:epub-cover.png[Front Cover,1050,1600]]
 :spring-data-commons-docs: https://raw.githubusercontent.com/spring-projects/spring-data-commons/master/src/main/asciidoc
 :spring-framework-docs: http://docs.spring.io/spring-framework/docs/{springVersion}/spring-framework-reference/
 
-(C) 2008-2017 The original authors.
+(C) 2008-2018 The original authors.
 
 NOTE: Copies of this document may be made for your own use and for distribution to others, provided that you do not charge any fee for such copies and further provided that each copy contains this Copyright Notice, whether distributed in print or electronically.
 
-toc::[]
-
 include::preface.adoc[]
-:leveloffset: +1
-include::{spring-data-commons-docs}/repositories.adoc[]
-:leveloffset: -1
+include::{spring-data-commons-docs}/repositories.adoc[leveloffset=+1]
 
 [[reference]]
 = Reference Documentation
 
-:leveloffset: +1
-include::key-value-repositories.adoc[]
-:leveloffset: -1
+include::key-value-repositories.adoc[leveloffset=+1]
 
 [[appendix]]
 = Appendix
 
 :numbered!:
-:leveloffset: +1
-include::{spring-data-commons-docs}/repository-namespace-reference.adoc[]
-include::{spring-data-commons-docs}/repository-populator-namespace-reference.adoc[]
-include::{spring-data-commons-docs}/repository-query-keywords-reference.adoc[]
-:leveloffset: -1
+include::{spring-data-commons-docs}/repository-namespace-reference.adoc[leveloffset=+1]
+include::{spring-data-commons-docs}/repository-populator-namespace-reference.adoc[leveloffset=+1]
+include::{spring-data-commons-docs}/repository-query-keywords-reference.adoc[leveloffset=+1]
