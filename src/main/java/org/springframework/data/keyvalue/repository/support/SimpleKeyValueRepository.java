@@ -98,11 +98,10 @@ public class SimpleKeyValueRepository<T, ID> implements KeyValueRepository<T, ID
 		Assert.notNull(entity, "Entity must not be null!");
 
 		if (entityInformation.isNew(entity)) {
-			operations.insert(entity);
-		} else {
-			operations.update(entityInformation.getRequiredId(entity), entity);
+			return operations.insert(entity);
 		}
-		return entity;
+
+		return operations.update(entityInformation.getRequiredId(entity), entity);
 	}
 
 	/*
@@ -112,9 +111,13 @@ public class SimpleKeyValueRepository<T, ID> implements KeyValueRepository<T, ID
 	@Override
 	public <S extends T> Iterable<S> saveAll(Iterable<S> entities) {
 
-		entities.forEach(this::save);
+		List<S> saved = new ArrayList<>();
 
-		return entities;
+		for (S entity : entities) {
+			saved.add(save(entity));
+		}
+
+		return saved;
 	}
 
 	/*

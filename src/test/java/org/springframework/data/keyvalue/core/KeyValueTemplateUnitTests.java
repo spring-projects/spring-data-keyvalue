@@ -110,6 +110,15 @@ public class KeyValueTemplateUnitTests {
 		verify(adapterMock, times(1)).put("1", FOO_ONE, Foo.class.getName());
 	}
 
+	@Test // DATACMNS-225
+	public void insertShouldReturnInsertedObject() {
+
+		ClassWithStringId object = new ClassWithStringId();
+
+		assertThat(template.insert(object), is(object));
+		assertThat(template.insert("1", object), is(object));
+	}
+
 	@Test // DATACMNS-525
 	public void insertShouldThrowExceptionWhenObectWithIdAlreadyExists() {
 
@@ -223,6 +232,16 @@ public class KeyValueTemplateUnitTests {
 		template.update("1", FOO_TWO);
 
 		verify(adapterMock, times(1)).put("1", FOO_TWO, Foo.class.getName());
+	}
+
+	@Test // DATAKV-225
+	public void updateShouldReturnUpdatedObject() {
+
+		ClassWithStringId object = new ClassWithStringId();
+		object.id = "foo";
+
+		assertThat(template.update(object), is(object));
+		assertThat(template.update("1", object), is(object));
 	}
 
 	@Test(expected = IllegalArgumentException.class) // DATACMNS-525

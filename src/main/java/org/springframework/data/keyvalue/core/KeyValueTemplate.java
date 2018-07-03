@@ -137,8 +137,7 @@ public class KeyValueTemplate implements KeyValueOperations, ApplicationEventPub
 				entity.getIdProperty(), identifierGenerator);
 		Object id = generatingIdAccessor.getOrGenerateIdentifier();
 
-		insert(id, objectToInsert);
-		return objectToInsert;
+		return insert(id, objectToInsert);
 	}
 
 	/*
@@ -146,7 +145,7 @@ public class KeyValueTemplate implements KeyValueOperations, ApplicationEventPub
 	 * @see org.springframework.data.keyvalue.core.KeyValueOperations#insert(java.lang.Object, java.lang.Object)
 	 */
 	@Override
-	public void insert(Object id, Object objectToInsert) {
+	public <T> T insert(Object id, T objectToInsert) {
 
 		Assert.notNull(id, "Id for object to be inserted must not be null!");
 		Assert.notNull(objectToInsert, "Object to be inserted must not be null!");
@@ -167,6 +166,8 @@ public class KeyValueTemplate implements KeyValueOperations, ApplicationEventPub
 		});
 
 		potentiallyPublishEvent(KeyValueEvent.afterInsert(id, keyspace, objectToInsert.getClass(), objectToInsert));
+
+		return objectToInsert;
 	}
 
 	/*
@@ -175,7 +176,7 @@ public class KeyValueTemplate implements KeyValueOperations, ApplicationEventPub
 	 */
 	@SuppressWarnings("rawtypes")
 	@Override
-	public void update(Object objectToUpdate) {
+	public <T> T update(T objectToUpdate) {
 
 		KeyValuePersistentEntity<?, ?> entity = getKeyValuePersistentEntity(objectToUpdate);
 
@@ -184,7 +185,7 @@ public class KeyValueTemplate implements KeyValueOperations, ApplicationEventPub
 					String.format("Cannot determine id for type %s", ClassUtils.getUserClass(objectToUpdate)));
 		}
 
-		update(entity.getIdentifierAccessor(objectToUpdate).getRequiredIdentifier(), objectToUpdate);
+		return update(entity.getIdentifierAccessor(objectToUpdate).getRequiredIdentifier(), objectToUpdate);
 	}
 
 	/*
@@ -192,7 +193,7 @@ public class KeyValueTemplate implements KeyValueOperations, ApplicationEventPub
 	 * @see org.springframework.data.keyvalue.core.KeyValueOperations#update(java.lang.Object, java.lang.Object)
 	 */
 	@Override
-	public void update(Object id, Object objectToUpdate) {
+	public <T> T update(Object id, T objectToUpdate) {
 
 		Assert.notNull(id, "Id for object to be inserted must not be null!");
 		Assert.notNull(objectToUpdate, "Object to be updated must not be null!");
@@ -205,6 +206,8 @@ public class KeyValueTemplate implements KeyValueOperations, ApplicationEventPub
 
 		potentiallyPublishEvent(
 				KeyValueEvent.afterUpdate(id, keyspace, objectToUpdate.getClass(), objectToUpdate, existing));
+
+		return objectToUpdate;
 	}
 
 	/*
