@@ -36,7 +36,7 @@ public interface KeyValueOperations extends DisposableBean {
 	 * Add given object. Object needs to have id property to which a generated value will be assigned.
 	 *
 	 * @param objectToInsert
-	 * @return
+	 * @return the inserted object.
 	 */
 	<T> T insert(T objectToInsert);
 
@@ -45,8 +45,9 @@ public interface KeyValueOperations extends DisposableBean {
 	 *
 	 * @param id must not be {@literal null}.
 	 * @param objectToInsert must not be {@literal null}.
+	 * @return the inserted object.
 	 */
-	void insert(Object id, Object objectToInsert);
+	<T> T insert(Object id, T objectToInsert);
 
 	/**
 	 * Get all elements of given type. Respects {@link KeySpace} if present and therefore returns all elements that can be
@@ -121,14 +122,16 @@ public interface KeyValueOperations extends DisposableBean {
 
 	/**
 	 * @param objectToUpdate must not be {@literal null}.
+	 * @return the updated object.
 	 */
-	void update(Object objectToUpdate);
+	<T> T update(T objectToUpdate);
 
 	/**
 	 * @param id must not be {@literal null}.
 	 * @param objectToUpdate must not be {@literal null}.
+	 * @return the updated object.
 	 */
-	void update(Object id, Object objectToUpdate);
+	<T> T update(Object id, T objectToUpdate);
 
 	/**
 	 * Remove all elements of type. Respects {@link KeySpace} if present and therefore removes all elements that can be
