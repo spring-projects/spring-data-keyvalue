@@ -1,6 +1,13 @@
 Spring Data KeyValue Changelog
 ==========================
 
+Changes in version 2.0.9.RELEASE (2018-07-26)
+---------------------------------------------
+* DATAKV-224 - Full editing pass on reference documentation.
+* DATAKV-223 - Add coverpage for epub documentation output.
+* DATAKV-222 - Release 2.0.9 (Kay SR9).
+
+
 Changes in version 2.1.0.RC1 (2018-07-26)
 -----------------------------------------
 * DATAKV-225 - Add support for immutable objects.
