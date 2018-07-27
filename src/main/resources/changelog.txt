@@ -1,6 +1,13 @@
 Spring Data KeyValue Changelog
 ==========================
 
+Changes in version 1.2.14.RELEASE (2018-07-27)
+----------------------------------------------
+* DATAKV-224 - Full editing pass on reference documentation.
+* DATAKV-223 - Add coverpage for epub documentation output.
+* DATAKV-221 - Release 1.2.14 (Ingalls SR14).
+
+
 Changes in version 2.0.9.RELEASE (2018-07-26)
 ---------------------------------------------
 * DATAKV-224 - Full editing pass on reference documentation.
