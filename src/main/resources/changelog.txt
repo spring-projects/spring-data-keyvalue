@@ -1,6 +1,11 @@
 Spring Data KeyValue Changelog
 ==========================
 
+Changes in version 2.0.10.RELEASE (2018-09-10)
+----------------------------------------------
+* DATAKV-227 - Release 2.0.10 (Kay SR10).
+
+
 Changes in version 1.2.15.RELEASE (2018-09-10)
 ----------------------------------------------
 * DATAKV-228 - Release 1.2.15 (Ingalls SR15).
