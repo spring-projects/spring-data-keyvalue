@@ -1,6 +1,12 @@
 Spring Data KeyValue Changelog
 ==========================
 
+Changes in version 2.2.0.M1 (2018-12-11)
+----------------------------------------
+* DATAKV-242 - Simplify reference documentation setup.
+* DATAKV-241 - Release 2.2 M1 (Moore).
+
+
 Changes in version 2.1.3.RELEASE (2018-11-27)
 ---------------------------------------------
 * DATAKV-236 - Release 2.1.3 (Lovelace SR3).
