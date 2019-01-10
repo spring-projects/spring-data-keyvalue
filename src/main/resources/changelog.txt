@@ -1,6 +1,12 @@
 Spring Data KeyValue Changelog
 ==========================
 
+Changes in version 1.2.18.RELEASE (2019-01-10)
+----------------------------------------------
+* DATAKV-244 - Update copyright years to 2019.
+* DATAKV-238 - Release 1.2.18 (Ingalls SR18).
+
+
 Changes in version 2.2.0.M1 (2018-12-11)
 ----------------------------------------
 * DATAKV-242 - Simplify reference documentation setup.
