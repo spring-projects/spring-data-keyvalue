@@ -1,6 +1,13 @@
 Spring Data KeyValue Changelog
 ==========================
 
+Changes in version 2.2.0.M2 (2019-03-07)
+----------------------------------------
+* DATAKV-245 - Introduce Concourse CI.
+* DATAKV-244 - Update copyright years to 2019.
+* DATAKV-243 - Release 2.2 M2 (Moore).
+
+
 Changes in version 2.1.5.RELEASE (2019-02-13)
 ---------------------------------------------
 * DATAKV-248 - Release 2.1.5 (Lovelace SR5).
