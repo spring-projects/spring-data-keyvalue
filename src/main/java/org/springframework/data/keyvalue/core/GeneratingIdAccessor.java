@@ -30,7 +30,7 @@ import org.springframework.util.Assert;
  */
 class GeneratingIdAccessor implements IdentifierAccessor {
 
-	private final PersistentPropertyAccessor accessor;
+	private final PersistentPropertyAccessor<?> accessor;
 	private final PersistentProperty<?> identifierProperty;
 	private final IdentifierGenerator generator;
 
@@ -42,7 +42,7 @@ class GeneratingIdAccessor implements IdentifierAccessor {
 	 * @param identifierProperty must not be {@literal null}.
 	 * @param generator must not be {@literal null}.
 	 */
-	GeneratingIdAccessor(PersistentPropertyAccessor accessor, PersistentProperty<?> identifierProperty,
+	GeneratingIdAccessor(PersistentPropertyAccessor<?> accessor, PersistentProperty<?> identifierProperty,
 			IdentifierGenerator generator) {
 
 		Assert.notNull(accessor, "PersistentPropertyAccessor must not be null!");

@@ -126,7 +126,6 @@ public class SpelPropertyComparator<T> implements Comparator<T> {
 	 * (non-Javadoc)
 	 * @see java.util.Comparator#compare(java.lang.Object, java.lang.Object)
 	 */
-	@SuppressWarnings("ConstantConditions")
 	@Override
 	public int compare(T arg1, T arg2) {
 

@@ -57,6 +57,6 @@ public class KeyValueMappingContext<E extends KeyValuePersistentEntity<?, P>, P 
 	@Override
 	@SuppressWarnings("unchecked")
 	protected P createPersistentProperty(Property property, E owner, SimpleTypeHolder simpleTypeHolder) {
-		return (P) new KeyValuePersistentProperty(property, owner, simpleTypeHolder);
+		return (P) new KeyValuePersistentProperty<>(property, owner, simpleTypeHolder);
 	}
 }

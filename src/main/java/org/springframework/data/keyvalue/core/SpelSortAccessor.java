@@ -51,7 +51,6 @@ public class SpelSortAccessor implements SortAccessor<Comparator<?>> {
 	 * (non-Javadoc)
 	 * @see org.springframework.data.keyvalue.core.SortAccessor#resolve(org.springframework.data.keyvalue.core.query.KeyValueQuery)
 	 */
-	@SuppressWarnings({ "rawtypes", "unchecked" })
 	@Override
 	public Comparator<?> resolve(KeyValueQuery<?> query) {
 

@@ -52,7 +52,8 @@ class SpelQueryEngine extends QueryEngine<KeyValueAdapter, SpelCriteria, Compara
 	 * @see org.springframework.data.keyvalue.core.QueryEngine#execute(java.lang.Object, java.lang.Object, int, int, java.lang.String)
 	 */
 	@Override
-	public Collection<?> execute(@Nullable SpelCriteria criteria, @Nullable Comparator<?> sort, long offset, int rows, String keyspace) {
+	public Collection<?> execute(@Nullable SpelCriteria criteria, @Nullable Comparator<?> sort, long offset, int rows,
+			String keyspace) {
 		return sortAndFilterMatchingRange(getRequiredAdapter().getAllOf(keyspace), criteria, sort, offset, rows);
 	}
 
@@ -66,9 +67,9 @@ class SpelQueryEngine extends QueryEngine<KeyValueAdapter, SpelCriteria, Compara
 				.size();
 	}
 
-	@SuppressWarnings("unchecked")
-	private List<?> sortAndFilterMatchingRange(Iterable<?> source, @Nullable SpelCriteria criteria, @Nullable Comparator sort,
-			long offset, int rows) {
+	@SuppressWarnings({ "unchecked", "rawtypes" })
+	private List<?> sortAndFilterMatchingRange(Iterable<?> source, @Nullable SpelCriteria criteria,
+			@Nullable Comparator sort, long offset, int rows) {
 
 		List<?> tmp = IterableConverter.toList(source);
 		if (sort != null) {
@@ -96,7 +97,6 @@ class SpelQueryEngine extends QueryEngine<KeyValueAdapter, SpelCriteria, Compara
 		return stream.collect(Collectors.toList());
 	}
 
-	@SuppressWarnings("ConstantConditions")
 	private static boolean evaluateExpression(SpelCriteria criteria, Object candidate) {
 
 		try {

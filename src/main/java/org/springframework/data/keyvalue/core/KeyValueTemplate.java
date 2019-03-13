@@ -174,7 +174,6 @@ public class KeyValueTemplate implements KeyValueOperations, ApplicationEventPub
 	 * (non-Javadoc)
 	 * @see org.springframework.data.keyvalue.core.KeyValueOperations#update(java.lang.Object)
 	 */
-	@SuppressWarnings("rawtypes")
 	@Override
 	public <T> T update(T objectToUpdate) {
 
@@ -290,7 +289,7 @@ public class KeyValueTemplate implements KeyValueOperations, ApplicationEventPub
 	 * (non-Javadoc)
 	 * @see org.springframework.data.keyvalue.core.KeyValueOperations#delete(java.lang.Object)
 	 */
-	@SuppressWarnings({ "unchecked", "rawtypes" })
+	@SuppressWarnings("unchecked")
 	@Override
 	public <T> T delete(T objectToDelete) {
 
@@ -447,12 +446,10 @@ public class KeyValueTemplate implements KeyValueOperations, ApplicationEventPub
 		this.adapter.clear();
 	}
 
-	@SuppressWarnings("unchecked")
 	private KeyValuePersistentEntity<?, ?> getKeyValuePersistentEntity(Object objectToInsert) {
 		return this.mappingContext.getRequiredPersistentEntity(ClassUtils.getUserClass(objectToInsert));
 	}
 
-	@SuppressWarnings("unchecked")
 	private String resolveKeySpace(Class<?> type) {
 		return this.mappingContext.getRequiredPersistentEntity(type).getKeySpace();
 	}

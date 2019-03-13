@@ -41,7 +41,6 @@ import org.springframework.data.repository.query.QueryMethod;
 import org.springframework.data.repository.query.QueryMethodEvaluationContextProvider;
 import org.springframework.data.repository.query.RepositoryQuery;
 import org.springframework.data.repository.query.parser.AbstractQueryCreator;
-import org.springframework.data.spel.EvaluationContextProvider;
 import org.springframework.lang.Nullable;
 import org.springframework.util.Assert;
 import org.springframework.util.ClassUtils;
@@ -173,22 +172,6 @@ public class KeyValueRepositoryFactory extends RepositoryFactorySupport {
 
 		private Class<? extends AbstractQueryCreator<?, ?>> queryCreator;
 		private Class<? extends RepositoryQuery> repositoryQueryType;
-
-		/**
-		 * Creates a new {@link KeyValueQueryLookupStrategy} for the given {@link Key}, {@link EvaluationContextProvider},
-		 * {@link KeyValueOperations} and query creator type.
-		 * <p>
-		 * TODO: Key is not considered. Should it?
-		 *
-		 * @param key
-		 * @param evaluationContextProvider must not be {@literal null}.
-		 * @param keyValueOperations must not be {@literal null}.
-		 * @param queryCreator must not be {@literal null}.
-		 */
-		public KeyValueQueryLookupStrategy(Key key, QueryMethodEvaluationContextProvider evaluationContextProvider,
-				KeyValueOperations keyValueOperations, Class<? extends AbstractQueryCreator<?, ?>> queryCreator) {
-			this(key, evaluationContextProvider, keyValueOperations, queryCreator, KeyValuePartTreeQuery.class);
-		}
 
 		/**
 		 * @param key

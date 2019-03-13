@@ -17,6 +17,7 @@ package org.springframework.data.keyvalue.repository;
 
 import static org.hamcrest.core.Is.*;
 import static org.junit.Assert.*;
+import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.*;
 
 import lombok.Data;
@@ -36,8 +37,11 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.keyvalue.core.KeyValueOperations;
+import org.springframework.data.keyvalue.core.mapping.context.KeyValueMappingContext;
 import org.springframework.data.keyvalue.repository.support.SimpleKeyValueRepository;
-import org.springframework.data.repository.core.support.ReflectionEntityInformation;
+import org.springframework.data.mapping.PersistentEntity;
+import org.springframework.data.repository.core.EntityInformation;
+import org.springframework.data.repository.core.support.PersistentEntityInformation;
 
 /**
  * @author Christoph Strobl
@@ -48,19 +52,22 @@ public class SimpleKeyValueRepositoryUnitTests {
 
 	private SimpleKeyValueRepository<Foo, String> repo;
 	private @Mock KeyValueOperations opsMock;
+	KeyValueMappingContext<?, ?> context;
 
 	@Before
 	public void setUp() {
 
-		ReflectionEntityInformation<Foo, String> ei = new ReflectionEntityInformation<>(Foo.class);
+		this.context = new KeyValueMappingContext<>();
+
+		EntityInformation<Foo, String> ei = getEntityInformationFor(Foo.class);
 		repo = new SimpleKeyValueRepository<>(ei, opsMock);
 	}
 
 	@Test // DATACMNS-525
 	public void saveNewWithNumericId() {
 
-		ReflectionEntityInformation<WithNumericId, Integer> ei = new ReflectionEntityInformation<>(WithNumericId.class);
-		SimpleKeyValueRepository<WithNumericId, Integer> temp = new SimpleKeyValueRepository<>(ei, opsMock);
+		EntityInformation<WithNumericId, ?> ei = getEntityInformationFor(WithNumericId.class);
+		SimpleKeyValueRepository<WithNumericId, ?> temp = new SimpleKeyValueRepository<>(ei, opsMock);
 
 		WithNumericId withNumericId = new WithNumericId();
 		temp.save(withNumericId);
@@ -168,6 +175,15 @@ public class SimpleKeyValueRepositoryUnitTests {
 		repo.findAll(Pageable.unpaged());
 
 		verify(opsMock, times(1)).findAll(eq(Foo.class));
+	}
+
+	@SuppressWarnings("unchecked")
+	private <T, S> EntityInformation<T, S> getEntityInformationFor(Class<T> type) {
+
+		PersistentEntity<T, ?> requiredPersistentEntity = (PersistentEntity<T, ?>) context
+				.getRequiredPersistentEntity(type);
+
+		return new PersistentEntityInformation<>(requiredPersistentEntity);
 	}
 
 	@Data

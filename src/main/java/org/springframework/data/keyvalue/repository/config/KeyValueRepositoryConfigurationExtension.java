@@ -154,10 +154,14 @@ public abstract class KeyValueRepositoryConfigurationExtension extends Repositor
 
 		super.registerBeansForRoot(registry, configurationSource);
 
-		RootBeanDefinition mappingContextDefinition = new RootBeanDefinition(KeyValueMappingContext.class);
-		mappingContextDefinition.setSource(configurationSource.getSource());
+		registerIfNotAlreadyRegistered(() -> {
 
-		registerIfNotAlreadyRegistered(mappingContextDefinition, registry, getMappingContextBeanRef(), configurationSource);
+			RootBeanDefinition definitionefinition = new RootBeanDefinition(KeyValueMappingContext.class);
+			definitionefinition.setSource(configurationSource.getSource());
+
+			return definitionefinition;
+
+		}, registry, getMappingContextBeanRef(), configurationSource);
 
 		Optional<String> keyValueTemplateName = configurationSource.getAttribute(KEY_VALUE_TEMPLATE_BEAN_REF_ATTRIBUTE);
 
@@ -168,7 +172,7 @@ public abstract class KeyValueRepositoryConfigurationExtension extends Repositor
 			AbstractBeanDefinition beanDefinition = getDefaultKeyValueTemplateBeanDefinition(configurationSource);
 
 			if (beanDefinition != null) {
-				registerIfNotAlreadyRegistered(beanDefinition, registry, keyValueTemplateName.get(),
+				registerIfNotAlreadyRegistered(() -> beanDefinition, registry, keyValueTemplateName.get(),
 						configurationSource.getSource());
 			}
 		}
