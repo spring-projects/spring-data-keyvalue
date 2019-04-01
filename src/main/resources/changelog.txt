@@ -1,6 +1,11 @@
 Spring Data KeyValue Changelog
 ==========================
 
+Changes in version 2.0.14.RELEASE (2019-04-01)
+----------------------------------------------
+* DATAKV-247 - Release 2.0.14 (Kay SR14).
+
+
 Changes in version 1.2.20.RELEASE (2019-04-01)
 ----------------------------------------------
 * DATAKV-254 - Release 1.2.20 (Ingalls SR20).
