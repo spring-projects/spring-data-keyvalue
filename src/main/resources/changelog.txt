@@ -1,6 +1,11 @@
 Spring Data KeyValue Changelog
 ==========================
 
+Changes in version 1.2.19.RELEASE (2019-04-01)
+----------------------------------------------
+* DATAKV-246 - Release 1.2.19 (Ingalls SR19).
+
+
 Changes in version 2.2.0.M2 (2019-03-07)
 ----------------------------------------
 * DATAKV-245 - Introduce Concourse CI.
