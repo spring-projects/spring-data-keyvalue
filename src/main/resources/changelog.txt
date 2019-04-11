@@ -1,6 +1,12 @@
 Spring Data KeyValue Changelog
 ==========================
 
+Changes in version 2.2.0.M3 (2019-04-11)
+----------------------------------------
+* DATAKV-251 - Move off deprecation in Spring Data Commons.
+* DATAKV-250 - Release 2.2 M3 (Moore).
+
+
 Changes in version 2.1.6.RELEASE (2019-04-01)
 ---------------------------------------------
 * DATAKV-249 - Release 2.1.6 (Lovelace SR6).
