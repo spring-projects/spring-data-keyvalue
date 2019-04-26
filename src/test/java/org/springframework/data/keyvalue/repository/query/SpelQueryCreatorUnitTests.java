@@ -38,7 +38,7 @@ import org.springframework.data.repository.query.ParametersParameterAccessor;
 import org.springframework.data.repository.query.QueryMethod;
 import org.springframework.data.repository.query.parser.PartTree;
 import org.springframework.expression.spel.standard.SpelExpression;
-import org.springframework.expression.spel.support.StandardEvaluationContext;
+import org.springframework.expression.spel.support.SimpleEvaluationContext;
 import org.springframework.util.ObjectUtils;
 
 /**
@@ -329,7 +329,8 @@ public class SpelQueryCreatorUnitTests {
 				new QueryMethod(method, metadataMock, new SpelAwareProxyProjectionFactory()).getParameters(), args));
 
 		KeyValueQuery<SpelExpression> q = creator.createQuery();
-		q.getCriteria().setEvaluationContext(new StandardEvaluationContext(args));
+		q.getCriteria().setEvaluationContext(
+				SimpleEvaluationContext.forReadOnlyDataBinding().withRootObject(args).withInstanceMethods().build());
 
 		return q;
 	}

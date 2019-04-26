@@ -38,7 +38,7 @@ import org.springframework.data.repository.core.RepositoryMetadata;
 import org.springframework.data.repository.query.ParametersParameterAccessor;
 import org.springframework.data.repository.query.QueryMethod;
 import org.springframework.data.repository.query.parser.PartTree;
-import org.springframework.expression.spel.support.StandardEvaluationContext;
+import org.springframework.expression.spel.support.SimpleEvaluationContext;
 
 /**
  * Unit tests for {@link SpelQueryEngine}.
@@ -99,7 +99,8 @@ public class SpelQueryEngineUnitTests {
 		SpelQueryCreator creator = new SpelQueryCreator(partTree, new ParametersParameterAccessor(new QueryMethod(method,
 				metadata, new SpelAwareProxyProjectionFactory()).getParameters(), args));
 
-		return new SpelCriteria(creator.createQuery().getCriteria(), new StandardEvaluationContext(args));
+		return new SpelCriteria(creator.createQuery().getCriteria(),
+				SimpleEvaluationContext.forReadOnlyDataBinding().withInstanceMethods().withRootObject(args).build());
 	}
 
 	static interface PersonRepository {
