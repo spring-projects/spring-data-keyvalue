@@ -17,7 +17,7 @@ package org.springframework.data.keyvalue.core;
 
 import org.springframework.expression.EvaluationContext;
 import org.springframework.expression.spel.standard.SpelExpression;
-import org.springframework.expression.spel.support.StandardEvaluationContext;
+import org.springframework.expression.spel.support.SimpleEvaluationContext;
 import org.springframework.util.Assert;
 
 /**
@@ -38,7 +38,7 @@ public class SpelCriteria {
 	 * @param expression must not be {@literal null}.
 	 */
 	public SpelCriteria(SpelExpression expression) {
-		this(expression, new StandardEvaluationContext());
+		this(expression, SimpleEvaluationContext.forReadOnlyDataBinding().withInstanceMethods().build());
 	}
 
 	/**
