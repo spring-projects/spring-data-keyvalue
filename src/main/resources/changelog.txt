@@ -1,6 +1,12 @@
 Spring Data KeyValue Changelog
 ==========================
 
+Changes in version 2.1.7.RELEASE (2019-05-10)
+---------------------------------------------
+* DATAKV-257 - Release 2.1.7 (Lovelace SR7).
+* DATAKV-212 - Use SimpleEvaluationContext.
+
+
 Changes in version 2.2.0.M3 (2019-04-11)
 ----------------------------------------
 * DATAKV-251 - Move off deprecation in Spring Data Commons.
