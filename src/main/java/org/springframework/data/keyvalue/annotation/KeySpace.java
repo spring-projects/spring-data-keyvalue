@@ -26,7 +26,8 @@ import org.springframework.data.annotation.Persistent;
 
 /**
  * Marker interface for methods with {@link Persistent} annotations indicating the presence of a dedicated keyspace the
- * entity should reside in. If present the value will be picked up for resolving the keyspace.
+ * entity should reside in. If present the value will be picked up for resolving the keyspace. The {@link #value()}
+ * attribute supports SpEL expressions to dynamically resolve the keyspace based on a per-operation basis.
  *
  * <pre>
  * <code>
