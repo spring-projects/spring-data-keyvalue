@@ -29,33 +29,29 @@ import org.springframework.data.annotation.Persistent;
  * entity should reside in. If present the value will be picked up for resolving the keyspace. The {@link #value()}
  * attribute supports SpEL expressions to dynamically resolve the keyspace based on a per-operation basis.
  *
- * <pre>
- * <code>
+ * <pre class="code">
  * &#64;Persistent
  * &#64;Retention(RetentionPolicy.RUNTIME)
  * &#64;Target({ ElementType.TYPE })
  * static @interface CacheCentricAnnotation {
  *
- *   &#64;AliasFor(annotation = KeySpace.class, attribute = "value")
- *   String cacheRegion() default "";
+ * 	&#64;AliasFor(annotation = KeySpace.class, attribute = "value")
+ * 	String cacheRegion() default "";
  * }
  *
  * &#64;CacheCentricAnnotation(cacheRegion = "customers")
  * class Customer {
- *   //...
+ * 	// ...
  * }
- * </code>
  * </pre>
  *
  * Can also be directly used on types to indicate the keyspace.
  *
- * <pre>
- * <code>
+ * <pre class="code">
  * &#64;KeySpace("persons")
  * public class Foo {
  *
  * }
- * </code>
  * </pre>
  *
  * @author Christoph Strobl
