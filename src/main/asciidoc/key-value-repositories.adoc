@@ -89,6 +89,10 @@ template.findAllOf(User.class);   <2>
 <2> Returns only elements of type `User` stored in `persons` keyspace.
 ====
 
+TIP: `@KeySpace` supports https://docs.spring.io/spring/docs/{springVersion}/spring-framework-reference/core.html#expressions[SpEL] expressions allowing dynamic keyspace configuration.
+
+5.2.0.M3
+
 [[key-value.keyspaces-custom]]
 === Custom KeySpace Annotation
 

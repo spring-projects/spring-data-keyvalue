@@ -55,9 +55,11 @@ public class BasicKeyValuePersistentEntity<T, P extends KeyValuePersistentProper
 		String keySpace = AnnotationBasedKeySpaceResolver.INSTANCE.resolveKeySpace(type);
 
 		if (StringUtils.hasText(keySpace)) {
+
 			this.keyspace = keySpace;
 			this.keyspaceExpression = detectExpression(keySpace);
 		} else {
+
 			this.keyspace = resolveKeyspace(fallbackKeySpaceResolver, type);
 			this.keyspaceExpression = null;
 		}
@@ -67,8 +69,8 @@ public class BasicKeyValuePersistentEntity<T, P extends KeyValuePersistentProper
 	 * Returns a SpEL {@link Expression} if the given {@link String} is actually an expression that does not evaluate to a
 	 * {@link LiteralExpression} (indicating that no subsequent evaluation is necessary).
 	 *
-	 * @param potentialExpression can be {@literal null}
-	 * @return
+	 * @param potentialExpression must not be {@literal null}
+	 * @return the parsed {@link Expression} or {@literal null}.
 	 */
 	@Nullable
 	private static Expression detectExpression(String potentialExpression) {

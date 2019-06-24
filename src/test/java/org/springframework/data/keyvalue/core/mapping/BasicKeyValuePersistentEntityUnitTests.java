@@ -22,7 +22,6 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 
 import org.junit.Test;
-
 import org.springframework.data.keyvalue.annotation.KeySpace;
 import org.springframework.data.keyvalue.core.mapping.context.KeyValueMappingContext;
 import org.springframework.data.mapping.context.MappingContext;
@@ -41,20 +40,28 @@ public class BasicKeyValuePersistentEntityUnitTests {
 	@Test // DATAKV-268
 	public void shouldDeriveKeyspaceFromClassName() {
 
-		KeyValuePersistentEntity<?, ?> persistentEntity = mappingContext.getPersistentEntity(KeyspaceEntity.class);
-
-		assertThat(persistentEntity.getKeySpace()).isEqualTo(KeyspaceEntity.class.getName());
+		assertThat(mappingContext.getPersistentEntity(KeyspaceEntity.class).getKeySpace())
+				.isEqualTo(KeyspaceEntity.class.getName());
 	}
 
 	@Test // DATAKV-268
 	public void shouldEvaluateKeyspaceExpression() {
 
 		KeyValuePersistentEntity<?, ?> persistentEntity = mappingContext.getPersistentEntity(ExpressionEntity.class);
-
 		persistentEntity.setEvaluationContextProvider(
 				new ExtensionAwareEvaluationContextProvider(Collections.singletonList(new SampleExtension())));
 
 		assertThat(persistentEntity.getKeySpace()).isEqualTo("some");
+	}
+
+	@Test // DATAKV-268
+	public void shouldEvaluateEntityWithoutKeyspace() {
+
+		KeyValuePersistentEntity<?, ?> persistentEntity = mappingContext.getPersistentEntity(NoKeyspaceEntity.class);
+		persistentEntity.setEvaluationContextProvider(
+				new ExtensionAwareEvaluationContextProvider(Collections.singletonList(new SampleExtension())));
+
+		assertThat(persistentEntity.getKeySpace()).isEqualTo(NoKeyspaceEntity.class.getName());
 	}
 
 	@KeySpace("#{myProperty}")
@@ -62,6 +69,8 @@ public class BasicKeyValuePersistentEntityUnitTests {
 
 	@KeySpace
 	static class KeyspaceEntity {}
+
+	static class NoKeyspaceEntity {}
 
 	static class SampleExtension implements EvaluationContextExtension {
 
