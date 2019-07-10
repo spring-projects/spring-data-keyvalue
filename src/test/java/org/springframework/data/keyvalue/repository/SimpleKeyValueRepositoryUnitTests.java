@@ -15,8 +15,7 @@
  */
 package org.springframework.data.keyvalue.repository;
 
-import static org.hamcrest.core.Is.*;
-import static org.junit.Assert.*;
+import static org.assertj.core.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.*;
 
@@ -31,6 +30,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
+
 import org.springframework.data.annotation.Id;
 import org.springframework.data.annotation.Persistent;
 import org.springframework.data.domain.PageRequest;
@@ -141,7 +141,7 @@ public class SimpleKeyValueRepositoryUnitTests {
 	public void existsByIdReturnsFalseForEmptyOptional() {
 
 		when(opsMock.findById(any(), any(Class.class))).thenReturn(Optional.empty());
-		assertThat(repo.existsById("one"), is(false));
+		assertThat(repo.existsById("one")).isFalse();
 	}
 
 	@Test // DATAKV-186
@@ -149,7 +149,7 @@ public class SimpleKeyValueRepositoryUnitTests {
 	public void existsByIdReturnsTrueWhenOptionalValuePresent() {
 
 		when(opsMock.findById(any(), any(Class.class))).thenReturn(Optional.of(new Foo()));
-		assertTrue(repo.existsById("one"));
+		assertThat(repo.existsById("one")).isTrue();
 	}
 
 	@Test // DATACMNS-525

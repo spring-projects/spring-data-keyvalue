@@ -15,9 +15,7 @@
  */
 package org.springframework.data.keyvalue.repository.query;
 
-import static org.hamcrest.core.IsNot.*;
-import static org.hamcrest.core.IsSame.*;
-import static org.junit.Assert.*;
+import static org.assertj.core.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.*;
 
@@ -29,6 +27,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
+
 import org.springframework.data.keyvalue.Person;
 import org.springframework.data.keyvalue.core.KeyValueOperations;
 import org.springframework.data.keyvalue.core.SpelCriteria;
@@ -71,8 +70,8 @@ public class CachingKeyValuePartTreeQueryUnitTests {
 		SpelCriteria first = (SpelCriteria) query.prepareQuery(args).getCriteria();
 		SpelCriteria second = (SpelCriteria) query.prepareQuery(args).getCriteria();
 
-		assertThat(first.getExpression(), sameInstance(second.getExpression()));
-		assertThat(first.getContext(), not(sameInstance(second.getContext())));
+		assertThat(first.getExpression()).isSameAs(second.getExpression());
+		assertThat(first.getContext()).isNotSameAs(second.getContext());
 	}
 
 	static interface Repo {

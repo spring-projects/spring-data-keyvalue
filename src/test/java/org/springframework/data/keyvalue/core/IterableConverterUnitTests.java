@@ -15,8 +15,7 @@
  */
 package org.springframework.data.keyvalue.core;
 
-import static org.hamcrest.Matchers.*;
-import static org.junit.Assert.*;
+import static org.assertj.core.api.Assertions.*;
 import static org.springframework.data.keyvalue.core.IterableConverter.*;
 
 import java.util.ArrayList;
@@ -36,7 +35,7 @@ public class IterableConverterUnitTests {
 
 	@Test // DATAKV-101
 	public void toListShouldReturnEmptyListWhenSourceEmpty() {
-		assertThat(toList(Collections.emptySet()), empty());
+		assertThat(toList(Collections.emptySet())).isEmpty();
 	}
 
 	@Test // DATAKV-101
@@ -44,7 +43,7 @@ public class IterableConverterUnitTests {
 
 		List<String> source = new ArrayList<>();
 
-		assertThat(toList(source), sameInstance(source));
+		assertThat(toList(source)).isSameAs(source);
 	}
 
 	@Test // DATAKV-101
@@ -53,7 +52,7 @@ public class IterableConverterUnitTests {
 		Set<String> source = new HashSet<>();
 		source.add("tyrion");
 
-		assertThat(toList(source), instanceOf(List.class));
+		assertThat(toList(source)).isInstanceOf(List.class);
 	}
 
 	@Test // DATAKV-101
@@ -63,7 +62,7 @@ public class IterableConverterUnitTests {
 		source.add("tyrion");
 		source.add("jaime");
 
-		assertThat(toList(source), contains(source.toArray(new String[2])));
+		assertThat(toList(source)).containsExactly(source.toArray(new String[2]));
 	}
 
 }

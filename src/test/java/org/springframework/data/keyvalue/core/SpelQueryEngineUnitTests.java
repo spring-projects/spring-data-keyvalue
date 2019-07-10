@@ -15,9 +15,7 @@
  */
 package org.springframework.data.keyvalue.core;
 
-import static org.hamcrest.Matchers.*;
-import static org.hamcrest.Matchers.contains;
-import static org.junit.Assert.*;
+import static org.assertj.core.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 import java.lang.reflect.Method;
@@ -30,6 +28,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
+
 import org.springframework.data.annotation.Id;
 import org.springframework.data.keyvalue.repository.query.SpelQueryCreator;
 import org.springframework.data.projection.SpelAwareProxyProjectionFactory;
@@ -71,8 +70,8 @@ public class SpelQueryEngineUnitTests {
 
 		doReturn(people).when(adapter).getAllOf(anyString());
 
-		assertThat(engine.execute(createQueryForMethodWithArgs("findByFirstname", "bob"), null, -1, -1, anyString()),
-				contains(BOB_WITH_FIRSTNAME));
+		assertThat(engine.execute(createQueryForMethodWithArgs("findByFirstname", "bob"), null, -1, -1, anyString()))
+				.containsExactly(BOB_WITH_FIRSTNAME);
 	}
 
 	@Test // DATAKV-114
@@ -80,7 +79,7 @@ public class SpelQueryEngineUnitTests {
 
 		doReturn(people).when(adapter).getAllOf(anyString());
 
-		assertThat(engine.count(createQueryForMethodWithArgs("findByFirstname", "bob"), anyString()), is(1L));
+		assertThat(engine.count(createQueryForMethodWithArgs("findByFirstname", "bob"), anyString())).isEqualTo(1L);
 	}
 
 	private static SpelCriteria createQueryForMethodWithArgs(String methodName, Object... args) throws Exception {

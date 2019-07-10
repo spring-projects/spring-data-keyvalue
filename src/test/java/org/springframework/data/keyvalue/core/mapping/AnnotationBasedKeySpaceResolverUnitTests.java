@@ -15,8 +15,7 @@
  */
 package org.springframework.data.keyvalue.core.mapping;
 
-import static org.hamcrest.CoreMatchers.*;
-import static org.junit.Assert.*;
+import static org.assertj.core.api.Assertions.*;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
@@ -25,6 +24,7 @@ import java.lang.annotation.Target;
 
 import org.junit.Before;
 import org.junit.Test;
+
 import org.springframework.core.annotation.AliasFor;
 import org.springframework.data.annotation.Persistent;
 import org.springframework.data.keyvalue.TypeWithDirectKeySpaceAnnotation;
@@ -49,42 +49,42 @@ public class AnnotationBasedKeySpaceResolverUnitTests {
 
 	@Test // DATACMNS-525
 	public void shouldResolveKeySpaceDefaultValueCorrectly() {
-		assertThat(resolver.resolveKeySpace(EntityWithDefaultKeySpace.class), is("daenerys"));
+		assertThat(resolver.resolveKeySpace(EntityWithDefaultKeySpace.class)).isEqualTo("daenerys");
 	}
 
 	@Test // DATAKV-105
 	public void shouldReturnNullWhenNoKeySpaceFoundOnComposedPersistentAnnotation() {
-		assertThat(resolver.resolveKeySpace(TypeWithInhteritedPersistentAnnotationNotHavingKeySpace.class), nullValue());
+		assertThat(resolver.resolveKeySpace(TypeWithInhteritedPersistentAnnotationNotHavingKeySpace.class)).isNull();
 	}
 
 	@Test // DATAKV-105
 	public void shouldReturnNullWhenPersistentIsFoundOnNonComposedAnnotation() {
-		assertThat(resolver.resolveKeySpace(TypeWithPersistentAnnotationNotHavingKeySpace.class), nullValue());
+		assertThat(resolver.resolveKeySpace(TypeWithPersistentAnnotationNotHavingKeySpace.class)).isNull();
 	}
 
 	@Test // DATAKV-105
 	public void shouldReturnNullWhenPersistentIsNotFound() {
-		assertThat(resolver.resolveKeySpace(TypeWithoutKeySpace.class), nullValue());
+		assertThat(resolver.resolveKeySpace(TypeWithoutKeySpace.class)).isNull();
 	}
 
 	@Test // DATACMNS-525
 	public void shouldResolveInheritedKeySpaceCorrectly() {
-		assertThat(resolver.resolveKeySpace(EntityWithInheritedKeySpace.class), is("viserys"));
+		assertThat(resolver.resolveKeySpace(EntityWithInheritedKeySpace.class)).isEqualTo("viserys");
 	}
 
 	@Test // DATACMNS-525
 	public void shouldResolveDirectKeySpaceAnnotationCorrectly() {
-		assertThat(resolver.resolveKeySpace(TypeWithDirectKeySpaceAnnotation.class), is("rhaegar"));
+		assertThat(resolver.resolveKeySpace(TypeWithDirectKeySpaceAnnotation.class)).isEqualTo("rhaegar");
 	}
 
 	@Test // DATAKV-129
 	public void shouldResolveKeySpaceUsingAliasForCorrectly() {
-		assertThat(resolver.resolveKeySpace(EntityWithSetKeySpaceUsingAliasFor.class), is("viserys"));
+		assertThat(resolver.resolveKeySpace(EntityWithSetKeySpaceUsingAliasFor.class)).isEqualTo("viserys");
 	}
 
 	@Test // DATAKV-129
 	public void shouldResolveKeySpaceUsingAliasForCorrectlyOnSubClass() {
-		assertThat(resolver.resolveKeySpace(EntityWithInheritedKeySpaceUsingAliasFor.class), is("viserys"));
+		assertThat(resolver.resolveKeySpace(EntityWithInheritedKeySpaceUsingAliasFor.class)).isEqualTo("viserys");
 	}
 
 	@PersistentAnnotationWithExplicitKeySpaceUsingAliasFor

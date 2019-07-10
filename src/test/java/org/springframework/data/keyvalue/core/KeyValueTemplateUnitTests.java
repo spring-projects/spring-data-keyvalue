@@ -15,10 +15,8 @@
  */
 package org.springframework.data.keyvalue.core;
 
-import static org.hamcrest.Matchers.*;
-import static org.junit.Assert.*;
+import static org.assertj.core.api.Assertions.*;
 import static org.mockito.Mockito.*;
-import static org.mockito.Mockito.any;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -27,16 +25,14 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
-import java.util.Optional;
 
 import org.junit.Before;
-import org.junit.Rule;
 import org.junit.Test;
-import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
+
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.dao.InvalidDataAccessApiUsageException;
@@ -64,8 +60,6 @@ import org.springframework.data.keyvalue.core.query.KeyValueQuery;
 @RunWith(MockitoJUnitRunner.Silent.class)
 public class KeyValueTemplateUnitTests {
 
-	public @Rule ExpectedException exception = ExpectedException.none();
-
 	private static final Foo FOO_ONE = new Foo("one");
 	private static final Foo FOO_TWO = new Foo("two");
 	private static final TypeWithCustomComposedKeySpaceAnnotationUsingAliasFor ALIASED_USING_ALIAS_FOR = new TypeWithCustomComposedKeySpaceAnnotationUsingAliasFor(
@@ -79,19 +73,19 @@ public class KeyValueTemplateUnitTests {
 	private @Mock ApplicationEventPublisher publisherMock;
 
 	@Before
-	public void setUp() throws InstantiationException, IllegalAccessException {
+	public void setUp() {
 		this.template = new KeyValueTemplate(adapterMock);
 		this.template.setApplicationEventPublisher(publisherMock);
 	}
 
-	@Test(expected = IllegalArgumentException.class) // DATACMNS-525
+	@Test // DATACMNS-525
 	public void shouldThrowExceptionWhenCreatingNewTempateWithNullAdapter() {
-		new KeyValueTemplate(null);
+		assertThatIllegalArgumentException().isThrownBy(() -> new KeyValueTemplate(null));
 	}
 
-	@Test(expected = IllegalArgumentException.class) // DATACMNS-525
+	@Test // DATACMNS-525
 	public void shouldThrowExceptionWhenCreatingNewTempateWithNullMappingContext() {
-		new KeyValueTemplate(adapterMock, null);
+		assertThatIllegalArgumentException().isThrownBy(() -> new KeyValueTemplate(adapterMock, null));
 	}
 
 	@Test // DATACMNS-525
@@ -115,29 +109,26 @@ public class KeyValueTemplateUnitTests {
 
 		ClassWithStringId object = new ClassWithStringId();
 
-		assertThat(template.insert(object), is(object));
-		assertThat(template.insert("1", object), is(object));
+		assertThat(template.insert(object)).isEqualTo(object);
+		assertThat(template.insert("1", object)).isEqualTo(object);
 	}
 
 	@Test // DATACMNS-525
 	public void insertShouldThrowExceptionWhenObectWithIdAlreadyExists() {
 
-		exception.expect(DuplicateKeyException.class);
-		exception.expectMessage("id 1");
-
 		when(adapterMock.contains(anyString(), anyString())).thenReturn(true);
 
-		template.insert("1", FOO_ONE);
+		assertThatExceptionOfType(DuplicateKeyException.class).isThrownBy(() -> template.insert("1", FOO_ONE));
 	}
 
-	@Test(expected = IllegalArgumentException.class) // DATACMNS-525
+	@Test // DATACMNS-525
 	public void insertShouldThrowExceptionForNullId() {
-		template.insert(null, FOO_ONE);
+		assertThatIllegalArgumentException().isThrownBy(() -> template.insert(null, FOO_ONE));
 	}
 
-	@Test(expected = IllegalArgumentException.class) // DATACMNS-525
+	@Test // DATACMNS-525
 	public void insertShouldThrowExceptionForNullObject() {
-		template.insert("some-id", null);
+		assertThatIllegalArgumentException().isThrownBy(() -> template.insert("some-id", null));
 	}
 
 	@Test // DATACMNS-525
@@ -145,12 +136,12 @@ public class KeyValueTemplateUnitTests {
 
 		ClassWithStringId target = template.insert(new ClassWithStringId());
 
-		assertThat(target.id, notNullValue());
+		assertThat(target.id).isNotNull();
 	}
 
-	@Test(expected = IllegalArgumentException.class) // DATACMNS-525
+	@Test // DATACMNS-525
 	public void insertShouldThrowErrorWhenIdCannotBeResolved() {
-		template.insert(FOO_ONE);
+		assertThatIllegalArgumentException().isThrownBy(() -> template.insert(FOO_ONE));
 	}
 
 	@Test // DATACMNS-525
@@ -159,7 +150,7 @@ public class KeyValueTemplateUnitTests {
 		ClassWithStringId source = new ClassWithStringId();
 		ClassWithStringId target = template.insert(source);
 
-		assertThat(target, sameInstance(source));
+		assertThat(target).isSameAs(source);
 	}
 
 	@Test // DATACMNS-525
@@ -175,7 +166,7 @@ public class KeyValueTemplateUnitTests {
 
 	@Test // DATACMNS-525
 	public void findByIdShouldReturnOptionalEmptyWhenNoElementsPresent() {
-		assertThat(template.findById("1", Foo.class), is(Optional.empty()));
+		assertThat(template.findById("1", Foo.class)).isEmpty();
 	}
 
 	@Test // DATACMNS-525
@@ -186,9 +177,9 @@ public class KeyValueTemplateUnitTests {
 		verify(adapterMock, times(1)).get("1", Foo.class.getName(), Foo.class);
 	}
 
-	@Test(expected = IllegalArgumentException.class) // DATACMNS-525, DATAKV-187
+	@Test // DATACMNS-525, DATAKV-187
 	public void findByIdShouldThrowExceptionWhenGivenNullId() {
-		template.findById(null, Foo.class);
+		assertThatIllegalArgumentException().isThrownBy(() -> template.findById(null, Foo.class));
 	}
 
 	@Test // DATACMNS-525
@@ -199,9 +190,9 @@ public class KeyValueTemplateUnitTests {
 		verify(adapterMock, times(1)).getAllOf(Foo.class.getName());
 	}
 
-	@Test(expected = IllegalArgumentException.class) // DATACMNS-525
+	@Test // DATACMNS-525
 	public void findAllOfShouldThrowExceptionWhenGivenNullType() {
-		template.findAll(null);
+		assertThatIllegalArgumentException().isThrownBy(() -> template.findAll(null));
 	}
 
 	@Test // DATACMNS-525
@@ -221,9 +212,9 @@ public class KeyValueTemplateUnitTests {
 		template.findInRange(1, 5, Foo.class);
 
 		verify(adapterMock, times(1)).find(captor.capture(), eq(Foo.class.getName()), eq(Foo.class));
-		assertThat(captor.getValue().getOffset(), is(1L));
-		assertThat(captor.getValue().getRows(), is(5));
-		assertThat(captor.getValue().getCriteria(), nullValue());
+		assertThat(captor.getValue().getOffset()).isEqualTo(1L);
+		assertThat(captor.getValue().getRows()).isEqualTo(5);
+		assertThat(captor.getValue().getCriteria()).isNull();
 	}
 
 	@Test // DATACMNS-525
@@ -240,18 +231,18 @@ public class KeyValueTemplateUnitTests {
 		ClassWithStringId object = new ClassWithStringId();
 		object.id = "foo";
 
-		assertThat(template.update(object), is(object));
-		assertThat(template.update("1", object), is(object));
+		assertThat(template.update(object)).isEqualTo(object);
+		assertThat(template.update("1", object)).isEqualTo(object);
 	}
 
-	@Test(expected = IllegalArgumentException.class) // DATACMNS-525
+	@Test // DATACMNS-525
 	public void updateShouldThrowExceptionWhenGivenNullId() {
-		template.update(null, FOO_ONE);
+		assertThatIllegalArgumentException().isThrownBy(() -> template.update(null, FOO_ONE));
 	}
 
-	@Test(expected = IllegalArgumentException.class) // DATACMNS-525
+	@Test // DATACMNS-525
 	public void updateShouldThrowExceptionWhenGivenNullObject() {
-		template.update("1", null);
+		assertThatIllegalArgumentException().isThrownBy(() -> template.update("1", null));
 	}
 
 	@Test // DATACMNS-525
@@ -265,9 +256,9 @@ public class KeyValueTemplateUnitTests {
 		verify(adapterMock, times(1)).put(source.id, source, ClassWithStringId.class.getName());
 	}
 
-	@Test(expected = InvalidDataAccessApiUsageException.class) // DATACMNS-525
+	@Test // DATACMNS-525
 	public void updateShouldThrowErrorWhenIdInformationCannotBeExtracted() {
-		template.update(FOO_ONE);
+		assertThatExceptionOfType(InvalidDataAccessApiUsageException.class).isThrownBy(() -> template.update(FOO_ONE));
 	}
 
 	@Test // DATACMNS-525
@@ -289,9 +280,9 @@ public class KeyValueTemplateUnitTests {
 		verify(adapterMock, times(1)).delete("some-id", ClassWithStringId.class.getName(), ClassWithStringId.class);
 	}
 
-	@Test(expected = IllegalArgumentException.class) // DATACMNS-525
+	@Test // DATACMNS-525
 	public void deleteThrowsExceptionWhenIdCannotBeExctracted() {
-		template.delete(FOO_ONE);
+		assertThatIllegalArgumentException().isThrownBy(() -> template.delete(FOO_ONE));
 	}
 
 	@Test // DATACMNS-525
@@ -304,12 +295,12 @@ public class KeyValueTemplateUnitTests {
 
 		when(adapterMock.count(Foo.class.getName())).thenReturn(2L);
 
-		assertThat(template.count(Foo.class), is(2L));
+		assertThat(template.count(Foo.class)).isEqualTo(2L);
 	}
 
-	@Test(expected = IllegalArgumentException.class) // DATACMNS-525
+	@Test // DATACMNS-525
 	public void countShouldThrowErrorOnNullType() {
-		template.count(null);
+		assertThatIllegalArgumentException().isThrownBy(() -> template.count(null));
 	}
 
 	@Test // DATACMNS-525
@@ -335,20 +326,20 @@ public class KeyValueTemplateUnitTests {
 		Collection foo = Arrays.asList(ALIASED_USING_ALIAS_FOR, SUBCLASS_OF_ALIASED_USING_ALIAS_FOR);
 		when(adapterMock.getAllOf("aliased")).thenReturn(foo);
 
-		assertThat(template.findAll(SUBCLASS_OF_ALIASED_USING_ALIAS_FOR.getClass()),
-				containsInAnyOrder(SUBCLASS_OF_ALIASED_USING_ALIAS_FOR));
+		assertThat((Iterable) template.findAll(SUBCLASS_OF_ALIASED_USING_ALIAS_FOR.getClass()))
+				.contains(SUBCLASS_OF_ALIASED_USING_ALIAS_FOR);
 	}
 
 	@Test // DATACMNS-525
 	public void insertSouldRespectTypeAliasAndFilterNonMatching() {
 
 		template.insert("1", ALIASED_USING_ALIAS_FOR);
-		assertThat(template.findById("1", SUBCLASS_OF_ALIASED_USING_ALIAS_FOR.getClass()), is(Optional.empty()));
+		assertThat(template.findById("1", SUBCLASS_OF_ALIASED_USING_ALIAS_FOR.getClass())).isEmpty();
 	}
 
-	@Test(expected = IllegalArgumentException.class) // DATACMNS-525
+	@Test // DATACMNS-525
 	public void setttingNullPersistenceExceptionTranslatorShouldThrowException() {
-		template.setExceptionTranslator(null);
+		assertThatIllegalArgumentException().isThrownBy(() -> template.setExceptionTranslator(null));
 	}
 
 	@Test // DATAKV-91
@@ -414,9 +405,9 @@ public class KeyValueTemplateUnitTests {
 		verify(publisherMock, times(1)).publishEvent(captor.capture());
 		verifyNoMoreInteractions(publisherMock);
 
-		assertThat(captor.getValue().getKey(), is("1"));
-		assertThat(captor.getValue().getKeyspace(), is(Foo.class.getName()));
-		assertThat(captor.getValue().getPayload(), is(FOO_ONE));
+		assertThat(captor.getValue().getKey()).isEqualTo("1");
+		assertThat(captor.getValue().getKeyspace()).isEqualTo(Foo.class.getName());
+		assertThat(captor.getValue().getPayload()).isEqualTo(FOO_ONE);
 	}
 
 	@Test // DATAKV-91, DATAKV-104, DATAKV-187
@@ -432,9 +423,9 @@ public class KeyValueTemplateUnitTests {
 		verify(publisherMock, times(1)).publishEvent(captor.capture());
 		verifyNoMoreInteractions(publisherMock);
 
-		assertThat(captor.getValue().getKey(), is("1"));
-		assertThat(captor.getValue().getKeyspace(), is(Foo.class.getName()));
-		assertThat(captor.getValue().getPayload(), is(FOO_ONE));
+		assertThat(captor.getValue().getKey()).isEqualTo("1");
+		assertThat(captor.getValue().getKeyspace()).isEqualTo(Foo.class.getName());
+		assertThat(captor.getValue().getPayload()).isEqualTo(FOO_ONE);
 	}
 
 	@Test // DATAKV-91, DATAKV-104, DATAKV-187
@@ -450,9 +441,9 @@ public class KeyValueTemplateUnitTests {
 		verify(publisherMock, times(1)).publishEvent(captor.capture());
 		verifyNoMoreInteractions(publisherMock);
 
-		assertThat(captor.getValue().getKey(), is("1"));
-		assertThat(captor.getValue().getKeyspace(), is(Foo.class.getName()));
-		assertThat(captor.getValue().getPayload(), is(FOO_ONE));
+		assertThat(captor.getValue().getKey()).isEqualTo("1");
+		assertThat(captor.getValue().getKeyspace()).isEqualTo(Foo.class.getName());
+		assertThat(captor.getValue().getPayload()).isEqualTo(FOO_ONE);
 	}
 
 	@Test // DATAKV-91, DATAKV-104, DATAKV-187
@@ -468,9 +459,9 @@ public class KeyValueTemplateUnitTests {
 		verify(publisherMock, times(1)).publishEvent(captor.capture());
 		verifyNoMoreInteractions(publisherMock);
 
-		assertThat(captor.getValue().getKey(), is("1"));
-		assertThat(captor.getValue().getKeyspace(), is(Foo.class.getName()));
-		assertThat(captor.getValue().getPayload(), is(FOO_ONE));
+		assertThat(captor.getValue().getKey()).isEqualTo("1");
+		assertThat(captor.getValue().getKeyspace()).isEqualTo(Foo.class.getName());
+		assertThat(captor.getValue().getPayload()).isEqualTo(FOO_ONE);
 	}
 
 	@Test // DATAKV-91, DATAKV-104, DATAKV-187
@@ -486,8 +477,8 @@ public class KeyValueTemplateUnitTests {
 		verify(publisherMock, times(1)).publishEvent(captor.capture());
 		verifyNoMoreInteractions(publisherMock);
 
-		assertThat(captor.getValue().getKey(), is("1"));
-		assertThat(captor.getValue().getKeyspace(), is(Foo.class.getName()));
+		assertThat(captor.getValue().getKey()).isEqualTo("1");
+		assertThat(captor.getValue().getKeyspace()).isEqualTo(Foo.class.getName());
 	}
 
 	@Test // DATAKV-91, DATAKV-104, DATAKV-187
@@ -504,9 +495,9 @@ public class KeyValueTemplateUnitTests {
 		verify(publisherMock, times(1)).publishEvent(captor.capture());
 		verifyNoMoreInteractions(publisherMock);
 
-		assertThat(captor.getValue().getKey(), is("1"));
-		assertThat(captor.getValue().getKeyspace(), is(Foo.class.getName()));
-		assertThat(captor.getValue().getPayload(), is(FOO_ONE));
+		assertThat(captor.getValue().getKey()).isEqualTo("1");
+		assertThat(captor.getValue().getKeyspace()).isEqualTo(Foo.class.getName());
+		assertThat(captor.getValue().getPayload()).isEqualTo(FOO_ONE);
 	}
 
 	@Test // DATAKV-91, DATAKV-104, DATAKV-187
@@ -524,8 +515,8 @@ public class KeyValueTemplateUnitTests {
 		verify(publisherMock, times(1)).publishEvent(captor.capture());
 		verifyNoMoreInteractions(publisherMock);
 
-		assertThat(captor.getValue().getKey(), is("1"));
-		assertThat(captor.getValue().getKeyspace(), is(Foo.class.getName()));
+		assertThat(captor.getValue().getKey()).isEqualTo("1");
+		assertThat(captor.getValue().getKeyspace()).isEqualTo(Foo.class.getName());
 	}
 
 	@Test // DATAKV-91, DATAKV-104
@@ -543,9 +534,9 @@ public class KeyValueTemplateUnitTests {
 		verify(publisherMock, times(1)).publishEvent(captor.capture());
 		verifyNoMoreInteractions(publisherMock);
 
-		assertThat(captor.getValue().getKey(), is("1"));
-		assertThat(captor.getValue().getKeyspace(), is(Foo.class.getName()));
-		assertThat(captor.getValue().getPayload(), is(FOO_ONE));
+		assertThat(captor.getValue().getKey()).isEqualTo("1");
+		assertThat(captor.getValue().getKeyspace()).isEqualTo(Foo.class.getName());
+		assertThat(captor.getValue().getPayload()).isEqualTo(FOO_ONE);
 	}
 
 	@Test // DATAKV-91, DATAKV-104, DATAKV-187
@@ -561,7 +552,7 @@ public class KeyValueTemplateUnitTests {
 		verify(publisherMock, times(1)).publishEvent(captor.capture());
 		verifyNoMoreInteractions(publisherMock);
 
-		assertThat(captor.getValue().getKeyspace(), is(Foo.class.getName()));
+		assertThat(captor.getValue().getKeyspace()).isEqualTo(Foo.class.getName());
 	}
 
 	@Test // DATAKV-129

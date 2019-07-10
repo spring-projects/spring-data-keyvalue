@@ -15,11 +15,9 @@
  */
 package org.springframework.data.keyvalue.repository.support;
 
-import static org.hamcrest.collection.IsArrayWithSize.*;
-import static org.junit.Assert.*;
+import static org.assertj.core.api.Assertions.*;
 import static org.springframework.data.keyvalue.repository.support.KeyValueQuerydslUtils.*;
 
-import org.hamcrest.collection.IsArrayContainingInOrder;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.data.domain.Sort;
@@ -53,14 +51,14 @@ public class KeyValueQuerydslUtilsUnitTests {
 		this.builder = new PathBuilder<>(path.getType(), path.getMetadata());
 	}
 
-	@Test(expected = IllegalArgumentException.class) // DATACMNS-525
+	@Test // DATACMNS-525
 	public void toOrderSpecifierThrowsExceptioOnNullPathBuilder() {
-		toOrderSpecifier(Sort.by("firstname"), null);
+		assertThatIllegalArgumentException().isThrownBy(() -> toOrderSpecifier(Sort.by("firstname"), null));
 	}
 
 	@Test // DATACMNS-525, DATAKV-197
 	public void toOrderSpecifierReturnsEmptyArrayWhenSortIsUnsorted() {
-		assertThat(toOrderSpecifier(Sort.unsorted(), builder), arrayWithSize(0));
+		assertThat(toOrderSpecifier(Sort.unsorted(), builder)).hasSize(0);
 	}
 
 	@Test // DATACMNS-525
@@ -70,8 +68,7 @@ public class KeyValueQuerydslUtilsUnitTests {
 
 		OrderSpecifier<?>[] specifiers = toOrderSpecifier(sort, builder);
 
-		assertThat(specifiers,
-				IsArrayContainingInOrder.arrayContaining(QPerson.person.firstname.asc()));
+		assertThat(specifiers).containsExactly(QPerson.person.firstname.asc());
 	}
 
 	@Test // DATACMNS-525
@@ -81,8 +78,7 @@ public class KeyValueQuerydslUtilsUnitTests {
 
 		OrderSpecifier<?>[] specifiers = toOrderSpecifier(sort, builder);
 
-		assertThat(specifiers,
-				IsArrayContainingInOrder.arrayContaining(QPerson.person.firstname.desc()));
+		assertThat(specifiers).containsExactly(QPerson.person.firstname.desc());
 	}
 
 	@Test // DATACMNS-525
@@ -92,8 +88,7 @@ public class KeyValueQuerydslUtilsUnitTests {
 
 		OrderSpecifier<?>[] specifiers = toOrderSpecifier(sort, builder);
 
-		assertThat(specifiers, IsArrayContainingInOrder.arrayContaining(QPerson.person.firstname.desc(),
-				QPerson.person.age.asc()));
+		assertThat(specifiers).containsExactly(QPerson.person.firstname.desc(), QPerson.person.age.asc());
 	}
 
 	@Test // DATACMNS-525
@@ -103,7 +98,6 @@ public class KeyValueQuerydslUtilsUnitTests {
 
 		OrderSpecifier<?>[] specifiers = toOrderSpecifier(sort, builder);
 
-		assertThat(specifiers,
-				IsArrayContainingInOrder.arrayContaining(QPerson.person.firstname.desc().nullsLast()));
+		assertThat(specifiers).containsExactly(QPerson.person.firstname.desc().nullsLast());
 	}
 }

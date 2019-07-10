@@ -15,15 +15,14 @@
  */
 package org.springframework.data.map;
 
-import static org.hamcrest.Matchers.*;
-import static org.junit.Assert.*;
+import static org.assertj.core.api.Assertions.*;
 
 import java.util.Arrays;
 import java.util.List;
 
-import org.hamcrest.collection.IsCollectionWithSize;
 import org.junit.Before;
 import org.junit.Test;
+
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -71,7 +70,7 @@ public abstract class AbstractRepositoryUnitTests<T extends AbstractRepositoryUn
 
 		repository.saveAll(LENNISTERS);
 
-		assertThat(repository.findByAge(19), hasItems(CERSEI, JAIME));
+		assertThat(repository.findByAge(19)).contains(CERSEI, JAIME);
 	}
 
 	@Test // DATAKV-137
@@ -79,8 +78,8 @@ public abstract class AbstractRepositoryUnitTests<T extends AbstractRepositoryUn
 
 		repository.saveAll(LENNISTERS);
 
-		assertThat(repository.findByFirstname(CERSEI.getFirstname()), hasItems(CERSEI));
-		assertThat(repository.findByFirstname(JAIME.getFirstname()), hasItems(JAIME));
+		assertThat(repository.findByFirstname(CERSEI.getFirstname())).contains(CERSEI);
+		assertThat(repository.findByFirstname(JAIME.getFirstname())).contains(JAIME);
 	}
 
 	@Test // DATACMNS-525, DATAKV-137
@@ -88,8 +87,8 @@ public abstract class AbstractRepositoryUnitTests<T extends AbstractRepositoryUn
 
 		repository.saveAll(LENNISTERS);
 
-		assertThat(repository.findByFirstnameAndAge(JAIME.getFirstname(), 19), hasItem(JAIME));
-		assertThat(repository.findByFirstnameAndAge(TYRION.getFirstname(), 17), hasItem(TYRION));
+		assertThat(repository.findByFirstnameAndAge(JAIME.getFirstname(), 19)).contains(JAIME);
+		assertThat(repository.findByFirstnameAndAge(TYRION.getFirstname(), 17)).contains(TYRION);
 	}
 
 	@Test // DATACMNS-525
@@ -98,14 +97,14 @@ public abstract class AbstractRepositoryUnitTests<T extends AbstractRepositoryUn
 		repository.saveAll(LENNISTERS);
 
 		Page<Person> page = repository.findByAge(19, PageRequest.of(0, 1));
-		assertThat(page.hasNext(), is(true));
-		assertThat(page.getTotalElements(), is(2L));
-		assertThat(page.getContent(), IsCollectionWithSize.hasSize(1));
+		assertThat(page.hasNext()).isTrue();
+		assertThat(page.getTotalElements()).isEqualTo(2L);
+		assertThat(page.getContent()).hasSize(1);
 
 		Page<Person> next = repository.findByAge(19, page.nextPageable());
-		assertThat(next.hasNext(), is(false));
-		assertThat(next.getTotalElements(), is(2L));
-		assertThat(next.getContent(), IsCollectionWithSize.hasSize(1));
+		assertThat(next.hasNext()).isFalse();
+		assertThat(next.getTotalElements()).isEqualTo(2L);
+		assertThat(next.getContent()).hasSize(1);
 	}
 
 	@Test // DATACMNS-525
@@ -113,7 +112,7 @@ public abstract class AbstractRepositoryUnitTests<T extends AbstractRepositoryUn
 
 		repository.saveAll(LENNISTERS);
 
-		assertThat(repository.findByAgeOrFirstname(19, TYRION.getFirstname()), hasItems(CERSEI, JAIME, TYRION));
+		assertThat(repository.findByAgeOrFirstname(19, TYRION.getFirstname())).contains(CERSEI, JAIME, TYRION);
 	}
 
 	@Test // DATACMNS-525, DATAKV-137
@@ -121,8 +120,8 @@ public abstract class AbstractRepositoryUnitTests<T extends AbstractRepositoryUn
 
 		repository.saveAll(LENNISTERS);
 
-		assertThat(repository.findByAgeAndFirstname(TYRION.getAge(), TYRION.getFirstname()), is(TYRION));
-		assertThat(repository.findByAgeAndFirstname(CERSEI.getAge(), CERSEI.getFirstname()), is(CERSEI));
+		assertThat(repository.findByAgeAndFirstname(TYRION.getAge(), TYRION.getFirstname())).isEqualTo(TYRION);
+		assertThat(repository.findByAgeAndFirstname(CERSEI.getAge(), CERSEI.getFirstname())).isEqualTo(CERSEI);
 	}
 
 	@Test // DATACMNS-525
@@ -131,8 +130,8 @@ public abstract class AbstractRepositoryUnitTests<T extends AbstractRepositoryUn
 		repository.saveAll(LENNISTERS);
 
 		assertThat(
-				repository.findAll(Sort.by(new Sort.Order(Direction.ASC, "age"), new Sort.Order(Direction.DESC, "firstname"))),
-				contains(TYRION, JAIME, CERSEI));
+				repository.findAll(Sort.by(new Sort.Order(Direction.ASC, "age"), new Sort.Order(Direction.DESC, "firstname"))))
+						.containsExactly(TYRION, JAIME, CERSEI);
 	}
 
 	@Test // DATACMNS-525
@@ -142,7 +141,7 @@ public abstract class AbstractRepositoryUnitTests<T extends AbstractRepositoryUn
 
 		List<Person> result = repository.findByAgeGreaterThanOrderByAgeAscFirstnameDesc(2);
 
-		assertThat(result, contains(TYRION, JAIME, CERSEI));
+		assertThat(result).containsExactly(TYRION, JAIME, CERSEI);
 	}
 
 	@Test // DATAKV-121
@@ -152,8 +151,8 @@ public abstract class AbstractRepositoryUnitTests<T extends AbstractRepositoryUn
 
 		List<PersonSummary> result = repository.findByAgeGreaterThan(0, Sort.by("firstname"));
 
-		assertThat(result, hasSize(3));
-		assertThat(result.get(0).getFirstname(), is(CERSEI.getFirstname()));
+		assertThat(result).hasSize(3);
+		assertThat(result.get(0).getFirstname()).isEqualTo(CERSEI.getFirstname());
 	}
 
 	@Test // DATAKV-121
@@ -163,8 +162,8 @@ public abstract class AbstractRepositoryUnitTests<T extends AbstractRepositoryUn
 
 		List<PersonSummary> result = repository.findByAgeGreaterThan(0, Sort.by("firstname"), PersonSummary.class);
 
-		assertThat(result, hasSize(3));
-		assertThat(result.get(0).getFirstname(), is(CERSEI.getFirstname()));
+		assertThat(result).hasSize(3);
+		assertThat(result.get(0).getFirstname()).isEqualTo(CERSEI.getFirstname());
 	}
 
 	@Test // DATAKV-169
@@ -174,8 +173,8 @@ public abstract class AbstractRepositoryUnitTests<T extends AbstractRepositoryUn
 
 		List<Person> result = repository.findByFirstnameIn(Arrays.asList(CERSEI.getFirstname(), JAIME.getFirstname()));
 
-		assertThat(result, hasSize(2));
-		assertThat(result, is(containsInAnyOrder(CERSEI, JAIME)));
+		assertThat(result).hasSize(2);
+		assertThat(result).contains(CERSEI, JAIME);
 	}
 
 	@Test // DATAKV-169
@@ -186,8 +185,8 @@ public abstract class AbstractRepositoryUnitTests<T extends AbstractRepositoryUn
 
 		List<Person> result = repository.findByFirstnameIn(Arrays.asList(CERSEI.getFirstname(), JAIME.getFirstname()));
 
-		assertThat(result, hasSize(2));
-		assertThat(result, is(containsInAnyOrder(CERSEI, JAIME)));
+		assertThat(result).hasSize(2);
+		assertThat(result).contains(CERSEI, JAIME);
 	}
 
 	@Test // DATAKV-169
@@ -201,8 +200,8 @@ public abstract class AbstractRepositoryUnitTests<T extends AbstractRepositoryUn
 		List<Person> result = repository
 				.findByFirstnameIn(Arrays.asList(CERSEI.getFirstname(), JAIME.getFirstname(), null));
 
-		assertThat(result, hasSize(3));
-		assertThat(result, is(containsInAnyOrder(CERSEI, JAIME, personWithNullAsFirstname)));
+		assertThat(result).hasSize(3);
+		assertThat(result).contains(CERSEI, JAIME, personWithNullAsFirstname);
 	}
 
 	protected KeyValueRepositoryFactory createKeyValueRepositoryFactory(KeyValueOperations operations) {

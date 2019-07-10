@@ -15,19 +15,16 @@
  */
 package org.springframework.data.map;
 
-import static org.hamcrest.collection.IsIterableContainingInAnyOrder.*;
-import static org.hamcrest.core.Is.*;
-import static org.hamcrest.core.IsEqual.*;
-import static org.hamcrest.core.IsNull.*;
-import static org.junit.Assert.*;
-import static org.springframework.data.keyvalue.test.util.IsEntry.*;
+import static org.assertj.core.api.Assertions.*;
 
 import lombok.Data;
 
+import java.util.AbstractMap;
 import java.util.Map;
 
 import org.junit.Before;
 import org.junit.Test;
+
 import org.springframework.data.util.CloseableIterator;
 
 /**
@@ -49,70 +46,70 @@ public class MapKeyValueAdapterUnitTests {
 		this.adapter = new MapKeyValueAdapter();
 	}
 
-	@Test(expected = IllegalArgumentException.class) // DATACMNS-525
+	@Test // DATACMNS-525
 	public void putShouldThrowExceptionWhenAddingNullId() {
-		adapter.put(null, object1, COLLECTION_1);
+		assertThatIllegalArgumentException().isThrownBy(() -> adapter.put(null, object1, COLLECTION_1));
 	}
 
-	@Test(expected = IllegalArgumentException.class) // DATACMNS-525
+	@Test // DATACMNS-525
 	public void putShouldThrowExceptionWhenCollectionIsNullValue() {
-		adapter.put("1", object1, null);
+		assertThatIllegalArgumentException().isThrownBy(() -> adapter.put("1", object1, null));
 	}
 
 	@Test // DATACMNS-525
 	public void putReturnsNullWhenNoObjectForIdPresent() {
-		assertThat(adapter.put("1", object1, COLLECTION_1), nullValue());
+		assertThat(adapter.put("1", object1, COLLECTION_1)).isNull();
 	}
 
 	@Test // DATACMNS-525
 	public void putShouldReturnPreviousObjectForIdWhenAddingNewOneWithSameIdPresent() {
 
 		adapter.put("1", object1, COLLECTION_1);
-		assertThat(adapter.put("1", object2, COLLECTION_1), equalTo(object1));
+		assertThat(adapter.put("1", object2, COLLECTION_1)).isEqualTo(object1);
 	}
 
-	@Test(expected = IllegalArgumentException.class) // DATACMNS-525
+	@Test // DATACMNS-525
 	public void containsShouldThrowExceptionWhenIdIsNull() {
-		adapter.contains(null, COLLECTION_1);
+		assertThatIllegalArgumentException().isThrownBy(() -> adapter.contains(null, COLLECTION_1));
 	}
 
-	@Test(expected = IllegalArgumentException.class) // DATACMNS-525
+	@Test // DATACMNS-525
 	public void containsShouldThrowExceptionWhenTypeIsNull() {
-		adapter.contains("", null);
+		assertThatIllegalArgumentException().isThrownBy(() -> adapter.contains("", null));
 	}
 
 	@Test // DATACMNS-525
 	public void containsShouldReturnFalseWhenNoElementsPresent() {
-		assertThat(adapter.contains("1", COLLECTION_1), is(false));
+		assertThat(adapter.contains("1", COLLECTION_1)).isFalse();
 	}
 
 	@Test // DATACMNS-525
 	public void containShouldReturnTrueWhenElementWithIdPresent() {
 
 		adapter.put("1", object1, COLLECTION_1);
-		assertThat(adapter.contains("1", COLLECTION_1), is(true));
+		assertThat(adapter.contains("1", COLLECTION_1)).isTrue();
 	}
 
 	@Test // DATACMNS-525
 	public void getShouldReturnNullWhenNoElementWithIdPresent() {
-		assertThat(adapter.get("1", COLLECTION_1), nullValue());
+		assertThat(adapter.get("1", COLLECTION_1)).isNull();
 	}
 
 	@Test // DATACMNS-525
 	public void getShouldReturnElementWhenMatchingIdPresent() {
 
 		adapter.put("1", object1, COLLECTION_1);
-		assertThat(adapter.get("1", COLLECTION_1), is(object1));
+		assertThat(adapter.get("1", COLLECTION_1)).isEqualTo(object1);
 	}
 
-	@Test(expected = IllegalArgumentException.class) // DATACMNS-525
+	@Test // DATACMNS-525
 	public void getShouldThrowExceptionWhenIdIsNull() {
-		adapter.get(null, COLLECTION_1);
+		assertThatIllegalArgumentException().isThrownBy(() -> adapter.get(null, COLLECTION_1));
 	}
 
-	@Test(expected = IllegalArgumentException.class) // DATACMNS-525
+	@Test // DATACMNS-525
 	public void getShouldThrowExceptionWhenTypeIsNull() {
-		adapter.get("1", null);
+		assertThatIllegalArgumentException().isThrownBy(() -> adapter.get("1", null));
 	}
 
 	@Test // DATACMNS-525
@@ -122,24 +119,24 @@ public class MapKeyValueAdapterUnitTests {
 		adapter.put("2", object2, COLLECTION_1);
 		adapter.put("3", STRING_1, COLLECTION_2);
 
-		assertThat(adapter.getAllOf(COLLECTION_1), containsInAnyOrder(object1, object2));
+		assertThat((Iterable) adapter.getAllOf(COLLECTION_1)).contains(object1, object2);
 	}
 
-	@Test(expected = IllegalArgumentException.class) // DATACMNS-525
+	@Test // DATACMNS-525
 	public void getAllOfShouldThrowExceptionWhenTypeIsNull() {
-		adapter.getAllOf(null);
+		assertThatIllegalArgumentException().isThrownBy(() -> adapter.getAllOf(null));
 	}
 
 	@Test // DATACMNS-525
 	public void deleteShouldReturnNullWhenGivenIdThatDoesNotExist() {
-		assertThat(adapter.delete("1", COLLECTION_1), nullValue());
+		assertThat(adapter.delete("1", COLLECTION_1)).isNull();
 	}
 
 	@Test // DATACMNS-525
 	public void deleteShouldReturnDeletedObject() {
 
 		adapter.put("1", object1, COLLECTION_1);
-		assertThat(adapter.delete("1", COLLECTION_1), is(object1));
+		assertThat(adapter.delete("1", COLLECTION_1)).isEqualTo(object1);
 	}
 
 	@Test // DATAKV-99
@@ -150,14 +147,14 @@ public class MapKeyValueAdapterUnitTests {
 
 		CloseableIterator<Map.Entry<Object, Object>> iterator = adapter.entries(COLLECTION_1);
 
-		assertThat(iterator.next(), isEntry("1", object1));
-		assertThat(iterator.next(), isEntry("2", object2));
-		assertThat(iterator.hasNext(), is(false));
+		assertThat(iterator.next()).isEqualTo(new AbstractMap.SimpleEntry<>("1", object1));
+		assertThat(iterator.next()).isEqualTo(new AbstractMap.SimpleEntry<>("2", object2));
+		assertThat(iterator.hasNext()).isFalse();
 	}
 
 	@Test // DATAKV-99
 	public void scanShouldReturnEmptyIteratorWhenNoElementsAvailable() {
-		assertThat(adapter.entries(COLLECTION_1).hasNext(), is(false));
+		assertThat(adapter.entries(COLLECTION_1).hasNext()).isFalse();
 	}
 
 	@Test // DATAKV-99
@@ -168,8 +165,8 @@ public class MapKeyValueAdapterUnitTests {
 
 		CloseableIterator<Map.Entry<Object, Object>> iterator = adapter.entries(COLLECTION_1);
 
-		assertThat(iterator.next(), isEntry("1", object1));
-		assertThat(iterator.hasNext(), is(false));
+		assertThat(iterator.next()).isEqualTo(new AbstractMap.SimpleEntry<>("1", object1));
+		assertThat(iterator.hasNext()).isFalse();
 	}
 
 	@Data

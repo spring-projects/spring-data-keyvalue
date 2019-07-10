@@ -15,8 +15,7 @@
  */
 package org.springframework.data.keyvalue.core;
 
-import static org.hamcrest.Matchers.*;
-import static org.junit.Assert.*;
+import static org.assertj.core.api.Assertions.*;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -32,6 +31,7 @@ import java.util.Optional;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+
 import org.springframework.core.annotation.AliasFor;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.data.annotation.Id;
@@ -72,21 +72,22 @@ public class KeyValueTemplateTests {
 		operations.insert("1", FOO_ONE);
 	}
 
-	@Test(expected = IllegalArgumentException.class) // DATACMNS-525
+	@Test // DATACMNS-525
 	public void insertShouldThrowExceptionForNullId() {
-		operations.insert(null, FOO_ONE);
+		assertThatIllegalArgumentException().isThrownBy(() -> operations.insert(null, FOO_ONE));
 	}
 
-	@Test(expected = IllegalArgumentException.class) // DATACMNS-525
+	@Test // DATACMNS-525
 	public void insertShouldThrowExceptionForNullObject() {
-		operations.insert("some-id", null);
+		assertThatIllegalArgumentException().isThrownBy(() -> operations.insert("some-id", null));
 	}
 
-	@Test(expected = DuplicateKeyException.class) // DATACMNS-525
+	@Test // DATACMNS-525
 	public void insertShouldThrowExecptionWhenObjectOfSameTypeAlreadyExists() {
 
 		operations.insert("1", FOO_ONE);
-		operations.insert("1", FOO_TWO);
+
+		assertThatExceptionOfType(DuplicateKeyException.class).isThrownBy(() -> operations.insert("1", FOO_TWO));
 	}
 
 	@Test // DATACMNS-525
@@ -102,7 +103,7 @@ public class KeyValueTemplateTests {
 		ClassWithStringId source = new ClassWithStringId();
 		ClassWithStringId target = operations.insert(source);
 
-		assertThat(target, sameInstance(source));
+		assertThat(target).isSameAs(source);
 	}
 
 	@Test // DATACMNS-525
@@ -113,28 +114,28 @@ public class KeyValueTemplateTests {
 
 		operations.insert(source);
 
-		assertThat(operations.findById("one", ClassWithStringId.class), is(Optional.of(source)));
+		assertThat(operations.findById("one", ClassWithStringId.class)).isEqualTo(Optional.of(source));
 	}
 
 	@Test // DATACMNS-525
 	public void findByIdShouldReturnObjectWithMatchingIdAndType() {
 
 		operations.insert("1", FOO_ONE);
-		assertThat(operations.findById("1", Foo.class), is(Optional.of(FOO_ONE)));
+		assertThat(operations.findById("1", Foo.class)).isEqualTo(Optional.of(FOO_ONE));
 	}
 
 	@Test // DATACMNS-525
 	public void findByIdSouldReturnOptionalEmptyIfNoMatchingIdFound() {
 
 		operations.insert("1", FOO_ONE);
-		assertThat(operations.findById("2", Foo.class), is(Optional.empty()));
+		assertThat(operations.findById("2", Foo.class)).isEmpty();
 	}
 
 	@Test // DATACMNS-525
 	public void findByIdShouldReturnOptionalEmptyIfNoMatchingTypeFound() {
 
 		operations.insert("1", FOO_ONE);
-		assertThat(operations.findById("1", Bar.class), is(Optional.empty()));
+		assertThat(operations.findById("1", Bar.class)).isEmpty();
 	}
 
 	@Test // DATACMNS-525
@@ -144,8 +145,8 @@ public class KeyValueTemplateTests {
 		operations.insert("2", FOO_TWO);
 
 		List<Foo> result = (List<Foo>) operations.find(STRING_QUERY, Foo.class);
-		assertThat(result, hasSize(1));
-		assertThat(result.get(0), is(FOO_TWO));
+		assertThat(result).hasSize(1);
+		assertThat(result.get(0)).isEqualTo(FOO_TWO);
 	}
 
 	@Test // DATACMNS-525
@@ -155,7 +156,7 @@ public class KeyValueTemplateTests {
 		operations.insert("2", FOO_TWO);
 		operations.insert("3", FOO_THREE);
 
-		assertThat(operations.findInRange(5, 5, Foo.class), emptyIterable());
+		assertThat(operations.findInRange(5, 5, Foo.class)).isEmpty();
 	}
 
 	@Test // DATACMNS-525
@@ -163,7 +164,7 @@ public class KeyValueTemplateTests {
 
 		operations.insert("1", FOO_ONE);
 		operations.update("1", FOO_TWO);
-		assertThat(operations.findById("1", Foo.class), is(Optional.of(FOO_TWO)));
+		assertThat(operations.findById("1", Foo.class)).isEqualTo(Optional.of(FOO_TWO));
 	}
 
 	@Test // DATACMNS-525
@@ -172,7 +173,7 @@ public class KeyValueTemplateTests {
 		operations.insert("1", FOO_ONE);
 		operations.update("1", BAR_ONE);
 
-		assertThat(operations.findById("1", Foo.class), is(Optional.of(FOO_ONE)));
+		assertThat(operations.findById("1", Foo.class)).isEqualTo(Optional.of(FOO_ONE));
 	}
 
 	@Test // DATACMNS-525
@@ -180,31 +181,31 @@ public class KeyValueTemplateTests {
 
 		operations.insert("1", FOO_ONE);
 		operations.delete("1", Foo.class);
-		assertThat(operations.findById("1", Foo.class), is(Optional.empty()));
+		assertThat(operations.findById("1", Foo.class)).isEmpty();
 	}
 
 	@Test // DATACMNS-525
 	public void deleteReturnsNullWhenNotExisting() {
 
 		operations.insert("1", FOO_ONE);
-		assertThat(operations.delete("2", Foo.class), nullValue());
+		assertThat(operations.delete("2", Foo.class)).isNull();
 	}
 
 	@Test // DATACMNS-525
 	public void deleteReturnsRemovedObject() {
 
 		operations.insert("1", FOO_ONE);
-		assertThat(operations.delete("1", Foo.class), is(FOO_ONE));
+		assertThat(operations.delete("1", Foo.class)).isEqualTo(FOO_ONE);
 	}
 
-	@Test(expected = IllegalArgumentException.class) // DATACMNS-525
+	@Test // DATACMNS-525
 	public void deleteThrowsExceptionWhenIdCannotBeExctracted() {
-		operations.delete(FOO_ONE);
+		assertThatIllegalArgumentException().isThrownBy(() -> operations.delete(FOO_ONE));
 	}
 
 	@Test // DATACMNS-525
 	public void countShouldReturnZeroWhenNoElementsPresent() {
-		assertThat(operations.count(Foo.class), is(0L));
+		assertThat(operations.count(Foo.class)).isEqualTo(0L);
 	}
 
 	@Test // DATACMNS-525
@@ -213,7 +214,7 @@ public class KeyValueTemplateTests {
 		operations.insert("1", ALIASED);
 		operations.insert("2", SUBCLASS_OF_ALIASED);
 
-		assertThat(operations.findAll(ALIASED.getClass()), containsInAnyOrder(ALIASED, SUBCLASS_OF_ALIASED));
+		assertThat((List) operations.findAll(ALIASED.getClass())).contains(ALIASED, SUBCLASS_OF_ALIASED);
 	}
 
 	@Data

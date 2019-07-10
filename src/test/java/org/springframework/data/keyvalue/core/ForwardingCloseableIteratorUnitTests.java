@@ -15,8 +15,7 @@
  */
 package org.springframework.data.keyvalue.core;
 
-import static org.hamcrest.Matchers.*;
-import static org.junit.Assert.*;
+import static org.assertj.core.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 import java.util.Iterator;
@@ -49,7 +48,7 @@ public class ForwardingCloseableIteratorUnitTests<K, V> {
 		CloseableIterator<Entry<K, V>> iterator = new ForwardingCloseableIterator<>(iteratorMock);
 
 		try {
-			assertThat(iterator.hasNext(), is(true));
+			assertThat(iterator.hasNext()).isTrue();
 			verify(iteratorMock, times(1)).hasNext();
 		} finally {
 			iterator.close();
@@ -65,14 +64,14 @@ public class ForwardingCloseableIteratorUnitTests<K, V> {
 		CloseableIterator<Entry<K, V>> iterator = new ForwardingCloseableIterator<>(iteratorMock);
 
 		try {
-			assertThat(iterator.next(), notNullValue());
+			assertThat(iterator.next()).isNotNull();
 			verify(iteratorMock, times(1)).next();
 		} finally {
 			iterator.close();
 		}
 	}
 
-	@Test(expected = NoSuchElementException.class) // DATAKV-99
+	@Test // DATAKV-99
 	public void nextShouldThrowErrorWhenWrappedIteratorHasNoMoreElements() {
 
 		when(iteratorMock.next()).thenThrow(new NoSuchElementException());
@@ -80,7 +79,7 @@ public class ForwardingCloseableIteratorUnitTests<K, V> {
 		CloseableIterator<Entry<K, V>> iterator = new ForwardingCloseableIterator<>(iteratorMock);
 
 		try {
-			iterator.next();
+			assertThatExceptionOfType(NoSuchElementException.class).isThrownBy(iterator::next);
 		} finally {
 			iterator.close();
 		}

@@ -16,14 +16,12 @@
 package org.springframework.data.map;
 
 import static org.assertj.core.api.Assertions.*;
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.hamcrest.Matchers.*;
-import static org.junit.Assert.assertThat;
 
 import java.util.List;
 import java.util.Optional;
 
 import org.junit.Test;
+
 import org.springframework.dao.IncorrectResultSizeDataAccessException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -64,7 +62,7 @@ public class QuerydslKeyValueRepositoryUnitTests extends AbstractRepositoryUnitT
 		repository.saveAll(LENNISTERS);
 
 		Iterable<Person> result = repository.findAll(QPerson.person.age.eq(CERSEI.getAge()));
-		assertThat(result, containsInAnyOrder(CERSEI, JAIME));
+		assertThat(result).contains(CERSEI, JAIME);
 	}
 
 	@Test // DATACMNS-525
@@ -73,15 +71,15 @@ public class QuerydslKeyValueRepositoryUnitTests extends AbstractRepositoryUnitT
 		repository.saveAll(LENNISTERS);
 		Page<Person> page1 = repository.findAll(QPerson.person.age.eq(CERSEI.getAge()), PageRequest.of(0, 1));
 
-		assertThat(page1.getTotalElements(), is(2L));
-		assertThat(page1.getContent(), hasSize(1));
-		assertThat(page1.hasNext(), is(true));
+		assertThat(page1.getTotalElements()).isEqualTo(2L);
+		assertThat(page1.getContent()).hasSize(1);
+		assertThat(page1.hasNext()).isTrue();
 
 		Page<Person> page2 = repository.findAll(QPerson.person.age.eq(CERSEI.getAge()), page1.nextPageable());
 
-		assertThat(page2.getTotalElements(), is(2L));
-		assertThat(page2.getContent(), hasSize(1));
-		assertThat(page2.hasNext(), is(false));
+		assertThat(page2.getTotalElements()).isEqualTo(2L);
+		assertThat(page2.getContent()).hasSize(1);
+		assertThat(page2.hasNext()).isFalse();
 	}
 
 	@Test // DATACMNS-525
@@ -92,7 +90,7 @@ public class QuerydslKeyValueRepositoryUnitTests extends AbstractRepositoryUnitT
 		Iterable<Person> result = repository.findAll(QPerson.person.age.eq(CERSEI.getAge()),
 				QPerson.person.firstname.desc());
 
-		assertThat(result, contains(JAIME, CERSEI));
+		assertThat(result).containsExactly(JAIME, CERSEI);
 	}
 
 	@Test // DATACMNS-525
@@ -103,7 +101,7 @@ public class QuerydslKeyValueRepositoryUnitTests extends AbstractRepositoryUnitT
 		Iterable<Person> result = repository.findAll(QPerson.person.age.eq(CERSEI.getAge()),
 				PageRequest.of(0, 10, Direction.DESC, "firstname"));
 
-		assertThat(result, contains(JAIME, CERSEI));
+		assertThat(result).containsExactly(JAIME, CERSEI);
 	}
 
 	@Test // DATACMNS-525
@@ -114,7 +112,7 @@ public class QuerydslKeyValueRepositoryUnitTests extends AbstractRepositoryUnitT
 		Iterable<Person> result = repository.findAll(QPerson.person.age.eq(CERSEI.getAge()),
 				PageRequest.of(0, 10, new QSort(QPerson.person.firstname.desc())));
 
-		assertThat(result, contains(JAIME, CERSEI));
+		assertThat(result).containsExactly(JAIME, CERSEI);
 	}
 
 	@Test // DATAKV-90
@@ -124,12 +122,12 @@ public class QuerydslKeyValueRepositoryUnitTests extends AbstractRepositoryUnitT
 
 		Iterable<Person> result = repository.findAll(new QSort(QPerson.person.firstname.desc()));
 
-		assertThat(result, contains(TYRION, JAIME, CERSEI));
+		assertThat(result).containsExactly(TYRION, JAIME, CERSEI);
 	}
 
-	@Test(expected = IllegalArgumentException.class) // DATAKV-90, DATAKV-197
+	@Test // DATAKV-90, DATAKV-197
 	public void findAllShouldRequireSort() {
-		repository.findAll((QSort) null);
+		assertThatIllegalArgumentException().isThrownBy(() -> repository.findAll((QSort) null));
 	}
 
 	@Test // DATAKV-90, DATAKV-197
@@ -139,7 +137,7 @@ public class QuerydslKeyValueRepositoryUnitTests extends AbstractRepositoryUnitT
 
 		Iterable<Person> result = repository.findAll(Sort.unsorted());
 
-		assertThat(result, containsInAnyOrder(TYRION, JAIME, CERSEI));
+		assertThat(result).contains(TYRION, JAIME, CERSEI);
 	}
 
 	@Test // DATAKV-95
@@ -147,7 +145,7 @@ public class QuerydslKeyValueRepositoryUnitTests extends AbstractRepositoryUnitT
 
 		repository.saveAll(LENNISTERS);
 
-		assertThat(repository.exists(QPerson.person.age.eq(CERSEI.getAge())), is(true));
+		assertThat(repository.exists(QPerson.person.age.eq(CERSEI.getAge()))).isTrue();
 	}
 
 	@Test // DATAKV-96
@@ -157,10 +155,10 @@ public class QuerydslKeyValueRepositoryUnitTests extends AbstractRepositoryUnitT
 
 		List<Person> users = Lists.newArrayList(repository.findAll(person.age.gt(0), Sort.by(Direction.ASC, "firstname")));
 
-		assertThat(users, hasSize(3));
-		assertThat(users.get(0).getFirstname(), is(CERSEI.getFirstname()));
-		assertThat(users.get(2).getFirstname(), is(TYRION.getFirstname()));
-		assertThat(users, hasItems(CERSEI, JAIME, TYRION));
+		assertThat(users).hasSize(3);
+		assertThat(users.get(0).getFirstname()).isEqualTo(CERSEI.getFirstname());
+		assertThat(users.get(2).getFirstname()).isEqualTo(TYRION.getFirstname());
+		assertThat(users).contains(CERSEI, JAIME, TYRION);
 	}
 
 	@Test // DATAKV-179

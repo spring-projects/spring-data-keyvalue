@@ -15,8 +15,7 @@
  */
 package org.springframework.data.map.repository.config;
 
-import static org.hamcrest.core.IsNull.*;
-import static org.junit.Assert.*;
+import static org.assertj.core.api.Assertions.*;
 
 import lombok.Data;
 
@@ -24,6 +23,7 @@ import java.util.List;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -59,7 +59,7 @@ public class MapRepositoryRegistrarWithTemplateDefinitionIntegrationTests {
 
 	@Test // DATACMNS-525
 	public void shouldEnableMapRepositoryCorrectly() {
-		assertThat(repo, notNullValue());
+		assertThat(repo).isNotNull();
 	}
 
 	@Data

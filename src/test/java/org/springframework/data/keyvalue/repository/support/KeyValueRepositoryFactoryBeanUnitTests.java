@@ -15,14 +15,12 @@
  */
 package org.springframework.data.keyvalue.repository.support;
 
-import static org.hamcrest.CoreMatchers.*;
-import static org.junit.Assert.*;
+import static org.assertj.core.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 import org.junit.Before;
-import org.junit.Rule;
 import org.junit.Test;
-import org.junit.rules.ExpectedException;
+
 import org.springframework.data.keyvalue.core.KeyValueOperations;
 import org.springframework.data.keyvalue.repository.query.KeyValuePartTreeQuery;
 import org.springframework.data.repository.Repository;
@@ -37,8 +35,6 @@ import org.springframework.data.repository.query.parser.AbstractQueryCreator;
  */
 public class KeyValueRepositoryFactoryBeanUnitTests {
 
-	public @Rule ExpectedException exception = ExpectedException.none();
-
 	KeyValueRepositoryFactoryBean<?, ?, ?> factoryBean;
 
 	@Before
@@ -47,37 +43,38 @@ public class KeyValueRepositoryFactoryBeanUnitTests {
 				SampleRepository.class);
 	}
 
-	@Test(expected = IllegalArgumentException.class) // DATAKV-123
+	@Test // DATAKV-123
 	public void rejectsNullKeyValueOperations() {
-		factoryBean.setKeyValueOperations(null);
+		assertThatIllegalArgumentException().isThrownBy(() -> factoryBean.setKeyValueOperations(null));
 	}
 
-	@Test(expected = IllegalArgumentException.class) // DATAKV-123
+	@Test // DATAKV-123
 	public void rejectsNullQueryCreator() {
-		factoryBean.setQueryCreator(null);
+		assertThatIllegalArgumentException().isThrownBy(() -> factoryBean.setQueryCreator(null));
 	}
 
-	@Test(expected = IllegalArgumentException.class) // DATAKV-123
+	@Test // DATAKV-123
 	public void rejectsUninitializedInstance() {
-		factoryBean.afterPropertiesSet();
+		assertThatIllegalArgumentException().isThrownBy(() -> factoryBean.afterPropertiesSet());
 	}
 
 	@SuppressWarnings("unchecked")
-	@Test(expected = IllegalArgumentException.class) // DATAKV-123
+	@Test // DATAKV-123
 	public void rejectsInstanceWithoutKeyValueOperations() {
 
 		Class<? extends AbstractQueryCreator<?, ?>> creatorType = (Class<? extends AbstractQueryCreator<?, ?>>) mock(
 				AbstractQueryCreator.class).getClass();
 
 		factoryBean.setQueryCreator(creatorType);
-		factoryBean.afterPropertiesSet();
+
+		assertThatIllegalArgumentException().isThrownBy(() -> factoryBean.afterPropertiesSet());
 	}
 
-	@Test(expected = IllegalArgumentException.class) // DATAKV-123
+	@Test // DATAKV-123
 	public void rejectsInstanceWithoutQueryCreator() {
 
 		factoryBean.setKeyValueOperations(mock(KeyValueOperations.class));
-		factoryBean.afterPropertiesSet();
+		assertThatIllegalArgumentException().isThrownBy(() -> factoryBean.afterPropertiesSet());
 	}
 
 	@Test // DATAKV-123
@@ -92,12 +89,12 @@ public class KeyValueRepositoryFactoryBeanUnitTests {
 		factoryBean.setKeyValueOperations(mock(KeyValueOperations.class));
 		factoryBean.setQueryType(queryType);
 
-		assertThat(factoryBean.createRepositoryFactory(), is(notNullValue()));
+		assertThat(factoryBean.createRepositoryFactory()).isNotNull();
 	}
 
-	@Test(expected = IllegalArgumentException.class) // DATAKV-112
+	@Test // DATAKV-112
 	public void rejectsNullQueryType() {
-		factoryBean.setQueryType(null);
+		assertThatIllegalArgumentException().isThrownBy(() -> factoryBean.setQueryType(null));
 	}
 
 	interface SampleRepository extends Repository<Object, Object> {}

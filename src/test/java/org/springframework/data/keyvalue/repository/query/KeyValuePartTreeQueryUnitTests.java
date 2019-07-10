@@ -15,19 +15,18 @@
  */
 package org.springframework.data.keyvalue.repository.query;
 
-import static org.hamcrest.Matchers.*;
-import static org.junit.Assert.*;
-import static org.mockito.ArgumentMatchers.any;
+import static org.assertj.core.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.*;
 
 import java.lang.reflect.Method;
 import java.util.List;
 
-import org.hamcrest.core.IsInstanceOf;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
+
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.keyvalue.Person;
@@ -67,7 +66,7 @@ public class KeyValuePartTreeQueryUnitTests {
 		Object first = query.prepareQuery(args).getCriteria();
 		Object second = query.prepareQuery(args).getCriteria();
 
-		assertThat(first, not(sameInstance(second)));
+		assertThat(first).isNotSameAs(second);
 	}
 
 	@Test // DATAKV-142
@@ -85,8 +84,8 @@ public class KeyValuePartTreeQueryUnitTests {
 
 		KeyValueQuery<?> query = partTreeQuery.prepareQuery(new Object[] { PageRequest.of(2, 3) });
 
-		assertThat(query.getOffset(), is(6L));
-		assertThat(query.getRows(), is(3));
+		assertThat(query.getOffset()).isEqualTo(6L);
+		assertThat(query.getRows()).isEqualTo(3);
 	}
 
 	@Test // DATAKV-142
@@ -103,7 +102,7 @@ public class KeyValuePartTreeQueryUnitTests {
 
 		KeyValueQuery<?> query = partTreeQuery.prepareQuery(new Object[] {});
 
-		assertThat(query.getRows(), is(3));
+		assertThat(query.getRows()).isEqualTo(3);
 	}
 
 	@Test // DATAKV-142
@@ -121,11 +120,10 @@ public class KeyValuePartTreeQueryUnitTests {
 
 		KeyValueQuery<?> query = partTreeQuery.prepareQuery(new Object[] { "firstname" });
 
-		assertThat(query.getCriteria(), is(notNullValue()));
-		assertThat(query.getCriteria(), IsInstanceOf.instanceOf(SpelCriteria.class));
-		assertThat(((SpelCriteria) query.getCriteria()).getExpression().getExpressionString(),
-				is("#it?.firstname?.equals([0])"));
-		assertThat(query.getRows(), is(3));
+		assertThat(query.getCriteria()).isInstanceOf(SpelCriteria.class);
+		assertThat(((SpelCriteria) query.getCriteria()).getExpression().getExpressionString())
+				.isEqualTo("#it?.firstname?.equals([0])");
+		assertThat(query.getRows()).isEqualTo(3);
 	}
 
 	interface Repo {

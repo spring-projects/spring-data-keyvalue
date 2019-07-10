@@ -15,14 +15,14 @@
  */
 package org.springframework.data.map.repository.config;
 
-import static org.hamcrest.Matchers.*;
-import static org.junit.Assert.*;
+import static org.assertj.core.api.Assertions.*;
 
 import java.util.Arrays;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentSkipListMap;
 
 import org.junit.Test;
+
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
@@ -45,7 +45,7 @@ public class MapRepositoriesConfigurationExtensionIntegrationTests {
 
 		ConfigurableApplicationContext context = new AnnotationConfigApplicationContext(Config.class);
 
-		assertThat(Arrays.asList(context.getBeanDefinitionNames()), hasItem("mapKeyValueTemplate"));
+		assertThat(Arrays.asList(context.getBeanDefinitionNames())).contains("mapKeyValueTemplate");
 
 		context.close();
 	}
@@ -56,15 +56,15 @@ public class MapRepositoriesConfigurationExtensionIntegrationTests {
 		ConfigurableApplicationContext context = new AnnotationConfigApplicationContext(
 				ConfigWithCustomTemplateReference.class);
 
-		assertThat(Arrays.asList(context.getBeanDefinitionNames()), not(hasItem("mapKeyValueTemplate")));
+		assertThat(context.getBeanDefinitionNames()).doesNotContain("mapKeyValueTemplate");
 
 		context.close();
 	}
 
 	@Test // DATAKV-87
 	public void considersMapTypeConfiguredOnAnnotation() {
-		assertKeyValueTemplateWithAdapterFor(ConcurrentSkipListMap.class, new AnnotationConfigApplicationContext(
-				ConfigWithCustomizedMapType.class));
+		assertKeyValueTemplateWithAdapterFor(ConcurrentSkipListMap.class,
+				new AnnotationConfigApplicationContext(ConfigWithCustomizedMapType.class));
 	}
 
 	@Test // DATAKV-87
@@ -78,8 +78,8 @@ public class MapRepositoriesConfigurationExtensionIntegrationTests {
 		KeyValueTemplate template = context.getBean(KeyValueTemplate.class);
 		Object adapter = ReflectionTestUtils.getField(template, "adapter");
 
-		assertThat(adapter, is(instanceOf(MapKeyValueAdapter.class)));
-		assertThat(ReflectionTestUtils.getField(adapter, "store"), is(instanceOf(mapType)));
+		assertThat(adapter).isInstanceOf(MapKeyValueAdapter.class);
+		assertThat(ReflectionTestUtils.getField(adapter, "store")).isInstanceOf(mapType);
 	}
 
 	@Configuration

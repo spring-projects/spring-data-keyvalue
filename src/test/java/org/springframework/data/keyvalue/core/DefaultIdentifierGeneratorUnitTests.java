@@ -15,15 +15,13 @@
  */
 package org.springframework.data.keyvalue.core;
 
-import static org.hamcrest.core.Is.*;
-import static org.hamcrest.core.IsInstanceOf.*;
-import static org.hamcrest.core.IsNull.*;
-import static org.junit.Assert.*;
+import static org.assertj.core.api.Assertions.*;
 
 import java.util.Date;
 import java.util.UUID;
 
 import org.junit.Test;
+
 import org.springframework.dao.InvalidDataAccessApiUsageException;
 import org.springframework.data.util.ClassTypeInformation;
 
@@ -34,9 +32,10 @@ public class DefaultIdentifierGeneratorUnitTests {
 
 	DefaultIdentifierGenerator generator = DefaultIdentifierGenerator.INSTANCE;
 
-	@Test(expected = InvalidDataAccessApiUsageException.class)
+	@Test
 	public void shouldThrowExceptionForUnsupportedType() {
-		generator.generateIdentifierOfType(ClassTypeInformation.from(Date.class));
+		assertThatExceptionOfType(InvalidDataAccessApiUsageException.class)
+				.isThrownBy(() -> generator.generateIdentifierOfType(ClassTypeInformation.from(Date.class)));
 	}
 
 	@Test // DATAKV-136
@@ -44,8 +43,8 @@ public class DefaultIdentifierGeneratorUnitTests {
 
 		Object value = generator.generateIdentifierOfType(ClassTypeInformation.from(UUID.class));
 
-		assertThat(value, is(notNullValue()));
-		assertThat(value, instanceOf(UUID.class));
+		assertThat(value).isNotNull();
+		assertThat(value).isInstanceOf(UUID.class);
 	}
 
 	@Test // DATAKV-136
@@ -53,8 +52,8 @@ public class DefaultIdentifierGeneratorUnitTests {
 
 		Object value = generator.generateIdentifierOfType(ClassTypeInformation.from(String.class));
 
-		assertThat(value, is(notNullValue()));
-		assertThat(value, instanceOf(String.class));
+		assertThat(value).isNotNull();
+		assertThat(value).isInstanceOf(String.class);
 	}
 
 	@Test // DATAKV-136
@@ -62,8 +61,8 @@ public class DefaultIdentifierGeneratorUnitTests {
 
 		Object value = generator.generateIdentifierOfType(ClassTypeInformation.from(Long.class));
 
-		assertThat(value, is(notNullValue()));
-		assertThat(value, instanceOf(Long.class));
+		assertThat(value).isNotNull();
+		assertThat(value).isInstanceOf(Long.class);
 	}
 
 	@Test // DATAKV-136
@@ -71,7 +70,7 @@ public class DefaultIdentifierGeneratorUnitTests {
 
 		Object value = generator.generateIdentifierOfType(ClassTypeInformation.from(Integer.class));
 
-		assertThat(value, is(notNullValue()));
-		assertThat(value, instanceOf(Integer.class));
+		assertThat(value).isNotNull();
+		assertThat(value).isInstanceOf(Integer.class);
 	}
 }
