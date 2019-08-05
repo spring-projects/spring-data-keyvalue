@@ -1,6 +1,15 @@
 Spring Data KeyValue Changelog
 ==========================
 
+Changes in version 2.2.0.RC2 (2019-08-05)
+-----------------------------------------
+* DATAKV-271 - Migrate tests to AssertJ.
+* DATAKV-270 - Revise readme for a consistent structure.
+* DATAKV-268 - Add SpEL support for @KeySpace.
+* DATAKV-267 - Release 2.2 RC2 (Moore).
+* DATAKV-264 - Introduce Jenkins CI.
+
+
 Changes in version 2.1.10.RELEASE (2019-08-05)
 ----------------------------------------------
 * DATAKV-269 - Fix NoHTTP errors.
