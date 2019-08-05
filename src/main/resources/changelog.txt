@@ -1,6 +1,12 @@
 Spring Data KeyValue Changelog
 ==========================
 
+Changes in version 1.2.23.RELEASE (2019-08-05)
+----------------------------------------------
+* DATAKV-264 - Introduce Jenkins CI.
+* DATAKV-263 - Release 1.2.23 (Ingalls SR23).
+
+
 Changes in version 2.2.0.RC1 (2019-06-14)
 -----------------------------------------
 * DATAKV-265 - Create security policy readme.
