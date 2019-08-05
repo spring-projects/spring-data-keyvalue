@@ -1,6 +1,13 @@
 Spring Data KeyValue Changelog
 ==========================
 
+Changes in version 2.1.10.RELEASE (2019-08-05)
+----------------------------------------------
+* DATAKV-269 - Fix NoHTTP errors.
+* DATAKV-266 - Release 2.1.10 (Lovelace SR10).
+* DATAKV-264 - Introduce Jenkins CI.
+
+
 Changes in version 1.2.23.RELEASE (2019-08-05)
 ----------------------------------------------
 * DATAKV-264 - Introduce Jenkins CI.
