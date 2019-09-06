@@ -1,6 +1,11 @@
 Spring Data KeyValue Changelog
 ==========================
 
+Changes in version 2.2.0.RC3 (2019-09-06)
+-----------------------------------------
+* DATAKV-274 - Release 2.2 RC3 (Moore).
+
+
 Changes in version 2.2.0.RC2 (2019-08-05)
 -----------------------------------------
 * DATAKV-271 - Migrate tests to AssertJ.
