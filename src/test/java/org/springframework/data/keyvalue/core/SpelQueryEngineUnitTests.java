@@ -21,6 +21,7 @@ import static org.mockito.Mockito.*;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.List;
 
 import org.junit.Before;
@@ -70,8 +71,9 @@ public class SpelQueryEngineUnitTests {
 
 		doReturn(people).when(adapter).getAllOf(anyString());
 
-		assertThat(engine.execute(createQueryForMethodWithArgs("findByFirstname", "bob"), null, -1, -1, anyString()))
-				.containsExactly(BOB_WITH_FIRSTNAME);
+		Collection result = engine.execute(createQueryForMethodWithArgs("findByFirstname", "bob"), null, -1, -1,
+				anyString());
+		assertThat(result).containsExactly(BOB_WITH_FIRSTNAME);
 	}
 
 	@Test // DATAKV-114

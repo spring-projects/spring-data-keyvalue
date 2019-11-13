@@ -16,10 +16,12 @@
 package org.springframework.data.map;
 
 import static org.assertj.core.api.Assertions.*;
+import static org.assertj.core.api.Assumptions.*;
 
 import java.util.List;
 import java.util.Optional;
 
+import org.junit.Before;
 import org.junit.Test;
 
 import org.springframework.dao.IncorrectResultSizeDataAccessException;
@@ -34,6 +36,7 @@ import org.springframework.data.keyvalue.repository.support.QuerydslKeyValueRepo
 import org.springframework.data.map.QuerydslKeyValueRepositoryUnitTests.QPersonRepository;
 import org.springframework.data.querydsl.QSort;
 import org.springframework.data.querydsl.QuerydslPredicateExecutor;
+import org.springframework.data.util.Version;
 
 import com.google.common.collect.Lists;
 
@@ -46,6 +49,11 @@ import com.google.common.collect.Lists;
  * @author Mark Paluch
  */
 public class QuerydslKeyValueRepositoryUnitTests extends AbstractRepositoryUnitTests<QPersonRepository> {
+
+	@Before
+	public void before() {
+		assumeThat(Version.javaVersion().toString()).startsWith("1.8");
+	}
 
 	@Test // DATACMNS-525
 	public void findOneIsExecutedCorrectly() {
