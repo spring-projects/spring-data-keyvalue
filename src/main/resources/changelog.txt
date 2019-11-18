@@ -1,6 +1,11 @@
 Spring Data KeyValue Changelog
 ==========================
 
+Changes in version 2.1.13.RELEASE (2019-11-18)
+----------------------------------------------
+* DATAKV-278 - Release 2.1.13 (Lovelace SR13).
+
+
 Changes in version 2.2.1.RELEASE (2019-11-04)
 ---------------------------------------------
 * DATAKV-276 - Release 2.2.1 (Moore SR1).
