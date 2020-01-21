@@ -32,6 +32,7 @@ import org.springframework.util.ClassUtils;
  * {@link KeyValueAdapter} implementation for {@link Map}.
  *
  * @author Christoph Strobl
+ * @author Derek Cochran
  */
 public class MapKeyValueAdapter extends AbstractKeyValueAdapter {
 
@@ -188,18 +189,7 @@ public class MapKeyValueAdapter extends AbstractKeyValueAdapter {
 	protected Map<Object, Object> getKeySpaceMap(String keyspace) {
 
 		Assert.notNull(keyspace, "Collection must not be null for lookup.");
-
-		Map<Object, Object> map = store.get(keyspace);
-
-		if (map != null) {
-			return map;
-		}
-
-		addMapForKeySpace(keyspace);
-		return store.get(keyspace);
+		return store.computeIfAbsent(keyspace, k -> CollectionFactory.createMap(keySpaceMapType,  1000));
 	}
 
-	private void addMapForKeySpace(String keyspace) {
-		store.put(keyspace, CollectionFactory.createMap(keySpaceMapType, 1000));
-	}
 }
