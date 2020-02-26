@@ -1,6 +1,11 @@
 Spring Data KeyValue Changelog
 ==========================
 
+Changes in version 2.1.16.RELEASE (2020-02-26)
+----------------------------------------------
+* DATAKV-286 - Release 2.1.16 (Lovelace SR16).
+
+
 Changes in version 2.3.0.M3 (2020-02-12)
 ----------------------------------------
 * DATAKV-290 - MapKeyValueAdapter.getKeySpaceMap is not thread safe.
@@ -637,6 +642,7 @@ Changes in version 1.0.0.M1 (2015-06-02)
 * DATAKV-86 - Move configuration infrastructure for Map-based repositories into map package.
 * DATAKV-85 - Migrate key-value infrastructure from Spring Data Commons.
 * DATAKV-84 - Setup project structure.
+
 
 
 
