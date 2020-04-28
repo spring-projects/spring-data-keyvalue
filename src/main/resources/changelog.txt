@@ -1,6 +1,11 @@
 Spring Data KeyValue Changelog
 ==========================
 
+Changes in version 2.1.17.RELEASE (2020-04-28)
+----------------------------------------------
+* DATAKV-292 - Release 2.1.17 (Lovelace SR17).
+
+
 Changes in version 2.3.0.RC1 (2020-03-31)
 -----------------------------------------
 * DATAKV-294 - Release 2.3 RC1 (Neumann).
@@ -662,6 +667,7 @@ Changes in version 1.0.0.M1 (2015-06-02)
 * DATAKV-86 - Move configuration infrastructure for Map-based repositories into map package.
 * DATAKV-85 - Migrate key-value infrastructure from Spring Data Commons.
 * DATAKV-84 - Setup project structure.
+
 
 
 
