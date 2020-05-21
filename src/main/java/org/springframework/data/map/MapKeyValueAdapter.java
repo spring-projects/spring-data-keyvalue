@@ -24,6 +24,7 @@ import org.springframework.core.CollectionFactory;
 import org.springframework.data.keyvalue.core.AbstractKeyValueAdapter;
 import org.springframework.data.keyvalue.core.ForwardingCloseableIterator;
 import org.springframework.data.keyvalue.core.KeyValueAdapter;
+import org.springframework.data.keyvalue.core.QueryEngine;
 import org.springframework.data.util.CloseableIterator;
 import org.springframework.util.Assert;
 import org.springframework.util.ClassUtils;
@@ -33,6 +34,7 @@ import org.springframework.util.ClassUtils;
  *
  * @author Christoph Strobl
  * @author Derek Cochran
+ * @author Marcel Overdijk
  */
 public class MapKeyValueAdapter extends AbstractKeyValueAdapter {
 
@@ -48,13 +50,33 @@ public class MapKeyValueAdapter extends AbstractKeyValueAdapter {
 	}
 
 	/**
+	 * Create new {@link MapKeyValueAdapter} using the given query engine.
+	 *
+	 * @param engine the query engine
+	 */
+	public MapKeyValueAdapter(QueryEngine<? extends KeyValueAdapter, ?, ?> engine) {
+		this(ConcurrentHashMap.class, engine);
+	}
+
+	/**
 	 * Creates a new {@link MapKeyValueAdapter} using the given {@link Map} as backing store.
 	 *
 	 * @param mapType must not be {@literal null}.
 	 */
 	@SuppressWarnings("rawtypes")
 	public MapKeyValueAdapter(Class<? extends Map> mapType) {
-		this(CollectionFactory.createMap(mapType, 100), mapType);
+		this(CollectionFactory.createMap(mapType, 100), mapType, null);
+	}
+
+	/**
+	 * Creates a new {@link MapKeyValueAdapter} using the given {@link Map} as backing store and query engine.
+	 *
+	 * @param mapType must not be {@literal null}.
+	 * @param engine the query engine
+	 */
+	@SuppressWarnings("rawtypes")
+	public MapKeyValueAdapter(Class<? extends Map> mapType, QueryEngine<? extends KeyValueAdapter, ?, ?> engine) {
+		this(CollectionFactory.createMap(mapType, 100), mapType, engine);
 	}
 
 	/**
@@ -64,17 +86,30 @@ public class MapKeyValueAdapter extends AbstractKeyValueAdapter {
 	 */
 	@SuppressWarnings({ "rawtypes", "unchecked" })
 	public MapKeyValueAdapter(Map<String, Map<Object, Object>> store) {
-		this(store, (Class<? extends Map>) ClassUtils.getUserClass(store));
+		this(store, (Class<? extends Map>) ClassUtils.getUserClass(store), null);
 	}
 
 	/**
-	 * Creates a new {@link MapKeyValueAdapter} with the given store and type to be used when creating key spaces.
+	 * Create new instance of {@link MapKeyValueAdapter} using given dataStore for persistence and query engine.
+	 *
+	 * @param store must not be {@literal null}.
+	 * @param engine the query engine
+	 */
+	@SuppressWarnings({ "rawtypes", "unchecked" })
+	public MapKeyValueAdapter(Map<String, Map<Object, Object>> store, QueryEngine<? extends KeyValueAdapter, ?, ?> engine) {
+		this(store, (Class<? extends Map>) ClassUtils.getUserClass(store), engine);
+	}
+
+	/**
+	 * Creates a new {@link MapKeyValueAdapter} with the given store and type to be used when creating key spaces and query engine.
 	 *
 	 * @param store must not be {@literal null}.
 	 * @param keySpaceMapType must not be {@literal null}.
+	 * @param engine the query engine
 	 */
 	@SuppressWarnings("rawtypes")
-	private MapKeyValueAdapter(Map<String, Map<Object, Object>> store, Class<? extends Map> keySpaceMapType) {
+	private MapKeyValueAdapter(Map<String, Map<Object, Object>> store, Class<? extends Map> keySpaceMapType, QueryEngine<? extends KeyValueAdapter, ?, ?> engine) {
+		super(engine);
 
 		Assert.notNull(store, "Store must not be null.");
 		Assert.notNull(keySpaceMapType, "Map type to be used for key spaces must not be null!");
