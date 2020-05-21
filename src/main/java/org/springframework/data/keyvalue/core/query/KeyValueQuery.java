@@ -22,6 +22,7 @@ import org.springframework.util.Assert;
 /**
  * @author Christoph Strobl
  * @author Mark Paluch
+ * @author Marcel Overdijk
  * @param <T> Criteria type
  */
 public class KeyValueQuery<T> {
@@ -43,6 +44,17 @@ public class KeyValueQuery<T> {
 	 */
 	public KeyValueQuery(@Nullable T criteria) {
 		this.criteria = criteria;
+	}
+
+	/**
+	 * Creates new instance of {@link KeyValueQuery} with given criteria and {@link Sort}.
+	 *
+	 * @param criteria can be {@literal null}.
+	 * @param sort must not be {@literal null}.
+	 */
+	public KeyValueQuery(@Nullable T criteria, Sort sort) {
+		this.criteria = criteria;
+		setSort(sort);
 	}
 
 	/**
