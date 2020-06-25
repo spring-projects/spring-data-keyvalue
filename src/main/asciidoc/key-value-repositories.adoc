@@ -64,8 +64,8 @@ public KeyValueAdapter keyValueAdapter() {
 [[key-value.keyspaces]]
 == Keyspaces
 
-Keyspaces define the part of the data structure in which the entity should be kept. This concept is similar to collections in MongoDB and Elasticsearch, cores in Solr, and tables in JPA.
-By default, the keyspace of an entity is extracted from its type, but you can also store entities of different types within one keyspace. In that case, any find operation type-checks the results. The following example shows a keyspace for a repository of `Person` objects:
+Keyspaces define the part of the data structure in which the entity should be kept.This concept is similar to collections in MongoDB and Elasticsearch, cores in Solr, and tables in JPA.
+By default, the keyspace of an entity is extracted from its type, but you can also store entities of different types within one keyspace.In that case, any find operation type-checks the results.The following example shows a keyspace for a repository of `Person` objects:
 
 ====
 [source, java]
@@ -125,15 +125,17 @@ class Customer {
 [[key-value.template-query]]
 == Querying
 
-Query execution is managed by a `QueryEngine`. As mentioned earlier, you can instruct the `KeyValueAdapter` to use an implementation-specific `QueryEngine` that allows access to native functionality.
-When used without further customization, queries are be executed by using `SpELQueryEngine`.
+Running queries is managed by a `QueryEngine`.
+As mentioned earlier, you can instruct the `KeyValueAdapter` to use an implementation-specific `QueryEngine` that allows access to native functionality.
+When used without further customization, queries can be run by using `SpELQueryEngine`.
 
-NOTE: For performance reasons, we highly recommend to have at least Spring Framework 4.1.2 or better to make use of link:{spring-framework-docs}core.html#expressions-spel-compilation[compiled SpEL Expressions]. ("`SpEL`" is short for "`Spring Expression Language`".) You can use the `-Dspring.expression.compiler.mode=IMMEDIATE` switch to enable it.
+NOTE: For performance reasons, we highly recommend to have at least Spring Framework 4.1.2 or better to make use of link:{spring-framework-docs}core.html#expressions-spel-compilation[compiled SpEL Expressions].
+("`SpEL`" is short for "`Spring Expression Language`".) You can use the `-Dspring.expression.compiler.mode=IMMEDIATE` switch to enable it.
 
 The following example shows a query that uses the SpEL:
 
 ====
-[source, java]
+[source,java]
 ----
 KeyValueQuery<String> query = new KeyValueQuery<String>("lastname == 'targaryen'");
 List<Person> targaryens = template.find(query, Person.class);
@@ -145,8 +147,8 @@ IMPORTANT: You must have getters and setters present to query properties when yo
 [[key-value.template-sort]]
 == Sorting
 
-Depending on the store implementation provided by the adapter, entities might already be stored in some sorted way but do not necessarily have to be. Again, the underlying `QueryEngine` is capable of performing sort operations.
-When used without further customization, sorting is done by using a `SpelPropertyComparator` extracted from the `Sort` clause. The following example shows a query with a `Sort` clause:
+Depending on the store implementation provided by the adapter, entities might already be stored in some sorted way but do not necessarily have to be.Again, the underlying `QueryEngine` is capable of performing sort operations.
+When used without further customization, sorting is done by using a `SpelPropertyComparator` extracted from the `Sort` clause.The following example shows a query with a `Sort` clause:
 
 ====
 [source, java]
