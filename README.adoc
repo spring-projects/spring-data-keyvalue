@@ -12,7 +12,7 @@ This module provides infrastructure components to build repository abstractions 
 
 == Code of Conduct
 
-This project is governed by the link:CODE_OF_CONDUCT.adoc[Spring Code of Conduct]. By participating, you are expected to uphold this code of conduct. Please report unacceptable behavior to spring-code-of-conduct@pivotal.io.
+This project is governed by the https://github.com/spring-projects/.github/CODE_OF_CONDUCT.adoc[Spring Code of Conduct]. By participating, you are expected to uphold this code of conduct. Please report unacceptable behavior to spring-code-of-conduct@pivotal.io.
 
 == Getting Started
 

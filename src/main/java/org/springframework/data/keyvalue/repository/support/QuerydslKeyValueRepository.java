@@ -91,7 +91,7 @@ public class QuerydslKeyValueRepository<T, ID> extends SimpleKeyValueRepository<
 
 	/*
 	 * (non-Javadoc)
-	 * @see org.springframework.data.querydsl.QueryDslPredicateExecutor#findOne(com.mysema.query.types.Predicate)
+	 * @see org.springframework.data.querydsl.QueryDslPredicateExecutor#findOne(com.querydsl.core.types.Predicate)
 	 */
 	@Override
 	public Optional<T> findOne(Predicate predicate) {
@@ -107,7 +107,7 @@ public class QuerydslKeyValueRepository<T, ID> extends SimpleKeyValueRepository<
 
 	/*
 	 * (non-Javadoc)
-	 * @see org.springframework.data.querydsl.QueryDslPredicateExecutor#findAll(com.mysema.query.types.Predicate)
+	 * @see org.springframework.data.querydsl.QueryDslPredicateExecutor#findAll(com.querydsl.core.types.Predicate)
 	 */
 	@Override
 	public Iterable<T> findAll(Predicate predicate) {
@@ -119,7 +119,7 @@ public class QuerydslKeyValueRepository<T, ID> extends SimpleKeyValueRepository<
 
 	/*
 	 * (non-Javadoc)
-	 * @see org.springframework.data.querydsl.QueryDslPredicateExecutor#findAll(com.mysema.query.types.Predicate, com.mysema.query.types.OrderSpecifier[])
+	 * @see org.springframework.data.querydsl.QueryDslPredicateExecutor#findAll(com.querydsl.core.types.Predicate, com.querydsl.core.types.OrderSpecifier[])
 	 */
 	@Override
 	public Iterable<T> findAll(Predicate predicate, OrderSpecifier<?>... orders) {
@@ -135,7 +135,7 @@ public class QuerydslKeyValueRepository<T, ID> extends SimpleKeyValueRepository<
 
 	/*
 	 * (non-Javadoc)
-	 * @see org.springframework.data.querydsl.QueryDslPredicateExecutor#findAll(com.mysema.query.types.Predicate, org.springframework.data.domain.Sort)
+	 * @see org.springframework.data.querydsl.QueryDslPredicateExecutor#findAll(com.querydsl.core.types.Predicate, org.springframework.data.domain.Sort)
 	 */
 	@Override
 	public Iterable<T> findAll(Predicate predicate, Sort sort) {
@@ -148,7 +148,7 @@ public class QuerydslKeyValueRepository<T, ID> extends SimpleKeyValueRepository<
 
 	/*
 	 * (non-Javadoc)
-	 * @see org.springframework.data.querydsl.QueryDslPredicateExecutor#findAll(com.mysema.query.types.Predicate, org.springframework.data.domain.Pageable)
+	 * @see org.springframework.data.querydsl.QueryDslPredicateExecutor#findAll(com.querydsl.core.types.Predicate, org.springframework.data.domain.Pageable)
 	 */
 	@Override
 	public Page<T> findAll(Predicate predicate, Pageable pageable) {
@@ -173,7 +173,7 @@ public class QuerydslKeyValueRepository<T, ID> extends SimpleKeyValueRepository<
 
 	/*
 	 * (non-Javadoc)
-	 * @see org.springframework.data.querydsl.QueryDslPredicateExecutor#findAll(com.mysema.query.types.OrderSpecifier[])
+	 * @see org.springframework.data.querydsl.QueryDslPredicateExecutor#findAll(com.querydsl.core.types.OrderSpecifier[])
 	 */
 	@Override
 	public Iterable<T> findAll(OrderSpecifier<?>... orders) {
@@ -192,7 +192,7 @@ public class QuerydslKeyValueRepository<T, ID> extends SimpleKeyValueRepository<
 
 	/*
 	 * (non-Javadoc)
-	 * @see org.springframework.data.querydsl.QueryDslPredicateExecutor#count(com.mysema.query.types.Predicate)
+	 * @see org.springframework.data.querydsl.QueryDslPredicateExecutor#count(com.querydsl.core.types.Predicate)
 	 */
 	@Override
 	public long count(Predicate predicate) {
@@ -204,7 +204,7 @@ public class QuerydslKeyValueRepository<T, ID> extends SimpleKeyValueRepository<
 
 	/*
 	 * (non-Javadoc)
-	 * @see org.springframework.data.querydsl.QueryDslPredicateExecutor#exists(com.mysema.query.types.Predicate)
+	 * @see org.springframework.data.querydsl.QueryDslPredicateExecutor#exists(com.querydsl.core.types.Predicate)
 	 */
 	@Override
 	public boolean exists(Predicate predicate) {
