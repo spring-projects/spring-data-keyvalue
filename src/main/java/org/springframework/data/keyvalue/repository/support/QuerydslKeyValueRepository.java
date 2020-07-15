@@ -96,7 +96,7 @@ public class QuerydslKeyValueRepository<T, ID> extends SimpleKeyValueRepository<
 	@Override
 	public Optional<T> findOne(Predicate predicate) {
 
-		Assert.notNull(predicate, "Predicate must not be null");
+		Assert.notNull(predicate, "Predicate must not be null!");
 
 		try {
 			return Optional.ofNullable(prepareQuery(predicate).fetchOne());
@@ -112,7 +112,7 @@ public class QuerydslKeyValueRepository<T, ID> extends SimpleKeyValueRepository<
 	@Override
 	public Iterable<T> findAll(Predicate predicate) {
 
-		Assert.notNull(predicate, "Predicate must not be null");
+		Assert.notNull(predicate, "Predicate must not be null!");
 
 		return prepareQuery(predicate).fetchResults().getResults();
 	}
@@ -124,8 +124,8 @@ public class QuerydslKeyValueRepository<T, ID> extends SimpleKeyValueRepository<
 	@Override
 	public Iterable<T> findAll(Predicate predicate, OrderSpecifier<?>... orders) {
 
-		Assert.notNull(predicate, "Predicate must not be null");
-		Assert.notNull(orders, "OrderSpecifiers must not be null");
+		Assert.notNull(predicate, "Predicate must not be null!");
+		Assert.notNull(orders, "OrderSpecifiers must not be null!");
 
 		AbstractCollQuery<T, ?> query = prepareQuery(predicate);
 		query.orderBy(orders);
@@ -140,8 +140,8 @@ public class QuerydslKeyValueRepository<T, ID> extends SimpleKeyValueRepository<
 	@Override
 	public Iterable<T> findAll(Predicate predicate, Sort sort) {
 
-		Assert.notNull(predicate, "Predicate must not be null");
-		Assert.notNull(sort, "Sort must not be null");
+		Assert.notNull(predicate, "Predicate must not be null!");
+		Assert.notNull(sort, "Sort must not be null!");
 
 		return findAll(predicate, toOrderSpecifier(sort, builder));
 	}
@@ -153,8 +153,8 @@ public class QuerydslKeyValueRepository<T, ID> extends SimpleKeyValueRepository<
 	@Override
 	public Page<T> findAll(Predicate predicate, Pageable pageable) {
 
-		Assert.notNull(predicate, "Predicate must not be null");
-		Assert.notNull(pageable, "Pageable must not be null");
+		Assert.notNull(predicate, "Predicate must not be null!");
+		Assert.notNull(pageable, "Pageable must not be null!");
 
 		AbstractCollQuery<T, ?> query = prepareQuery(predicate);
 
@@ -178,7 +178,7 @@ public class QuerydslKeyValueRepository<T, ID> extends SimpleKeyValueRepository<
 	@Override
 	public Iterable<T> findAll(OrderSpecifier<?>... orders) {
 
-		Assert.notNull(orders, "OrderSpecifiers must not be null");
+		Assert.notNull(orders, "OrderSpecifiers must not be null!");
 
 		if (ObjectUtils.isEmpty(orders)) {
 			return findAll();
@@ -197,7 +197,7 @@ public class QuerydslKeyValueRepository<T, ID> extends SimpleKeyValueRepository<
 	@Override
 	public long count(Predicate predicate) {
 
-		Assert.notNull(predicate, "Predicate must not be null");
+		Assert.notNull(predicate, "Predicate must not be null!");
 
 		return prepareQuery(predicate).fetchCount();
 	}
@@ -209,7 +209,7 @@ public class QuerydslKeyValueRepository<T, ID> extends SimpleKeyValueRepository<
 	@Override
 	public boolean exists(Predicate predicate) {
 
-		Assert.notNull(predicate, "Predicate must not be null");
+		Assert.notNull(predicate, "Predicate must not be null!");
 
 		return count(predicate) > 0;
 	}

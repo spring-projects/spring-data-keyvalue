@@ -95,7 +95,7 @@ public class KeyValueTemplate implements KeyValueOperations, ApplicationEventPub
 	 */
 	public void setExceptionTranslator(PersistenceExceptionTranslator exceptionTranslator) {
 
-		Assert.notNull(exceptionTranslator, "ExceptionTranslator must not be null.");
+		Assert.notNull(exceptionTranslator, "ExceptionTranslator must not be null!");
 		this.exceptionTranslator = exceptionTranslator;
 	}
 

@@ -114,7 +114,7 @@ public class SimpleKeyValueRepository<T, ID> implements KeyValueRepository<T, ID
 	@Override
 	public <S extends T> Iterable<S> saveAll(Iterable<S> entities) {
 
-		Assert.notNull(entities, "The given Iterable of entities must not be null");
+		Assert.notNull(entities, "The given Iterable of entities must not be null!");
 
 		List<S> saved = new ArrayList<>();
 
@@ -132,7 +132,7 @@ public class SimpleKeyValueRepository<T, ID> implements KeyValueRepository<T, ID
 	@Override
 	public Optional<T> findById(ID id) {
 
-		Assert.notNull(id, "The given id must not be null");
+		Assert.notNull(id, "The given id must not be null!");
 
 		return operations.findById(id, entityInformation.getJavaType());
 	}
@@ -162,7 +162,7 @@ public class SimpleKeyValueRepository<T, ID> implements KeyValueRepository<T, ID
 	@Override
 	public Iterable<T> findAllById(Iterable<ID> ids) {
 
-		Assert.notNull(ids, "The given Iterable of id's must not be null");
+		Assert.notNull(ids, "The given Iterable of id's must not be null!");
 
 		List<T> result = new ArrayList<>();
 
@@ -187,7 +187,7 @@ public class SimpleKeyValueRepository<T, ID> implements KeyValueRepository<T, ID
 	@Override
 	public void deleteById(ID id) {
 
-		Assert.notNull(id, "The given id must not be null");
+		Assert.notNull(id, "The given id must not be null!");
 
 		operations.delete(id, entityInformation.getJavaType());
 	}
@@ -199,7 +199,7 @@ public class SimpleKeyValueRepository<T, ID> implements KeyValueRepository<T, ID
 	@Override
 	public void delete(T entity) {
 
-		Assert.notNull(entity, "The given entity must not be null");
+		Assert.notNull(entity, "The given entity must not be null!");
 
 		deleteById(entityInformation.getRequiredId(entity));
 	}
@@ -211,7 +211,7 @@ public class SimpleKeyValueRepository<T, ID> implements KeyValueRepository<T, ID
 	@Override
 	public void deleteAll(Iterable<? extends T> entities) {
 
-		Assert.notNull(entities, "The given Iterable of entities must not be null");
+		Assert.notNull(entities, "The given Iterable of entities must not be null!");
 
 		entities.forEach(this::delete);
 	}

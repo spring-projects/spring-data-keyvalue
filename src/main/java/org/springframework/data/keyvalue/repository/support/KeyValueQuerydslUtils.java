@@ -54,8 +54,8 @@ abstract class KeyValueQuerydslUtils {
 	 */
 	static OrderSpecifier<?>[] toOrderSpecifier(Sort sort, PathBuilder<?> builder) {
 
-		Assert.notNull(sort, "Sort must not be null.");
-		Assert.notNull(builder, "Builder must not be null.");
+		Assert.notNull(sort, "Sort must not be null!");
+		Assert.notNull(builder, "Builder must not be null!");
 
 		List<OrderSpecifier<?>> specifiers = null;
 
