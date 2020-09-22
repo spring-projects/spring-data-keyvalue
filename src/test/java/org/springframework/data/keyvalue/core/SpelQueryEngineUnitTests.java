@@ -37,6 +37,7 @@ import org.springframework.data.repository.core.RepositoryMetadata;
 import org.springframework.data.repository.query.ParametersParameterAccessor;
 import org.springframework.data.repository.query.QueryMethod;
 import org.springframework.data.repository.query.parser.PartTree;
+import org.springframework.data.util.ClassTypeInformation;
 import org.springframework.expression.spel.support.SimpleEvaluationContext;
 
 /**
@@ -95,6 +96,7 @@ public class SpelQueryEngineUnitTests {
 		Method method = PersonRepository.class.getMethod(methodName, types.toArray(new Class<?>[types.size()]));
 		RepositoryMetadata metadata = mock(RepositoryMetadata.class);
 		doReturn(method.getReturnType()).when(metadata).getReturnedDomainClass(method);
+		doReturn(ClassTypeInformation.fromReturnTypeOf(method)).when(metadata).getReturnType(method);
 
 		PartTree partTree = new PartTree(method.getName(), method.getReturnType());
 		SpelQueryCreator creator = new SpelQueryCreator(partTree, new ParametersParameterAccessor(

@@ -37,9 +37,12 @@ import org.springframework.data.projection.ProjectionFactory;
 import org.springframework.data.repository.core.RepositoryMetadata;
 import org.springframework.data.repository.query.QueryMethod;
 import org.springframework.data.repository.query.QueryMethodEvaluationContextProvider;
+import org.springframework.data.util.ClassTypeInformation;
+import org.springframework.data.util.TypeInformation;
 
 /**
  * @author Christoph Strobl
+ * @author Mark Paluch
  */
 @RunWith(MockitoJUnitRunner.class)
 public class KeyValuePartTreeQueryUnitTests {
@@ -53,6 +56,8 @@ public class KeyValuePartTreeQueryUnitTests {
 	public void spelExpressionAndContextShouldNotBeReused() throws NoSuchMethodException, SecurityException {
 
 		when(metadataMock.getDomainType()).thenReturn((Class) Person.class);
+		when(metadataMock.getReturnType(any(Method.class)))
+				.thenReturn((TypeInformation) ClassTypeInformation.from(List.class));
 		when(metadataMock.getReturnedDomainClass(any(Method.class))).thenReturn((Class) Person.class);
 
 		QueryMethod qm = new QueryMethod(Repo.class.getMethod("findByFirstname", String.class), metadataMock,
@@ -74,6 +79,8 @@ public class KeyValuePartTreeQueryUnitTests {
 	public void shouldApplyPageableParameterToCollectionQuery() throws SecurityException, NoSuchMethodException {
 
 		when(metadataMock.getDomainType()).thenReturn((Class) Person.class);
+		when(metadataMock.getReturnType(any(Method.class)))
+				.thenReturn((TypeInformation) ClassTypeInformation.from(List.class));
 		when(metadataMock.getReturnedDomainClass(any(Method.class))).thenReturn((Class) Person.class);
 
 		QueryMethod qm = new QueryMethod(Repo.class.getMethod("findBy", Pageable.class), metadataMock,
@@ -93,6 +100,8 @@ public class KeyValuePartTreeQueryUnitTests {
 	public void shouldApplyDerivedMaxResultsToQuery() throws SecurityException, NoSuchMethodException {
 
 		when(metadataMock.getDomainType()).thenReturn((Class) Person.class);
+		when(metadataMock.getReturnType(any(Method.class)))
+				.thenReturn((TypeInformation) ClassTypeInformation.from(List.class));
 		when(metadataMock.getReturnedDomainClass(any(Method.class))).thenReturn((Class) Person.class);
 
 		QueryMethod qm = new QueryMethod(Repo.class.getMethod("findTop3By"), metadataMock, projectionFactoryMock);
@@ -110,6 +119,8 @@ public class KeyValuePartTreeQueryUnitTests {
 	public void shouldApplyDerivedMaxResultsToQueryWithParameters() throws SecurityException, NoSuchMethodException {
 
 		when(metadataMock.getDomainType()).thenReturn((Class) Person.class);
+		when(metadataMock.getReturnType(any(Method.class)))
+				.thenReturn((TypeInformation) ClassTypeInformation.from(List.class));
 		when(metadataMock.getReturnedDomainClass(any(Method.class))).thenReturn((Class) Person.class);
 
 		QueryMethod qm = new QueryMethod(Repo.class.getMethod("findTop3ByFirstname", String.class), metadataMock,

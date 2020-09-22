@@ -40,6 +40,7 @@ import org.springframework.data.repository.core.RepositoryMetadata;
 import org.springframework.data.repository.query.ParametersParameterAccessor;
 import org.springframework.data.repository.query.QueryMethod;
 import org.springframework.data.repository.query.parser.PartTree;
+import org.springframework.data.util.ClassTypeInformation;
 import org.springframework.expression.spel.standard.SpelExpression;
 import org.springframework.expression.spel.support.SimpleEvaluationContext;
 import org.springframework.util.ObjectUtils;
@@ -336,6 +337,7 @@ public class SpelQueryCreatorUnitTests {
 
 		Method method = PersonRepository.class.getMethod(methodName, argTypes);
 		doReturn(Person.class).when(metadataMock).getReturnedDomainClass(method);
+		doReturn(ClassTypeInformation.from(Person.class)).when(metadataMock).getReturnType(method);
 
 		PartTree partTree = new PartTree(method.getName(), method.getReturnType());
 		SpelQueryCreator creator = new SpelQueryCreator(partTree, new ParametersParameterAccessor(

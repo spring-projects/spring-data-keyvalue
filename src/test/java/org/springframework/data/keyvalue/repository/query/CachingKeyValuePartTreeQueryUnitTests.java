@@ -35,6 +35,7 @@ import org.springframework.data.projection.ProjectionFactory;
 import org.springframework.data.repository.core.RepositoryMetadata;
 import org.springframework.data.repository.query.QueryMethod;
 import org.springframework.data.repository.query.QueryMethodEvaluationContextProvider;
+import org.springframework.data.util.ClassTypeInformation;
 
 /**
  * Unit tests for {@link CachingKeyValuePartTreeQuery}.
@@ -54,6 +55,7 @@ public class CachingKeyValuePartTreeQueryUnitTests {
 
 		when(metadataMock.getDomainType()).thenReturn((Class) Person.class);
 		when(metadataMock.getReturnedDomainClass(any(Method.class))).thenReturn((Class) Person.class);
+		when(metadataMock.getReturnType(any(Method.class))).thenReturn(ClassTypeInformation.from((Class) List.class));
 	}
 
 	@Test // DATAKV-137
