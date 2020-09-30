@@ -59,7 +59,9 @@ enum DefaultIdentifierGenerator implements IdentifierGenerator {
 			return (T) Long.valueOf(getSecureRandom().nextLong());
 		}
 
-		throw new InvalidDataAccessApiUsageException("Non gereratable id type....");
+		throw new InvalidDataAccessApiUsageException(
+				String.format("Identifier cannot be generated for %s. Supported types are: UUID, String, Integer, and Long.",
+						identifierType.getType().getName()));
 	}
 
 	private SecureRandom getSecureRandom() {
