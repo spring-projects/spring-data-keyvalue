@@ -80,13 +80,7 @@ public class KeyValueTemplate implements KeyValueOperations, ApplicationEventPub
 	 */
 	public KeyValueTemplate(KeyValueAdapter adapter,
 			MappingContext<? extends KeyValuePersistentEntity<?, ?>, ? extends KeyValuePersistentProperty<?>> mappingContext) {
-
-		Assert.notNull(adapter, "Adapter must not be null!");
-		Assert.notNull(mappingContext, "MappingContext must not be null!");
-
-		this.adapter = adapter;
-		this.mappingContext = mappingContext;
-		this.identifierGenerator = DefaultIdentifierGenerator.INSTANCE;
+		this(adapter, mappingContext, DefaultIdentifierGenerator.INSTANCE);
 	}
 
 	/**
@@ -95,6 +89,7 @@ public class KeyValueTemplate implements KeyValueOperations, ApplicationEventPub
 	 * @param adapter must not be {@literal null}.
 	 * @param mappingContext must not be {@literal null}.
 	 * @param identifierGenerator must not be {@literal null}.
+	 * @since 2.4
 	 */
 	public KeyValueTemplate(KeyValueAdapter adapter,
 			MappingContext<? extends KeyValuePersistentEntity<?, ?>, ? extends KeyValuePersistentProperty<?>> mappingContext,
