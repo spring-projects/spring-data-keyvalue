@@ -30,12 +30,14 @@ public class KeyValueQuery<T> {
 	private Sort sort = Sort.unsorted();
 	private long offset = -1;
 	private int rows = -1;
-	private @Nullable T criteria;
+	private final @Nullable T criteria;
 
 	/**
 	 * Creates new instance of {@link KeyValueQuery}.
 	 */
-	public KeyValueQuery() {}
+	public KeyValueQuery() {
+		this((T) null);
+	}
 
 	/**
 	 * Creates new instance of {@link KeyValueQuery} with given criteria.
@@ -51,6 +53,7 @@ public class KeyValueQuery<T> {
 	 *
 	 * @param criteria can be {@literal null}.
 	 * @param sort must not be {@literal null}.
+	 * @since 2.4
 	 */
 	public KeyValueQuery(@Nullable T criteria, Sort sort) {
 		this.criteria = criteria;
@@ -63,6 +66,7 @@ public class KeyValueQuery<T> {
 	 * @param sort must not be {@literal null}.
 	 */
 	public KeyValueQuery(Sort sort) {
+		this();
 		setSort(sort);
 	}
 

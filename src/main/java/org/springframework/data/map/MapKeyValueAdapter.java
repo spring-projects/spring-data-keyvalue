@@ -52,7 +52,8 @@ public class MapKeyValueAdapter extends AbstractKeyValueAdapter {
 	/**
 	 * Create new {@link MapKeyValueAdapter} using the given query engine.
 	 *
-	 * @param engine the query engine
+	 * @param engine the query engine.
+	 * @since 2.4
 	 */
 	public MapKeyValueAdapter(QueryEngine<? extends KeyValueAdapter, ?, ?> engine) {
 		this(ConcurrentHashMap.class, engine);
@@ -72,7 +73,8 @@ public class MapKeyValueAdapter extends AbstractKeyValueAdapter {
 	 * Creates a new {@link MapKeyValueAdapter} using the given {@link Map} as backing store and query engine.
 	 *
 	 * @param mapType must not be {@literal null}.
-	 * @param engine the query engine
+	 * @param engine the query engine.
+	 * @since 2.4
 	 */
 	@SuppressWarnings("rawtypes")
 	public MapKeyValueAdapter(Class<? extends Map> mapType, QueryEngine<? extends KeyValueAdapter, ?, ?> engine) {
@@ -93,7 +95,8 @@ public class MapKeyValueAdapter extends AbstractKeyValueAdapter {
 	 * Create new instance of {@link MapKeyValueAdapter} using given dataStore for persistence and query engine.
 	 *
 	 * @param store must not be {@literal null}.
-	 * @param engine the query engine
+	 * @param engine the query engine.
+	 * @since 2.4
 	 */
 	@SuppressWarnings({ "rawtypes", "unchecked" })
 	public MapKeyValueAdapter(Map<String, Map<Object, Object>> store, QueryEngine<? extends KeyValueAdapter, ?, ?> engine) {
@@ -101,14 +104,16 @@ public class MapKeyValueAdapter extends AbstractKeyValueAdapter {
 	}
 
 	/**
-	 * Creates a new {@link MapKeyValueAdapter} with the given store and type to be used when creating key spaces and query engine.
+	 * Creates a new {@link MapKeyValueAdapter} with the given store and type to be used when creating key spaces and
+	 * query engine.
 	 *
 	 * @param store must not be {@literal null}.
 	 * @param keySpaceMapType must not be {@literal null}.
-	 * @param engine the query engine
+	 * @param engine the query engine.
 	 */
 	@SuppressWarnings("rawtypes")
 	private MapKeyValueAdapter(Map<String, Map<Object, Object>> store, Class<? extends Map> keySpaceMapType, QueryEngine<? extends KeyValueAdapter, ?, ?> engine) {
+
 		super(engine);
 
 		Assert.notNull(store, "Store must not be null.");
