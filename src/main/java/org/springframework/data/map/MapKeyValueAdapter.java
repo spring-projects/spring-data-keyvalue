@@ -189,17 +189,7 @@ public class MapKeyValueAdapter extends AbstractKeyValueAdapter {
 
 		Assert.notNull(keyspace, "Collection must not be null for lookup.");
 
-		Map<Object, Object> map = store.get(keyspace);
-
-		if (map != null) {
-			return map;
-		}
-
-		addMapForKeySpace(keyspace);
-		return store.get(keyspace);
+		return store.computeIfAbsent(keyspace, it -> CollectionFactory.createMap(keySpaceMapType, 1000));
 	}
 
-	private void addMapForKeySpace(String keyspace) {
-		store.put(keyspace, CollectionFactory.createMap(keySpaceMapType, 1000));
-	}
 }
