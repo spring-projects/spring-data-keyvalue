@@ -1,6 +1,15 @@
 Spring Data KeyValue Changelog
 ==========================
 
+Changes in version 2.4.0-RC2 (2020-10-14)
+-----------------------------------------
+* DATAKV-323 - Documentation wording changes.
+* DATAKV-322 - Support setting the QueryEngine in the MapKeyValueAdapter.
+* DATAKV-321 - Adopt to changes in Spring Data Commons.
+* DATAKV-319 - Release 2.4 RC2 (2020.0.0).
+* DATAKV-206 - Support for custom identifier generators.
+
+
 Changes in version 2.4.0-RC1 (2020-09-16)
 -----------------------------------------
 * DATAKV-314 - Release 2.4 RC1 (2020.0.0).
@@ -747,6 +756,7 @@ Changes in version 1.0.0.M1 (2015-06-02)
 * DATAKV-86 - Move configuration infrastructure for Map-based repositories into map package.
 * DATAKV-85 - Migrate key-value infrastructure from Spring Data Commons.
 * DATAKV-84 - Setup project structure.
+
 
 
 
