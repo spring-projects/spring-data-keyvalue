@@ -43,6 +43,7 @@ import org.springframework.data.repository.CrudRepository;
  * @author Oliver Gierke
  * @author Thomas Darimont
  * @author Mark Paluch
+ * @author Jens Schauder
  */
 public abstract class AbstractRepositoryUnitTests<T extends AbstractRepositoryUnitTests.PersonRepository> {
 
