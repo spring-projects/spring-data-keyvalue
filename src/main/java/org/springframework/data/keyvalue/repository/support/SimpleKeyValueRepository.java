@@ -216,6 +216,14 @@ public class SimpleKeyValueRepository<T, ID> implements KeyValueRepository<T, ID
 		entities.forEach(this::delete);
 	}
 
+	@Override
+	public void deleteAllById(Iterable<? extends ID> ids) {
+
+		Assert.notNull(ids, "The given Iterable of Ids must not be null!");
+
+		ids.forEach(this::deleteById);
+	}
+
 	/*
 	 * (non-Javadoc)
 	 * @see org.springframework.data.repository.CrudRepository#deleteAll()

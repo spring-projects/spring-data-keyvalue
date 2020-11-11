@@ -15,6 +15,7 @@
  */
 package org.springframework.data.keyvalue.repository;
 
+import static java.util.Arrays.*;
 import static org.assertj.core.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.*;
@@ -46,6 +47,7 @@ import org.springframework.data.repository.core.support.PersistentEntityInformat
 /**
  * @author Christoph Strobl
  * @author Eugene Nikiforov
+ * @author Jens Schauder
  */
 @RunWith(MockitoJUnitRunner.class)
 public class SimpleKeyValueRepositoryUnitTests {
@@ -94,7 +96,7 @@ public class SimpleKeyValueRepositoryUnitTests {
 		Foo one = new Foo("one");
 		Foo two = new Foo("two");
 
-		repo.saveAll(Arrays.asList(one, two));
+		repo.saveAll(asList(one, two));
 		verify(opsMock, times(1)).insert(eq(one));
 		verify(opsMock, times(1)).insert(eq(two));
 	}
@@ -118,6 +120,15 @@ public class SimpleKeyValueRepositoryUnitTests {
 		verify(opsMock, times(1)).delete(eq("one"), eq(Foo.class));
 	}
 
+	@Test // DATAKV-330
+	public void deleteAllById() {
+
+		repo.deleteAllById(asList("one", "two"));
+
+		verify(opsMock, times(1)).delete(eq("one"), eq(Foo.class));
+		verify(opsMock, times(1)).delete(eq("two"), eq(Foo.class));
+	}
+
 	@Test // DATACMNS-525
 	public void deleteAll() {
 
@@ -131,7 +142,7 @@ public class SimpleKeyValueRepositoryUnitTests {
 	public void findAllIds() {
 
 		when(opsMock.findById(any(), any(Class.class))).thenReturn(Optional.empty());
-		repo.findAllById(Arrays.asList("one", "two", "three"));
+		repo.findAllById(asList("one", "two", "three"));
 
 		verify(opsMock, times(3)).findById(anyString(), eq(Foo.class));
 	}
