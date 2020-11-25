@@ -23,10 +23,11 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.NoSuchElementException;
 
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
-import org.mockito.junit.MockitoJUnitRunner;
+import org.mockito.junit.jupiter.MockitoExtension;
+
 import org.springframework.data.util.CloseableIterator;
 
 /**
@@ -34,14 +35,14 @@ import org.springframework.data.util.CloseableIterator;
  * @author Thomas Darimont
  * @author Oliver Gierke
  */
-@RunWith(MockitoJUnitRunner.class)
-public class ForwardingCloseableIteratorUnitTests<K, V> {
+@ExtendWith(MockitoExtension.class)
+class ForwardingCloseableIteratorUnitTests<K, V> {
 
 	@Mock Iterator<Entry<K, V>> iteratorMock;
 	@Mock Runnable closeActionMock;
 
 	@Test // DATAKV-99
-	public void hasNextShouldDelegateToWrappedIterator() {
+	void hasNextShouldDelegateToWrappedIterator() {
 
 		when(iteratorMock.hasNext()).thenReturn(true);
 
@@ -57,7 +58,7 @@ public class ForwardingCloseableIteratorUnitTests<K, V> {
 
 	@Test // DATAKV-99
 	@SuppressWarnings("unchecked")
-	public void nextShouldDelegateToWrappedIterator() {
+	void nextShouldDelegateToWrappedIterator() {
 
 		when(iteratorMock.next()).thenReturn((Entry<K, V>) mock(Map.Entry.class));
 
@@ -72,7 +73,7 @@ public class ForwardingCloseableIteratorUnitTests<K, V> {
 	}
 
 	@Test // DATAKV-99
-	public void nextShouldThrowErrorWhenWrappedIteratorHasNoMoreElements() {
+	void nextShouldThrowErrorWhenWrappedIteratorHasNoMoreElements() {
 
 		when(iteratorMock.next()).thenThrow(new NoSuchElementException());
 
@@ -86,7 +87,7 @@ public class ForwardingCloseableIteratorUnitTests<K, V> {
 	}
 
 	@Test // DATAKV-99
-	public void closeShouldDoNothingByDefault() {
+	void closeShouldDoNothingByDefault() {
 
 		new ForwardingCloseableIterator<>(iteratorMock).close();
 
@@ -94,7 +95,7 @@ public class ForwardingCloseableIteratorUnitTests<K, V> {
 	}
 
 	@Test // DATAKV-99
-	public void closeShouldInvokeConfiguredCloseAction() {
+	void closeShouldInvokeConfiguredCloseAction() {
 
 		new ForwardingCloseableIterator<>(iteratorMock, closeActionMock).close();
 

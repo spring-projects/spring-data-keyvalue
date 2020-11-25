@@ -21,7 +21,7 @@ import java.util.Arrays;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentSkipListMap;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ConfigurableApplicationContext;
@@ -38,10 +38,10 @@ import org.springframework.test.util.ReflectionTestUtils;
  * @author Oliver Gierke
  * @author Christoph Strobl
  */
-public class MapRepositoriesConfigurationExtensionIntegrationTests {
+class MapRepositoriesConfigurationExtensionIntegrationTests {
 
 	@Test // DATAKV-86
-	public void registersDefaultTemplateIfReferenceNotCustomized() {
+	void registersDefaultTemplateIfReferenceNotCustomized() {
 
 		ConfigurableApplicationContext context = new AnnotationConfigApplicationContext(Config.class);
 
@@ -51,7 +51,7 @@ public class MapRepositoriesConfigurationExtensionIntegrationTests {
 	}
 
 	@Test // DATAKV-86
-	public void doesNotRegisterDefaulttemplateIfReferenceIsCustomized() {
+	void doesNotRegisterDefaulttemplateIfReferenceIsCustomized() {
 
 		ConfigurableApplicationContext context = new AnnotationConfigApplicationContext(
 				ConfigWithCustomTemplateReference.class);
@@ -62,13 +62,13 @@ public class MapRepositoriesConfigurationExtensionIntegrationTests {
 	}
 
 	@Test // DATAKV-87
-	public void considersMapTypeConfiguredOnAnnotation() {
+	void considersMapTypeConfiguredOnAnnotation() {
 		assertKeyValueTemplateWithAdapterFor(ConcurrentSkipListMap.class,
 				new AnnotationConfigApplicationContext(ConfigWithCustomizedMapType.class));
 	}
 
 	@Test // DATAKV-87
-	public void doesNotConsiderMapConfiguredIfTemplateIsPresent() {
+	void doesNotConsiderMapConfiguredIfTemplateIsPresent() {
 		assertKeyValueTemplateWithAdapterFor(ConcurrentHashMap.class, new AnnotationConfigApplicationContext(
 				ConfigWithCustomizedMapTypeAndExplicitDefinitionOfKeyValueTemplate.class));
 	}

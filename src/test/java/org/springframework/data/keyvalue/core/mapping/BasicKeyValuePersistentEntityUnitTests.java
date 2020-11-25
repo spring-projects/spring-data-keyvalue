@@ -21,7 +21,7 @@ import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.springframework.data.keyvalue.annotation.KeySpace;
 import org.springframework.data.keyvalue.core.mapping.context.KeyValueMappingContext;
 import org.springframework.data.mapping.context.MappingContext;
@@ -33,19 +33,19 @@ import org.springframework.data.spel.spi.EvaluationContextExtension;
  *
  * @author Mark Paluch
  */
-public class BasicKeyValuePersistentEntityUnitTests {
+class BasicKeyValuePersistentEntityUnitTests {
 
-	MappingContext<? extends KeyValuePersistentEntity<?, ?>, ? extends KeyValuePersistentProperty<?>> mappingContext = new KeyValueMappingContext<>();
+	private MappingContext<? extends KeyValuePersistentEntity<?, ?>, ? extends KeyValuePersistentProperty<?>> mappingContext = new KeyValueMappingContext<>();
 
 	@Test // DATAKV-268
-	public void shouldDeriveKeyspaceFromClassName() {
+	void shouldDeriveKeyspaceFromClassName() {
 
 		assertThat(mappingContext.getPersistentEntity(KeyspaceEntity.class).getKeySpace())
 				.isEqualTo(KeyspaceEntity.class.getName());
 	}
 
 	@Test // DATAKV-268
-	public void shouldEvaluateKeyspaceExpression() {
+	void shouldEvaluateKeyspaceExpression() {
 
 		KeyValuePersistentEntity<?, ?> persistentEntity = mappingContext.getPersistentEntity(ExpressionEntity.class);
 		persistentEntity.setEvaluationContextProvider(
@@ -55,7 +55,7 @@ public class BasicKeyValuePersistentEntityUnitTests {
 	}
 
 	@Test // DATAKV-268
-	public void shouldEvaluateEntityWithoutKeyspace() {
+	void shouldEvaluateEntityWithoutKeyspace() {
 
 		KeyValuePersistentEntity<?, ?> persistentEntity = mappingContext.getPersistentEntity(NoKeyspaceEntity.class);
 		persistentEntity.setEvaluationContextProvider(
@@ -65,12 +65,12 @@ public class BasicKeyValuePersistentEntityUnitTests {
 	}
 
 	@KeySpace("#{myProperty}")
-	static class ExpressionEntity {}
+	private static class ExpressionEntity {}
 
 	@KeySpace
-	static class KeyspaceEntity {}
+	private static class KeyspaceEntity {}
 
-	static class NoKeyspaceEntity {}
+	private static class NoKeyspaceEntity {}
 
 	static class SampleExtension implements EvaluationContextExtension {
 

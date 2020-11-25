@@ -18,8 +18,8 @@ package org.springframework.data.keyvalue.repository.support;
 import static org.assertj.core.api.Assertions.*;
 import static org.springframework.data.keyvalue.repository.support.KeyValueQuerydslUtils.*;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.domain.Sort.Direction;
 import org.springframework.data.domain.Sort.NullHandling;
@@ -39,30 +39,30 @@ import com.querydsl.core.types.dsl.PathBuilder;
  * @author Oliver Gierke
  * @author Mark Paluch
  */
-public class KeyValueQuerydslUtilsUnitTests {
+class KeyValueQuerydslUtilsUnitTests {
 
 	private EntityPath<Person> path;
 	private PathBuilder<Person> builder;
 
-	@Before
-	public void setUp() {
+	@BeforeEach
+	void setUp() {
 
 		this.path = SimpleEntityPathResolver.INSTANCE.createPath(Person.class);
 		this.builder = new PathBuilder<>(path.getType(), path.getMetadata());
 	}
 
 	@Test // DATACMNS-525
-	public void toOrderSpecifierThrowsExceptioOnNullPathBuilder() {
+	void toOrderSpecifierThrowsExceptioOnNullPathBuilder() {
 		assertThatIllegalArgumentException().isThrownBy(() -> toOrderSpecifier(Sort.by("firstname"), null));
 	}
 
 	@Test // DATACMNS-525, DATAKV-197
-	public void toOrderSpecifierReturnsEmptyArrayWhenSortIsUnsorted() {
+	void toOrderSpecifierReturnsEmptyArrayWhenSortIsUnsorted() {
 		assertThat(toOrderSpecifier(Sort.unsorted(), builder)).hasSize(0);
 	}
 
 	@Test // DATACMNS-525
-	public void toOrderSpecifierConvertsSimpleAscSortCorrectly() {
+	void toOrderSpecifierConvertsSimpleAscSortCorrectly() {
 
 		Sort sort = Sort.by(Direction.ASC, "firstname");
 
@@ -72,7 +72,7 @@ public class KeyValueQuerydslUtilsUnitTests {
 	}
 
 	@Test // DATACMNS-525
-	public void toOrderSpecifierConvertsSimpleDescSortCorrectly() {
+	void toOrderSpecifierConvertsSimpleDescSortCorrectly() {
 
 		Sort sort = Sort.by(Direction.DESC, "firstname");
 
@@ -82,7 +82,7 @@ public class KeyValueQuerydslUtilsUnitTests {
 	}
 
 	@Test // DATACMNS-525
-	public void toOrderSpecifierConvertsSortCorrectlyAndRetainsArgumentOrder() {
+	void toOrderSpecifierConvertsSortCorrectlyAndRetainsArgumentOrder() {
 
 		Sort sort = Sort.by(Direction.DESC, "firstname").and(Sort.by(Direction.ASC, "age"));
 
@@ -92,7 +92,7 @@ public class KeyValueQuerydslUtilsUnitTests {
 	}
 
 	@Test // DATACMNS-525
-	public void toOrderSpecifierConvertsSortWithNullHandlingCorrectly() {
+	void toOrderSpecifierConvertsSortWithNullHandlingCorrectly() {
 
 		Sort sort = Sort.by(new Sort.Order(Direction.DESC, "firstname", NullHandling.NULLS_LAST));
 

@@ -24,11 +24,11 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
-import org.mockito.junit.MockitoJUnitRunner;
+import org.mockito.junit.jupiter.MockitoExtension;
 
 import org.springframework.data.annotation.Id;
 import org.springframework.data.keyvalue.repository.query.SpelQueryCreator;
@@ -47,20 +47,20 @@ import org.springframework.expression.spel.support.SimpleEvaluationContext;
  * @author Oliver Gierke
  * @author Mark Paluch
  */
-@RunWith(MockitoJUnitRunner.class)
+@ExtendWith(MockitoExtension.class)
 public class SpelQueryEngineUnitTests {
 
-	static final Person BOB_WITH_FIRSTNAME = new Person("bob", 30);
-	static final Person MIKE_WITHOUT_FIRSTNAME = new Person(null, 25);
+	private static final Person BOB_WITH_FIRSTNAME = new Person("bob", 30);
+	private static final Person MIKE_WITHOUT_FIRSTNAME = new Person(null, 25);
 
 	@Mock KeyValueAdapter adapter;
 
-	SpelQueryEngine engine;
+	private SpelQueryEngine engine;
 
-	Iterable<Person> people = Arrays.asList(BOB_WITH_FIRSTNAME, MIKE_WITHOUT_FIRSTNAME);
+	private Iterable<Person> people = Arrays.asList(BOB_WITH_FIRSTNAME, MIKE_WITHOUT_FIRSTNAME);
 
-	@Before
-	public void setUp() {
+	@BeforeEach
+	void setUp() {
 
 		engine = new SpelQueryEngine();
 		engine.registerAdapter(adapter);
@@ -68,7 +68,7 @@ public class SpelQueryEngineUnitTests {
 
 	@Test // DATAKV-114
 	@SuppressWarnings("unchecked")
-	public void queriesEntitiesWithNullProperty() throws Exception {
+	void queriesEntitiesWithNullProperty() throws Exception {
 
 		doReturn(people).when(adapter).getAllOf(anyString());
 
@@ -78,7 +78,7 @@ public class SpelQueryEngineUnitTests {
 	}
 
 	@Test // DATAKV-114
-	public void countsEntitiesWithNullProperty() throws Exception {
+	void countsEntitiesWithNullProperty() throws Exception {
 
 		doReturn(people).when(adapter).getAllOf(anyString());
 
@@ -110,13 +110,13 @@ public class SpelQueryEngineUnitTests {
 		Person findByFirstname(String firstname);
 	}
 
-	static class Person {
+	public static class Person {
 
 		@Id String id;
 		String firstname;
 		int age;
 
-		public Person(String firstname, int age) {
+		Person(String firstname, int age) {
 
 			this.firstname = firstname;
 			this.age = age;
