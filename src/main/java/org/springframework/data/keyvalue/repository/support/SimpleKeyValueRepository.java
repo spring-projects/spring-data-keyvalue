@@ -30,6 +30,8 @@ import org.springframework.data.repository.core.EntityInformation;
 import org.springframework.util.Assert;
 
 /**
+ * Simple {@link KeyValueRepository} implementation.
+ *
  * @author Christoph Strobl
  * @author Oliver Gierke
  * @author Mark Paluch
@@ -58,38 +60,9 @@ public class SimpleKeyValueRepository<T, ID> implements KeyValueRepository<T, ID
 		this.operations = operations;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @see org.springframework.data.repository.PagingAndSortingRepository#findAll(org.springframework.data.domain.Sort)
-	 */
-	@Override
-	public Iterable<T> findAll(Sort sort) {
-
-		Assert.notNull(sort, "Sort must not be null!");
-
-		return operations.findAll(sort, entityInformation.getJavaType());
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * @see org.springframework.data.repository.PagingAndSortingRepository#findAll(org.springframework.data.domain.Pageable)
-	 */
-	@Override
-	public Page<T> findAll(Pageable pageable) {
-
-		Assert.notNull(pageable, "Pageable must not be null!");
-
-		if (pageable.isUnpaged()) {
-			List<T> result = findAll();
-			return new PageImpl<>(result, Pageable.unpaged(), result.size());
-		}
-
-		Iterable<T> content = operations.findInRange(pageable.getOffset(), pageable.getPageSize(), pageable.getSort(),
-				entityInformation.getJavaType());
-
-		return new PageImpl<>(IterableConverter.toList(content), pageable,
-				this.operations.count(entityInformation.getJavaType()));
-	}
+	// -------------------------------------------------------------------------
+	// Methods from CrudRepository
+	// -------------------------------------------------------------------------
 
 	/*
 	 * (non-Javadoc)
@@ -206,16 +179,8 @@ public class SimpleKeyValueRepository<T, ID> implements KeyValueRepository<T, ID
 
 	/*
 	 * (non-Javadoc)
-	 * @see org.springframework.data.repository.CrudRepository#delete(java.lang.Iterable)
+	 * @see org.springframework.data.repository.CrudRepository#deleteAllById(java.lang.Iterable)
 	 */
-	@Override
-	public void deleteAll(Iterable<? extends T> entities) {
-
-		Assert.notNull(entities, "The given Iterable of entities must not be null!");
-
-		entities.forEach(this::delete);
-	}
-
 	@Override
 	public void deleteAllById(Iterable<? extends ID> ids) {
 
@@ -226,10 +191,59 @@ public class SimpleKeyValueRepository<T, ID> implements KeyValueRepository<T, ID
 
 	/*
 	 * (non-Javadoc)
+	 * @see org.springframework.data.repository.CrudRepository#delete(java.lang.Iterable)
+	 */
+	@Override
+	public void deleteAll(Iterable<? extends T> entities) {
+
+		Assert.notNull(entities, "The given Iterable of entities must not be null!");
+
+		entities.forEach(this::delete);
+	}
+
+	/*
+	 * (non-Javadoc)
 	 * @see org.springframework.data.repository.CrudRepository#deleteAll()
 	 */
 	@Override
 	public void deleteAll() {
 		operations.delete(entityInformation.getJavaType());
+	}
+
+	// -------------------------------------------------------------------------
+	// Methods from PagingAndSortingRepository
+	// -------------------------------------------------------------------------
+
+	/*
+	 * (non-Javadoc)
+	 * @see org.springframework.data.repository.PagingAndSortingRepository#findAll(org.springframework.data.domain.Sort)
+	 */
+	@Override
+	public Iterable<T> findAll(Sort sort) {
+
+		Assert.notNull(sort, "Sort must not be null!");
+
+		return operations.findAll(sort, entityInformation.getJavaType());
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * @see org.springframework.data.repository.PagingAndSortingRepository#findAll(org.springframework.data.domain.Pageable)
+	 */
+	@Override
+	public Page<T> findAll(Pageable pageable) {
+
+		Assert.notNull(pageable, "Pageable must not be null!");
+
+		if (pageable.isUnpaged()) {
+			List<T> result = findAll();
+			return new PageImpl<>(result, Pageable.unpaged(), result.size());
+		}
+
+		Iterable<T> content = operations.findInRange(pageable.getOffset(), pageable.getPageSize(), pageable.getSort(),
+				entityInformation.getJavaType());
+
+		return new PageImpl<>(IterableConverter.toList(content), pageable,
+				this.operations.count(entityInformation.getJavaType()));
 	}
 }
