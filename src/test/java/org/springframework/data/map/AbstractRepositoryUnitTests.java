@@ -20,8 +20,8 @@ import static org.assertj.core.api.Assertions.*;
 import java.util.Arrays;
 import java.util.List;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -47,18 +47,18 @@ import org.springframework.data.repository.CrudRepository;
  */
 public abstract class AbstractRepositoryUnitTests<T extends AbstractRepositoryUnitTests.PersonRepository> {
 
-	protected static final Person CERSEI = new Person("cersei", 19);
-	protected static final Person JAIME = new Person("jaime", 19);
-	protected static final Person TYRION = new Person("tyrion", 17);
+	static final Person CERSEI = new Person("cersei", 19);
+	static final Person JAIME = new Person("jaime", 19);
+	static final Person TYRION = new Person("tyrion", 17);
 
-	protected static List<Person> LENNISTERS = Arrays.asList(CERSEI, JAIME, TYRION);
+	static List<Person> LENNISTERS = Arrays.asList(CERSEI, JAIME, TYRION);
 
 	protected final QPerson person = QPerson.person;
 
 	protected T repository;
 
-	@Before
-	public void setup() {
+	@BeforeEach
+	void setup() {
 
 		KeyValueOperations operations = new KeyValueTemplate(new MapKeyValueAdapter());
 		KeyValueRepositoryFactory keyValueRepositoryFactory = createKeyValueRepositoryFactory(operations);
@@ -67,7 +67,7 @@ public abstract class AbstractRepositoryUnitTests<T extends AbstractRepositoryUn
 	}
 
 	@Test // DATACMNS-525
-	public void findBy() {
+	void findBy() {
 
 		repository.saveAll(LENNISTERS);
 
@@ -75,7 +75,7 @@ public abstract class AbstractRepositoryUnitTests<T extends AbstractRepositoryUn
 	}
 
 	@Test // DATAKV-137
-	public void findByFirstname() {
+	void findByFirstname() {
 
 		repository.saveAll(LENNISTERS);
 
@@ -84,7 +84,7 @@ public abstract class AbstractRepositoryUnitTests<T extends AbstractRepositoryUn
 	}
 
 	@Test // DATACMNS-525, DATAKV-137
-	public void combindedFindUsingAnd() {
+	void combindedFindUsingAnd() {
 
 		repository.saveAll(LENNISTERS);
 
@@ -93,7 +93,7 @@ public abstract class AbstractRepositoryUnitTests<T extends AbstractRepositoryUn
 	}
 
 	@Test // DATACMNS-525
-	public void findPage() {
+	void findPage() {
 
 		repository.saveAll(LENNISTERS);
 
@@ -109,7 +109,7 @@ public abstract class AbstractRepositoryUnitTests<T extends AbstractRepositoryUn
 	}
 
 	@Test // DATACMNS-525
-	public void findByConnectingOr() {
+	void findByConnectingOr() {
 
 		repository.saveAll(LENNISTERS);
 
@@ -117,7 +117,7 @@ public abstract class AbstractRepositoryUnitTests<T extends AbstractRepositoryUn
 	}
 
 	@Test // DATACMNS-525, DATAKV-137
-	public void singleEntityExecution() {
+	void singleEntityExecution() {
 
 		repository.saveAll(LENNISTERS);
 
@@ -126,7 +126,7 @@ public abstract class AbstractRepositoryUnitTests<T extends AbstractRepositoryUn
 	}
 
 	@Test // DATACMNS-525
-	public void findAllShouldRespectSort() {
+	void findAllShouldRespectSort() {
 
 		repository.saveAll(LENNISTERS);
 
@@ -136,7 +136,7 @@ public abstract class AbstractRepositoryUnitTests<T extends AbstractRepositoryUn
 	}
 
 	@Test // DATACMNS-525
-	public void derivedFinderShouldRespectSort() {
+	void derivedFinderShouldRespectSort() {
 
 		repository.saveAll(LENNISTERS);
 
@@ -146,7 +146,7 @@ public abstract class AbstractRepositoryUnitTests<T extends AbstractRepositoryUn
 	}
 
 	@Test // DATAKV-121
-	public void projectsResultToInterface() {
+	void projectsResultToInterface() {
 
 		repository.saveAll(LENNISTERS);
 
@@ -157,7 +157,7 @@ public abstract class AbstractRepositoryUnitTests<T extends AbstractRepositoryUn
 	}
 
 	@Test // DATAKV-121
-	public void projectsResultToDynamicInterface() {
+	void projectsResultToDynamicInterface() {
 
 		repository.saveAll(LENNISTERS);
 
@@ -168,7 +168,7 @@ public abstract class AbstractRepositoryUnitTests<T extends AbstractRepositoryUn
 	}
 
 	@Test // DATAKV-169
-	public void findsByValueInCollectionCorrectly() {
+	void findsByValueInCollectionCorrectly() {
 
 		repository.saveAll(LENNISTERS);
 
@@ -179,7 +179,7 @@ public abstract class AbstractRepositoryUnitTests<T extends AbstractRepositoryUn
 	}
 
 	@Test // DATAKV-169
-	public void findsByValueInCollectionCorrectlyWhenTargetPathContainsNullValue() {
+	void findsByValueInCollectionCorrectlyWhenTargetPathContainsNullValue() {
 
 		repository.saveAll(LENNISTERS);
 		repository.save(new Person(null, 10));
@@ -191,7 +191,7 @@ public abstract class AbstractRepositoryUnitTests<T extends AbstractRepositoryUn
 	}
 
 	@Test // DATAKV-169
-	public void findsByValueInCollectionCorrectlyWhenTargetPathAndCollectionContainNullValue() {
+	void findsByValueInCollectionCorrectlyWhenTargetPathAndCollectionContainNullValue() {
 
 		repository.saveAll(LENNISTERS);
 

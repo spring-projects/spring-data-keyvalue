@@ -21,8 +21,8 @@ import static org.assertj.core.api.Assumptions.*;
 import java.util.List;
 import java.util.Optional;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import org.springframework.dao.IncorrectResultSizeDataAccessException;
 import org.springframework.data.domain.Page;
@@ -50,13 +50,13 @@ import com.google.common.collect.Lists;
  */
 public class QuerydslKeyValueRepositoryUnitTests extends AbstractRepositoryUnitTests<QPersonRepository> {
 
-	@Before
-	public void before() {
+	@BeforeEach
+	void before() {
 		assumeThat(Version.javaVersion().toString()).startsWith("1.8");
 	}
 
 	@Test // DATACMNS-525
-	public void findOneIsExecutedCorrectly() {
+	void findOneIsExecutedCorrectly() {
 
 		repository.saveAll(LENNISTERS);
 
@@ -65,7 +65,7 @@ public class QuerydslKeyValueRepositoryUnitTests extends AbstractRepositoryUnitT
 	}
 
 	@Test // DATACMNS-525
-	public void findAllIsExecutedCorrectly() {
+	void findAllIsExecutedCorrectly() {
 
 		repository.saveAll(LENNISTERS);
 
@@ -74,7 +74,7 @@ public class QuerydslKeyValueRepositoryUnitTests extends AbstractRepositoryUnitT
 	}
 
 	@Test // DATACMNS-525
-	public void findWithPaginationWorksCorrectly() {
+	void findWithPaginationWorksCorrectly() {
 
 		repository.saveAll(LENNISTERS);
 		Page<Person> page1 = repository.findAll(QPerson.person.age.eq(CERSEI.getAge()), PageRequest.of(0, 1));
@@ -91,7 +91,7 @@ public class QuerydslKeyValueRepositoryUnitTests extends AbstractRepositoryUnitT
 	}
 
 	@Test // DATACMNS-525
-	public void findAllUsingOrderSpecifierWorksCorrectly() {
+	void findAllUsingOrderSpecifierWorksCorrectly() {
 
 		repository.saveAll(LENNISTERS);
 
@@ -102,7 +102,7 @@ public class QuerydslKeyValueRepositoryUnitTests extends AbstractRepositoryUnitT
 	}
 
 	@Test // DATACMNS-525
-	public void findAllUsingPageableWithSortWorksCorrectly() {
+	void findAllUsingPageableWithSortWorksCorrectly() {
 
 		repository.saveAll(LENNISTERS);
 
@@ -113,7 +113,7 @@ public class QuerydslKeyValueRepositoryUnitTests extends AbstractRepositoryUnitT
 	}
 
 	@Test // DATACMNS-525
-	public void findAllUsingPagableWithQSortWorksCorrectly() {
+	void findAllUsingPagableWithQSortWorksCorrectly() {
 
 		repository.saveAll(LENNISTERS);
 
@@ -124,7 +124,7 @@ public class QuerydslKeyValueRepositoryUnitTests extends AbstractRepositoryUnitT
 	}
 
 	@Test // DATAKV-90
-	public void findAllWithOrderSpecifierWorksCorrectly() {
+	void findAllWithOrderSpecifierWorksCorrectly() {
 
 		repository.saveAll(LENNISTERS);
 
@@ -134,12 +134,12 @@ public class QuerydslKeyValueRepositoryUnitTests extends AbstractRepositoryUnitT
 	}
 
 	@Test // DATAKV-90, DATAKV-197
-	public void findAllShouldRequireSort() {
+	void findAllShouldRequireSort() {
 		assertThatIllegalArgumentException().isThrownBy(() -> repository.findAll((QSort) null));
 	}
 
 	@Test // DATAKV-90, DATAKV-197
-	public void findAllShouldAllowUnsortedFindAll() {
+	void findAllShouldAllowUnsortedFindAll() {
 
 		repository.saveAll(LENNISTERS);
 
@@ -149,7 +149,7 @@ public class QuerydslKeyValueRepositoryUnitTests extends AbstractRepositoryUnitT
 	}
 
 	@Test // DATAKV-95
-	public void executesExistsCorrectly() {
+	void executesExistsCorrectly() {
 
 		repository.saveAll(LENNISTERS);
 
@@ -157,7 +157,7 @@ public class QuerydslKeyValueRepositoryUnitTests extends AbstractRepositoryUnitT
 	}
 
 	@Test // DATAKV-96
-	public void shouldSupportFindAllWithPredicateAndSort() {
+	void shouldSupportFindAllWithPredicateAndSort() {
 
 		repository.saveAll(LENNISTERS);
 
@@ -170,7 +170,7 @@ public class QuerydslKeyValueRepositoryUnitTests extends AbstractRepositoryUnitT
 	}
 
 	@Test // DATAKV-179
-	public void throwsExceptionIfMoreThanOneResultIsFound() {
+	void throwsExceptionIfMoreThanOneResultIsFound() {
 
 		repository.saveAll(LENNISTERS);
 

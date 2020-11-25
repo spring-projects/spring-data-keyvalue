@@ -27,10 +27,10 @@ import java.util.Date;
 
 import org.joda.time.format.DateTimeFormatter;
 import org.joda.time.format.ISODateTimeFormat;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
-import org.mockito.junit.MockitoJUnitRunner;
+import org.mockito.junit.jupiter.MockitoExtension;
 
 import org.springframework.dao.InvalidDataAccessApiUsageException;
 import org.springframework.data.annotation.Id;
@@ -49,226 +49,226 @@ import org.springframework.util.ObjectUtils;
  * @author Christoph Strobl
  * @author Mark Paluch
  */
-@RunWith(MockitoJUnitRunner.class)
+@ExtendWith(MockitoExtension.class)
 public class SpelQueryCreatorUnitTests {
 
-	static final DateTimeFormatter FORMATTER = ISODateTimeFormat.dateTimeNoMillis().withZoneUTC();
+	private static final DateTimeFormatter FORMATTER = ISODateTimeFormat.dateTimeNoMillis().withZoneUTC();
 
-	static final Person RICKON = new Person("rickon", 4);
-	static final Person BRAN = new Person("bran", 9)//
+	private static final Person RICKON = new Person("rickon", 4);
+	private static final Person BRAN = new Person("bran", 9)//
 			.skinChanger(true)//
 			.bornAt(FORMATTER.parseDateTime("2013-01-31T06:00:00Z").toDate());
-	static final Person ARYA = new Person("arya", 13);
-	static final Person ROBB = new Person("robb", 16)//
+	private static final Person ARYA = new Person("arya", 13);
+	private static final Person ROBB = new Person("robb", 16)//
 			.named("stark")//
 			.bornAt(FORMATTER.parseDateTime("2010-09-20T06:00:00Z").toDate());
-	static final Person JON = new Person("jon", 17).named("snow");
+	private static final Person JON = new Person("jon", 17).named("snow");
 
 	@Mock RepositoryMetadata metadataMock;
 
 	@Test // DATACMNS-525
-	public void equalsReturnsTrueWhenMatching() {
+	void equalsReturnsTrueWhenMatching() {
 		assertThat(evaluate("findByFirstname", BRAN.firstname).against(BRAN)).isTrue();
 	}
 
 	@Test // DATACMNS-525
-	public void equalsReturnsFalseWhenNotMatching() {
+	void equalsReturnsFalseWhenNotMatching() {
 		assertThat(evaluate("findByFirstname", BRAN.firstname).against(RICKON)).isFalse();
 	}
 
 	@Test // DATACMNS-525
-	public void isTrueAssertedProperlyWhenTrue() {
+	void isTrueAssertedProperlyWhenTrue() {
 		assertThat(evaluate("findBySkinChangerIsTrue").against(BRAN)).isTrue();
 	}
 
 	@Test // DATACMNS-525
-	public void isTrueAssertedProperlyWhenFalse() {
+	void isTrueAssertedProperlyWhenFalse() {
 		assertThat(evaluate("findBySkinChangerIsTrue").against(RICKON)).isFalse();
 	}
 
 	@Test // DATACMNS-525
-	public void isFalseAssertedProperlyWhenTrue() {
+	void isFalseAssertedProperlyWhenTrue() {
 		assertThat(evaluate("findBySkinChangerIsFalse").against(BRAN)).isFalse();
 	}
 
 	@Test // DATACMNS-525
-	public void isFalseAssertedProperlyWhenFalse() {
+	void isFalseAssertedProperlyWhenFalse() {
 		assertThat(evaluate("findBySkinChangerIsFalse").against(RICKON)).isTrue();
 	}
 
 	@Test // DATACMNS-525
-	public void isNullAssertedProperlyWhenAttributeIsNull() {
+	void isNullAssertedProperlyWhenAttributeIsNull() {
 		assertThat(evaluate("findByLastnameIsNull").against(BRAN)).isTrue();
 	}
 
 	@Test // DATACMNS-525
-	public void isNullAssertedProperlyWhenAttributeIsNotNull() {
+	void isNullAssertedProperlyWhenAttributeIsNotNull() {
 		assertThat(evaluate("findByLastnameIsNull").against(ROBB)).isFalse();
 	}
 
 	@Test // DATACMNS-525
-	public void isNotNullFalseTrueWhenAttributeIsNull() {
+	void isNotNullFalseTrueWhenAttributeIsNull() {
 		assertThat(evaluate("findByLastnameIsNotNull").against(BRAN)).isFalse();
 	}
 
 	@Test // DATACMNS-525
-	public void isNotNullReturnsTrueAttributeIsNotNull() {
+	void isNotNullReturnsTrueAttributeIsNotNull() {
 		assertThat(evaluate("findByLastnameIsNotNull").against(ROBB)).isTrue();
 	}
 
 	@Test // DATACMNS-525
-	public void startsWithReturnsTrueWhenMatching() {
+	void startsWithReturnsTrueWhenMatching() {
 		assertThat(evaluate("findByFirstnameStartingWith", "r").against(ROBB)).isTrue();
 	}
 
 	@Test // DATACMNS-525
-	public void startsWithReturnsFalseWhenNotMatching() {
+	void startsWithReturnsFalseWhenNotMatching() {
 		assertThat(evaluate("findByFirstnameStartingWith", "r").against(BRAN)).isFalse();
 	}
 
 	@Test // DATACMNS-525
-	public void likeReturnsTrueWhenMatching() {
+	void likeReturnsTrueWhenMatching() {
 		assertThat(evaluate("findByFirstnameLike", "ob").against(ROBB)).isTrue();
 	}
 
 	@Test // DATACMNS-525
-	public void likeReturnsFalseWhenNotMatching() {
+	void likeReturnsFalseWhenNotMatching() {
 		assertThat(evaluate("findByFirstnameLike", "ra").against(ROBB)).isFalse();
 	}
 
 	@Test // DATACMNS-525
-	public void endsWithReturnsTrueWhenMatching() {
+	void endsWithReturnsTrueWhenMatching() {
 		assertThat(evaluate("findByFirstnameEndingWith", "bb").against(ROBB)).isTrue();
 	}
 
 	@Test // DATACMNS-525
-	public void endsWithReturnsFalseWhenNotMatching() {
+	void endsWithReturnsFalseWhenNotMatching() {
 		assertThat(evaluate("findByFirstnameEndingWith", "an").against(ROBB)).isFalse();
 	}
 
 	@Test // DATACMNS-525
-	public void startsWithIgnoreCaseReturnsTrueWhenMatching() {
+	void startsWithIgnoreCaseReturnsTrueWhenMatching() {
 		assertThatExceptionOfType(InvalidDataAccessApiUsageException.class)
 				.isThrownBy(() -> evaluate("findByFirstnameIgnoreCase", "R").against(ROBB));
 	}
 
 	@Test // DATACMNS-525
-	public void greaterThanReturnsTrueForHigherValues() {
+	void greaterThanReturnsTrueForHigherValues() {
 		assertThat(evaluate("findByAgeGreaterThan", BRAN.age).against(ROBB)).isTrue();
 	}
 
 	@Test // DATACMNS-525
-	public void greaterThanReturnsFalseForLowerValues() {
+	void greaterThanReturnsFalseForLowerValues() {
 		assertThat(evaluate("findByAgeGreaterThan", BRAN.age).against(RICKON)).isFalse();
 	}
 
 	@Test // DATACMNS-525
-	public void afterReturnsTrueForHigherValues() {
+	void afterReturnsTrueForHigherValues() {
 		assertThat(evaluate("findByBirthdayAfter", ROBB.birthday).against(BRAN)).isTrue();
 	}
 
 	@Test // DATACMNS-525
-	public void afterReturnsFalseForLowerValues() {
+	void afterReturnsFalseForLowerValues() {
 		assertThat(evaluate("findByBirthdayAfter", BRAN.birthday).against(ROBB)).isFalse();
 	}
 
 	@Test // DATACMNS-525
-	public void greaterThanEaualsReturnsTrueForHigherValues() {
+	void greaterThanEaualsReturnsTrueForHigherValues() {
 		assertThat(evaluate("findByAgeGreaterThanEqual", BRAN.age).against(ROBB)).isTrue();
 	}
 
 	@Test // DATACMNS-525
-	public void greaterThanEqualsReturnsTrueForEqualValues() {
+	void greaterThanEqualsReturnsTrueForEqualValues() {
 		assertThat(evaluate("findByAgeGreaterThanEqual", BRAN.age).against(BRAN)).isTrue();
 	}
 
 	@Test // DATACMNS-525
-	public void greaterThanEqualsReturnsFalseForLowerValues() {
+	void greaterThanEqualsReturnsFalseForLowerValues() {
 		assertThat(evaluate("findByAgeGreaterThanEqual", BRAN.age).against(RICKON)).isFalse();
 	}
 
 	@Test // DATACMNS-525
-	public void lessThanReturnsTrueForHigherValues() {
+	void lessThanReturnsTrueForHigherValues() {
 		assertThat(evaluate("findByAgeLessThan", BRAN.age).against(ROBB)).isFalse();
 	}
 
 	@Test // DATACMNS-525
-	public void lessThanReturnsFalseForLowerValues() {
+	void lessThanReturnsFalseForLowerValues() {
 		assertThat(evaluate("findByAgeLessThan", BRAN.age).against(RICKON)).isTrue();
 	}
 
 	@Test // DATACMNS-525
-	public void beforeReturnsTrueForLowerValues() {
+	void beforeReturnsTrueForLowerValues() {
 		assertThat(evaluate("findByBirthdayBefore", BRAN.birthday).against(ROBB)).isTrue();
 	}
 
 	@Test // DATACMNS-525
-	public void beforeReturnsFalseForHigherValues() {
+	void beforeReturnsFalseForHigherValues() {
 		assertThat(evaluate("findByBirthdayBefore", ROBB.birthday).against(BRAN)).isFalse();
 	}
 
 	@Test // DATACMNS-525
-	public void lessThanEaualsReturnsTrueForHigherValues() {
+	void lessThanEaualsReturnsTrueForHigherValues() {
 		assertThat(evaluate("findByAgeLessThanEqual", BRAN.age).against(ROBB)).isFalse();
 	}
 
 	@Test // DATACMNS-525
-	public void lessThanEaualsReturnsTrueForEqualValues() {
+	void lessThanEaualsReturnsTrueForEqualValues() {
 		assertThat(evaluate("findByAgeLessThanEqual", BRAN.age).against(BRAN)).isTrue();
 	}
 
 	@Test // DATACMNS-525
-	public void lessThanEqualsReturnsFalseForLowerValues() {
+	void lessThanEqualsReturnsFalseForLowerValues() {
 		assertThat(evaluate("findByAgeLessThanEqual", BRAN.age).against(RICKON)).isTrue();
 	}
 
 	@Test // DATACMNS-525
-	public void betweenEqualsReturnsTrueForValuesInBetween() {
+	void betweenEqualsReturnsTrueForValuesInBetween() {
 		assertThat(evaluate("findByAgeBetween", BRAN.age, ROBB.age).against(ARYA)).isTrue();
 	}
 
 	@Test // DATACMNS-525
-	public void betweenEqualsReturnsFalseForHigherValues() {
+	void betweenEqualsReturnsFalseForHigherValues() {
 		assertThat(evaluate("findByAgeBetween", BRAN.age, ROBB.age).against(JON)).isFalse();
 	}
 
 	@Test // DATACMNS-525
-	public void betweenEqualsReturnsFalseForLowerValues() {
+	void betweenEqualsReturnsFalseForLowerValues() {
 		assertThat(evaluate("findByAgeBetween", BRAN.age, ROBB.age).against(RICKON)).isFalse();
 	}
 
 	@Test // DATACMNS-525
-	public void connectByAndReturnsTrueWhenAllPropertiesMatching() {
+	void connectByAndReturnsTrueWhenAllPropertiesMatching() {
 		assertThat(evaluate("findByAgeGreaterThanAndLastname", BRAN.age, JON.lastname).against(JON)).isTrue();
 	}
 
 	@Test // DATACMNS-525
-	public void connectByAndReturnsFalseWhenOnlyFewPropertiesMatch() {
+	void connectByAndReturnsFalseWhenOnlyFewPropertiesMatch() {
 		assertThat(evaluate("findByAgeGreaterThanAndLastname", BRAN.age, JON.lastname).against(ROBB)).isFalse();
 	}
 
 	@Test // DATACMNS-525
-	public void connectByOrReturnsTrueWhenOnlyFewPropertiesMatch() {
+	void connectByOrReturnsTrueWhenOnlyFewPropertiesMatch() {
 		assertThat(evaluate("findByAgeGreaterThanOrLastname", BRAN.age, JON.lastname).against(ROBB)).isTrue();
 	}
 
 	@Test // DATACMNS-525
-	public void connectByOrReturnsTrueWhenAllPropertiesMatch() {
+	void connectByOrReturnsTrueWhenAllPropertiesMatch() {
 		assertThat(evaluate("findByAgeGreaterThanOrLastname", BRAN.age, JON.lastname).against(JON)).isTrue();
 	}
 
 	@Test // DATACMNS-525
-	public void regexReturnsTrueWhenMatching() {
+	void regexReturnsTrueWhenMatching() {
 		assertThat(evaluate("findByLastnameMatches", "^s.*w$").against(JON)).isTrue();
 	}
 
 	@Test // DATACMNS-525
-	public void regexReturnsFalseWhenNotMatching() {
+	void regexReturnsFalseWhenNotMatching() {
 		assertThat(evaluate("findByLastnameMatches", "^s.*w$").against(ROBB)).isFalse();
 	}
 
 	@Test // DATAKV-169
-	public void inReturnsMatchCorrectly() {
+	void inReturnsMatchCorrectly() {
 
 		ArrayList<String> list = new ArrayList<>();
 		list.add(ROBB.firstname);
@@ -277,7 +277,7 @@ public class SpelQueryCreatorUnitTests {
 	}
 
 	@Test // DATAKV-169
-	public void inNotMatchingReturnsCorrectly() {
+	void inNotMatchingReturnsCorrectly() {
 
 		ArrayList<String> list = new ArrayList<>();
 		list.add(ROBB.firstname);
@@ -286,7 +286,7 @@ public class SpelQueryCreatorUnitTests {
 	}
 
 	@Test // DATAKV-169
-	public void inWithNullCompareValuesCorrectly() {
+	void inWithNullCompareValuesCorrectly() {
 
 		ArrayList<String> list = new ArrayList<>();
 		list.add(null);
@@ -295,7 +295,7 @@ public class SpelQueryCreatorUnitTests {
 	}
 
 	@Test // DATAKV-169
-	public void inWithNullSourceValuesMatchesCorrectly() {
+	void inWithNullSourceValuesMatchesCorrectly() {
 
 		ArrayList<String> list = new ArrayList<>();
 		list.add(ROBB.firstname);
@@ -304,7 +304,7 @@ public class SpelQueryCreatorUnitTests {
 	}
 
 	@Test // DATAKV-169
-	public void inMatchesNullValuesCorrectly() {
+	void inMatchesNullValuesCorrectly() {
 
 		ArrayList<String> list = new ArrayList<>();
 		list.add(null);
@@ -313,7 +313,7 @@ public class SpelQueryCreatorUnitTests {
 	}
 
 	@Test // DATAKV-185
-	public void noDerivedQueryArgumentsMatchesAlways() {
+	void noDerivedQueryArgumentsMatchesAlways() {
 
 		assertThat(evaluate("findBy").against(JON)).isTrue();
 		assertThat(evaluate("findBy").against(null)).isTrue();
@@ -420,11 +420,11 @@ public class SpelQueryCreatorUnitTests {
 		SpelExpression expression;
 		Object candidate;
 
-		public Evaluation(SpelExpression expression) {
+		Evaluation(SpelExpression expression) {
 			this.expression = expression;
 		}
 
-		public Boolean against(Object candidate) {
+		Boolean against(Object candidate) {
 			this.candidate = candidate;
 			return evaluate();
 		}
@@ -436,7 +436,7 @@ public class SpelQueryCreatorUnitTests {
 	}
 
 	@Data
-	static class Person {
+	public static class Person {
 
 		private @Id String id;
 		private String firstname, lastname;
@@ -446,23 +446,23 @@ public class SpelQueryCreatorUnitTests {
 
 		public Person() {}
 
-		public Person(String firstname, int age) {
+		Person(String firstname, int age) {
 			super();
 			this.firstname = firstname;
 			this.age = age;
 		}
 
-		public Person skinChanger(boolean isSkinChanger) {
+		Person skinChanger(boolean isSkinChanger) {
 			this.isSkinChanger = isSkinChanger;
 			return this;
 		}
 
-		public Person named(String lastname) {
+		Person named(String lastname) {
 			this.lastname = lastname;
 			return this;
 		}
 
-		public Person bornAt(Date date) {
+		Person bornAt(Date date) {
 			this.birthday = date;
 			return this;
 		}

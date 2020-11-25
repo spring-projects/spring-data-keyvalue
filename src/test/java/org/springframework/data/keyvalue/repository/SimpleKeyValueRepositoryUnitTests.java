@@ -25,11 +25,11 @@ import lombok.NoArgsConstructor;
 import java.util.Arrays;
 import java.util.Optional;
 
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
-import org.mockito.junit.MockitoJUnitRunner;
+import org.mockito.junit.jupiter.MockitoExtension;
 
 import org.springframework.data.annotation.Id;
 import org.springframework.data.annotation.Persistent;
@@ -48,15 +48,15 @@ import org.springframework.data.repository.core.support.PersistentEntityInformat
  * @author Eugene Nikiforov
  * @author Jens Schauder
  */
-@RunWith(MockitoJUnitRunner.class)
-public class SimpleKeyValueRepositoryUnitTests {
+@ExtendWith(MockitoExtension.class)
+class SimpleKeyValueRepositoryUnitTests {
 
 	private SimpleKeyValueRepository<Foo, String> repo;
 	private @Mock KeyValueOperations opsMock;
-	KeyValueMappingContext<?, ?> context;
+	private KeyValueMappingContext<?, ?> context;
 
-	@Before
-	public void setUp() {
+	@BeforeEach
+	void setUp() {
 
 		this.context = new KeyValueMappingContext<>();
 
@@ -65,7 +65,7 @@ public class SimpleKeyValueRepositoryUnitTests {
 	}
 
 	@Test // DATACMNS-525
-	public void saveNewWithNumericId() {
+	void saveNewWithNumericId() {
 
 		EntityInformation<WithNumericId, ?> ei = getEntityInformationFor(WithNumericId.class);
 		SimpleKeyValueRepository<WithNumericId, ?> temp = new SimpleKeyValueRepository<>(ei, opsMock);
@@ -77,7 +77,7 @@ public class SimpleKeyValueRepositoryUnitTests {
 	}
 
 	@Test // DATACMNS-525
-	public void testDoubleSave() {
+	void testDoubleSave() {
 
 		Foo foo = new Foo("one");
 
@@ -90,7 +90,7 @@ public class SimpleKeyValueRepositoryUnitTests {
 	}
 
 	@Test // DATACMNS-525
-	public void multipleSave() {
+	void multipleSave() {
 
 		Foo one = new Foo("one");
 		Foo two = new Foo("two");
@@ -101,7 +101,7 @@ public class SimpleKeyValueRepositoryUnitTests {
 	}
 
 	@Test // DATACMNS-525
-	public void deleteEntity() {
+	void deleteEntity() {
 
 		Foo one = new Foo("one");
 		one.id = "1";
@@ -112,7 +112,7 @@ public class SimpleKeyValueRepositoryUnitTests {
 	}
 
 	@Test // DATACMNS-525
-	public void deleteById() {
+	void deleteById() {
 
 		repo.deleteById("one");
 
@@ -120,7 +120,7 @@ public class SimpleKeyValueRepositoryUnitTests {
 	}
 
 	@Test // DATAKV-330
-	public void deleteAllById() {
+	void deleteAllById() {
 
 		repo.deleteAllById(Arrays.asList("one", "two"));
 
@@ -129,7 +129,7 @@ public class SimpleKeyValueRepositoryUnitTests {
 	}
 
 	@Test // DATACMNS-525
-	public void deleteAll() {
+	void deleteAll() {
 
 		repo.deleteAll();
 
@@ -138,7 +138,7 @@ public class SimpleKeyValueRepositoryUnitTests {
 
 	@Test // DATACMNS-525
 	@SuppressWarnings("unchecked")
-	public void findAllIds() {
+	void findAllIds() {
 
 		when(opsMock.findById(any(), any(Class.class))).thenReturn(Optional.empty());
 		repo.findAllById(Arrays.asList("one", "two", "three"));
@@ -148,7 +148,7 @@ public class SimpleKeyValueRepositoryUnitTests {
 
 	@Test // DATAKV-186
 	@SuppressWarnings("unchecked")
-	public void existsByIdReturnsFalseForEmptyOptional() {
+	void existsByIdReturnsFalseForEmptyOptional() {
 
 		when(opsMock.findById(any(), any(Class.class))).thenReturn(Optional.empty());
 		assertThat(repo.existsById("one")).isFalse();
@@ -156,14 +156,14 @@ public class SimpleKeyValueRepositoryUnitTests {
 
 	@Test // DATAKV-186
 	@SuppressWarnings("unchecked")
-	public void existsByIdReturnsTrueWhenOptionalValuePresent() {
+	void existsByIdReturnsTrueWhenOptionalValuePresent() {
 
 		when(opsMock.findById(any(), any(Class.class))).thenReturn(Optional.of(new Foo()));
 		assertThat(repo.existsById("one")).isTrue();
 	}
 
 	@Test // DATACMNS-525
-	public void findAllWithPageableShouldDelegateToOperationsCorrectlyWhenPageableDoesNotContainSort() {
+	void findAllWithPageableShouldDelegateToOperationsCorrectlyWhenPageableDoesNotContainSort() {
 
 		repo.findAll(PageRequest.of(10, 15));
 
@@ -171,7 +171,7 @@ public class SimpleKeyValueRepositoryUnitTests {
 	}
 
 	@Test // DATACMNS-525
-	public void findAllWithPageableShouldDelegateToOperationsCorrectlyWhenPageableContainsSort() {
+	void findAllWithPageableShouldDelegateToOperationsCorrectlyWhenPageableContainsSort() {
 
 		Sort sort = Sort.by("for", "bar");
 		repo.findAll(PageRequest.of(10, 15, sort));
@@ -180,7 +180,7 @@ public class SimpleKeyValueRepositoryUnitTests {
 	}
 
 	@Test // DATACMNS-525
-	public void findAllShouldFallbackToFindAllOfWhenGivenNullPageable() {
+	void findAllShouldFallbackToFindAllOfWhenGivenNullPageable() {
 
 		repo.findAll(Pageable.unpaged());
 
@@ -205,13 +205,13 @@ public class SimpleKeyValueRepositoryUnitTests {
 		private String name;
 		private Bar bar;
 
-		public Foo(String name) {
+		Foo(String name) {
 			this.name = name;
 		}
 	}
 
 	@Data
-	static class Bar {
+	private static class Bar {
 
 		private String bar;
 	}

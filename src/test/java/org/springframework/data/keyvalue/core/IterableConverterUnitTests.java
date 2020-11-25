@@ -25,21 +25,21 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /**
  * @author Christoph Strobl
  * @author Mark Paluch
  */
-public class IterableConverterUnitTests {
+class IterableConverterUnitTests {
 
 	@Test // DATAKV-101
-	public void toListShouldReturnEmptyListWhenSourceEmpty() {
+	void toListShouldReturnEmptyListWhenSourceEmpty() {
 		assertThat(toList(Collections.emptySet())).isEmpty();
 	}
 
 	@Test // DATAKV-101
-	public void toListShouldReturnSameObjectWhenSourceIsAlreadyListType() {
+	void toListShouldReturnSameObjectWhenSourceIsAlreadyListType() {
 
 		List<String> source = new ArrayList<>();
 
@@ -47,7 +47,7 @@ public class IterableConverterUnitTests {
 	}
 
 	@Test // DATAKV-101
-	public void toListShouldReturnListWhenSourceIsNonListType() {
+	void toListShouldReturnListWhenSourceIsNonListType() {
 
 		Set<String> source = new HashSet<>();
 		source.add("tyrion");
@@ -56,7 +56,7 @@ public class IterableConverterUnitTests {
 	}
 
 	@Test // DATAKV-101
-	public void toListShouldHoldValuesInOrderOfSource() {
+	void toListShouldHoldValuesInOrderOfSource() {
 
 		Set<String> source = new LinkedHashSet<>();
 		source.add("tyrion");

@@ -22,11 +22,11 @@ import static org.mockito.Mockito.*;
 import java.lang.reflect.Method;
 import java.util.List;
 
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
-import org.mockito.junit.MockitoJUnitRunner;
+import org.mockito.junit.jupiter.MockitoExtension;
 
 import org.springframework.data.keyvalue.Person;
 import org.springframework.data.keyvalue.core.KeyValueOperations;
@@ -42,16 +42,16 @@ import org.springframework.data.util.ClassTypeInformation;
  *
  * @author Mark Paluch
  */
-@RunWith(MockitoJUnitRunner.class)
-public class CachingKeyValuePartTreeQueryUnitTests {
+@ExtendWith(MockitoExtension.class)
+class CachingKeyValuePartTreeQueryUnitTests {
 
 	@Mock KeyValueOperations kvOpsMock;
 	@Mock RepositoryMetadata metadataMock;
 	@Mock ProjectionFactory projectionFactoryMock;
 
-	@Before
+	@BeforeEach
 	@SuppressWarnings({ "unchecked", "rawtypes" })
-	public void setUp() throws Exception {
+	void setUp() throws Exception {
 
 		when(metadataMock.getDomainType()).thenReturn((Class) Person.class);
 		when(metadataMock.getReturnedDomainClass(any(Method.class))).thenReturn((Class) Person.class);
@@ -59,7 +59,7 @@ public class CachingKeyValuePartTreeQueryUnitTests {
 	}
 
 	@Test // DATAKV-137
-	public void cachedSpelExpressionShouldBeReusedWithNewContext() throws NoSuchMethodException, SecurityException {
+	void cachedSpelExpressionShouldBeReusedWithNewContext() throws NoSuchMethodException, SecurityException {
 
 		QueryMethod qm = new QueryMethod(Repo.class.getMethod("findByFirstname", String.class), metadataMock,
 				projectionFactoryMock);

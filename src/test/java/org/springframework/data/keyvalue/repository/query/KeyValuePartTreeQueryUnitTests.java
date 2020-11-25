@@ -22,10 +22,10 @@ import static org.mockito.Mockito.*;
 import java.lang.reflect.Method;
 import java.util.List;
 
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
-import org.mockito.junit.MockitoJUnitRunner;
+import org.mockito.junit.jupiter.MockitoExtension;
 
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -44,8 +44,8 @@ import org.springframework.data.util.TypeInformation;
  * @author Christoph Strobl
  * @author Mark Paluch
  */
-@RunWith(MockitoJUnitRunner.class)
-public class KeyValuePartTreeQueryUnitTests {
+@ExtendWith(MockitoExtension.class)
+class KeyValuePartTreeQueryUnitTests {
 
 	@Mock KeyValueOperations kvOpsMock;
 	@Mock RepositoryMetadata metadataMock;
@@ -53,7 +53,7 @@ public class KeyValuePartTreeQueryUnitTests {
 
 	@Test // DATAKV-115
 	@SuppressWarnings({ "unchecked", "rawtypes" })
-	public void spelExpressionAndContextShouldNotBeReused() throws NoSuchMethodException, SecurityException {
+	void spelExpressionAndContextShouldNotBeReused() throws NoSuchMethodException, SecurityException {
 
 		when(metadataMock.getDomainType()).thenReturn((Class) Person.class);
 		when(metadataMock.getReturnType(any(Method.class)))
@@ -76,7 +76,7 @@ public class KeyValuePartTreeQueryUnitTests {
 
 	@Test // DATAKV-142
 	@SuppressWarnings({ "unchecked", "rawtypes" })
-	public void shouldApplyPageableParameterToCollectionQuery() throws SecurityException, NoSuchMethodException {
+	void shouldApplyPageableParameterToCollectionQuery() throws SecurityException, NoSuchMethodException {
 
 		when(metadataMock.getDomainType()).thenReturn((Class) Person.class);
 		when(metadataMock.getReturnType(any(Method.class)))
@@ -97,7 +97,7 @@ public class KeyValuePartTreeQueryUnitTests {
 
 	@Test // DATAKV-142
 	@SuppressWarnings({ "unchecked", "rawtypes" })
-	public void shouldApplyDerivedMaxResultsToQuery() throws SecurityException, NoSuchMethodException {
+	void shouldApplyDerivedMaxResultsToQuery() throws SecurityException, NoSuchMethodException {
 
 		when(metadataMock.getDomainType()).thenReturn((Class) Person.class);
 		when(metadataMock.getReturnType(any(Method.class)))
@@ -116,7 +116,7 @@ public class KeyValuePartTreeQueryUnitTests {
 
 	@Test // DATAKV-142
 	@SuppressWarnings({ "unchecked", "rawtypes" })
-	public void shouldApplyDerivedMaxResultsToQueryWithParameters() throws SecurityException, NoSuchMethodException {
+	void shouldApplyDerivedMaxResultsToQueryWithParameters() throws SecurityException, NoSuchMethodException {
 
 		when(metadataMock.getDomainType()).thenReturn((Class) Person.class);
 		when(metadataMock.getReturnType(any(Method.class)))

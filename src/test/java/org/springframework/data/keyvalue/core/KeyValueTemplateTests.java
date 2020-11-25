@@ -26,11 +26,10 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 import java.util.List;
-import java.util.Optional;
 
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import org.springframework.core.annotation.AliasFor;
 import org.springframework.dao.DuplicateKeyException;
@@ -45,45 +44,45 @@ import org.springframework.data.map.MapKeyValueAdapter;
  * @author Oliver Gierke
  * @author Mark Paluch
  */
-public class KeyValueTemplateTests {
+class KeyValueTemplateTests {
 
-	static final Foo FOO_ONE = new Foo("one");
-	static final Foo FOO_TWO = new Foo("two");
-	static final Foo FOO_THREE = new Foo("three");
-	static final Bar BAR_ONE = new Bar("one");
-	static final ClassWithTypeAlias ALIASED = new ClassWithTypeAlias("super");
-	static final SubclassOfAliasedType SUBCLASS_OF_ALIASED = new SubclassOfAliasedType("sub");
-	static final KeyValueQuery<String> STRING_QUERY = new KeyValueQuery<>("foo == 'two'");
+	private static final Foo FOO_ONE = new Foo("one");
+	private static final Foo FOO_TWO = new Foo("two");
+	private static final Foo FOO_THREE = new Foo("three");
+	private static final Bar BAR_ONE = new Bar("one");
+	private static final ClassWithTypeAlias ALIASED = new ClassWithTypeAlias("super");
+	private static final SubclassOfAliasedType SUBCLASS_OF_ALIASED = new SubclassOfAliasedType("sub");
+	private static final KeyValueQuery<String> STRING_QUERY = new KeyValueQuery<>("foo == 'two'");
 
-	KeyValueTemplate operations;
+	private KeyValueTemplate operations;
 
-	@Before
-	public void setUp() throws InstantiationException, IllegalAccessException {
+	@BeforeEach
+	void setUp() {
 		this.operations = new KeyValueTemplate(new MapKeyValueAdapter());
 	}
 
-	@After
-	public void tearDown() throws Exception {
+	@AfterEach
+	void tearDown() throws Exception {
 		this.operations.destroy();
 	}
 
 	@Test // DATACMNS-525
-	public void insertShouldNotThorwErrorWhenExecutedHavingNonExistingIdAndNonNullValue() {
+	void insertShouldNotThorwErrorWhenExecutedHavingNonExistingIdAndNonNullValue() {
 		operations.insert("1", FOO_ONE);
 	}
 
 	@Test // DATACMNS-525
-	public void insertShouldThrowExceptionForNullId() {
+	void insertShouldThrowExceptionForNullId() {
 		assertThatIllegalArgumentException().isThrownBy(() -> operations.insert(null, FOO_ONE));
 	}
 
 	@Test // DATACMNS-525
-	public void insertShouldThrowExceptionForNullObject() {
+	void insertShouldThrowExceptionForNullObject() {
 		assertThatIllegalArgumentException().isThrownBy(() -> operations.insert("some-id", null));
 	}
 
 	@Test // DATACMNS-525
-	public void insertShouldThrowExecptionWhenObjectOfSameTypeAlreadyExists() {
+	void insertShouldThrowExecptionWhenObjectOfSameTypeAlreadyExists() {
 
 		operations.insert("1", FOO_ONE);
 
@@ -91,14 +90,14 @@ public class KeyValueTemplateTests {
 	}
 
 	@Test // DATACMNS-525
-	public void insertShouldWorkCorrectlyWhenObjectsOfDifferentTypesWithSameIdAreInserted() {
+	void insertShouldWorkCorrectlyWhenObjectsOfDifferentTypesWithSameIdAreInserted() {
 
 		operations.insert("1", FOO_ONE);
 		operations.insert("1", BAR_ONE);
 	}
 
 	@Test // DATACMNS-525
-	public void createShouldReturnSameInstanceGenerateId() {
+	void createShouldReturnSameInstanceGenerateId() {
 
 		ClassWithStringId source = new ClassWithStringId();
 		ClassWithStringId target = operations.insert(source);
@@ -107,39 +106,39 @@ public class KeyValueTemplateTests {
 	}
 
 	@Test // DATACMNS-525
-	public void createShouldRespectExistingId() {
+	void createShouldRespectExistingId() {
 
 		ClassWithStringId source = new ClassWithStringId();
 		source.id = "one";
 
 		operations.insert(source);
 
-		assertThat(operations.findById("one", ClassWithStringId.class)).isEqualTo(Optional.of(source));
+		assertThat(operations.findById("one", ClassWithStringId.class)).contains(source);
 	}
 
 	@Test // DATACMNS-525
-	public void findByIdShouldReturnObjectWithMatchingIdAndType() {
+	void findByIdShouldReturnObjectWithMatchingIdAndType() {
 
 		operations.insert("1", FOO_ONE);
-		assertThat(operations.findById("1", Foo.class)).isEqualTo(Optional.of(FOO_ONE));
+		assertThat(operations.findById("1", Foo.class)).contains(FOO_ONE);
 	}
 
 	@Test // DATACMNS-525
-	public void findByIdSouldReturnOptionalEmptyIfNoMatchingIdFound() {
+	void findByIdSouldReturnOptionalEmptyIfNoMatchingIdFound() {
 
 		operations.insert("1", FOO_ONE);
 		assertThat(operations.findById("2", Foo.class)).isEmpty();
 	}
 
 	@Test // DATACMNS-525
-	public void findByIdShouldReturnOptionalEmptyIfNoMatchingTypeFound() {
+	void findByIdShouldReturnOptionalEmptyIfNoMatchingTypeFound() {
 
 		operations.insert("1", FOO_ONE);
 		assertThat(operations.findById("1", Bar.class)).isEmpty();
 	}
 
 	@Test // DATACMNS-525
-	public void findShouldExecuteQueryCorrectly() {
+	void findShouldExecuteQueryCorrectly() {
 
 		operations.insert("1", FOO_ONE);
 		operations.insert("2", FOO_TWO);
@@ -150,7 +149,7 @@ public class KeyValueTemplateTests {
 	}
 
 	@Test // DATACMNS-525
-	public void readShouldReturnEmptyCollectionIfOffsetOutOfRange() {
+	void readShouldReturnEmptyCollectionIfOffsetOutOfRange() {
 
 		operations.insert("1", FOO_ONE);
 		operations.insert("2", FOO_TWO);
@@ -160,24 +159,24 @@ public class KeyValueTemplateTests {
 	}
 
 	@Test // DATACMNS-525
-	public void updateShouldReplaceExistingObject() {
+	void updateShouldReplaceExistingObject() {
 
 		operations.insert("1", FOO_ONE);
 		operations.update("1", FOO_TWO);
-		assertThat(operations.findById("1", Foo.class)).isEqualTo(Optional.of(FOO_TWO));
+		assertThat(operations.findById("1", Foo.class)).contains(FOO_TWO);
 	}
 
 	@Test // DATACMNS-525
-	public void updateShouldRespectTypeInformation() {
+	void updateShouldRespectTypeInformation() {
 
 		operations.insert("1", FOO_ONE);
 		operations.update("1", BAR_ONE);
 
-		assertThat(operations.findById("1", Foo.class)).isEqualTo(Optional.of(FOO_ONE));
+		assertThat(operations.findById("1", Foo.class)).contains(FOO_ONE);
 	}
 
 	@Test // DATACMNS-525
-	public void deleteShouldRemoveObjectCorrectly() {
+	void deleteShouldRemoveObjectCorrectly() {
 
 		operations.insert("1", FOO_ONE);
 		operations.delete("1", Foo.class);
@@ -185,31 +184,31 @@ public class KeyValueTemplateTests {
 	}
 
 	@Test // DATACMNS-525
-	public void deleteReturnsNullWhenNotExisting() {
+	void deleteReturnsNullWhenNotExisting() {
 
 		operations.insert("1", FOO_ONE);
 		assertThat(operations.delete("2", Foo.class)).isNull();
 	}
 
 	@Test // DATACMNS-525
-	public void deleteReturnsRemovedObject() {
+	void deleteReturnsRemovedObject() {
 
 		operations.insert("1", FOO_ONE);
 		assertThat(operations.delete("1", Foo.class)).isEqualTo(FOO_ONE);
 	}
 
 	@Test // DATACMNS-525
-	public void deleteThrowsExceptionWhenIdCannotBeExctracted() {
+	void deleteThrowsExceptionWhenIdCannotBeExctracted() {
 		assertThatIllegalArgumentException().isThrownBy(() -> operations.delete(FOO_ONE));
 	}
 
 	@Test // DATACMNS-525
-	public void countShouldReturnZeroWhenNoElementsPresent() {
+	void countShouldReturnZeroWhenNoElementsPresent() {
 		assertThat(operations.count(Foo.class)).isEqualTo(0L);
 	}
 
 	@Test // DATACMNS-525
-	public void insertShouldRespectTypeAlias() {
+	void insertShouldRespectTypeAlias() {
 
 		operations.insert("1", ALIASED);
 		operations.insert("2", SUBCLASS_OF_ALIASED);
@@ -248,7 +247,7 @@ public class KeyValueTemplateTests {
 		@Id String id;
 		String name;
 
-		public ClassWithTypeAlias(String name) {
+		ClassWithTypeAlias(String name) {
 			this.name = name;
 		}
 	}
@@ -257,7 +256,7 @@ public class KeyValueTemplateTests {
 
 		private static final long serialVersionUID = -468809596668871479L;
 
-		public SubclassOfAliasedType(String name) {
+		SubclassOfAliasedType(String name) {
 			super(name);
 		}
 

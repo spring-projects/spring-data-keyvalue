@@ -19,7 +19,7 @@ import static org.assertj.core.api.Assertions.*;
 
 import java.util.NoSuchElementException;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import org.springframework.beans.factory.NoSuchBeanDefinitionException;
 import org.springframework.dao.DataRetrievalFailureException;
@@ -27,48 +27,48 @@ import org.springframework.dao.DataRetrievalFailureException;
 /**
  * @author Christoph Strobl
  */
-public class KeyValuePersistenceExceptionTranslatorUnitTests {
+class KeyValuePersistenceExceptionTranslatorUnitTests {
 
-	KeyValuePersistenceExceptionTranslator translator = new KeyValuePersistenceExceptionTranslator();
+	private KeyValuePersistenceExceptionTranslator translator = new KeyValuePersistenceExceptionTranslator();
 
 	@Test // DATACMNS-525
-	public void translateExeptionShouldReturnDataAccessExceptionWhenGivenOne() {
+	void translateExeptionShouldReturnDataAccessExceptionWhenGivenOne() {
 		assertThat(translator.translateExceptionIfPossible(new DataRetrievalFailureException("booh")))
 				.isInstanceOf(DataRetrievalFailureException.class);
 	}
 
 	@Test // DATACMNS-525, DATAKV-192
-	public void translateExeptionShouldReturnNullWhenGivenNull() {
+	void translateExeptionShouldReturnNullWhenGivenNull() {
 		assertThatIllegalArgumentException()
 				.isThrownBy(() -> assertThat(translator.translateExceptionIfPossible(null)).isNull());
 	}
 
 	@Test // DATACMNS-525
-	public void translateExeptionShouldTranslateNoSuchElementExceptionToDataRetrievalFailureException() {
+	void translateExeptionShouldTranslateNoSuchElementExceptionToDataRetrievalFailureException() {
 		assertThat(translator.translateExceptionIfPossible(new NoSuchElementException("")))
 				.isInstanceOf(DataRetrievalFailureException.class);
 	}
 
 	@Test // DATACMNS-525
-	public void translateExeptionShouldTranslateIndexOutOfBoundsExceptionToDataRetrievalFailureException() {
+	void translateExeptionShouldTranslateIndexOutOfBoundsExceptionToDataRetrievalFailureException() {
 		assertThat(translator.translateExceptionIfPossible(new IndexOutOfBoundsException("")))
 				.isInstanceOf(DataRetrievalFailureException.class);
 	}
 
 	@Test // DATACMNS-525
-	public void translateExeptionShouldTranslateIllegalStateExceptionToDataRetrievalFailureException() {
+	void translateExeptionShouldTranslateIllegalStateExceptionToDataRetrievalFailureException() {
 		assertThat(translator.translateExceptionIfPossible(new IllegalStateException("")))
 				.isInstanceOf(DataRetrievalFailureException.class);
 	}
 
 	@Test // DATACMNS-525
-	public void translateExeptionShouldTranslateAnyJavaExceptionToUncategorizedKeyValueException() {
+	void translateExeptionShouldTranslateAnyJavaExceptionToUncategorizedKeyValueException() {
 		assertThat(translator.translateExceptionIfPossible(new UnsupportedOperationException("")))
 				.isInstanceOf(UncategorizedKeyValueException.class);
 	}
 
 	@Test // DATACMNS-525
-	public void translateExeptionShouldReturnNullForNonJavaExceptions() {
+	void translateExeptionShouldReturnNullForNonJavaExceptions() {
 		assertThat(translator.translateExceptionIfPossible(new NoSuchBeanDefinitionException(""))).isNull();
 	}
 

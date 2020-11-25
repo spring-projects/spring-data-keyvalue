@@ -20,7 +20,7 @@ import static org.assertj.core.api.Assertions.*;
 import java.util.Date;
 import java.util.UUID;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import org.springframework.dao.InvalidDataAccessApiUsageException;
 import org.springframework.data.util.ClassTypeInformation;
@@ -28,49 +28,45 @@ import org.springframework.data.util.ClassTypeInformation;
 /**
  * @author Christoph Strobl
  */
-public class DefaultIdentifierGeneratorUnitTests {
+class DefaultIdentifierGeneratorUnitTests {
 
-	DefaultIdentifierGenerator generator = DefaultIdentifierGenerator.INSTANCE;
+	private DefaultIdentifierGenerator generator = DefaultIdentifierGenerator.INSTANCE;
 
 	@Test
-	public void shouldThrowExceptionForUnsupportedType() {
+	void shouldThrowExceptionForUnsupportedType() {
 		assertThatExceptionOfType(InvalidDataAccessApiUsageException.class)
 				.isThrownBy(() -> generator.generateIdentifierOfType(ClassTypeInformation.from(Date.class)));
 	}
 
 	@Test // DATAKV-136
-	public void shouldGenerateUUIDValueCorrectly() {
+	void shouldGenerateUUIDValueCorrectly() {
 
 		Object value = generator.generateIdentifierOfType(ClassTypeInformation.from(UUID.class));
 
-		assertThat(value).isNotNull();
-		assertThat(value).isInstanceOf(UUID.class);
+		assertThat(value).isNotNull().isInstanceOf(UUID.class);
 	}
 
 	@Test // DATAKV-136
-	public void shouldGenerateStringValueCorrectly() {
+	void shouldGenerateStringValueCorrectly() {
 
 		Object value = generator.generateIdentifierOfType(ClassTypeInformation.from(String.class));
 
-		assertThat(value).isNotNull();
-		assertThat(value).isInstanceOf(String.class);
+		assertThat(value).isNotNull().isInstanceOf(String.class);
 	}
 
 	@Test // DATAKV-136
-	public void shouldGenerateLongValueCorrectly() {
+	void shouldGenerateLongValueCorrectly() {
 
 		Object value = generator.generateIdentifierOfType(ClassTypeInformation.from(Long.class));
 
-		assertThat(value).isNotNull();
-		assertThat(value).isInstanceOf(Long.class);
+		assertThat(value).isNotNull().isInstanceOf(Long.class);
 	}
 
 	@Test // DATAKV-136
-	public void shouldGenerateIntValueCorrectly() {
+	void shouldGenerateIntValueCorrectly() {
 
 		Object value = generator.generateIdentifierOfType(ClassTypeInformation.from(Integer.class));
 
-		assertThat(value).isNotNull();
-		assertThat(value).isInstanceOf(Integer.class);
+		assertThat(value).isNotNull().isInstanceOf(Integer.class);
 	}
 }

@@ -21,15 +21,15 @@ import lombok.Data;
 
 import java.util.List;
 
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 /**
  * Integration tests for {@link MapRepositoriesRegistrar} with complete defaulting.
@@ -37,7 +37,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
  * @author Christoph Strobl
  * @author Mark Paluch
  */
-@RunWith(SpringJUnit4ClassRunner.class)
+@ExtendWith(SpringExtension.class)
 @ContextConfiguration
 public class MapRepositoryRegistrarWithFullDefaultingIntegrationTests {
 
@@ -50,7 +50,7 @@ public class MapRepositoryRegistrarWithFullDefaultingIntegrationTests {
 	@Autowired PersonRepository repo;
 
 	@Test // DATAKV-86
-	public void shouldEnableMapRepositoryCorrectly() {
+	void shouldEnableMapRepositoryCorrectly() {
 		assertThat(repo).isNotNull();
 	}
 

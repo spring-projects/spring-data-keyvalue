@@ -22,15 +22,15 @@ import lombok.Data;
 import java.util.AbstractMap;
 import java.util.Map;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import org.springframework.data.util.CloseableIterator;
 
 /**
  * @author Christoph Strobl
  */
-public class MapKeyValueAdapterUnitTests {
+class MapKeyValueAdapterUnitTests {
 
 	private static final String COLLECTION_1 = "collection-1";
 	private static final String COLLECTION_2 = "collection-2";
@@ -41,79 +41,79 @@ public class MapKeyValueAdapterUnitTests {
 
 	private MapKeyValueAdapter adapter;
 
-	@Before
-	public void setUp() {
+	@BeforeEach
+	void setUp() {
 		this.adapter = new MapKeyValueAdapter();
 	}
 
 	@Test // DATACMNS-525
-	public void putShouldThrowExceptionWhenAddingNullId() {
+	void putShouldThrowExceptionWhenAddingNullId() {
 		assertThatIllegalArgumentException().isThrownBy(() -> adapter.put(null, object1, COLLECTION_1));
 	}
 
 	@Test // DATACMNS-525
-	public void putShouldThrowExceptionWhenCollectionIsNullValue() {
+	void putShouldThrowExceptionWhenCollectionIsNullValue() {
 		assertThatIllegalArgumentException().isThrownBy(() -> adapter.put("1", object1, null));
 	}
 
 	@Test // DATACMNS-525
-	public void putReturnsNullWhenNoObjectForIdPresent() {
+	void putReturnsNullWhenNoObjectForIdPresent() {
 		assertThat(adapter.put("1", object1, COLLECTION_1)).isNull();
 	}
 
 	@Test // DATACMNS-525
-	public void putShouldReturnPreviousObjectForIdWhenAddingNewOneWithSameIdPresent() {
+	void putShouldReturnPreviousObjectForIdWhenAddingNewOneWithSameIdPresent() {
 
 		adapter.put("1", object1, COLLECTION_1);
 		assertThat(adapter.put("1", object2, COLLECTION_1)).isEqualTo(object1);
 	}
 
 	@Test // DATACMNS-525
-	public void containsShouldThrowExceptionWhenIdIsNull() {
+	void containsShouldThrowExceptionWhenIdIsNull() {
 		assertThatIllegalArgumentException().isThrownBy(() -> adapter.contains(null, COLLECTION_1));
 	}
 
 	@Test // DATACMNS-525
-	public void containsShouldThrowExceptionWhenTypeIsNull() {
+	void containsShouldThrowExceptionWhenTypeIsNull() {
 		assertThatIllegalArgumentException().isThrownBy(() -> adapter.contains("", null));
 	}
 
 	@Test // DATACMNS-525
-	public void containsShouldReturnFalseWhenNoElementsPresent() {
+	void containsShouldReturnFalseWhenNoElementsPresent() {
 		assertThat(adapter.contains("1", COLLECTION_1)).isFalse();
 	}
 
 	@Test // DATACMNS-525
-	public void containShouldReturnTrueWhenElementWithIdPresent() {
+	void containShouldReturnTrueWhenElementWithIdPresent() {
 
 		adapter.put("1", object1, COLLECTION_1);
 		assertThat(adapter.contains("1", COLLECTION_1)).isTrue();
 	}
 
 	@Test // DATACMNS-525
-	public void getShouldReturnNullWhenNoElementWithIdPresent() {
+	void getShouldReturnNullWhenNoElementWithIdPresent() {
 		assertThat(adapter.get("1", COLLECTION_1)).isNull();
 	}
 
 	@Test // DATACMNS-525
-	public void getShouldReturnElementWhenMatchingIdPresent() {
+	void getShouldReturnElementWhenMatchingIdPresent() {
 
 		adapter.put("1", object1, COLLECTION_1);
 		assertThat(adapter.get("1", COLLECTION_1)).isEqualTo(object1);
 	}
 
 	@Test // DATACMNS-525
-	public void getShouldThrowExceptionWhenIdIsNull() {
+	void getShouldThrowExceptionWhenIdIsNull() {
 		assertThatIllegalArgumentException().isThrownBy(() -> adapter.get(null, COLLECTION_1));
 	}
 
 	@Test // DATACMNS-525
-	public void getShouldThrowExceptionWhenTypeIsNull() {
+	void getShouldThrowExceptionWhenTypeIsNull() {
 		assertThatIllegalArgumentException().isThrownBy(() -> adapter.get("1", null));
 	}
 
 	@Test // DATACMNS-525
-	public void getAllOfShouldReturnAllValuesOfGivenCollection() {
+	void getAllOfShouldReturnAllValuesOfGivenCollection() {
 
 		adapter.put("1", object1, COLLECTION_1);
 		adapter.put("2", object2, COLLECTION_1);
@@ -123,24 +123,24 @@ public class MapKeyValueAdapterUnitTests {
 	}
 
 	@Test // DATACMNS-525
-	public void getAllOfShouldThrowExceptionWhenTypeIsNull() {
+	void getAllOfShouldThrowExceptionWhenTypeIsNull() {
 		assertThatIllegalArgumentException().isThrownBy(() -> adapter.getAllOf(null));
 	}
 
 	@Test // DATACMNS-525
-	public void deleteShouldReturnNullWhenGivenIdThatDoesNotExist() {
+	void deleteShouldReturnNullWhenGivenIdThatDoesNotExist() {
 		assertThat(adapter.delete("1", COLLECTION_1)).isNull();
 	}
 
 	@Test // DATACMNS-525
-	public void deleteShouldReturnDeletedObject() {
+	void deleteShouldReturnDeletedObject() {
 
 		adapter.put("1", object1, COLLECTION_1);
 		assertThat(adapter.delete("1", COLLECTION_1)).isEqualTo(object1);
 	}
 
 	@Test // DATAKV-99
-	public void scanShouldIterateOverAvailableEntries() {
+	void scanShouldIterateOverAvailableEntries() {
 
 		adapter.put("1", object1, COLLECTION_1);
 		adapter.put("2", object2, COLLECTION_1);
@@ -153,12 +153,12 @@ public class MapKeyValueAdapterUnitTests {
 	}
 
 	@Test // DATAKV-99
-	public void scanShouldReturnEmptyIteratorWhenNoElementsAvailable() {
+	void scanShouldReturnEmptyIteratorWhenNoElementsAvailable() {
 		assertThat(adapter.entries(COLLECTION_1).hasNext()).isFalse();
 	}
 
 	@Test // DATAKV-99
-	public void scanDoesNotMixResultsFromMultipleKeyspaces() {
+	void scanDoesNotMixResultsFromMultipleKeyspaces() {
 
 		adapter.put("1", object1, COLLECTION_1);
 		adapter.put("2", object2, COLLECTION_2);

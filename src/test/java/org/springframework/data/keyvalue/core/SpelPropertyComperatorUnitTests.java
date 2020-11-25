@@ -15,12 +15,11 @@
  */
 package org.springframework.data.keyvalue.core;
 
-import static java.lang.Integer.*;
 import static org.assertj.core.api.Assertions.*;
 
 import java.util.Comparator;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import org.springframework.expression.spel.standard.SpelExpressionParser;
 
@@ -30,7 +29,7 @@ import org.springframework.expression.spel.standard.SpelExpressionParser;
  * @author Christoph Strobl
  * @author Oliver Gierke
  */
-public class SpelPropertyComperatorUnitTests {
+class SpelPropertyComperatorUnitTests {
 
 	private static final SpelExpressionParser PARSER = new SpelExpressionParser();
 
@@ -40,71 +39,71 @@ public class SpelPropertyComperatorUnitTests {
 	private static final WrapperType WRAPPER_TWO = new WrapperType("w-two", TWO);
 
 	@Test // DATACMNS-525
-	public void shouldCompareStringAscCorrectly() {
+	void shouldCompareStringAscCorrectly() {
 
 		Comparator<SomeType> comparator = new SpelPropertyComparator<>("stringProperty", PARSER);
 		assertThat(comparator.compare(ONE, TWO)).isEqualTo(ONE.getStringProperty().compareTo(TWO.getStringProperty()));
 	}
 
 	@Test // DATACMNS-525
-	public void shouldCompareStringDescCorrectly() {
+	void shouldCompareStringDescCorrectly() {
 
 		Comparator<SomeType> comparator = new SpelPropertyComparator<SomeType>("stringProperty", PARSER).desc();
 		assertThat(comparator.compare(ONE, TWO)).isEqualTo(TWO.getStringProperty().compareTo(ONE.getStringProperty()));
 	}
 
 	@Test // DATACMNS-525
-	public void shouldCompareIntegerAscCorrectly() {
+	void shouldCompareIntegerAscCorrectly() {
 
 		Comparator<SomeType> comparator = new SpelPropertyComparator<>("integerProperty", PARSER);
 		assertThat(comparator.compare(ONE, TWO)).isEqualTo(ONE.getIntegerProperty().compareTo(TWO.getIntegerProperty()));
 	}
 
 	@Test // DATACMNS-525
-	public void shouldCompareIntegerDescCorrectly() {
+	void shouldCompareIntegerDescCorrectly() {
 
 		Comparator<SomeType> comparator = new SpelPropertyComparator<SomeType>("integerProperty", PARSER).desc();
 		assertThat(comparator.compare(ONE, TWO)).isEqualTo(TWO.getIntegerProperty().compareTo(ONE.getIntegerProperty()));
 	}
 
 	@Test // DATACMNS-525
-	public void shouldComparePrimitiveIntegerAscCorrectly() {
+	void shouldComparePrimitiveIntegerAscCorrectly() {
 
 		Comparator<SomeType> comparator = new SpelPropertyComparator<>("primitiveProperty", PARSER);
 		assertThat(comparator.compare(ONE, TWO))
-				.isEqualTo(valueOf(ONE.getPrimitiveProperty()).compareTo(valueOf(TWO.getPrimitiveProperty())));
+				.isEqualTo(Integer.compare(ONE.getPrimitiveProperty(), TWO.getPrimitiveProperty()));
 	}
 
 	@Test // DATACMNS-525
-	public void shouldNotFailOnNullValues() {
+	void shouldNotFailOnNullValues() {
 
 		Comparator<SomeType> comparator = new SpelPropertyComparator<>("stringProperty", PARSER);
 		assertThat(comparator.compare(ONE, new SomeType(null, null, 2))).isEqualTo(1);
 	}
 
 	@Test // DATACMNS-525
-	public void shouldComparePrimitiveIntegerDescCorrectly() {
+	void shouldComparePrimitiveIntegerDescCorrectly() {
 
 		Comparator<SomeType> comparator = new SpelPropertyComparator<SomeType>("primitiveProperty", PARSER).desc();
 		assertThat(comparator.compare(ONE, TWO))
-				.isEqualTo(valueOf(TWO.getPrimitiveProperty()).compareTo(valueOf(ONE.getPrimitiveProperty())));
+				.isEqualTo(Integer.compare(TWO.getPrimitiveProperty(), ONE.getPrimitiveProperty()));
 	}
 
 	@Test // DATACMNS-525
-	public void shouldSortNullsFirstCorrectly() {
+	void shouldSortNullsFirstCorrectly() {
 		Comparator<SomeType> comparator = new SpelPropertyComparator<SomeType>("stringProperty", PARSER).nullsFirst();
 		assertThat(comparator.compare(ONE, new SomeType(null, null, 2))).isEqualTo(1);
 	}
 
 	@Test // DATACMNS-525
-	public void shouldSortNullsLastCorrectly() {
+	void shouldSortNullsLastCorrectly() {
 
 		Comparator<SomeType> comparator = new SpelPropertyComparator<SomeType>("stringProperty", PARSER).nullsLast();
 		assertThat(comparator.compare(ONE, new SomeType(null, null, 2))).isEqualTo(-1);
 	}
 
 	@Test // DATACMNS-525
-	public void shouldCompareNestedTypesCorrectly() {
+	void shouldCompareNestedTypesCorrectly() {
 
 		Comparator<WrapperType> comparator = new SpelPropertyComparator<>("nestedType.stringProperty", PARSER);
 		assertThat(comparator.compare(WRAPPER_ONE, WRAPPER_TWO)).isEqualTo(
@@ -112,18 +111,18 @@ public class SpelPropertyComperatorUnitTests {
 	}
 
 	@Test // DATACMNS-525
-	public void shouldCompareNestedTypesCorrectlyWhenOneOfThemHasNullValue() {
+	void shouldCompareNestedTypesCorrectlyWhenOneOfThemHasNullValue() {
 
 		SpelPropertyComparator<WrapperType> comparator = new SpelPropertyComparator<>("nestedType.stringProperty", PARSER);
 		assertThat(comparator.compare(WRAPPER_ONE, new WrapperType("two", null))).isGreaterThanOrEqualTo(1);
 	}
 
-	static class WrapperType {
+	public static class WrapperType {
 
 		private String stringPropertyWrapper;
 		private SomeType nestedType;
 
-		public WrapperType(String stringPropertyWrapper, SomeType nestedType) {
+		WrapperType(String stringPropertyWrapper, SomeType nestedType) {
 			this.stringPropertyWrapper = stringPropertyWrapper;
 			this.nestedType = nestedType;
 		}
@@ -146,13 +145,14 @@ public class SpelPropertyComperatorUnitTests {
 
 	}
 
-	static class SomeType {
+	@SuppressWarnings("WeakerAccess")
+	public static class SomeType {
 
 		public SomeType() {
 
 		}
 
-		public SomeType(String stringProperty, Integer integerProperty, int primitiveProperty) {
+		SomeType(String stringProperty, Integer integerProperty, int primitiveProperty) {
 			this.stringProperty = stringProperty;
 			this.integerProperty = integerProperty;
 			this.primitiveProperty = primitiveProperty;
