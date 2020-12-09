@@ -1,6 +1,13 @@
 Spring Data KeyValue Changelog
 ==========================
 
+Changes in version 2.5.0-M1 (2020-12-09)
+----------------------------------------
+* DATAKV-332 - Migrate tests to JUnit 5.
+* DATAKV-330 - Implement CrudRepository.delete(Iterable<ID> ids).
+* DATAKV-329 - Release 2.5 M1 (2021.0.0).
+
+
 Changes in version 2.3.6.RELEASE (2020-12-09)
 ---------------------------------------------
 * DATAKV-327 - Release 2.3.6 (Neumann SR6).
@@ -800,6 +807,7 @@ Changes in version 1.0.0.M1 (2015-06-02)
 * DATAKV-86 - Move configuration infrastructure for Map-based repositories into map package.
 * DATAKV-85 - Migrate key-value infrastructure from Spring Data Commons.
 * DATAKV-84 - Setup project structure.
+
 
 
 
