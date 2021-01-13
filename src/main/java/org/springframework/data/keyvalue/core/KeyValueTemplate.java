@@ -46,6 +46,7 @@ import org.springframework.util.CollectionUtils;
  * @author Oliver Gierke
  * @author Thomas Darimont
  * @author Mark Paluch
+ * @author Adeyemi Abass
  */
 public class KeyValueTemplate implements KeyValueOperations, ApplicationEventPublisherAware {
 
@@ -240,7 +241,7 @@ public class KeyValueTemplate implements KeyValueOperations, ApplicationEventPub
 	@Override
 	public <T> Optional<T> findById(Object id, Class<T> type) {
 
-		Assert.notNull(id, "Id for object to be inserted must not be null!");
+		Assert.notNull(id, "Id for object to be found must not be null!");
 		Assert.notNull(type, "Type to fetch must not be null!");
 
 		String keyspace = resolveKeySpace(type);
