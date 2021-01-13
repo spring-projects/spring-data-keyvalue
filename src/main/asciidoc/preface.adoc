@@ -6,7 +6,7 @@
 == Project Metadata
 
 * Version control: https://github.com/spring-projects/spring-data-keyvalue
-* Bugtracker: https://jira.spring.io/browse/DATAKV
+* Bugtracker: https://github.com/spring-projects/spring-data-keyvalue/issues
 * Release repository: https://repo.spring.io/libs-release
 * Milestone repository: https://repo.spring.io/libs-milestone
 * Snapshot repository: https://repo.spring.io/libs-snapshot
