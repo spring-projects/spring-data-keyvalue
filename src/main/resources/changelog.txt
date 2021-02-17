@@ -1,6 +1,14 @@
 Spring Data KeyValue Changelog
 ==========================
 
+Changes in version 2.2.13.RELEASE (2021-02-17)
+----------------------------------------------
+* #349 - Include Bintray plugin repository.
+* #346 - Update copyright year to 2021.
+* #345 - Change findById(…) assert message to reflect the actual operation.
+* #343 - Update repository after GitHub issues migration.
+
+
 Changes in version 2.5.0-M2 (2021-01-13)
 ----------------------------------------
 * DATAKV-333 - Update CI jobs with Docker Login.
@@ -829,6 +837,7 @@ Changes in version 1.0.0.M1 (2015-06-02)
 * DATAKV-86 - Move configuration infrastructure for Map-based repositories into map package.
 * DATAKV-85 - Migrate key-value infrastructure from Spring Data Commons.
 * DATAKV-84 - Setup project structure.
+
 
 
 
