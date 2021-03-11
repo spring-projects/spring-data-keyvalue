@@ -190,7 +190,7 @@ class KeyValueTemplateUnitTests {
 
 		template.findAll(Foo.class);
 
-		verify(adapterMock, times(1)).getAllOf(Foo.class.getName());
+		verify(adapterMock, times(1)).getAllOf(Foo.class.getName(), Foo.class);
 	}
 
 	@Test // DATACMNS-525
@@ -327,7 +327,7 @@ class KeyValueTemplateUnitTests {
 	void findAllOfShouldRespectTypeAliasAndFilterNonMatchingTypes() {
 
 		Collection foo = Arrays.asList(ALIASED_USING_ALIAS_FOR, SUBCLASS_OF_ALIASED_USING_ALIAS_FOR);
-		when(adapterMock.getAllOf("aliased")).thenReturn(foo);
+		when(adapterMock.getAllOf("aliased", SUBCLASS_OF_ALIASED_USING_ALIAS_FOR.getClass())).thenReturn(foo);
 
 		assertThat((Iterable) template.findAll(SUBCLASS_OF_ALIASED_USING_ALIAS_FOR.getClass()))
 				.contains(SUBCLASS_OF_ALIASED_USING_ALIAS_FOR);
