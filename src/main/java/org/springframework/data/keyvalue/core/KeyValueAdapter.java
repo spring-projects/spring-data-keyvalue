@@ -103,12 +103,38 @@ public interface KeyValueAdapter extends DisposableBean {
 	Iterable<?> getAllOf(String keyspace);
 
 	/**
+	 * Get all elements for given keyspace.
+	 *
+	 * @param type must not be {@literal null}.
+	 * @param keyspace must not be {@literal null}.
+	 * @return empty {@link Collection} if nothing found.
+	 * @since 2.5
+	 */
+	@SuppressWarnings("unchecked")
+	default <T> Iterable<T> getAllOf(String keyspace, Class<T> type) {
+		return (Iterable<T>) getAllOf(keyspace);
+	}
+
+	/**
 	 * Returns a {@link CloseableIterator} that iterates over all entries.
 	 *
 	 * @param keyspace must not be {@literal null}.
 	 * @return
 	 */
 	CloseableIterator<Map.Entry<Object, Object>> entries(String keyspace);
+
+	/**
+	 * Returns a {@link CloseableIterator} that iterates over all entries.
+	 *
+	 * @param type must not be {@literal null}.
+	 * @param keyspace must not be {@literal null}.
+	 * @return
+	 * @since 2.5
+	 */
+	@SuppressWarnings("unchecked")
+	default <T> CloseableIterator<Map.Entry<Object, T>> entries(String keyspace, Class<T> type) {
+		return (CloseableIterator) entries(keyspace);
+	}
 
 	/**
 	 * Remove all objects of given type.
@@ -129,7 +155,9 @@ public interface KeyValueAdapter extends DisposableBean {
 	 * @param keyspace must not be {@literal null}.
 	 * @return empty {@link Collection} if no match found.
 	 */
-	Iterable<?> find(KeyValueQuery<?> query, String keyspace);
+	default Iterable<?> find(KeyValueQuery<?> query, String keyspace) {
+		return find(query, keyspace, Object.class);
+	}
 
 	/**
 	 * @param query must not be {@literal null}.

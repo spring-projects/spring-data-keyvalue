@@ -237,7 +237,7 @@ public class KeyValueTemplate implements KeyValueOperations, ApplicationEventPub
 
 		return executeRequired(adapter -> {
 
-			Iterable<?> values = adapter.getAllOf(resolveKeySpace(type));
+			Iterable<?> values = adapter.getAllOf(resolveKeySpace(type), type);
 
 			ArrayList<T> filtered = new ArrayList<>();
 			for (Object candidate : values) {
