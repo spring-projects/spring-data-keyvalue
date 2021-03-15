@@ -105,8 +105,8 @@ public interface KeyValueAdapter extends DisposableBean {
 	/**
 	 * Get all elements for given keyspace.
 	 *
-	 * @param type must not be {@literal null}.
 	 * @param keyspace must not be {@literal null}.
+	 * @param type must not be {@literal null}.
 	 * @return empty {@link Collection} if nothing found.
 	 * @since 2.5
 	 */
@@ -126,8 +126,8 @@ public interface KeyValueAdapter extends DisposableBean {
 	/**
 	 * Returns a {@link CloseableIterator} that iterates over all entries.
 	 *
-	 * @param type must not be {@literal null}.
 	 * @param keyspace must not be {@literal null}.
+	 * @param type must not be {@literal null}.
 	 * @return
 	 * @since 2.5
 	 */
