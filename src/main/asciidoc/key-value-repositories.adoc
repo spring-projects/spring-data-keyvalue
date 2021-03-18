@@ -46,22 +46,29 @@ In its very basic shape, the `KeyValueTemplate` uses a `MapAdapter` that wraps a
 
 NOTE: The used `KeyValueAdapter` does the heavy lifting when it comes to storing and retrieving data. The data structure influences performance and multi-threading behavior.
 
-You can use a different type or preinitialize the adapter with some values, and you can do so by using various constructors on `MapKeyValueAdapter`, as the following example shows:
+You can use a different type or pre-initialize the adapter with some values, and you can do so by using various constructors on `MapKeyValueAdapter`, as the following example shows:
 
+====
 [source, java]
 ----
-@Bean
-public KeyValueOperations mapKeyValueTemplate() {
-  return new KeyValueTemplate(keyValueAdapter());
-}
+@EnableMapRepositories
+@Configuration
+class MyConfiguration {
 
-@Bean
-public KeyValueAdapter keyValueAdapter() {
-  return new MapKeyValueAdapter(ConcurrentHashMap.class);
+  @Bean
+  public KeyValueOperations mapKeyValueTemplate() {               <1>
+    return new KeyValueTemplate(keyValueAdapter());
+  }
+
+  @Bean
+  public KeyValueAdapter keyValueAdapter() {
+    return new MapKeyValueAdapter(ConcurrentHashMap.class);       <2>
+  }
 }
 ----
-
-Alternatively, you might use `@EnableMapRepositories(keyValueTemplateRef=…)`.
+<1> Defines a custom `KeyValueOperations` bean using the default bean name. See documentation and properties of {spring-data-keyvalue-docs}org/springframework/data/map/repository/config/EnableMapRepositories.html[`@EnableMapRepositories`] for further customization.
+<2> Defines a custom `KeyValueAdapter` bean using a `ConcurrentHashMap` as storage that is used by `KeyValueTemplate`.
+====
 
 [[key-value.keyspaces]]
 == Keyspaces
