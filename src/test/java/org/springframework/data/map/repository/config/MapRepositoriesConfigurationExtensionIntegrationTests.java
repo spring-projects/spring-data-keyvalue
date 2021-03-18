@@ -16,6 +16,9 @@
 package org.springframework.data.map.repository.config;
 
 import static org.assertj.core.api.Assertions.*;
+import static org.mockito.Mockito.*;
+
+import lombok.Data;
 
 import java.util.Arrays;
 import java.util.concurrent.ConcurrentHashMap;
@@ -27,8 +30,14 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.FilterType;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.keyvalue.core.KeyValueAdapter;
+import org.springframework.data.keyvalue.core.KeyValueOperations;
 import org.springframework.data.keyvalue.core.KeyValueTemplate;
+import org.springframework.data.keyvalue.repository.KeyValueRepository;
 import org.springframework.data.map.MapKeyValueAdapter;
 import org.springframework.test.util.ReflectionTestUtils;
 
@@ -37,6 +46,7 @@ import org.springframework.test.util.ReflectionTestUtils;
  *
  * @author Oliver Gierke
  * @author Christoph Strobl
+ * @author Mark Paluch
  */
 class MapRepositoriesConfigurationExtensionIntegrationTests {
 
@@ -51,12 +61,25 @@ class MapRepositoriesConfigurationExtensionIntegrationTests {
 	}
 
 	@Test // DATAKV-86
-	void doesNotRegisterDefaulttemplateIfReferenceIsCustomized() {
+	void doesNotRegisterDefaultTemplateIfReferenceIsCustomized() {
 
 		ConfigurableApplicationContext context = new AnnotationConfigApplicationContext(
 				ConfigWithCustomTemplateReference.class);
 
 		assertThat(context.getBeanDefinitionNames()).doesNotContain("mapKeyValueTemplate");
+
+		context.close();
+	}
+
+	@Test // GH-358
+	void shouldUseCustomAdapter() {
+
+		ConfigurableApplicationContext context = new AnnotationConfigApplicationContext(
+				ConfigWithOverriddenTemplateReference.class);
+
+		PersonRepository repository = context.getBean(PersonRepository.class);
+
+		assertThatThrownBy(() -> repository.findById("foo")).hasRootCauseInstanceOf(IllegalStateException.class).hasMessageContaining("Mock!");
 
 		context.close();
 	}
@@ -91,6 +114,28 @@ class MapRepositoriesConfigurationExtensionIntegrationTests {
 	static class ConfigWithCustomTemplateReference {}
 
 	@Configuration
+	@EnableMapRepositories(considerNestedRepositories = true,
+			includeFilters = @ComponentScan.Filter(value = PersonRepository.class, type = FilterType.ASSIGNABLE_TYPE))
+	static class ConfigWithOverriddenTemplateReference {
+
+		@Bean
+		public KeyValueOperations mapKeyValueTemplate() {
+			return new KeyValueTemplate(keyValueAdapter());
+		}
+
+		@Bean
+		public KeyValueAdapter keyValueAdapter() {
+
+			KeyValueAdapter mock = mock(KeyValueAdapter.class);
+
+			when(mock.get(any(), anyString(), any())).thenThrow(new IllegalStateException("Mock!"));
+
+			return mock;
+		}
+
+	}
+
+	@Configuration
 	@EnableMapRepositories(mapType = ConcurrentSkipListMap.class)
 	static class ConfigWithCustomizedMapType {}
 
@@ -102,5 +147,15 @@ class MapRepositoriesConfigurationExtensionIntegrationTests {
 		public KeyValueTemplate mapKeyValueTemplate() {
 			return new KeyValueTemplate(new MapKeyValueAdapter());
 		}
+	}
+
+	interface PersonRepository extends KeyValueRepository<Person, String> {
+
+	}
+
+	@Data
+	static class Person {
+		@Id String id;
+		String name;
 	}
 }
