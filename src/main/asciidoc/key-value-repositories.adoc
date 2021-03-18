@@ -51,7 +51,7 @@ You can use a different type or preinitialize the adapter with some values, and 
 [source, java]
 ----
 @Bean
-public KeyValueOperations keyValueTemplate() {
+public KeyValueOperations mapKeyValueTemplate() {
   return new KeyValueTemplate(keyValueAdapter());
 }
 
@@ -60,6 +60,8 @@ public KeyValueAdapter keyValueAdapter() {
   return new MapKeyValueAdapter(ConcurrentHashMap.class);
 }
 ----
+
+Alternatively, you might use `@EnableMapRepositories(keyValueTemplateRef=…)`.
 
 [[key-value.keyspaces]]
 == Keyspaces
