@@ -1,6 +1,11 @@
 Spring Data KeyValue Changelog
 ==========================
 
+Changes in version 2.5.0-RC1 (2021-03-31)
+-----------------------------------------
+* #358 - Update reference documentation with examples that match `@EnableMapRepositories`.
+
+
 Changes in version 2.5.0-M5 (2021-03-17)
 ----------------------------------------
 * #356 - Accept target type in KeyValueAdapter.entries(…) and getAllOf(…).
@@ -877,6 +882,7 @@ Changes in version 1.0.0.M1 (2015-06-02)
 * DATAKV-86 - Move configuration infrastructure for Map-based repositories into map package.
 * DATAKV-85 - Migrate key-value infrastructure from Spring Data Commons.
 * DATAKV-84 - Setup project structure.
+
 
 
 
