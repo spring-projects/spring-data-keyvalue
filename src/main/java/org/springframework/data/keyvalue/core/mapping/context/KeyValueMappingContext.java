@@ -15,6 +15,8 @@
  */
 package org.springframework.data.keyvalue.core.mapping.context;
 
+import java.util.Collections;
+
 import org.springframework.data.keyvalue.core.mapping.BasicKeyValuePersistentEntity;
 import org.springframework.data.keyvalue.core.mapping.KeySpaceResolver;
 import org.springframework.data.keyvalue.core.mapping.KeyValuePersistentEntity;
@@ -39,6 +41,10 @@ public class KeyValueMappingContext<E extends KeyValuePersistentEntity<?, P>, P 
 
 	private @Nullable KeySpaceResolver fallbackKeySpaceResolver;
 
+	public KeyValueMappingContext() {
+		setSimpleTypeHolder(new KeyValueSimpleTypeHolder());
+	}
+
 	/**
 	 * Configures the {@link KeySpaceResolver} to be used if not explicit key space is annotated to the domain type.
 	 *
@@ -58,5 +64,25 @@ public class KeyValueMappingContext<E extends KeyValuePersistentEntity<?, P>, P 
 	@SuppressWarnings("unchecked")
 	protected P createPersistentProperty(Property property, E owner, SimpleTypeHolder simpleTypeHolder) {
 		return (P) new KeyValuePersistentProperty<>(property, owner, simpleTypeHolder);
+	}
+
+	/**
+	 * @since 2.5.1
+	 */
+	private static class KeyValueSimpleTypeHolder extends SimpleTypeHolder {
+
+		public KeyValueSimpleTypeHolder() {
+			super(Collections.emptySet(), true);
+		}
+
+		@Override
+		public boolean isSimpleType(Class<?> type) {
+
+			if (type.getName().startsWith("java.math.") || type.getName().startsWith("java.util.")) {
+				return true;
+			}
+
+			return super.isSimpleType(type);
+		}
 	}
 }
