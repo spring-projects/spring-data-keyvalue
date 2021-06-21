@@ -36,9 +36,8 @@ import org.springframework.data.keyvalue.repository.support.QuerydslKeyValueRepo
 import org.springframework.data.map.QuerydslKeyValueRepositoryUnitTests.QPersonRepository;
 import org.springframework.data.querydsl.QSort;
 import org.springframework.data.querydsl.QuerydslPredicateExecutor;
+import org.springframework.data.util.Streamable;
 import org.springframework.data.util.Version;
-
-import com.google.common.collect.Lists;
 
 /**
  * Unit tests for {@link QuerydslKeyValueRepository}.
@@ -161,7 +160,8 @@ public class QuerydslKeyValueRepositoryUnitTests extends AbstractRepositoryUnitT
 
 		repository.saveAll(LENNISTERS);
 
-		List<Person> users = Lists.newArrayList(repository.findAll(person.age.gt(0), Sort.by(Direction.ASC, "firstname")));
+		List<Person> users = Streamable.of(repository.findAll(person.age.gt(0), Sort.by(Direction.ASC, "firstname")))
+				.toList();
 
 		assertThat(users).hasSize(3);
 		assertThat(users.get(0).getFirstname()).isEqualTo(CERSEI.getFirstname());
