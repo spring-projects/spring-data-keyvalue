@@ -27,11 +27,13 @@ import org.springframework.data.keyvalue.core.mapping.context.KeyValueMappingCon
 import org.springframework.data.mapping.context.MappingContext;
 import org.springframework.data.spel.ExtensionAwareEvaluationContextProvider;
 import org.springframework.data.spel.spi.EvaluationContextExtension;
+import org.springframework.mock.env.MockEnvironment;
 
 /**
  * Unit tests for {@link BasicKeyValuePersistentEntity}.
  *
  * @author Mark Paluch
+ * @author Tim Sazon
  */
 class BasicKeyValuePersistentEntityUnitTests {
 
@@ -64,8 +66,21 @@ class BasicKeyValuePersistentEntityUnitTests {
 		assertThat(persistentEntity.getKeySpace()).isEqualTo(NoKeyspaceEntity.class.getName());
 	}
 
+	@Test // GH-375
+	void shouldEvaluateKeyspaceWithPropertyPlaceholders() {
+
+		BasicKeyValuePersistentEntity<?, ?> persistentEntity = (BasicKeyValuePersistentEntity<?, ?>) mappingContext
+				.getPersistentEntity(PropertyEntity.class);
+		persistentEntity.setPropertyResolver(new MockEnvironment().withProperty("myProperty", "value"));
+
+		assertThat(persistentEntity.getKeySpace()).isEqualTo("value");
+	}
+
 	@KeySpace("#{myProperty}")
 	private static class ExpressionEntity {}
+
+	@KeySpace("${myProperty}")
+	private static class PropertyEntity {}
 
 	@KeySpace
 	private static class KeyspaceEntity {}
