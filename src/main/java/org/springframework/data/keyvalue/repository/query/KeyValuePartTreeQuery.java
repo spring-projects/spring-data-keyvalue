@@ -139,6 +139,8 @@ public class KeyValuePartTreeQuery implements RepositoryQuery {
 
 			Iterable<?> result = this.keyValueOperations.find(query, queryMethod.getEntityInformation().getJavaType());
 			return result.iterator().hasNext() ? result.iterator().next() : null;
+		} else if (new PartTree(queryMethod.getName(), queryMethod.getEntityInformation().getJavaType()).isExistsProjection()) {
+			return keyValueOperations.count(query, queryMethod.getEntityInformation().getJavaType()) > 0;
 		}
 
 		throw new UnsupportedOperationException("Query method not supported.");

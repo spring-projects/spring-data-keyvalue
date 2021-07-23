@@ -137,9 +137,31 @@ class KeyValuePartTreeQueryUnitTests {
 		assertThat(query.getRows()).isEqualTo(3);
 	}
 
+	@Test // GH-385
+	void shouldUseCountForExists() throws NoSuchMethodException {
+
+		when(metadataMock.getDomainType()).thenReturn((Class) Person.class);
+		when(metadataMock.getReturnType(any(Method.class)))
+				.thenReturn((TypeInformation) ClassTypeInformation.from(Boolean.class));
+		when(metadataMock.getReturnedDomainClass(any(Method.class))).thenReturn((Class) Boolean.class);
+
+		QueryMethod qm = new QueryMethod(Repo.class.getMethod("existsByFirstname", String.class), metadataMock,
+				projectionFactoryMock);
+
+		KeyValuePartTreeQuery partTreeQuery = new KeyValuePartTreeQuery(qm, QueryMethodEvaluationContextProvider.DEFAULT,
+				kvOpsMock, SpelQueryCreator.class);
+
+		KeyValueQuery<?> query = partTreeQuery.prepareQuery(new Object[] { "firstname" });
+		partTreeQuery.doExecute(new Object[] { "firstname" }, query);
+
+		verify(kvOpsMock).count(eq(query), eq(Person.class));
+	}
+
 	interface Repo {
 
 		List<Person> findByFirstname(String firstname);
+
+		boolean existsByFirstname(String firstname);
 
 		List<Person> findBy(Pageable page);
 
