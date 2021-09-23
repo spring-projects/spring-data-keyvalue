@@ -28,8 +28,6 @@ import org.springframework.util.Assert;
  * @author Thomas Darimont
  * @author Oliver Gierke
  * @author Mark Paluch
- * @param <K>
- * @param <V>
  */
 public class ForwardingCloseableIterator<T> implements CloseableIterator<T> {
 

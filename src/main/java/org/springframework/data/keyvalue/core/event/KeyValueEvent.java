@@ -20,8 +20,9 @@ import org.springframework.lang.Nullable;
 
 /**
  * {@link KeyValueEvent} gets published for operations executed by eg.
- * {@link org.springframework.data.keyvalue.core.KeyValueTemplate}. Use the {@link #getType()} to determine which event
- * has been emitted.
+ * {@link org.springframework.data.keyvalue.core.KeyValueTemplate}.
+ *
+ * Use the {@link KeyValueEvent.KeyBasedEvent#getType()} to determine which event has been emitted.
  *
  * @author Christoph Strobl
  * @author Thomas Darimont
