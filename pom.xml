@@ -17,7 +17,7 @@
 	</parent>
 
 	<properties>
-		<springdata.commons>2.7.0-SNAPSHOT</springdata.commons>
+		<springdata.commons>3.0.0-SNAPSHOT</springdata.commons>
 		<java-module-name>spring.data.keyvalue</java-module-name>
 	</properties>
 
