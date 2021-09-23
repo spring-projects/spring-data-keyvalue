@@ -46,13 +46,6 @@
 			<optional>true</optional>
 		</dependency>
 
-		<dependency>
-			<groupId>joda-time</groupId>
-			<artifactId>joda-time</artifactId>
-			<version>${jodatime}</version>
-			<scope>test</scope>
-		</dependency>
-
 	</dependencies>
 
 	<build>

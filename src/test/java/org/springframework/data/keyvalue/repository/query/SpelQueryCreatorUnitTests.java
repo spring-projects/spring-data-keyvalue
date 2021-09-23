@@ -15,18 +15,16 @@
  */
 package org.springframework.data.keyvalue.repository.query;
 
-import static org.assertj.core.api.Assertions.*;
-import static org.mockito.Mockito.*;
-
-import lombok.Data;
-import lombok.SneakyThrows;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
+import static org.mockito.Mockito.doReturn;
 
 import java.lang.reflect.Method;
+import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Date;
 
-import org.joda.time.format.DateTimeFormatter;
-import org.joda.time.format.ISODateTimeFormat;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
@@ -45,6 +43,9 @@ import org.springframework.expression.spel.standard.SpelExpression;
 import org.springframework.expression.spel.support.SimpleEvaluationContext;
 import org.springframework.util.ObjectUtils;
 
+import lombok.Data;
+import lombok.SneakyThrows;
+
 /**
  * @author Christoph Strobl
  * @author Mark Paluch
@@ -52,16 +53,16 @@ import org.springframework.util.ObjectUtils;
 @ExtendWith(MockitoExtension.class)
 public class SpelQueryCreatorUnitTests {
 
-	private static final DateTimeFormatter FORMATTER = ISODateTimeFormat.dateTimeNoMillis().withZoneUTC();
+	private static final DateTimeFormatter FORMATTER = DateTimeFormatter.ISO_ZONED_DATE_TIME;
 
 	private static final Person RICKON = new Person("rickon", 4);
 	private static final Person BRAN = new Person("bran", 9)//
-			.skinChanger(true)//
-			.bornAt(FORMATTER.parseDateTime("2013-01-31T06:00:00Z").toDate());
+			.skinChanger(true)
+			.bornAt(Date.from(ZonedDateTime.parse("2013-01-31T06:00:00Z", FORMATTER).toInstant()));
 	private static final Person ARYA = new Person("arya", 13);
 	private static final Person ROBB = new Person("robb", 16)//
-			.named("stark")//
-			.bornAt(FORMATTER.parseDateTime("2010-09-20T06:00:00Z").toDate());
+			.named("stark")
+			.bornAt(Date.from(ZonedDateTime.parse("2010-09-20T06:00:00Z", FORMATTER).toInstant()));
 	private static final Person JON = new Person("jon", 17).named("snow");
 
 	@Mock RepositoryMetadata metadataMock;
