@@ -18,6 +18,7 @@ package org.springframework.data.keyvalue.repository.support;
 import static org.springframework.data.keyvalue.repository.support.KeyValueQuerydslUtils.*;
 
 import java.util.Optional;
+import java.util.function.Function;
 
 import org.springframework.dao.IncorrectResultSizeDataAccessException;
 import org.springframework.data.domain.Page;
@@ -30,6 +31,7 @@ import org.springframework.data.querydsl.EntityPathResolver;
 import org.springframework.data.querydsl.QuerydslPredicateExecutor;
 import org.springframework.data.querydsl.SimpleEntityPathResolver;
 import org.springframework.data.repository.core.EntityInformation;
+import org.springframework.data.repository.query.FluentQuery;
 import org.springframework.lang.Nullable;
 import org.springframework.util.Assert;
 import org.springframework.util.ObjectUtils;
@@ -212,6 +214,12 @@ public class QuerydslKeyValueRepository<T, ID> extends SimpleKeyValueRepository<
 		Assert.notNull(predicate, "Predicate must not be null!");
 
 		return count(predicate) > 0;
+	}
+
+	@Override
+	public <S extends T, R> R findBy(Predicate predicate,
+			Function<FluentQuery.FetchableFluentQuery<S>, R> queryFunction) {
+		throw new UnsupportedOperationException("Not yet supported");
 	}
 
 	/**
