@@ -23,6 +23,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.keyvalue.core.KeyValueOperations;
 import org.springframework.data.keyvalue.repository.KeyValueRepository;
+import org.springframework.data.projection.SpelAwareProxyProjectionFactory;
 import org.springframework.data.querydsl.EntityPathResolver;
 import org.springframework.data.querydsl.QuerydslPredicateExecutor;
 import org.springframework.data.querydsl.SimpleEntityPathResolver;
@@ -77,7 +78,8 @@ public class QuerydslKeyValueRepository<T, ID> extends SimpleKeyValueRepository<
 
 		Assert.notNull(resolver, "EntityPathResolver must not be null!");
 
-		this.executor = new QuerydslKeyValuePredicateExecutor<>(entityInformation, operations, resolver);
+		this.executor = new QuerydslKeyValuePredicateExecutor<>(entityInformation, new SpelAwareProxyProjectionFactory(),
+				operations, resolver);
 	}
 
 	/*
@@ -152,6 +154,10 @@ public class QuerydslKeyValueRepository<T, ID> extends SimpleKeyValueRepository<
 		return executor.exists(predicate);
 	}
 
+	/* 
+	 * (non-Javadoc)
+	 * @see org.springframework.data.querydsl.QuerydslPredicateExecutor#findBy(com.querydsl.core.types.Predicate, java.util.function.Function)
+	 */
 	@Override
 	public <S extends T, R> R findBy(Predicate predicate,
 			Function<FluentQuery.FetchableFluentQuery<S>, R> queryFunction) {

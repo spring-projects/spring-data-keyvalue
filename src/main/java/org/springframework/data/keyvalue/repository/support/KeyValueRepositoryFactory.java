@@ -31,6 +31,7 @@ import org.springframework.data.mapping.PersistentEntity;
 import org.springframework.data.mapping.context.MappingContext;
 import org.springframework.data.projection.ProjectionFactory;
 import org.springframework.data.querydsl.QuerydslPredicateExecutor;
+import org.springframework.data.querydsl.SimpleEntityPathResolver;
 import org.springframework.data.repository.core.EntityInformation;
 import org.springframework.data.repository.core.NamedQueries;
 import org.springframework.data.repository.core.RepositoryInformation;
@@ -152,12 +153,12 @@ public class KeyValueRepositoryFactory extends RepositoryFactorySupport {
 
 	/**
 	 * Creates {@link RepositoryFragments} based on {@link RepositoryMetadata} to add Key-Value-specific extensions.
-	 * Typically adds a {@link QuerydslMongoPredicateExecutor} if the repository interface uses Querydsl.
+	 * Typically adds a {@link QuerydslKeyValuePredicateExecutor} if the repository interface uses Querydsl.
 	 * <p>
 	 * Can be overridden by subclasses to customize {@link RepositoryFragments}.
 	 *
 	 * @param metadata repository metadata.
-	 * @param operations the MongoDB operations manager.
+	 * @param operations the KeyValue operations manager.
 	 * @return
 	 * @since 2.6
 	 */
@@ -171,7 +172,8 @@ public class KeyValueRepositoryFactory extends RepositoryFactorySupport {
 			}
 
 			return RepositoryFragments
-					.just(new QuerydslKeyValuePredicateExecutor<>(getEntityInformation(metadata.getDomainType()), operations));
+					.just(new QuerydslKeyValuePredicateExecutor<>(getEntityInformation(metadata.getDomainType()),
+							getProjectionFactory(), operations, SimpleEntityPathResolver.INSTANCE));
 		}
 
 		return RepositoryFragments.empty();
