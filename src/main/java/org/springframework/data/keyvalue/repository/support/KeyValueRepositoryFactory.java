@@ -16,12 +16,14 @@
 package org.springframework.data.keyvalue.repository.support;
 
 import static org.springframework.data.querydsl.QuerydslUtils.*;
+import static org.springframework.data.repository.core.support.RepositoryComposition.*;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
 import java.util.Optional;
 
 import org.springframework.beans.BeanUtils;
+import org.springframework.dao.InvalidDataAccessApiUsageException;
 import org.springframework.data.keyvalue.core.KeyValueOperations;
 import org.springframework.data.keyvalue.repository.query.KeyValuePartTreeQuery;
 import org.springframework.data.keyvalue.repository.query.SpelQueryCreator;
@@ -136,8 +138,43 @@ public class KeyValueRepositoryFactory extends RepositoryFactorySupport {
 	 */
 	@Override
 	protected Class<?> getRepositoryBaseClass(RepositoryMetadata metadata) {
-		return isQueryDslRepository(metadata.getRepositoryInterface()) ? QuerydslKeyValueRepository.class
-				: SimpleKeyValueRepository.class;
+		return SimpleKeyValueRepository.class;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * @see org.springframework.data.repository.core.support.RepositoryFactorySupport#getRepositoryFragments(org.springframework.data.repository.core.RepositoryMetadata)
+	 */
+	@Override
+	protected RepositoryFragments getRepositoryFragments(RepositoryMetadata metadata) {
+		return getRepositoryFragments(metadata, keyValueOperations);
+	}
+
+	/**
+	 * Creates {@link RepositoryFragments} based on {@link RepositoryMetadata} to add Key-Value-specific extensions.
+	 * Typically adds a {@link QuerydslMongoPredicateExecutor} if the repository interface uses Querydsl.
+	 * <p>
+	 * Can be overridden by subclasses to customize {@link RepositoryFragments}.
+	 *
+	 * @param metadata repository metadata.
+	 * @param operations the MongoDB operations manager.
+	 * @return
+	 * @since 2.6
+	 */
+	protected RepositoryFragments getRepositoryFragments(RepositoryMetadata metadata, KeyValueOperations operations) {
+
+		if (isQueryDslRepository(metadata.getRepositoryInterface())) {
+
+			if (metadata.isReactiveRepository()) {
+				throw new InvalidDataAccessApiUsageException(
+						"Cannot combine Querydsl and reactive repository support in a single interface");
+			}
+
+			return RepositoryFragments
+					.just(new QuerydslKeyValuePredicateExecutor<>(getEntityInformation(metadata.getDomainType()), operations));
+		}
+
+		return RepositoryFragments.empty();
 	}
 
 	/**

@@ -15,14 +15,10 @@
  */
 package org.springframework.data.keyvalue.repository.support;
 
-import static org.springframework.data.keyvalue.repository.support.KeyValueQuerydslUtils.*;
-
 import java.util.Optional;
 import java.util.function.Function;
 
-import org.springframework.dao.IncorrectResultSizeDataAccessException;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.keyvalue.core.KeyValueOperations;
@@ -32,17 +28,11 @@ import org.springframework.data.querydsl.QuerydslPredicateExecutor;
 import org.springframework.data.querydsl.SimpleEntityPathResolver;
 import org.springframework.data.repository.core.EntityInformation;
 import org.springframework.data.repository.query.FluentQuery;
-import org.springframework.lang.Nullable;
 import org.springframework.util.Assert;
-import org.springframework.util.ObjectUtils;
 
-import com.querydsl.collections.AbstractCollQuery;
 import com.querydsl.collections.CollQuery;
-import com.querydsl.core.NonUniqueResultException;
-import com.querydsl.core.types.EntityPath;
 import com.querydsl.core.types.OrderSpecifier;
 import com.querydsl.core.types.Predicate;
-import com.querydsl.core.types.dsl.PathBuilder;
 
 /**
  * {@link KeyValueRepository} implementation capable of executing {@link Predicate}s using {@link CollQuery}.
@@ -53,13 +43,13 @@ import com.querydsl.core.types.dsl.PathBuilder;
  * @author Mark Paluch
  * @param <T> the domain type to manage
  * @param <ID> the identifier type of the domain type
+ * @deprecated since 2.6, use {@link QuerydslKeyValuePredicateExecutor} instead.
  */
+@Deprecated
 public class QuerydslKeyValueRepository<T, ID> extends SimpleKeyValueRepository<T, ID>
 		implements QuerydslPredicateExecutor<T> {
 
-	private static final EntityPathResolver DEFAULT_ENTITY_PATH_RESOLVER = SimpleEntityPathResolver.INSTANCE;
-
-	private final PathBuilder<T> builder;
+	private final QuerydslKeyValuePredicateExecutor<T> executor;
 
 	/**
 	 * Creates a new {@link QuerydslKeyValueRepository} for the given {@link EntityInformation} and
@@ -69,7 +59,7 @@ public class QuerydslKeyValueRepository<T, ID> extends SimpleKeyValueRepository<
 	 * @param operations must not be {@literal null}.
 	 */
 	public QuerydslKeyValueRepository(EntityInformation<T, ID> entityInformation, KeyValueOperations operations) {
-		this(entityInformation, operations, DEFAULT_ENTITY_PATH_RESOLVER);
+		this(entityInformation, operations, SimpleEntityPathResolver.INSTANCE);
 	}
 
 	/**
@@ -87,8 +77,7 @@ public class QuerydslKeyValueRepository<T, ID> extends SimpleKeyValueRepository<
 
 		Assert.notNull(resolver, "EntityPathResolver must not be null!");
 
-		EntityPath<T> path = resolver.createPath(entityInformation.getJavaType());
-		this.builder = new PathBuilder<>(path.getType(), path.getMetadata());
+		this.executor = new QuerydslKeyValuePredicateExecutor<>(entityInformation, operations, resolver);
 	}
 
 	/*
@@ -97,14 +86,7 @@ public class QuerydslKeyValueRepository<T, ID> extends SimpleKeyValueRepository<
 	 */
 	@Override
 	public Optional<T> findOne(Predicate predicate) {
-
-		Assert.notNull(predicate, "Predicate must not be null!");
-
-		try {
-			return Optional.ofNullable(prepareQuery(predicate).fetchOne());
-		} catch (NonUniqueResultException o_O) {
-			throw new IncorrectResultSizeDataAccessException("Expected one or no result but found more than one!", 1, o_O);
-		}
+		return executor.findOne(predicate);
 	}
 
 	/*
@@ -113,10 +95,7 @@ public class QuerydslKeyValueRepository<T, ID> extends SimpleKeyValueRepository<
 	 */
 	@Override
 	public Iterable<T> findAll(Predicate predicate) {
-
-		Assert.notNull(predicate, "Predicate must not be null!");
-
-		return prepareQuery(predicate).fetchResults().getResults();
+		return executor.findAll(predicate);
 	}
 
 	/*
@@ -125,14 +104,7 @@ public class QuerydslKeyValueRepository<T, ID> extends SimpleKeyValueRepository<
 	 */
 	@Override
 	public Iterable<T> findAll(Predicate predicate, OrderSpecifier<?>... orders) {
-
-		Assert.notNull(predicate, "Predicate must not be null!");
-		Assert.notNull(orders, "OrderSpecifiers must not be null!");
-
-		AbstractCollQuery<T, ?> query = prepareQuery(predicate);
-		query.orderBy(orders);
-
-		return query.fetchResults().getResults();
+		return executor.findAll(predicate, orders);
 	}
 
 	/*
@@ -141,11 +113,7 @@ public class QuerydslKeyValueRepository<T, ID> extends SimpleKeyValueRepository<
 	 */
 	@Override
 	public Iterable<T> findAll(Predicate predicate, Sort sort) {
-
-		Assert.notNull(predicate, "Predicate must not be null!");
-		Assert.notNull(sort, "Sort must not be null!");
-
-		return findAll(predicate, toOrderSpecifier(sort, builder));
+		return executor.findAll(predicate, sort);
 	}
 
 	/*
@@ -154,23 +122,7 @@ public class QuerydslKeyValueRepository<T, ID> extends SimpleKeyValueRepository<
 	 */
 	@Override
 	public Page<T> findAll(Predicate predicate, Pageable pageable) {
-
-		Assert.notNull(predicate, "Predicate must not be null!");
-		Assert.notNull(pageable, "Pageable must not be null!");
-
-		AbstractCollQuery<T, ?> query = prepareQuery(predicate);
-
-		if (pageable.isPaged() || pageable.getSort().isSorted()) {
-
-			query.offset(pageable.getOffset());
-			query.limit(pageable.getPageSize());
-
-			if (pageable.getSort().isSorted()) {
-				query.orderBy(toOrderSpecifier(pageable.getSort(), builder));
-			}
-		}
-
-		return new PageImpl<>(query.fetchResults().getResults(), pageable, count(predicate));
+		return executor.findAll(predicate, pageable);
 	}
 
 	/*
@@ -179,17 +131,7 @@ public class QuerydslKeyValueRepository<T, ID> extends SimpleKeyValueRepository<
 	 */
 	@Override
 	public Iterable<T> findAll(OrderSpecifier<?>... orders) {
-
-		Assert.notNull(orders, "OrderSpecifiers must not be null!");
-
-		if (ObjectUtils.isEmpty(orders)) {
-			return findAll();
-		}
-
-		AbstractCollQuery<T, ?> query = prepareQuery(null);
-		query.orderBy(orders);
-
-		return query.fetchResults().getResults();
+		return executor.findAll(orders);
 	}
 
 	/*
@@ -198,10 +140,7 @@ public class QuerydslKeyValueRepository<T, ID> extends SimpleKeyValueRepository<
 	 */
 	@Override
 	public long count(Predicate predicate) {
-
-		Assert.notNull(predicate, "Predicate must not be null!");
-
-		return prepareQuery(predicate).fetchCount();
+		return executor.count(predicate);
 	}
 
 	/*
@@ -210,29 +149,13 @@ public class QuerydslKeyValueRepository<T, ID> extends SimpleKeyValueRepository<
 	 */
 	@Override
 	public boolean exists(Predicate predicate) {
-
-		Assert.notNull(predicate, "Predicate must not be null!");
-
-		return count(predicate) > 0;
+		return executor.exists(predicate);
 	}
 
 	@Override
 	public <S extends T, R> R findBy(Predicate predicate,
 			Function<FluentQuery.FetchableFluentQuery<S>, R> queryFunction) {
-		throw new UnsupportedOperationException("Not yet supported");
+		return executor.findBy(predicate, queryFunction);
 	}
 
-	/**
-	 * Creates executable query for given {@link Predicate}.
-	 *
-	 * @param predicate
-	 * @return
-	 */
-	protected AbstractCollQuery<T, ?> prepareQuery(@Nullable Predicate predicate) {
-
-		CollQuery<T> query = new CollQuery<>();
-		query.from(builder, findAll());
-
-		return predicate != null ? query.where(predicate) : query;
-	}
 }
