@@ -204,11 +204,11 @@ public class KeyValueRepositoryFactory extends RepositoryFactorySupport {
 	 */
 	private static class KeyValueQueryLookupStrategy implements QueryLookupStrategy {
 
-		private QueryMethodEvaluationContextProvider evaluationContextProvider;
-		private KeyValueOperations keyValueOperations;
+		private final QueryMethodEvaluationContextProvider evaluationContextProvider;
+		private final KeyValueOperations keyValueOperations;
 
-		private Class<? extends AbstractQueryCreator<?, ?>> queryCreator;
-		private Class<? extends RepositoryQuery> repositoryQueryType;
+		private final Class<? extends AbstractQueryCreator<?, ?>> queryCreator;
+		private final Class<? extends RepositoryQuery> repositoryQueryType;
 
 		/**
 		 * @param key
