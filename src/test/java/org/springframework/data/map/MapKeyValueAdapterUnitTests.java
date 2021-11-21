@@ -29,6 +29,7 @@ import org.springframework.data.util.CloseableIterator;
 
 /**
  * @author Christoph Strobl
+ * @author Hang Xie
  */
 class MapKeyValueAdapterUnitTests {
 
