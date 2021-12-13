@@ -154,7 +154,7 @@ class KeyValuePartTreeQueryUnitTests {
 		KeyValueQuery<?> query = partTreeQuery.prepareQuery(new Object[] { "firstname" });
 		partTreeQuery.doExecute(new Object[] { "firstname" }, query);
 
-		verify(kvOpsMock).count(eq(query), eq(Person.class));
+		verify(kvOpsMock).exists(eq(query), eq(Person.class));
 	}
 
 	interface Repo {

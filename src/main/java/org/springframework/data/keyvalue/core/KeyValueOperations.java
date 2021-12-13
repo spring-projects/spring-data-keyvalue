@@ -178,6 +178,16 @@ public interface KeyValueOperations extends DisposableBean {
 	long count(KeyValueQuery<?> query, Class<?> type);
 
 	/**
+	 * Determine whether result of given {@link KeyValueQuery} contains at least one element.
+	 *
+	 * @param query
+	 * @param type
+	 * @return
+	 * @since 2.7
+	 */
+	boolean exists(KeyValueQuery<?> query, Class<?> type);
+
+	/**
 	 * @return mapping context in use.
 	 */
 	MappingContext<?, ?> getMappingContext();

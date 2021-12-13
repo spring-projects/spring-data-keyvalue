@@ -447,6 +447,15 @@ public class KeyValueTemplate implements KeyValueOperations, ApplicationEventPub
 
 	/*
 	 * (non-Javadoc)
+	 * @see org.springframework.data.keyvalue.core.KeyValueOperations#count(org.springframework.data.keyvalue.core.query.KeyValueQuery, java.lang.Class)
+	 */
+	@Override
+	public boolean exists(KeyValueQuery<?> query, Class<?> type) {
+		return executeRequired(adapter -> adapter.exists(query, resolveKeySpace(type)));
+	}
+
+	/*
+	 * (non-Javadoc)
 	 * @see org.springframework.data.keyvalue.core.KeyValueOperations#getMappingContext()
 	 */
 	@Override

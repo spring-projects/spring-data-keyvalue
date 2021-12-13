@@ -34,6 +34,7 @@ import org.springframework.data.repository.query.ResultProcessor;
 import org.springframework.data.repository.query.parser.AbstractQueryCreator;
 import org.springframework.data.repository.query.parser.PartTree;
 import org.springframework.data.spel.EvaluationContextProvider;
+import org.springframework.data.util.Lazy;
 import org.springframework.expression.EvaluationContext;
 import org.springframework.expression.spel.standard.SpelExpression;
 import org.springframework.lang.Nullable;
@@ -50,9 +51,10 @@ import org.springframework.util.ClassUtils;
  */
 public class KeyValuePartTreeQuery implements RepositoryQuery {
 
-	private final QueryMethodEvaluationContextProvider evaluationContextProvider;
+	private final Lazy<PartTree> partTree;
 	private final QueryMethod queryMethod;
 	private final KeyValueOperations keyValueOperations;
+	private final QueryMethodEvaluationContextProvider evaluationContextProvider;
 	private final QueryCreatorFactory<AbstractQueryCreator<KeyValueQuery<?>, ?>> queryCreatorFactory;
 
 	/**
@@ -83,13 +85,16 @@ public class KeyValuePartTreeQuery implements RepositoryQuery {
 	 * @since 2.0
 	 */
 	public KeyValuePartTreeQuery(QueryMethod queryMethod, QueryMethodEvaluationContextProvider evaluationContextProvider,
-			KeyValueOperations keyValueOperations, QueryCreatorFactory queryCreatorFactory) {
+			KeyValueOperations keyValueOperations,
+			QueryCreatorFactory<AbstractQueryCreator<KeyValueQuery<?>, ?>> queryCreatorFactory) {
 
 		Assert.notNull(queryMethod, "Query method must not be null!");
 		Assert.notNull(evaluationContextProvider, "EvaluationContextprovider must not be null!");
 		Assert.notNull(keyValueOperations, "KeyValueOperations must not be null!");
 		Assert.notNull(queryCreatorFactory, "QueryCreatorFactory type must not be null!");
 
+		this.partTree = Lazy
+				.of(() -> new PartTree(queryMethod.getName(), queryMethod.getEntityInformation().getJavaType()));
 		this.queryMethod = queryMethod;
 		this.keyValueOperations = keyValueOperations;
 		this.evaluationContextProvider = evaluationContextProvider;
@@ -130,17 +135,15 @@ public class KeyValuePartTreeQuery implements RepositoryQuery {
 					: keyValueOperations.count(query, queryMethod.getEntityInformation().getJavaType());
 
 			return new PageImpl(IterableConverter.toList(result), page, count);
-
 		} else if (queryMethod.isCollectionQuery()) {
 
 			return this.keyValueOperations.find(query, queryMethod.getEntityInformation().getJavaType());
-
 		} else if (queryMethod.isQueryForEntity()) {
 
 			Iterable<?> result = this.keyValueOperations.find(query, queryMethod.getEntityInformation().getJavaType());
 			return result.iterator().hasNext() ? result.iterator().next() : null;
-		} else if (new PartTree(queryMethod.getName(), queryMethod.getEntityInformation().getJavaType()).isExistsProjection()) {
-			return keyValueOperations.count(query, queryMethod.getEntityInformation().getJavaType()) > 0;
+		} else if (partTree.get().isExistsProjection()) {
+			return keyValueOperations.exists(query, queryMethod.getEntityInformation().getJavaType());
 		}
 
 		throw new UnsupportedOperationException("Query method not supported.");
@@ -206,8 +209,7 @@ public class KeyValuePartTreeQuery implements RepositoryQuery {
 	 */
 	public KeyValueQuery<?> createQuery(ParameterAccessor accessor) {
 
-		PartTree tree = new PartTree(getQueryMethod().getName(), getQueryMethod().getEntityInformation().getJavaType());
-
+		PartTree tree = this.partTree.get();
 		AbstractQueryCreator<? extends KeyValueQuery<?>, ?> queryCreator = queryCreatorFactory.queryCreatorFor(tree,
 				accessor);
 
@@ -235,7 +237,7 @@ public class KeyValuePartTreeQuery implements RepositoryQuery {
 	 * @author Christoph Strobl
 	 * @since 2.0
 	 */
-	public interface QueryCreatorFactory<T extends AbstractQueryCreator> {
+	public interface QueryCreatorFactory<T extends AbstractQueryCreator<?, ?>> {
 
 		T queryCreatorFor(PartTree partTree, ParameterAccessor accessor);
 	}
@@ -260,6 +262,7 @@ public class KeyValuePartTreeQuery implements RepositoryQuery {
 		}
 
 		@Override
+		@SuppressWarnings("unchecked")
 		public AbstractQueryCreator<KeyValueQuery<?>, ?> queryCreatorFor(PartTree partTree, ParameterAccessor accessor) {
 
 			Assert.state(constructor != null,

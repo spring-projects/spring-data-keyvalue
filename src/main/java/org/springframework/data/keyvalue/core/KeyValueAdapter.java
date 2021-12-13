@@ -184,4 +184,16 @@ public interface KeyValueAdapter extends DisposableBean {
 	 * @return
 	 */
 	long count(KeyValueQuery<?> query, String keyspace);
+
+	/**
+	 * Determine whether result of given {@link KeyValueQuery} within {@literal keyspace} contains at least one element.
+	 *
+	 * @param query must not be {@literal null}.
+	 * @param keyspace must not be {@literal null}.
+	 * @return
+	 * @since 2.7
+	 */
+	default boolean exists(KeyValueQuery<?> query, String keyspace) {
+		return count(query, keyspace) > 0;
+	}
 }
