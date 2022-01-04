@@ -352,7 +352,7 @@ class KeyValueTemplateUnitTests {
 
 		template.insert("1", FOO_ONE);
 
-		verifyZeroInteractions(publisherMock);
+		verifyNoInteractions(publisherMock);
 	}
 
 	@Test // DATAKV-104
@@ -362,7 +362,7 @@ class KeyValueTemplateUnitTests {
 
 		template.insert("1", FOO_ONE);
 
-		verifyZeroInteractions(publisherMock);
+		verifyNoInteractions(publisherMock);
 	}
 
 	@Test // DATAKV-104
@@ -373,7 +373,7 @@ class KeyValueTemplateUnitTests {
 
 		template.insert("1", FOO_ONE);
 
-		verifyZeroInteractions(publisherMock);
+		verifyNoInteractions(publisherMock);
 	}
 
 	@Test // DATAKV-104
@@ -392,7 +392,7 @@ class KeyValueTemplateUnitTests {
 
 		template.insert("1", FOO_ONE);
 
-		verifyZeroInteractions(publisherMock);
+		verifyNoInteractions(publisherMock);
 	}
 
 	@Test // DATAKV-91, DATAKV-104, DATAKV-187

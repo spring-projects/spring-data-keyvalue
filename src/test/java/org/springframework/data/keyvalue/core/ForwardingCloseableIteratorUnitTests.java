@@ -91,7 +91,7 @@ class ForwardingCloseableIteratorUnitTests<K, V> {
 
 		new ForwardingCloseableIterator<>(iteratorMock).close();
 
-		verifyZeroInteractions(iteratorMock);
+		verifyNoInteractions(iteratorMock);
 	}
 
 	@Test // DATAKV-99
