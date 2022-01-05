@@ -41,10 +41,6 @@ public class CachingKeyValuePartTreeQuery extends KeyValuePartTreeQuery {
 		super(queryMethod, evaluationContextProvider, keyValueOperations, queryCreator);
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @see org.springframework.data.keyvalue.repository.query.KeyValuePartTreeQuery#prepareQuery(java.lang.Object[])
-	 */
 	protected KeyValueQuery<?> prepareQuery(Object[] parameters) {
 
 		if (cachedQuery == null) {

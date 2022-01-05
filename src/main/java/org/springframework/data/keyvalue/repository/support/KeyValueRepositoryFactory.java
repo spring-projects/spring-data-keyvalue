@@ -109,10 +109,6 @@ public class KeyValueRepositoryFactory extends RepositoryFactorySupport {
 		this.repositoryQueryType = repositoryQueryType;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @see org.springframework.data.repository.core.support.RepositoryFactorySupport#getEntityInformation(java.lang.Class)
-	 */
 	@Override
 	@SuppressWarnings("unchecked")
 	public <T, ID> EntityInformation<T, ID> getEntityInformation(Class<T> domainClass) {
@@ -122,10 +118,6 @@ public class KeyValueRepositoryFactory extends RepositoryFactorySupport {
 		return new PersistentEntityInformation<>(entity);
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @see org.springframework.data.repository.core.support.RepositoryFactorySupport#getTargetRepository(org.springframework.data.repository.core.RepositoryMetadata)
-	 */
 	@Override
 	protected Object getTargetRepository(RepositoryInformation repositoryInformation) {
 
@@ -133,19 +125,11 @@ public class KeyValueRepositoryFactory extends RepositoryFactorySupport {
 		return super.getTargetRepositoryViaReflection(repositoryInformation, entityInformation, keyValueOperations);
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @see org.springframework.data.repository.core.support.RepositoryFactorySupport#getRepositoryBaseClass(org.springframework.data.repository.core.RepositoryMetadata)
-	 */
 	@Override
 	protected Class<?> getRepositoryBaseClass(RepositoryMetadata metadata) {
 		return SimpleKeyValueRepository.class;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @see org.springframework.data.repository.core.support.RepositoryFactorySupport#getRepositoryFragments(org.springframework.data.repository.core.RepositoryMetadata)
-	 */
 	@Override
 	protected RepositoryFragments getRepositoryFragments(RepositoryMetadata metadata) {
 		return getRepositoryFragments(metadata, keyValueOperations);
@@ -189,10 +173,6 @@ public class KeyValueRepositoryFactory extends RepositoryFactorySupport {
 		return QUERY_DSL_PRESENT && QuerydslPredicateExecutor.class.isAssignableFrom(repositoryInterface);
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @see org.springframework.data.repository.core.support.RepositoryFactorySupport#getQueryLookupStrategy(org.springframework.data.repository.query.QueryLookupStrategy.Key, org.springframework.data.repository.query.EvaluationContextProvider)
-	 */
 	@Override
 	protected Optional<QueryLookupStrategy> getQueryLookupStrategy(@Nullable Key key,
 			QueryMethodEvaluationContextProvider evaluationContextProvider) {
@@ -235,10 +215,6 @@ public class KeyValueRepositoryFactory extends RepositoryFactorySupport {
 			this.repositoryQueryType = repositoryQueryType;
 		}
 
-		/*
-		 * (non-Javadoc)
-		 * @see org.springframework.data.repository.query.QueryLookupStrategy#resolveQuery(java.lang.reflect.Method, org.springframework.data.repository.core.RepositoryMetadata, org.springframework.data.projection.ProjectionFactory, org.springframework.data.repository.core.NamedQueries)
-		 */
 		@Override
 		@SuppressWarnings("unchecked")
 		public RepositoryQuery resolveQuery(Method method, RepositoryMetadata metadata, ProjectionFactory factory,

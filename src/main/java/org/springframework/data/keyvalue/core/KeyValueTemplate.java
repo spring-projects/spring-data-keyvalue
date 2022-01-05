@@ -132,19 +132,11 @@ public class KeyValueTemplate implements KeyValueOperations, ApplicationEventPub
 		}
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @see org.springframework.context.ApplicationEventPublisherAware#setApplicationEventPublisher(org.springframework.context.ApplicationEventPublisher)
-	 */
 	@Override
 	public void setApplicationEventPublisher(ApplicationEventPublisher applicationEventPublisher) {
 		this.eventPublisher = applicationEventPublisher;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @see org.springframework.data.keyvalue.core.KeyValueOperations#insert(java.lang.Object)
-	 */
 	@Override
 	public <T> T insert(T objectToInsert) {
 
@@ -157,10 +149,6 @@ public class KeyValueTemplate implements KeyValueOperations, ApplicationEventPub
 		return insert(id, objectToInsert);
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @see org.springframework.data.keyvalue.core.KeyValueOperations#insert(java.lang.Object, java.lang.Object)
-	 */
 	@Override
 	public <T> T insert(Object id, T objectToInsert) {
 
@@ -187,10 +175,6 @@ public class KeyValueTemplate implements KeyValueOperations, ApplicationEventPub
 		return objectToInsert;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @see org.springframework.data.keyvalue.core.KeyValueOperations#update(java.lang.Object)
-	 */
 	@Override
 	public <T> T update(T objectToUpdate) {
 
@@ -204,10 +188,6 @@ public class KeyValueTemplate implements KeyValueOperations, ApplicationEventPub
 		return update(entity.getIdentifierAccessor(objectToUpdate).getRequiredIdentifier(), objectToUpdate);
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @see org.springframework.data.keyvalue.core.KeyValueOperations#update(java.lang.Object, java.lang.Object)
-	 */
 	@Override
 	public <T> T update(Object id, T objectToUpdate) {
 
@@ -226,10 +206,6 @@ public class KeyValueTemplate implements KeyValueOperations, ApplicationEventPub
 		return objectToUpdate;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @see org.springframework.data.keyvalue.core.KeyValueOperations#findAllOf(java.lang.Class)
-	 */
 	@Override
 	public <T> Iterable<T> findAll(Class<T> type) {
 
@@ -250,10 +226,6 @@ public class KeyValueTemplate implements KeyValueOperations, ApplicationEventPub
 		});
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @see org.springframework.data.keyvalue.core.KeyValueOperations#findById(java.lang.Object, java.lang.Class)
-	 */
 	@Override
 	public <T> Optional<T> findById(Object id, Class<T> type) {
 
@@ -280,10 +252,6 @@ public class KeyValueTemplate implements KeyValueOperations, ApplicationEventPub
 		return Optional.ofNullable(result);
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @see org.springframework.data.keyvalue.core.KeyValueOperations#delete(java.lang.Class)
-	 */
 	@Override
 	public void delete(Class<?> type) {
 
@@ -302,10 +270,6 @@ public class KeyValueTemplate implements KeyValueOperations, ApplicationEventPub
 		potentiallyPublishEvent(KeyValueEvent.afterDropKeySpace(keyspace, type));
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @see org.springframework.data.keyvalue.core.KeyValueOperations#delete(java.lang.Object)
-	 */
 	@SuppressWarnings("unchecked")
 	@Override
 	public <T> T delete(T objectToDelete) {
@@ -316,10 +280,6 @@ public class KeyValueTemplate implements KeyValueOperations, ApplicationEventPub
 		return delete(entity.getIdentifierAccessor(objectToDelete).getIdentifier(), type);
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @see org.springframework.data.keyvalue.core.KeyValueOperations#delete(java.lang.Object, java.lang.Class)
-	 */
 	@Override
 	public <T> T delete(Object id, Class<T> type) {
 
@@ -337,10 +297,6 @@ public class KeyValueTemplate implements KeyValueOperations, ApplicationEventPub
 		return result;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @see org.springframework.data.keyvalue.core.KeyValueOperations#count(java.lang.Class)
-	 */
 	@Override
 	public long count(Class<?> type) {
 
@@ -348,10 +304,6 @@ public class KeyValueTemplate implements KeyValueOperations, ApplicationEventPub
 		return adapter.count(resolveKeySpace(type));
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @see org.springframework.data.keyvalue.core.KeyValueOperations#execute(org.springframework.data.keyvalue.core.KeyValueCallback)
-	 */
 	@Nullable
 	@Override
 	public <T> T execute(KeyValueCallback<T> action) {
@@ -383,10 +335,6 @@ public class KeyValueTemplate implements KeyValueOperations, ApplicationEventPub
 		throw new IllegalStateException(String.format("KeyValueCallback %s returned null value!", action));
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @see org.springframework.data.keyvalue.core.KeyValueOperations#find(org.springframework.data.keyvalue.core.query.KeyValueQuery, java.lang.Class)
-	 */
 	@Override
 	public <T> Iterable<T> find(KeyValueQuery<?> query, Class<T> type) {
 
@@ -406,67 +354,39 @@ public class KeyValueTemplate implements KeyValueOperations, ApplicationEventPub
 		});
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @see org.springframework.data.keyvalue.core.KeyValueOperations#findAllOf(org.springframework.data.domain.Sort, java.lang.Class)
-	 */
 	@SuppressWarnings("rawtypes")
 	@Override
 	public <T> Iterable<T> findAll(Sort sort, Class<T> type) {
 		return find(new KeyValueQuery(sort), type);
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @see org.springframework.data.keyvalue.core.KeyValueOperations#findInRange(long, int, java.lang.Class)
-	 */
 	@SuppressWarnings("rawtypes")
 	@Override
 	public <T> Iterable<T> findInRange(long offset, int rows, Class<T> type) {
 		return find(new KeyValueQuery().skip(offset).limit(rows), type);
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @see org.springframework.data.keyvalue.core.KeyValueOperations#findInRange(long, int, org.springframework.data.domain.Sort, java.lang.Class)
-	 */
 	@SuppressWarnings("rawtypes")
 	@Override
 	public <T> Iterable<T> findInRange(long offset, int rows, Sort sort, Class<T> type) {
 		return find(new KeyValueQuery(sort).skip(offset).limit(rows), type);
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @see org.springframework.data.keyvalue.core.KeyValueOperations#count(org.springframework.data.keyvalue.core.query.KeyValueQuery, java.lang.Class)
-	 */
 	@Override
 	public long count(KeyValueQuery<?> query, Class<?> type) {
 		return executeRequired(adapter -> adapter.count(query, resolveKeySpace(type)));
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @see org.springframework.data.keyvalue.core.KeyValueOperations#count(org.springframework.data.keyvalue.core.query.KeyValueQuery, java.lang.Class)
-	 */
 	@Override
 	public boolean exists(KeyValueQuery<?> query, Class<?> type) {
 		return executeRequired(adapter -> adapter.exists(query, resolveKeySpace(type)));
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @see org.springframework.data.keyvalue.core.KeyValueOperations#getMappingContext()
-	 */
 	@Override
 	public MappingContext<?, ?> getMappingContext() {
 		return this.mappingContext;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @see org.springframework.beans.factory.DisposableBean#destroy()
-	 */
 	@Override
 	public void destroy() throws Exception {
 		this.adapter.clear();

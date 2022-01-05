@@ -57,28 +57,16 @@ public class SpelQueryCreator extends AbstractQueryCreator<KeyValueQuery<SpelExp
 		this.expression = toPredicateExpression(tree);
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @see org.springframework.data.repository.query.parser.AbstractQueryCreator#create(org.springframework.data.repository.query.parser.Part, java.util.Iterator)
-	 */
 	@Override
 	protected String create(Part part, Iterator<Object> iterator) {
 		return "";
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @see org.springframework.data.repository.query.parser.AbstractQueryCreator#and(org.springframework.data.repository.query.parser.Part, java.lang.Object, java.util.Iterator)
-	 */
 	@Override
 	protected String and(Part part, String base, Iterator<Object> iterator) {
 		return "";
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @see org.springframework.data.repository.query.parser.AbstractQueryCreator#or(java.lang.Object, java.lang.Object)
-	 */
 	@Override
 	protected String or(String base, String criteria) {
 		return "";

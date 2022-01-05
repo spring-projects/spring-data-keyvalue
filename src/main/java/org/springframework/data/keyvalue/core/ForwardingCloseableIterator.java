@@ -58,28 +58,16 @@ public class ForwardingCloseableIterator<T> implements CloseableIterator<T> {
 		this.closeHandler = closeHandler;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @see java.util.Iterator#hasNext()
-	 */
 	@Override
 	public boolean hasNext() {
 		return delegate.hasNext();
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @see java.util.Iterator#next()
-	 */
 	@Override
 	public T next() {
 		return delegate.next();
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @see org.springframework.data.util.CloseableIterator#close()
-	 */
 	@Override
 	public void close() {
 		if (closeHandler != null) {

@@ -47,20 +47,12 @@ class SpelQueryEngine extends QueryEngine<KeyValueAdapter, SpelCriteria, Compara
 		super(new SpelCriteriaAccessor(PARSER), new SpelSortAccessor(PARSER));
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @see org.springframework.data.keyvalue.core.QueryEngine#execute(java.lang.Object, java.lang.Object, int, int, java.lang.String)
-	 */
 	@Override
 	public Collection<?> execute(@Nullable SpelCriteria criteria, @Nullable Comparator<?> sort, long offset, int rows,
 			String keyspace) {
 		return sortAndFilterMatchingRange(getRequiredAdapter().getAllOf(keyspace), criteria, sort, offset, rows);
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @see org.springframework.data.keyvalue.core.QueryEngine#count(java.lang.Object, java.lang.String)
-	 */
 	@Override
 	public long count(@Nullable SpelCriteria criteria, String keyspace) {
 		return filterMatchingRange(IterableConverter.toList(getRequiredAdapter().getAllOf(keyspace)), criteria, -1, -1)

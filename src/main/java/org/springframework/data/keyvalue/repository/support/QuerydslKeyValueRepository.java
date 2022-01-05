@@ -82,82 +82,46 @@ public class QuerydslKeyValueRepository<T, ID> extends SimpleKeyValueRepository<
 				operations, resolver);
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @see org.springframework.data.querydsl.QueryDslPredicateExecutor#findOne(com.querydsl.core.types.Predicate)
-	 */
 	@Override
 	public Optional<T> findOne(Predicate predicate) {
 		return executor.findOne(predicate);
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @see org.springframework.data.querydsl.QueryDslPredicateExecutor#findAll(com.querydsl.core.types.Predicate)
-	 */
 	@Override
 	public Iterable<T> findAll(Predicate predicate) {
 		return executor.findAll(predicate);
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @see org.springframework.data.querydsl.QueryDslPredicateExecutor#findAll(com.querydsl.core.types.Predicate, com.querydsl.core.types.OrderSpecifier[])
-	 */
 	@Override
 	public Iterable<T> findAll(Predicate predicate, OrderSpecifier<?>... orders) {
 		return executor.findAll(predicate, orders);
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @see org.springframework.data.querydsl.QueryDslPredicateExecutor#findAll(com.querydsl.core.types.Predicate, org.springframework.data.domain.Sort)
-	 */
 	@Override
 	public Iterable<T> findAll(Predicate predicate, Sort sort) {
 		return executor.findAll(predicate, sort);
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @see org.springframework.data.querydsl.QueryDslPredicateExecutor#findAll(com.querydsl.core.types.Predicate, org.springframework.data.domain.Pageable)
-	 */
 	@Override
 	public Page<T> findAll(Predicate predicate, Pageable pageable) {
 		return executor.findAll(predicate, pageable);
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @see org.springframework.data.querydsl.QueryDslPredicateExecutor#findAll(com.querydsl.core.types.OrderSpecifier[])
-	 */
 	@Override
 	public Iterable<T> findAll(OrderSpecifier<?>... orders) {
 		return executor.findAll(orders);
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @see org.springframework.data.querydsl.QueryDslPredicateExecutor#count(com.querydsl.core.types.Predicate)
-	 */
 	@Override
 	public long count(Predicate predicate) {
 		return executor.count(predicate);
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @see org.springframework.data.querydsl.QueryDslPredicateExecutor#exists(com.querydsl.core.types.Predicate)
-	 */
 	@Override
 	public boolean exists(Predicate predicate) {
 		return executor.exists(predicate);
 	}
 
-	/* 
-	 * (non-Javadoc)
-	 * @see org.springframework.data.querydsl.QuerydslPredicateExecutor#findBy(com.querydsl.core.types.Predicate, java.util.function.Function)
-	 */
 	@Override
 	public <S extends T, R> R findBy(Predicate predicate,
 			Function<FluentQuery.FetchableFluentQuery<S>, R> queryFunction) {

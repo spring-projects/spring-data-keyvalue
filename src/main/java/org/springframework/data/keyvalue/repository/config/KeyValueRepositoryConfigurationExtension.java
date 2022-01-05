@@ -50,46 +50,26 @@ public abstract class KeyValueRepositoryConfigurationExtension extends Repositor
 	protected static final String MAPPING_CONTEXT_BEAN_NAME = "keyValueMappingContext";
 	protected static final String KEY_VALUE_TEMPLATE_BEAN_REF_ATTRIBUTE = "keyValueTemplateRef";
 
-	/*
-	 * (non-Javadoc)
-	 * @see org.springframework.data.repository.config.RepositoryConfigurationExtension#getRepositoryFactoryClassName()
-	 */
 	@Override
 	public String getRepositoryFactoryBeanClassName() {
 		return KeyValueRepositoryFactoryBean.class.getName();
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @see org.springframework.data.repository.config.RepositoryConfigurationExtensionSupport#getModuleName()
-	 */
 	@Override
 	public String getModuleName() {
 		return "KeyValue";
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @see org.springframework.data.repository.config.RepositoryConfigurationExtensionSupport#getModulePrefix()
-	 */
 	@Override
 	protected String getModulePrefix() {
 		return "keyvalue";
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @see org.springframework.data.repository.config.RepositoryConfigurationExtensionSupport#getIdentifyingTypes()
-	 */
 	@Override
 	protected Collection<Class<?>> getIdentifyingTypes() {
 		return Collections.singleton(KeyValueRepository.class);
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @see org.springframework.data.repository.config.RepositoryConfigurationExtensionSupport#postProcess(org.springframework.beans.factory.support.BeanDefinitionBuilder, org.springframework.data.repository.config.AnnotationRepositoryConfigurationSource)
-	 */
 	@Override
 	public void postProcess(BeanDefinitionBuilder builder, AnnotationRepositoryConfigurationSource config) {
 
@@ -145,10 +125,6 @@ public abstract class KeyValueRepositoryConfigurationExtension extends Repositor
 		return queryCreatorAttributes.getClass("repositoryQueryType");
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @see org.springframework.data.repository.config.RepositoryConfigurationExtensionSupport#registerBeansForRoot(org.springframework.beans.factory.support.BeanDefinitionRegistry, org.springframework.data.repository.config.RepositoryConfigurationSource)
-	 */
 	@Override
 	public void registerBeansForRoot(BeanDefinitionRegistry registry, RepositoryConfigurationSource configurationSource) {
 

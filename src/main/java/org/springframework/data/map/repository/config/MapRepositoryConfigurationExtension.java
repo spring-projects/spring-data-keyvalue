@@ -32,37 +32,21 @@ import org.springframework.data.repository.config.RepositoryConfigurationSource;
  */
 public class MapRepositoryConfigurationExtension extends KeyValueRepositoryConfigurationExtension {
 
-	/*
-	 * (non-Javadoc)
-	 * @see org.springframework.data.keyvalue.repository.config.KeyValueRepositoryConfigurationExtension#getModuleName()
-	 */
 	@Override
 	public String getModuleName() {
 		return "Map";
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @see org.springframework.data.keyvalue.repository.config.KeyValueRepositoryConfigurationExtension#getModulePrefix()
-	 */
 	@Override
 	protected String getModulePrefix() {
 		return "map";
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @see org.springframework.data.keyvalue.repository.config.KeyValueRepositoryConfigurationExtension#getDefaultKeyValueTemplateRef()
-	 */
 	@Override
 	protected String getDefaultKeyValueTemplateRef() {
 		return "mapKeyValueTemplate";
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @see org.springframework.data.keyvalue.repository.config.KeyValueRepositoryConfigurationExtension#getDefaultKeyValueTemplateBeanDefinition()
-	 */
 	@Override
 	protected AbstractBeanDefinition getDefaultKeyValueTemplateBeanDefinition(
 			RepositoryConfigurationSource configurationSource) {

@@ -42,10 +42,6 @@ class SpelCriteriaAccessor implements CriteriaAccessor<SpelCriteria> {
 		this.parser = parser;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @see org.springframework.data.keyvalue.core.CriteriaAccessor#resolve(org.springframework.data.keyvalue.core.query.KeyValueQuery)
-	 */
 	@Override
 	public SpelCriteria resolve(KeyValueQuery<?> query) {
 

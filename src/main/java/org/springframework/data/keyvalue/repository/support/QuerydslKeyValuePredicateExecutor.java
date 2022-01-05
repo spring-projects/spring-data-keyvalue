@@ -108,10 +108,6 @@ public class QuerydslKeyValuePredicateExecutor<T> implements QuerydslPredicateEx
 		findAll = () -> operations.findAll(entityInformation.getJavaType());
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @see org.springframework.data.querydsl.QueryDslPredicateExecutor#findOne(com.querydsl.core.types.Predicate)
-	 */
 	@Override
 	public Optional<T> findOne(Predicate predicate) {
 
@@ -124,10 +120,6 @@ public class QuerydslKeyValuePredicateExecutor<T> implements QuerydslPredicateEx
 		}
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @see org.springframework.data.querydsl.QueryDslPredicateExecutor#findAll(com.querydsl.core.types.Predicate)
-	 */
 	@Override
 	public Iterable<T> findAll(Predicate predicate) {
 
@@ -136,10 +128,6 @@ public class QuerydslKeyValuePredicateExecutor<T> implements QuerydslPredicateEx
 		return prepareQuery(predicate).fetchResults().getResults();
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @see org.springframework.data.querydsl.QueryDslPredicateExecutor#findAll(com.querydsl.core.types.Predicate, com.querydsl.core.types.OrderSpecifier[])
-	 */
 	@Override
 	public Iterable<T> findAll(Predicate predicate, OrderSpecifier<?>... orders) {
 
@@ -152,10 +140,6 @@ public class QuerydslKeyValuePredicateExecutor<T> implements QuerydslPredicateEx
 		return query.fetchResults().getResults();
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @see org.springframework.data.querydsl.QueryDslPredicateExecutor#findAll(com.querydsl.core.types.Predicate, org.springframework.data.domain.Sort)
-	 */
 	@Override
 	public Iterable<T> findAll(Predicate predicate, Sort sort) {
 
@@ -165,10 +149,6 @@ public class QuerydslKeyValuePredicateExecutor<T> implements QuerydslPredicateEx
 		return findAll(predicate, toOrderSpecifier(sort, builder));
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @see org.springframework.data.querydsl.QueryDslPredicateExecutor#findAll(com.querydsl.core.types.Predicate, org.springframework.data.domain.Pageable)
-	 */
 	@Override
 	public Page<T> findAll(Predicate predicate, Pageable pageable) {
 
@@ -190,10 +170,6 @@ public class QuerydslKeyValuePredicateExecutor<T> implements QuerydslPredicateEx
 		return new PageImpl<>(query.fetchResults().getResults(), pageable, count(predicate));
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @see org.springframework.data.querydsl.QueryDslPredicateExecutor#findAll(com.querydsl.core.types.OrderSpecifier[])
-	 */
 	@Override
 	public Iterable<T> findAll(OrderSpecifier<?>... orders) {
 
@@ -209,10 +185,6 @@ public class QuerydslKeyValuePredicateExecutor<T> implements QuerydslPredicateEx
 		return query.fetchResults().getResults();
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @see org.springframework.data.querydsl.QueryDslPredicateExecutor#count(com.querydsl.core.types.Predicate)
-	 */
 	@Override
 	public long count(Predicate predicate) {
 
@@ -221,10 +193,6 @@ public class QuerydslKeyValuePredicateExecutor<T> implements QuerydslPredicateEx
 		return prepareQuery(predicate).fetchCount();
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @see org.springframework.data.querydsl.QueryDslPredicateExecutor#exists(com.querydsl.core.types.Predicate)
-	 */
 	@Override
 	public boolean exists(Predicate predicate) {
 
@@ -233,10 +201,6 @@ public class QuerydslKeyValuePredicateExecutor<T> implements QuerydslPredicateEx
 		return count(predicate) > 0;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @see org.springframework.data.querydsl.QuerydslPredicateExecutor#findBy(com.querydsl.core.types.Predicate, java.util.function.Function)
-	 */
 	@Override
 	@SuppressWarnings("unchecked")
 	public <S extends T, R> R findBy(Predicate predicate,
@@ -290,10 +254,6 @@ public class QuerydslKeyValuePredicateExecutor<T> implements QuerydslPredicateEx
 			this.fieldsToInclude = fieldsToInclude;
 		}
 
-		/*
-		* (non-Javadoc)
-		* @see org.springframework.data.repository.query.FluentQuery.FetchableFluentQuery#sortBy(org.springframework.data.domain.Sort)
-		*/
 		@Override
 		public FluentQuery.FetchableFluentQuery<R> sortBy(Sort sort) {
 
@@ -302,10 +262,6 @@ public class QuerydslKeyValuePredicateExecutor<T> implements QuerydslPredicateEx
 			return new FluentQuerydsl<>(predicate, sort, entityType, resultType, fieldsToInclude);
 		}
 
-		/*
-		 * (non-Javadoc)
-		 * @see org.springframework.data.repository.query.FluentQuery.FetchableFluentQuery#as(java.lang.Class)
-		 */
 		@Override
 		public <NR> FluentQuery.FetchableFluentQuery<NR> as(Class<NR> projection) {
 
@@ -314,10 +270,6 @@ public class QuerydslKeyValuePredicateExecutor<T> implements QuerydslPredicateEx
 			return new FluentQuerydsl<>(predicate, sort, entityType, projection, fieldsToInclude);
 		}
 
-		/*
-		 * (non-Javadoc)
-		 * @see org.springframework.data.repository.query.FluentQuery.FetchableFluentQuery#project(java.util.Collection)
-		 */
 		public FluentQuery.FetchableFluentQuery<R> project(Collection<String> properties) {
 
 			Assert.notNull(properties, "Projection properties must not be null!");
@@ -325,10 +277,6 @@ public class QuerydslKeyValuePredicateExecutor<T> implements QuerydslPredicateEx
 			return new FluentQuerydsl<>(predicate, sort, entityType, resultType, new ArrayList<>(properties));
 		}
 
-		/*
-		 * (non-Javadoc)
-		 * @see org.springframework.data.repository.query.FluentQuery.FetchableFluentQuery#oneValue()
-		 */
 		@Override
 		public R oneValue() {
 
@@ -347,10 +295,6 @@ public class QuerydslKeyValuePredicateExecutor<T> implements QuerydslPredicateEx
 
 		}
 
-		/*
-		 * (non-Javadoc)
-		 * @see org.springframework.data.repository.query.FluentQuery.FetchableFluentQuery#firstValue()
-		 */
 		@Override
 		public R firstValue() {
 
@@ -364,10 +308,6 @@ public class QuerydslKeyValuePredicateExecutor<T> implements QuerydslPredicateEx
 			return getConversionFunction().apply(one);
 		}
 
-		/*
-		 * (non-Javadoc)
-		 * @see org.springframework.data.repository.query.FluentQuery.FetchableFluentQuery#all()
-		 */
 		@Override
 		public List<R> all() {
 
@@ -376,10 +316,6 @@ public class QuerydslKeyValuePredicateExecutor<T> implements QuerydslPredicateEx
 			return mapResults(results);
 		}
 
-		/*
-		 * (non-Javadoc)
-		 * @see org.springframework.data.repository.query.FluentQuery.FetchableFluentQuery#page(org.springframework.data.domain.Pageable)
-		 */
 		@Override
 		public Page<R> page(Pageable pageable) {
 
@@ -401,28 +337,16 @@ public class QuerydslKeyValuePredicateExecutor<T> implements QuerydslPredicateEx
 			return new PageImpl<>(mapResults(results.getResults()), pageable, results.getTotal());
 		}
 
-		/*
-		 * (non-Javadoc)
-		 * @see org.springframework.data.repository.query.FluentQuery.FetchableFluentQuery#stream()
-		 */
 		@Override
 		public Stream<R> stream() {
 			return createQuery().stream().map(getConversionFunction());
 		}
 
-		/*
-		 * (non-Javadoc)
-		 * @see org.springframework.data.repository.query.FluentQuery.FetchableFluentQuery#count()
-		 */
 		@Override
 		public long count() {
 			return createQuery().fetchCount();
 		}
 
-		/*
-		 * (non-Javadoc)
-		 * @see org.springframework.data.repository.query.FluentQuery.FetchableFluentQuery#exists()
-		 */
 		@Override
 		public boolean exists() {
 			return count() > 0;

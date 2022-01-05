@@ -64,10 +64,6 @@ public class SimpleKeyValueRepository<T, ID> implements KeyValueRepository<T, ID
 	// Methods from CrudRepository
 	// -------------------------------------------------------------------------
 
-	/*
-	 * (non-Javadoc)
-	 * @see org.springframework.data.repository.CrudRepository#save(java.lang.Object)
-	 */
 	@Override
 	public <S extends T> S save(S entity) {
 
@@ -80,10 +76,6 @@ public class SimpleKeyValueRepository<T, ID> implements KeyValueRepository<T, ID
 		return operations.update(entityInformation.getRequiredId(entity), entity);
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @see org.springframework.data.repository.CrudRepository#save(java.lang.Iterable)
-	 */
 	@Override
 	public <S extends T> Iterable<S> saveAll(Iterable<S> entities) {
 
@@ -98,10 +90,6 @@ public class SimpleKeyValueRepository<T, ID> implements KeyValueRepository<T, ID
 		return saved;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @see org.springframework.data.repository.CrudRepository#findOne(java.lang.Object)
-	 */
 	@Override
 	public Optional<T> findById(ID id) {
 
@@ -110,28 +98,16 @@ public class SimpleKeyValueRepository<T, ID> implements KeyValueRepository<T, ID
 		return operations.findById(id, entityInformation.getJavaType());
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @see org.springframework.data.repository.CrudRepository#exists(java.lang.Object)
-	 */
 	@Override
 	public boolean existsById(ID id) {
 		return findById(id).isPresent();
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @see org.springframework.data.repository.CrudRepository#findAll()
-	 */
 	@Override
 	public List<T> findAll() {
 		return IterableConverter.toList(operations.findAll(entityInformation.getJavaType()));
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @see org.springframework.data.repository.CrudRepository#findAll(java.lang.Iterable)
-	 */
 	@Override
 	public Iterable<T> findAllById(Iterable<ID> ids) {
 
@@ -144,19 +120,11 @@ public class SimpleKeyValueRepository<T, ID> implements KeyValueRepository<T, ID
 		return result;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @see org.springframework.data.repository.CrudRepository#count()
-	 */
 	@Override
 	public long count() {
 		return operations.count(entityInformation.getJavaType());
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @see org.springframework.data.repository.CrudRepository#delete(java.lang.Object)
-	 */
 	@Override
 	public void deleteById(ID id) {
 
@@ -165,10 +133,6 @@ public class SimpleKeyValueRepository<T, ID> implements KeyValueRepository<T, ID
 		operations.delete(id, entityInformation.getJavaType());
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @see org.springframework.data.repository.CrudRepository#delete(java.lang.Object)
-	 */
 	@Override
 	public void delete(T entity) {
 
@@ -177,10 +141,6 @@ public class SimpleKeyValueRepository<T, ID> implements KeyValueRepository<T, ID
 		deleteById(entityInformation.getRequiredId(entity));
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @see org.springframework.data.repository.CrudRepository#deleteAllById(java.lang.Iterable)
-	 */
 	@Override
 	public void deleteAllById(Iterable<? extends ID> ids) {
 
@@ -189,10 +149,6 @@ public class SimpleKeyValueRepository<T, ID> implements KeyValueRepository<T, ID
 		ids.forEach(this::deleteById);
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @see org.springframework.data.repository.CrudRepository#delete(java.lang.Iterable)
-	 */
 	@Override
 	public void deleteAll(Iterable<? extends T> entities) {
 
@@ -201,10 +157,6 @@ public class SimpleKeyValueRepository<T, ID> implements KeyValueRepository<T, ID
 		entities.forEach(this::delete);
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @see org.springframework.data.repository.CrudRepository#deleteAll()
-	 */
 	@Override
 	public void deleteAll() {
 		operations.delete(entityInformation.getJavaType());
@@ -214,10 +166,6 @@ public class SimpleKeyValueRepository<T, ID> implements KeyValueRepository<T, ID
 	// Methods from PagingAndSortingRepository
 	// -------------------------------------------------------------------------
 
-	/*
-	 * (non-Javadoc)
-	 * @see org.springframework.data.repository.PagingAndSortingRepository#findAll(org.springframework.data.domain.Sort)
-	 */
 	@Override
 	public Iterable<T> findAll(Sort sort) {
 
@@ -226,10 +174,6 @@ public class SimpleKeyValueRepository<T, ID> implements KeyValueRepository<T, ID
 		return operations.findAll(sort, entityInformation.getJavaType());
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @see org.springframework.data.repository.PagingAndSortingRepository#findAll(org.springframework.data.domain.Pageable)
-	 */
 	@Override
 	public Page<T> findAll(Pageable pageable) {
 

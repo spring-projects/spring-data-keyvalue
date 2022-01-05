@@ -32,10 +32,6 @@ import org.springframework.util.Assert;
  */
 public class KeyValuePersistenceExceptionTranslator implements PersistenceExceptionTranslator {
 
-	/*
-	 * (non-Javadoc)
-	 * @see org.springframework.dao.support.PersistenceExceptionTranslator#translateExceptionIfPossible(java.lang.RuntimeException)
-	 */
 	@Nullable
 	@Override
 	public DataAccessException translateExceptionIfPossible(RuntimeException exception) {

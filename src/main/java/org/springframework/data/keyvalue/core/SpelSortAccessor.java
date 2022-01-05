@@ -47,10 +47,6 @@ public class SpelSortAccessor implements SortAccessor<Comparator<?>> {
 		this.parser = parser;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @see org.springframework.data.keyvalue.core.SortAccessor#resolve(org.springframework.data.keyvalue.core.query.KeyValueQuery)
-	 */
 	@Override
 	public Comparator<?> resolve(KeyValueQuery<?> query) {
 

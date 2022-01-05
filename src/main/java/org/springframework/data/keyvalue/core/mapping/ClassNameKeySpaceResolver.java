@@ -28,10 +28,6 @@ enum ClassNameKeySpaceResolver implements KeySpaceResolver {
 
 	INSTANCE;
 
-	/*
-	 * (non-Javadoc)
-	 * @see org.springframework.data.keyvalue.core.KeySpaceResolver#resolveKeySpace(java.lang.Class)
-	 */
 	@Override
 	public String resolveKeySpace(Class<?> type) {
 

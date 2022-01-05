@@ -101,10 +101,6 @@ public class KeyValuePartTreeQuery implements RepositoryQuery {
 		this.queryCreatorFactory = queryCreatorFactory;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @see org.springframework.data.repository.query.RepositoryQuery#execute(java.lang.Object[])
-	 */
 	@Override
 	public Object execute(Object[] parameters) {
 
@@ -221,10 +217,6 @@ public class KeyValuePartTreeQuery implements RepositoryQuery {
 		return query;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @see org.springframework.data.repository.query.RepositoryQuery#getQueryMethod()
-	 */
 	@Override
 	public QueryMethod getQueryMethod() {
 		return queryMethod;

@@ -27,19 +27,11 @@ import org.springframework.data.repository.config.RepositoryConfigurationExtensi
  */
 public class MapRepositoriesRegistrar extends RepositoryBeanDefinitionRegistrarSupport {
 
-	/*
-	 * (non-Javadoc)
-	 * @see org.springframework.data.repository.config.RepositoryBeanDefinitionRegistrarSupport#getAnnotation()
-	 */
 	@Override
 	protected Class<? extends Annotation> getAnnotation() {
 		return EnableMapRepositories.class;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @see org.springframework.data.repository.config.RepositoryBeanDefinitionRegistrarSupport#getExtension()
-	 */
 	@Override
 	protected RepositoryConfigurationExtension getExtension() {
 		return new MapRepositoryConfigurationExtension();

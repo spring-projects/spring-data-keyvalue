@@ -85,10 +85,6 @@ public class BasicKeyValuePersistentEntity<T, P extends KeyValuePersistentProper
 				.resolveKeySpace(type);
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @see org.springframework.data.keyvalue.core.mapping.KeyValuePersistentEntity#getKeySpace()
-	 */
 	@Override
 	public String getKeySpace() {
 		return keyspaceExpression == null //

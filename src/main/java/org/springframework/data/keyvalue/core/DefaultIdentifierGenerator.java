@@ -39,10 +39,6 @@ enum DefaultIdentifierGenerator implements IdentifierGenerator {
 
 	private final AtomicReference<SecureRandom> secureRandom = new AtomicReference<>(null);
 
-	/*
-	 * (non-Javadoc)
-	 * @see org.springframework.data.keyvalue.core.IdentifierGenerator#newIdForType(org.springframework.data.util.TypeInformation)
-	 */
 	@Override
 	@SuppressWarnings("unchecked")
 	public <T> T generateIdentifierOfType(TypeInformation<T> identifierType) {

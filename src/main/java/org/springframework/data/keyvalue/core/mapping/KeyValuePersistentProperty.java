@@ -36,10 +36,6 @@ public class KeyValuePersistentProperty<P extends KeyValuePersistentProperty<P>>
 		super(property, owner, simpleTypeHolder);
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @see org.springframework.data.mapping.model.AbstractPersistentProperty#createAssociation()
-	 */
 	@Override
 	@SuppressWarnings("unchecked")
 	protected Association<P> createAssociation() {

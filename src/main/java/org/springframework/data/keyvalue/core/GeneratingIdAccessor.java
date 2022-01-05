@@ -54,10 +54,6 @@ class GeneratingIdAccessor implements IdentifierAccessor {
 		this.generator = generator;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @see org.springframework.data.keyvalue.core.IdentifierAccessor#getIdentifier()
-	 */
 	@Override
 	public Object getIdentifier() {
 		return accessor.getProperty(identifierProperty);

@@ -296,10 +296,6 @@ class QuerydslKeyValuePredicateExecutorUnitTests extends AbstractRepositoryUnitT
 		String firstname;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @see org.springframework.data.map.SimpleKeyValueRepositoryUnitTests#getRepository(org.springframework.data.keyvalue.repository.support.KeyValueRepositoryFactory)
-	 */
 	@Override
 	protected QPersonRepository getRepository(KeyValueRepositoryFactory factory) {
 		return factory.getRepository(QPersonRepository.class);

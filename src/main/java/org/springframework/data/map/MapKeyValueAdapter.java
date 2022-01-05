@@ -123,10 +123,6 @@ public class MapKeyValueAdapter extends AbstractKeyValueAdapter {
 		this.keySpaceMapType = keySpaceMapType;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @see org.springframework.data.keyvalue.core.KeyValueAdapter#put(java.lang.Object, java.lang.Object, java.lang.String)
-	 */
 	@Override
 	public Object put(Object id, Object item, String keyspace) {
 
@@ -136,27 +132,16 @@ public class MapKeyValueAdapter extends AbstractKeyValueAdapter {
 		return getKeySpaceMap(keyspace).put(id, item);
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @see org.springframework.data.keyvalue.core.KeyValueAdapter#contains(java.lang.Object, java.lang.String)
-	 */
 	@Override
 	public boolean contains(Object id, String keyspace) {
 		return get(id, keyspace) != null;
 	}
 
-	/* (non-Javadoc)
-	 * @see org.springframework.data.keyvalue.core.KeyValueAdapter#count(java.lang.String)
-	 */
 	@Override
 	public long count(String keyspace) {
 		return getKeySpaceMap(keyspace).size();
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @see org.springframework.data.keyvalue.core.KeyValueAdapter#get(java.lang.Object, java.lang.String)
-	 */
 	@Override
 	public Object get(Object id, String keyspace) {
 
@@ -164,10 +149,6 @@ public class MapKeyValueAdapter extends AbstractKeyValueAdapter {
 		return getKeySpaceMap(keyspace).get(id);
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @see org.springframework.data.keyvalue.core.KeyValueAdapter#delete(java.lang.Object, java.lang.String)
-	 */
 	@Override
 	public Object delete(Object id, String keyspace) {
 
@@ -175,46 +156,26 @@ public class MapKeyValueAdapter extends AbstractKeyValueAdapter {
 		return getKeySpaceMap(keyspace).remove(id);
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @see org.springframework.data.keyvalue.core.KeyValueAdapter#getAllOf(java.lang.String)
-	 */
 	@Override
 	public Collection<?> getAllOf(String keyspace) {
 		return getKeySpaceMap(keyspace).values();
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @see org.springframework.data.keyvalue.core.KeyValueAdapter#entries(java.lang.String)
-	 */
 	@Override
 	public CloseableIterator<Entry<Object, Object>> entries(String keyspace) {
 		return new ForwardingCloseableIterator<>(getKeySpaceMap(keyspace).entrySet().iterator());
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @see org.springframework.data.keyvalue.core.KeyValueAdapter#deleteAllOf(java.lang.String)
-	 */
 	@Override
 	public void deleteAllOf(String keyspace) {
 		getKeySpaceMap(keyspace).clear();
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @see org.springframework.data.keyvalue.core.KeyValueAdapter#clear()
-	 */
 	@Override
 	public void clear() {
 		store.clear();
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @see org.springframework.beans.factory.DisposableBean#destroy()
-	 */
 	@Override
 	public void destroy() throws Exception {
 		clear();

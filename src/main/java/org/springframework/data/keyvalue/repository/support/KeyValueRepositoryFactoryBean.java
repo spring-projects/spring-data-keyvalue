@@ -62,10 +62,6 @@ public class KeyValueRepositoryFactoryBean<T extends Repository<S, ID>, S, ID>
 		this.operations = operations;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @see org.springframework.data.repository.core.support.RepositoryFactoryBeanSupport#setMappingContext(org.springframework.data.mapping.context.MappingContext)
-	 */
 	@Override
 	public void setMappingContext(MappingContext<?, ?> mappingContext) {
 		super.setMappingContext(mappingContext);
@@ -97,10 +93,6 @@ public class KeyValueRepositoryFactoryBean<T extends Repository<S, ID>, S, ID>
 
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @see org.springframework.data.repository.core.support.RepositoryFactoryBeanSupport#createRepositoryFactory()
-	 */
 	@Override
 	protected final RepositoryFactorySupport createRepositoryFactory() {
 		return createRepositoryFactory(operations, queryCreator, repositoryQueryType);
@@ -121,10 +113,6 @@ public class KeyValueRepositoryFactoryBean<T extends Repository<S, ID>, S, ID>
 		return new KeyValueRepositoryFactory(operations, queryCreator, repositoryQueryType);
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @see org.springframework.data.repository.core.support.RepositoryFactoryBeanSupport#afterPropertiesSet()
-	 */
 	@Override
 	public void afterPropertiesSet() {
 

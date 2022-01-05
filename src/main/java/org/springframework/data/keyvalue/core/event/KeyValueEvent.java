@@ -201,10 +201,6 @@ public class KeyValueEvent<T> extends ApplicationEvent {
 			return key;
 		}
 
-		/*
-		 * (non-Javadoc)
-		 * @see java.util.EventObject#getSource()
-		 */
 		@Override
 		public Object getSource() {
 			return getKey();
