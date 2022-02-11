@@ -31,6 +31,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.data.keyvalue.core.IterableConverter;
 import org.springframework.data.keyvalue.core.KeyValueOperations;
 import org.springframework.data.mapping.PersistentEntity;
 import org.springframework.data.mapping.PersistentProperty;
@@ -39,6 +40,7 @@ import org.springframework.data.mapping.model.EntityInstantiators;
 import org.springframework.data.projection.ProjectionFactory;
 import org.springframework.data.projection.SpelAwareProxyProjectionFactory;
 import org.springframework.data.querydsl.EntityPathResolver;
+import org.springframework.data.querydsl.ListQuerydslPredicateExecutor;
 import org.springframework.data.querydsl.QuerydslPredicateExecutor;
 import org.springframework.data.querydsl.SimpleEntityPathResolver;
 import org.springframework.data.repository.core.EntityInformation;
@@ -61,13 +63,13 @@ import com.querydsl.core.types.dsl.PathBuilder;
  * @author Mark Paluch
  * @since 2.6
  */
-public class QuerydslKeyValuePredicateExecutor<T> implements QuerydslPredicateExecutor<T> {
+public class QuerydslKeyValuePredicateExecutor<T> implements ListQuerydslPredicateExecutor<T> {
 
 	private static final EntityPathResolver DEFAULT_ENTITY_PATH_RESOLVER = SimpleEntityPathResolver.INSTANCE;
 
 	private final MappingContext<? extends PersistentEntity<?, ?>, ? extends PersistentProperty<?>> context;
 	private final PathBuilder<T> builder;
-	private final Supplier<Iterable<T>> findAll;
+	private final Supplier<List<T>> findAll;
 	private final EntityInformation<T, ?> entityInformation;
 	private final ProjectionFactory projectionFactory;
 	private final EntityInstantiators entityInstantiators = new EntityInstantiators();
@@ -105,7 +107,7 @@ public class QuerydslKeyValuePredicateExecutor<T> implements QuerydslPredicateEx
 		EntityPath<T> path = resolver.createPath(entityInformation.getJavaType());
 		this.builder = new PathBuilder<>(path.getType(), path.getMetadata());
 		this.entityInformation = entityInformation;
-		findAll = () -> operations.findAll(entityInformation.getJavaType());
+		findAll = () -> IterableConverter.toList(operations.findAll(entityInformation.getJavaType()));
 	}
 
 	@Override
@@ -121,7 +123,7 @@ public class QuerydslKeyValuePredicateExecutor<T> implements QuerydslPredicateEx
 	}
 
 	@Override
-	public Iterable<T> findAll(Predicate predicate) {
+	public List<T> findAll(Predicate predicate) {
 
 		Assert.notNull(predicate, "Predicate must not be null!");
 
@@ -129,7 +131,7 @@ public class QuerydslKeyValuePredicateExecutor<T> implements QuerydslPredicateEx
 	}
 
 	@Override
-	public Iterable<T> findAll(Predicate predicate, OrderSpecifier<?>... orders) {
+	public List<T> findAll(Predicate predicate, OrderSpecifier<?>... orders) {
 
 		Assert.notNull(predicate, "Predicate must not be null!");
 		Assert.notNull(orders, "OrderSpecifiers must not be null!");
@@ -141,7 +143,7 @@ public class QuerydslKeyValuePredicateExecutor<T> implements QuerydslPredicateEx
 	}
 
 	@Override
-	public Iterable<T> findAll(Predicate predicate, Sort sort) {
+	public List<T> findAll(Predicate predicate, Sort sort) {
 
 		Assert.notNull(predicate, "Predicate must not be null!");
 		Assert.notNull(sort, "Sort must not be null!");
@@ -171,7 +173,7 @@ public class QuerydslKeyValuePredicateExecutor<T> implements QuerydslPredicateEx
 	}
 
 	@Override
-	public Iterable<T> findAll(OrderSpecifier<?>... orders) {
+	public List<T> findAll(OrderSpecifier<?>... orders) {
 
 		Assert.notNull(orders, "OrderSpecifiers must not be null!");
 

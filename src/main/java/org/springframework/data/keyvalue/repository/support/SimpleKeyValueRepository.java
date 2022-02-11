@@ -77,7 +77,7 @@ public class SimpleKeyValueRepository<T, ID> implements KeyValueRepository<T, ID
 	}
 
 	@Override
-	public <S extends T> Iterable<S> saveAll(Iterable<S> entities) {
+	public <S extends T> List<S> saveAll(Iterable<S> entities) {
 
 		Assert.notNull(entities, "The given Iterable of entities must not be null!");
 
@@ -109,7 +109,7 @@ public class SimpleKeyValueRepository<T, ID> implements KeyValueRepository<T, ID
 	}
 
 	@Override
-	public Iterable<T> findAllById(Iterable<ID> ids) {
+	public List<T> findAllById(Iterable<ID> ids) {
 
 		Assert.notNull(ids, "The given Iterable of id's must not be null!");
 
@@ -167,11 +167,11 @@ public class SimpleKeyValueRepository<T, ID> implements KeyValueRepository<T, ID
 	// -------------------------------------------------------------------------
 
 	@Override
-	public Iterable<T> findAll(Sort sort) {
+	public List<T> findAll(Sort sort) {
 
 		Assert.notNull(sort, "Sort must not be null!");
 
-		return operations.findAll(sort, entityInformation.getJavaType());
+		return IterableConverter.toList(operations.findAll(sort, entityInformation.getJavaType()));
 	}
 
 	@Override

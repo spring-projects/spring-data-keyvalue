@@ -15,13 +15,14 @@
  */
 package org.springframework.data.keyvalue.repository;
 
-import org.springframework.data.repository.PagingAndSortingRepository;
+import org.springframework.data.repository.ListCrudRepository;
+import org.springframework.data.repository.ListPagingAndSortingRepository;
 
 /**
  * @author Christoph Strobl
  * @param <T>
  * @param <ID>
  */
-public interface KeyValueRepository<T, ID> extends PagingAndSortingRepository<T, ID> {
+public interface KeyValueRepository<T, ID> extends ListCrudRepository<T, ID>, ListPagingAndSortingRepository<T, ID> {
 
 }
