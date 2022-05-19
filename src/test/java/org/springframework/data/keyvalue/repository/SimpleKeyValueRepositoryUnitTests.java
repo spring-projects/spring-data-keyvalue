@@ -47,6 +47,7 @@ import org.springframework.data.repository.core.support.PersistentEntityInformat
  * @author Christoph Strobl
  * @author Eugene Nikiforov
  * @author Jens Schauder
+ * @author Mark Paluch
  */
 @ExtendWith(MockitoExtension.class)
 class SimpleKeyValueRepositoryUnitTests {
@@ -108,7 +109,7 @@ class SimpleKeyValueRepositoryUnitTests {
 		repo.save(one);
 		repo.delete(one);
 
-		verify(opsMock, times(1)).delete(eq(one.getId()), eq(Foo.class));
+		verify(opsMock, times(1)).delete(eq(one));
 	}
 
 	@Test // DATACMNS-525

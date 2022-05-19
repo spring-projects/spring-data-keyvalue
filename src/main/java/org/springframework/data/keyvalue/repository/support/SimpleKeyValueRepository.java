@@ -138,7 +138,7 @@ public class SimpleKeyValueRepository<T, ID> implements KeyValueRepository<T, ID
 
 		Assert.notNull(entity, "The given entity must not be null!");
 
-		deleteById(entityInformation.getRequiredId(entity));
+		operations.delete(entity);
 	}
 
 	@Override
