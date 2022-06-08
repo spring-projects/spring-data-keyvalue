@@ -98,10 +98,10 @@ public class QuerydslKeyValuePredicateExecutor<T> implements ListQuerydslPredica
 			ProjectionFactory projectionFactory, KeyValueOperations operations,
 			EntityPathResolver resolver) {
 
-		Assert.notNull(entityInformation, "EntityInformation must not be null!");
-		Assert.notNull(projectionFactory, "ProjectionFactory must not be null!");
-		Assert.notNull(operations, "KeyValueOperations must not be null!");
-		Assert.notNull(resolver, "EntityPathResolver must not be null!");
+		Assert.notNull(entityInformation, "EntityInformation must not be null");
+		Assert.notNull(projectionFactory, "ProjectionFactory must not be null");
+		Assert.notNull(operations, "KeyValueOperations must not be null");
+		Assert.notNull(resolver, "EntityPathResolver must not be null");
 
 		this.projectionFactory = projectionFactory;
 		this.context = operations.getMappingContext();
@@ -114,19 +114,19 @@ public class QuerydslKeyValuePredicateExecutor<T> implements ListQuerydslPredica
 	@Override
 	public Optional<T> findOne(Predicate predicate) {
 
-		Assert.notNull(predicate, "Predicate must not be null!");
+		Assert.notNull(predicate, "Predicate must not be null");
 
 		try {
 			return Optional.ofNullable(prepareQuery(predicate).fetchOne());
 		} catch (NonUniqueResultException o_O) {
-			throw new IncorrectResultSizeDataAccessException("Expected one or no result but found more than one!", 1, o_O);
+			throw new IncorrectResultSizeDataAccessException("Expected one or no result but found more than one", 1, o_O);
 		}
 	}
 
 	@Override
 	public List<T> findAll(Predicate predicate) {
 
-		Assert.notNull(predicate, "Predicate must not be null!");
+		Assert.notNull(predicate, "Predicate must not be null");
 
 		return prepareQuery(predicate).fetchResults().getResults();
 	}
@@ -134,8 +134,8 @@ public class QuerydslKeyValuePredicateExecutor<T> implements ListQuerydslPredica
 	@Override
 	public List<T> findAll(Predicate predicate, OrderSpecifier<?>... orders) {
 
-		Assert.notNull(predicate, "Predicate must not be null!");
-		Assert.notNull(orders, "OrderSpecifiers must not be null!");
+		Assert.notNull(predicate, "Predicate must not be null");
+		Assert.notNull(orders, "OrderSpecifiers must not be null");
 
 		AbstractCollQuery<T, ?> query = prepareQuery(predicate);
 		query.orderBy(orders);
@@ -146,8 +146,8 @@ public class QuerydslKeyValuePredicateExecutor<T> implements ListQuerydslPredica
 	@Override
 	public List<T> findAll(Predicate predicate, Sort sort) {
 
-		Assert.notNull(predicate, "Predicate must not be null!");
-		Assert.notNull(sort, "Sort must not be null!");
+		Assert.notNull(predicate, "Predicate must not be null");
+		Assert.notNull(sort, "Sort must not be null");
 
 		return findAll(predicate, toOrderSpecifier(sort, builder));
 	}
@@ -155,8 +155,8 @@ public class QuerydslKeyValuePredicateExecutor<T> implements ListQuerydslPredica
 	@Override
 	public Page<T> findAll(Predicate predicate, Pageable pageable) {
 
-		Assert.notNull(predicate, "Predicate must not be null!");
-		Assert.notNull(pageable, "Pageable must not be null!");
+		Assert.notNull(predicate, "Predicate must not be null");
+		Assert.notNull(pageable, "Pageable must not be null");
 
 		AbstractCollQuery<T, ?> query = prepareQuery(predicate);
 
@@ -176,7 +176,7 @@ public class QuerydslKeyValuePredicateExecutor<T> implements ListQuerydslPredica
 	@Override
 	public List<T> findAll(OrderSpecifier<?>... orders) {
 
-		Assert.notNull(orders, "OrderSpecifiers must not be null!");
+		Assert.notNull(orders, "OrderSpecifiers must not be null");
 
 		if (orders.length == 0) {
 			return findAll.get();
@@ -191,7 +191,7 @@ public class QuerydslKeyValuePredicateExecutor<T> implements ListQuerydslPredica
 	@Override
 	public long count(Predicate predicate) {
 
-		Assert.notNull(predicate, "Predicate must not be null!");
+		Assert.notNull(predicate, "Predicate must not be null");
 
 		return prepareQuery(predicate).fetchCount();
 	}
@@ -199,7 +199,7 @@ public class QuerydslKeyValuePredicateExecutor<T> implements ListQuerydslPredica
 	@Override
 	public boolean exists(Predicate predicate) {
 
-		Assert.notNull(predicate, "Predicate must not be null!");
+		Assert.notNull(predicate, "Predicate must not be null");
 
 		return count(predicate) > 0;
 	}
@@ -209,8 +209,8 @@ public class QuerydslKeyValuePredicateExecutor<T> implements ListQuerydslPredica
 	public <S extends T, R> R findBy(Predicate predicate,
 			Function<FluentQuery.FetchableFluentQuery<S>, R> queryFunction) {
 
-		Assert.notNull(predicate, "Predicate must not be null!");
-		Assert.notNull(queryFunction, "Query function must not be null!");
+		Assert.notNull(predicate, "Predicate must not be null");
+		Assert.notNull(queryFunction, "Query function must not be null");
 
 		return queryFunction.apply(new FluentQuerydsl<>(predicate, (Class<S>) entityInformation.getJavaType()));
 	}
@@ -260,7 +260,7 @@ public class QuerydslKeyValuePredicateExecutor<T> implements ListQuerydslPredica
 		@Override
 		public FluentQuery.FetchableFluentQuery<R> sortBy(Sort sort) {
 
-			Assert.notNull(sort, "Sort must not be null!");
+			Assert.notNull(sort, "Sort must not be null");
 
 			return new FluentQuerydsl<>(predicate, sort, entityType, resultType, fieldsToInclude);
 		}
@@ -268,14 +268,14 @@ public class QuerydslKeyValuePredicateExecutor<T> implements ListQuerydslPredica
 		@Override
 		public <NR> FluentQuery.FetchableFluentQuery<NR> as(Class<NR> projection) {
 
-			Assert.notNull(projection, "Projection target type must not be null!");
+			Assert.notNull(projection, "Projection target type must not be null");
 
 			return new FluentQuerydsl<>(predicate, sort, entityType, projection, fieldsToInclude);
 		}
 
 		public FluentQuery.FetchableFluentQuery<R> project(Collection<String> properties) {
 
-			Assert.notNull(properties, "Projection properties must not be null!");
+			Assert.notNull(properties, "Projection properties must not be null");
 
 			return new FluentQuerydsl<>(predicate, sort, entityType, resultType, new ArrayList<>(properties));
 		}
@@ -322,7 +322,7 @@ public class QuerydslKeyValuePredicateExecutor<T> implements ListQuerydslPredica
 		@Override
 		public Page<R> page(Pageable pageable) {
 
-			Assert.notNull(pageable, "Pageable must not be null!");
+			Assert.notNull(pageable, "Pageable must not be null");
 
 			AbstractCollQuery<T, ?> query = createQuery();
 

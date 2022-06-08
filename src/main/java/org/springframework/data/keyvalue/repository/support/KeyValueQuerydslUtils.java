@@ -54,8 +54,8 @@ abstract class KeyValueQuerydslUtils {
 	 */
 	static OrderSpecifier<?>[] toOrderSpecifier(Sort sort, PathBuilder<?> builder) {
 
-		Assert.notNull(sort, "Sort must not be null!");
-		Assert.notNull(builder, "Builder must not be null!");
+		Assert.notNull(sort, "Sort must not be null");
+		Assert.notNull(builder, "Builder must not be null");
 
 		List<OrderSpecifier<?>> specifiers = null;
 
@@ -88,8 +88,8 @@ abstract class KeyValueQuerydslUtils {
 	 */
 	private static Expression<?> buildOrderPropertyPathFrom(Order order, PathBuilder<?> builder) {
 
-		Assert.notNull(order, "Order must not be null!");
-		Assert.notNull(builder, "Builder must not be null!");
+		Assert.notNull(order, "Order must not be null");
+		Assert.notNull(builder, "Builder must not be null");
 
 		PropertyPath path = PropertyPath.from(order.getProperty(), builder.getType());
 		Expression<?> sortPropertyExpression = builder;
@@ -118,7 +118,7 @@ abstract class KeyValueQuerydslUtils {
 	 */
 	private static NullHandling toQueryDslNullHandling(org.springframework.data.domain.Sort.NullHandling nullHandling) {
 
-		Assert.notNull(nullHandling, "NullHandling must not be null!");
+		Assert.notNull(nullHandling, "NullHandling must not be null");
 
 		switch (nullHandling) {
 

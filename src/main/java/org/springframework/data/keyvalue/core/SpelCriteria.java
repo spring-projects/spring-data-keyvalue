@@ -49,8 +49,8 @@ public class SpelCriteria {
 	 */
 	public SpelCriteria(SpelExpression expression, EvaluationContext context) {
 
-		Assert.notNull(expression, "SpEL expression must not be null!");
-		Assert.notNull(context, "EvaluationContext must not be null!");
+		Assert.notNull(expression, "SpEL expression must not be null");
+		Assert.notNull(context, "EvaluationContext must not be null");
 
 		this.expression = expression;
 		this.context = context;

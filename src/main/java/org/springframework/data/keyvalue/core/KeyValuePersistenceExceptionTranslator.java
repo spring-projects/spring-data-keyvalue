@@ -36,7 +36,7 @@ public class KeyValuePersistenceExceptionTranslator implements PersistenceExcept
 	@Override
 	public DataAccessException translateExceptionIfPossible(RuntimeException exception) {
 
-		Assert.notNull(exception, "Exception must not be null!");
+		Assert.notNull(exception, "Exception must not be null");
 
 		if (exception instanceof DataAccessException) {
 			return (DataAccessException) exception;

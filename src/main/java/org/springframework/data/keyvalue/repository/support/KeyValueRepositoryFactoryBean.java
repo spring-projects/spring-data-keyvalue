@@ -57,7 +57,7 @@ public class KeyValueRepositoryFactoryBean<T extends Repository<S, ID>, S, ID>
 	 */
 	public void setKeyValueOperations(KeyValueOperations operations) {
 
-		Assert.notNull(operations, "KeyValueOperations must not be null!");
+		Assert.notNull(operations, "KeyValueOperations must not be null");
 
 		this.operations = operations;
 	}
@@ -74,7 +74,7 @@ public class KeyValueRepositoryFactoryBean<T extends Repository<S, ID>, S, ID>
 	 */
 	public void setQueryCreator(Class<? extends AbstractQueryCreator<?, ?>> queryCreator) {
 
-		Assert.notNull(queryCreator, "Query creator type must not be null!");
+		Assert.notNull(queryCreator, "Query creator type must not be null");
 
 		this.queryCreator = queryCreator;
 	}
@@ -87,7 +87,7 @@ public class KeyValueRepositoryFactoryBean<T extends Repository<S, ID>, S, ID>
 	 */
 	public void setQueryType(Class<? extends RepositoryQuery> repositoryQueryType) {
 
-		Assert.notNull(queryCreator, "Query creator type must not be null!");
+		Assert.notNull(queryCreator, "Query creator type must not be null");
 
 		this.repositoryQueryType = repositoryQueryType;
 
@@ -116,9 +116,9 @@ public class KeyValueRepositoryFactoryBean<T extends Repository<S, ID>, S, ID>
 	@Override
 	public void afterPropertiesSet() {
 
-		Assert.notNull(operations, "KeyValueOperations must not be null!");
-		Assert.notNull(queryCreator, "Query creator type must not be null!");
-		Assert.notNull(repositoryQueryType, "RepositoryQueryType type type must not be null!");
+		Assert.notNull(operations, "KeyValueOperations must not be null");
+		Assert.notNull(queryCreator, "Query creator type must not be null");
+		Assert.notNull(repositoryQueryType, "RepositoryQueryType type type must not be null");
 
 		super.afterPropertiesSet();
 	}

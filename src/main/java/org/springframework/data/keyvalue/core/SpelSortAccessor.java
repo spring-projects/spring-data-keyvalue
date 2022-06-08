@@ -43,7 +43,7 @@ public class SpelSortAccessor implements SortAccessor<Comparator<?>> {
 	 */
 	public SpelSortAccessor(SpelExpressionParser parser) {
 
-		Assert.notNull(parser, "SpelExpressionParser must not be null!");
+		Assert.notNull(parser, "SpelExpressionParser must not be null");
 		this.parser = parser;
 	}
 

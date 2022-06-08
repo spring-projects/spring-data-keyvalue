@@ -79,7 +79,7 @@ class MapRepositoriesConfigurationExtensionIntegrationTests {
 
 		PersonRepository repository = context.getBean(PersonRepository.class);
 
-		assertThatThrownBy(() -> repository.findById("foo")).hasRootCauseInstanceOf(IllegalStateException.class).hasMessageContaining("Mock!");
+		assertThatThrownBy(() -> repository.findById("foo")).hasRootCauseInstanceOf(IllegalStateException.class).hasMessageContaining("Mock");
 
 		context.close();
 	}
@@ -128,7 +128,7 @@ class MapRepositoriesConfigurationExtensionIntegrationTests {
 
 			KeyValueAdapter mock = mock(KeyValueAdapter.class);
 
-			when(mock.get(any(), anyString(), any())).thenThrow(new IllegalStateException("Mock!"));
+			when(mock.get(any(), anyString(), any())).thenThrow(new IllegalStateException("Mock"));
 
 			return mock;
 		}

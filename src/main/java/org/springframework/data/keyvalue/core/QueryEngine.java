@@ -144,7 +144,7 @@ public abstract class QueryEngine<ADAPTER extends KeyValueAdapter, CRITERIA, SOR
 			return adapter;
 		}
 
-		throw new IllegalStateException("Required KeyValueAdapter is not set!");
+		throw new IllegalStateException("Required KeyValueAdapter is not set");
 	}
 
 	/**
@@ -156,7 +156,7 @@ public abstract class QueryEngine<ADAPTER extends KeyValueAdapter, CRITERIA, SOR
 		if (this.adapter == null) {
 			this.adapter = (ADAPTER) adapter;
 		} else {
-			throw new IllegalArgumentException("Cannot register more than one adapter for this QueryEngine.");
+			throw new IllegalArgumentException("Cannot register more than one adapter for this QueryEngine");
 		}
 	}
 }

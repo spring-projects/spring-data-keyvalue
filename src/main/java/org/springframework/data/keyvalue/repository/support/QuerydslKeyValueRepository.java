@@ -76,7 +76,7 @@ public class QuerydslKeyValueRepository<T, ID> extends SimpleKeyValueRepository<
 
 		super(entityInformation, operations);
 
-		Assert.notNull(resolver, "EntityPathResolver must not be null!");
+		Assert.notNull(resolver, "EntityPathResolver must not be null");
 
 		this.executor = new QuerydslKeyValuePredicateExecutor<>(entityInformation, new SpelAwareProxyProjectionFactory(),
 				operations, resolver);

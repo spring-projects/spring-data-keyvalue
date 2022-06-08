@@ -88,10 +88,10 @@ public class KeyValuePartTreeQuery implements RepositoryQuery {
 			KeyValueOperations keyValueOperations,
 			QueryCreatorFactory<AbstractQueryCreator<KeyValueQuery<?>, ?>> queryCreatorFactory) {
 
-		Assert.notNull(queryMethod, "Query method must not be null!");
-		Assert.notNull(evaluationContextProvider, "EvaluationContextprovider must not be null!");
-		Assert.notNull(keyValueOperations, "KeyValueOperations must not be null!");
-		Assert.notNull(queryCreatorFactory, "QueryCreatorFactory type must not be null!");
+		Assert.notNull(queryMethod, "Query method must not be null");
+		Assert.notNull(evaluationContextProvider, "EvaluationContextprovider must not be null");
+		Assert.notNull(keyValueOperations, "KeyValueOperations must not be null");
+		Assert.notNull(queryCreatorFactory, "QueryCreatorFactory type must not be null");
 
 		this.partTree = Lazy
 				.of(() -> new PartTree(queryMethod.getName(), queryMethod.getEntityInformation().getJavaType()));
@@ -142,7 +142,7 @@ public class KeyValuePartTreeQuery implements RepositoryQuery {
 			return keyValueOperations.exists(query, queryMethod.getEntityInformation().getJavaType());
 		}
 
-		throw new UnsupportedOperationException("Query method not supported.");
+		throw new UnsupportedOperationException("Query method not supported");
 	}
 
 	protected KeyValueQuery<?> prepareQuery(Object[] parameters) {
@@ -258,7 +258,7 @@ public class KeyValuePartTreeQuery implements RepositoryQuery {
 		public AbstractQueryCreator<KeyValueQuery<?>, ?> queryCreatorFor(PartTree partTree, ParameterAccessor accessor) {
 
 			Assert.state(constructor != null,
-					() -> String.format("No constructor (PartTree, ParameterAccessor) could be found on type %s!", type));
+					() -> String.format("No constructor (PartTree, ParameterAccessor) could be found on type %s", type));
 			return (AbstractQueryCreator<KeyValueQuery<?>, ?>) BeanUtils.instantiateClass(constructor, partTree, accessor);
 		}
 	}

@@ -96,9 +96,9 @@ public class KeyValueTemplate implements KeyValueOperations, ApplicationEventPub
 			MappingContext<? extends KeyValuePersistentEntity<?, ?>, ? extends KeyValuePersistentProperty<?>> mappingContext,
 			IdentifierGenerator identifierGenerator) {
 
-		Assert.notNull(adapter, "Adapter must not be null!");
-		Assert.notNull(mappingContext, "MappingContext must not be null!");
-		Assert.notNull(identifierGenerator, "IdentifierGenerator must not be null!");
+		Assert.notNull(adapter, "Adapter must not be null");
+		Assert.notNull(mappingContext, "MappingContext must not be null");
+		Assert.notNull(identifierGenerator, "IdentifierGenerator must not be null");
 
 		this.adapter = adapter;
 		this.mappingContext = mappingContext;
@@ -112,7 +112,7 @@ public class KeyValueTemplate implements KeyValueOperations, ApplicationEventPub
 	 */
 	public void setExceptionTranslator(PersistenceExceptionTranslator exceptionTranslator) {
 
-		Assert.notNull(exceptionTranslator, "ExceptionTranslator must not be null!");
+		Assert.notNull(exceptionTranslator, "ExceptionTranslator must not be null");
 		this.exceptionTranslator = exceptionTranslator;
 	}
 
@@ -152,8 +152,8 @@ public class KeyValueTemplate implements KeyValueOperations, ApplicationEventPub
 	@Override
 	public <T> T insert(Object id, T objectToInsert) {
 
-		Assert.notNull(id, "Id for object to be inserted must not be null!");
-		Assert.notNull(objectToInsert, "Object to be inserted must not be null!");
+		Assert.notNull(id, "Id for object to be inserted must not be null");
+		Assert.notNull(objectToInsert, "Object to be inserted must not be null");
 
 		String keyspace = resolveKeySpace(objectToInsert.getClass());
 
@@ -163,7 +163,7 @@ public class KeyValueTemplate implements KeyValueOperations, ApplicationEventPub
 
 			if (adapter.contains(id, keyspace)) {
 				throw new DuplicateKeyException(
-						String.format("Cannot insert existing object with id %s!. Please use update.", id));
+						String.format("Cannot insert existing object with id %s; Please use update", id));
 			}
 
 			adapter.put(id, objectToInsert, keyspace);
@@ -191,8 +191,8 @@ public class KeyValueTemplate implements KeyValueOperations, ApplicationEventPub
 	@Override
 	public <T> T update(Object id, T objectToUpdate) {
 
-		Assert.notNull(id, "Id for object to be inserted must not be null!");
-		Assert.notNull(objectToUpdate, "Object to be updated must not be null!");
+		Assert.notNull(id, "Id for object to be inserted must not be null");
+		Assert.notNull(objectToUpdate, "Object to be updated must not be null");
 
 		String keyspace = resolveKeySpace(objectToUpdate.getClass());
 
@@ -209,7 +209,7 @@ public class KeyValueTemplate implements KeyValueOperations, ApplicationEventPub
 	@Override
 	public <T> Iterable<T> findAll(Class<T> type) {
 
-		Assert.notNull(type, "Type to fetch must not be null!");
+		Assert.notNull(type, "Type to fetch must not be null");
 
 		return executeRequired(adapter -> {
 
@@ -229,8 +229,8 @@ public class KeyValueTemplate implements KeyValueOperations, ApplicationEventPub
 	@Override
 	public <T> Optional<T> findById(Object id, Class<T> type) {
 
-		Assert.notNull(id, "Id for object to be found must not be null!");
-		Assert.notNull(type, "Type to fetch must not be null!");
+		Assert.notNull(id, "Id for object to be found must not be null");
+		Assert.notNull(type, "Type to fetch must not be null");
 
 		String keyspace = resolveKeySpace(type);
 
@@ -255,7 +255,7 @@ public class KeyValueTemplate implements KeyValueOperations, ApplicationEventPub
 	@Override
 	public void delete(Class<?> type) {
 
-		Assert.notNull(type, "Type to delete must not be null!");
+		Assert.notNull(type, "Type to delete must not be null");
 
 		String keyspace = resolveKeySpace(type);
 
@@ -283,8 +283,8 @@ public class KeyValueTemplate implements KeyValueOperations, ApplicationEventPub
 	@Override
 	public <T> T delete(Object id, Class<T> type) {
 
-		Assert.notNull(id, "Id for object to be deleted must not be null!");
-		Assert.notNull(type, "Type to delete must not be null!");
+		Assert.notNull(id, "Id for object to be deleted must not be null");
+		Assert.notNull(type, "Type to delete must not be null");
 
 		String keyspace = resolveKeySpace(type);
 
@@ -300,7 +300,7 @@ public class KeyValueTemplate implements KeyValueOperations, ApplicationEventPub
 	@Override
 	public long count(Class<?> type) {
 
-		Assert.notNull(type, "Type for count must not be null!");
+		Assert.notNull(type, "Type for count must not be null");
 		return adapter.count(resolveKeySpace(type));
 	}
 
@@ -308,7 +308,7 @@ public class KeyValueTemplate implements KeyValueOperations, ApplicationEventPub
 	@Override
 	public <T> T execute(KeyValueCallback<T> action) {
 
-		Assert.notNull(action, "KeyValueCallback must not be null!");
+		Assert.notNull(action, "KeyValueCallback must not be null");
 
 		try {
 			return action.doInKeyValue(this.adapter);
@@ -332,7 +332,7 @@ public class KeyValueTemplate implements KeyValueOperations, ApplicationEventPub
 			return result;
 		}
 
-		throw new IllegalStateException(String.format("KeyValueCallback %s returned null value!", action));
+		throw new IllegalStateException(String.format("KeyValueCallback %s returned null value", action));
 	}
 
 	@Override

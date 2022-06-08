@@ -37,7 +37,7 @@ class SpelCriteriaAccessor implements CriteriaAccessor<SpelCriteria> {
 	 */
 	public SpelCriteriaAccessor(SpelExpressionParser parser) {
 
-		Assert.notNull(parser, "SpelExpressionParser must not be null!");
+		Assert.notNull(parser, "SpelExpressionParser must not be null");
 
 		this.parser = parser;
 	}

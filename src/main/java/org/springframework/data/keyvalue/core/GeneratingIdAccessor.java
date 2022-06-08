@@ -45,9 +45,9 @@ class GeneratingIdAccessor implements IdentifierAccessor {
 	GeneratingIdAccessor(PersistentPropertyAccessor<?> accessor, PersistentProperty<?> identifierProperty,
 			IdentifierGenerator generator) {
 
-		Assert.notNull(accessor, "PersistentPropertyAccessor must not be null!");
-		Assert.notNull(identifierProperty, "Identifier property must not be null!");
-		Assert.notNull(generator, "IdentifierGenerator must not be null!");
+		Assert.notNull(accessor, "PersistentPropertyAccessor must not be null");
+		Assert.notNull(identifierProperty, "Identifier property must not be null");
+		Assert.notNull(generator, "IdentifierGenerator must not be null");
 
 		this.accessor = accessor;
 		this.identifierProperty = identifierProperty;

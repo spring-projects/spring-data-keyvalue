@@ -39,7 +39,7 @@ enum AnnotationBasedKeySpaceResolver implements KeySpaceResolver {
 	@Nullable
 	public String resolveKeySpace(Class<?> type) {
 
-		Assert.notNull(type, "Type for keyspace for null!");
+		Assert.notNull(type, "Type for keyspace for null");
 
 		Class<?> userClass = ClassUtils.getUserClass(type);
 		Object keySpace = getKeySpace(userClass);

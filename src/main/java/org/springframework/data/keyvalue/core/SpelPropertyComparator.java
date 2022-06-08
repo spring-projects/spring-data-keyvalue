@@ -47,8 +47,8 @@ public class SpelPropertyComparator<T> implements Comparator<T> {
 	 */
 	public SpelPropertyComparator(String path, SpelExpressionParser parser) {
 
-		Assert.hasText(path, "Path must not be null or empty!");
-		Assert.notNull(parser, "SpelExpressionParser must not be null!");
+		Assert.hasText(path, "Path must not be null or empty");
+		Assert.notNull(parser, "SpelExpressionParser must not be null");
 
 		this.path = path;
 		this.parser = parser;

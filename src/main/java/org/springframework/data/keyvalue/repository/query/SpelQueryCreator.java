@@ -107,7 +107,7 @@ public class SpelQueryCreator extends AbstractQueryCreator<KeyValueQuery<SpelExp
 
 				// TODO: check if we can have caseinsensitive search
 				if (!part.shouldIgnoreCase().equals(IgnoreCaseType.NEVER)) {
-					throw new InvalidDataAccessApiUsageException("Ignore case not supported!");
+					throw new InvalidDataAccessApiUsageException("Ignore case not supported");
 				}
 
 				switch (part.getType()) {

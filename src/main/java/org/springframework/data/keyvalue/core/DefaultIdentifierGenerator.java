@@ -56,7 +56,7 @@ enum DefaultIdentifierGenerator implements IdentifierGenerator {
 		}
 
 		throw new InvalidDataAccessApiUsageException(
-				String.format("Identifier cannot be generated for %s. Supported types are: UUID, String, Integer, and Long.",
+				String.format("Identifier cannot be generated for %s; Supported types are: UUID, String, Integer, and Long",
 						identifierType.getType().getName()));
 	}
 
@@ -77,7 +77,7 @@ enum DefaultIdentifierGenerator implements IdentifierGenerator {
 
 		if (secureRandom == null) {
 			throw new InvalidDataAccessApiUsageException(
-					String.format("Could not create SecureRandom instance for one of the algorithms '%s'.",
+					String.format("Could not create SecureRandom instance for one of the algorithms '%s'",
 							StringUtils.collectionToCommaDelimitedString(OsTools.secureRandomAlgorithmNames())));
 		}
 

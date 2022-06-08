@@ -31,7 +31,7 @@ enum ClassNameKeySpaceResolver implements KeySpaceResolver {
 	@Override
 	public String resolveKeySpace(Class<?> type) {
 
-		Assert.notNull(type, "Type must not be null!");
+		Assert.notNull(type, "Type must not be null");
 		return ClassUtils.getUserClass(type).getName();
 	}
 }

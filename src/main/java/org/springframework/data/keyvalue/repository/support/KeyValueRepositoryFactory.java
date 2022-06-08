@@ -99,9 +99,9 @@ public class KeyValueRepositoryFactory extends RepositoryFactorySupport {
 	public KeyValueRepositoryFactory(KeyValueOperations keyValueOperations,
 			Class<? extends AbstractQueryCreator<?, ?>> queryCreator, Class<? extends RepositoryQuery> repositoryQueryType) {
 
-		Assert.notNull(keyValueOperations, "KeyValueOperations must not be null!");
-		Assert.notNull(queryCreator, "Query creator type must not be null!");
-		Assert.notNull(repositoryQueryType, "RepositoryQueryType type must not be null!");
+		Assert.notNull(keyValueOperations, "KeyValueOperations must not be null");
+		Assert.notNull(queryCreator, "Query creator type must not be null");
+		Assert.notNull(repositoryQueryType, "RepositoryQueryType type must not be null");
 
 		this.queryCreator = queryCreator;
 		this.keyValueOperations = keyValueOperations;
@@ -204,10 +204,10 @@ public class KeyValueRepositoryFactory extends RepositoryFactorySupport {
 				Class<? extends AbstractQueryCreator<?, ?>> queryCreator,
 				Class<? extends RepositoryQuery> repositoryQueryType) {
 
-			Assert.notNull(evaluationContextProvider, "EvaluationContextProvider must not be null!");
-			Assert.notNull(keyValueOperations, "KeyValueOperations must not be null!");
-			Assert.notNull(queryCreator, "Query creator type must not be null!");
-			Assert.notNull(repositoryQueryType, "RepositoryQueryType type must not be null!");
+			Assert.notNull(evaluationContextProvider, "EvaluationContextProvider must not be null");
+			Assert.notNull(keyValueOperations, "KeyValueOperations must not be null");
+			Assert.notNull(queryCreator, "Query creator type must not be null");
+			Assert.notNull(repositoryQueryType, "RepositoryQueryType type must not be null");
 
 			this.evaluationContextProvider = evaluationContextProvider;
 			this.keyValueOperations = keyValueOperations;
@@ -228,7 +228,7 @@ public class KeyValueRepositoryFactory extends RepositoryFactorySupport {
 
 			Assert.state(constructor != null,
 					String.format(
-							"Constructor %s(QueryMethod, EvaluationContextProvider, KeyValueOperations, Class) not available!",
+							"Constructor %s(QueryMethod, EvaluationContextProvider, KeyValueOperations, Class) not available",
 							ClassUtils.getShortName(this.repositoryQueryType)));
 
 			return BeanUtils.instantiateClass(constructor, queryMethod, evaluationContextProvider, this.keyValueOperations,

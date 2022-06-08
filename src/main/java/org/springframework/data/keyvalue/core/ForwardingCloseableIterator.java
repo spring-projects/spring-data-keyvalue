@@ -52,7 +52,7 @@ public class ForwardingCloseableIterator<T> implements CloseableIterator<T> {
 	 */
 	public ForwardingCloseableIterator(Iterator<? extends T> delegate, @Nullable Runnable closeHandler) {
 
-		Assert.notNull(delegate, "Delegate iterator must not be null!");
+		Assert.notNull(delegate, "Delegate iterator must not be null");
 
 		this.delegate = delegate;
 		this.closeHandler = closeHandler;

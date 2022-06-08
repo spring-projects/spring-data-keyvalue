@@ -116,8 +116,8 @@ public class MapKeyValueAdapter extends AbstractKeyValueAdapter {
 
 		super(engine);
 
-		Assert.notNull(store, "Store must not be null.");
-		Assert.notNull(keySpaceMapType, "Map type to be used for key spaces must not be null!");
+		Assert.notNull(store, "Store must not be null");
+		Assert.notNull(keySpaceMapType, "Map type to be used for key spaces must not be null");
 
 		this.store = store;
 		this.keySpaceMapType = keySpaceMapType;
@@ -126,8 +126,8 @@ public class MapKeyValueAdapter extends AbstractKeyValueAdapter {
 	@Override
 	public Object put(Object id, Object item, String keyspace) {
 
-		Assert.notNull(id, "Cannot add item with null id.");
-		Assert.notNull(keyspace, "Cannot add item for null collection.");
+		Assert.notNull(id, "Cannot add item with null id");
+		Assert.notNull(keyspace, "Cannot add item for null collection");
 
 		return getKeySpaceMap(keyspace).put(id, item);
 	}
@@ -145,14 +145,14 @@ public class MapKeyValueAdapter extends AbstractKeyValueAdapter {
 	@Override
 	public Object get(Object id, String keyspace) {
 
-		Assert.notNull(id, "Cannot get item with null id.");
+		Assert.notNull(id, "Cannot get item with null id");
 		return getKeySpaceMap(keyspace).get(id);
 	}
 
 	@Override
 	public Object delete(Object id, String keyspace) {
 
-		Assert.notNull(id, "Cannot delete item with null id.");
+		Assert.notNull(id, "Cannot delete item with null id");
 		return getKeySpaceMap(keyspace).remove(id);
 	}
 
@@ -189,7 +189,7 @@ public class MapKeyValueAdapter extends AbstractKeyValueAdapter {
 	 */
 	protected Map<Object, Object> getKeySpaceMap(String keyspace) {
 
-		Assert.notNull(keyspace, "Collection must not be null for lookup!");
+		Assert.notNull(keyspace, "Collection must not be null for lookup");
 		return store.computeIfAbsent(keyspace, k -> CollectionFactory.createMap(keySpaceMapType,  1000));
 	}
 

@@ -133,7 +133,7 @@ public class KeyValueQuery<T> {
 	 */
 	public void setSort(Sort sort) {
 
-		Assert.notNull(sort, "Sort must not be null!");
+		Assert.notNull(sort, "Sort must not be null");
 
 		this.sort = sort;
 	}
@@ -146,7 +146,7 @@ public class KeyValueQuery<T> {
 	 */
 	public KeyValueQuery<T> orderBy(Sort sort) {
 
-		Assert.notNull(sort, "Sort must not be null!");
+		Assert.notNull(sort, "Sort must not be null");
 
 		if (this.sort.isSorted()) {
 			this.sort = this.sort.and(sort);
