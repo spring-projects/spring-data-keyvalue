@@ -15,8 +15,8 @@
  */
 package org.springframework.data.keyvalue.core.mapping;
 
-import org.springframework.core.annotation.AnnotatedElementUtils;
-import org.springframework.core.annotation.AnnotationUtils;
+import org.springframework.core.annotation.MergedAnnotation;
+import org.springframework.core.annotation.MergedAnnotations;
 import org.springframework.data.annotation.Persistent;
 import org.springframework.data.keyvalue.annotation.KeySpace;
 import org.springframework.lang.Nullable;
@@ -50,10 +50,11 @@ enum AnnotationBasedKeySpaceResolver implements KeySpaceResolver {
 	@Nullable
 	private static Object getKeySpace(Class<?> type) {
 
-		KeySpace keyspace = AnnotatedElementUtils.findMergedAnnotation(type, KeySpace.class);
+		MergedAnnotation<KeySpace> annotation = MergedAnnotations
+				.from(type, MergedAnnotations.SearchStrategy.TYPE_HIERARCHY).get(KeySpace.class);
 
-		if (keyspace != null) {
-			return AnnotationUtils.getValue(keyspace);
+		if (annotation.isPresent()) {
+			return annotation.getValue("value").orElse(null);
 		}
 
 		return null;
