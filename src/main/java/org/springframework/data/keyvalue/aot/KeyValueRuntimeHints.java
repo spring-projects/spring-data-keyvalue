@@ -27,19 +27,22 @@ import org.springframework.data.keyvalue.repository.query.KeyValuePartTreeQuery;
 import org.springframework.lang.Nullable;
 
 /**
+ * {@link RuntimeHintsRegistrar} for KeyValue.
+ *
  * @author Christoph Strobl
  * @since 3.0
  */
-public class DataKeyValueRuntimeHints implements RuntimeHintsRegistrar {
+class KeyValueRuntimeHints implements RuntimeHintsRegistrar {
 
 	@Override
 	public void registerHints(RuntimeHints hints, @Nullable ClassLoader classLoader) {
 
 		// REFLECTION
-		hints.reflection()
-				.registerTypes(Arrays.asList(TypeReference.of(org.springframework.data.keyvalue.repository.support.SimpleKeyValueRepository.class),
-								TypeReference.of(KeyValuePartTreeQuery.class)),
-						hint -> hint.withMembers(MemberCategory.INVOKE_DECLARED_CONSTRUCTORS, MemberCategory.INVOKE_DECLARED_METHODS));
+		hints.reflection().registerTypes(
+				Arrays.asList(
+						TypeReference.of(org.springframework.data.keyvalue.repository.support.SimpleKeyValueRepository.class),
+						TypeReference.of(KeyValuePartTreeQuery.class)),
+				hint -> hint.withMembers(MemberCategory.INVOKE_DECLARED_CONSTRUCTORS, MemberCategory.INVOKE_DECLARED_METHODS));
 
 		// PROXIES
 		RuntimeHintsUtils.registerAnnotation(hints, KeySpace.class);

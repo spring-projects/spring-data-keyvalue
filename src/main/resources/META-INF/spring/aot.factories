@@ -1,2 +1,2 @@
 org.springframework.aot.hint.RuntimeHintsRegistrar=\
-	org.springframework.data.keyvalue.aot.DataKeyValueRuntimeHints
+	org.springframework.data.keyvalue.aot.KeyValueRuntimeHints
