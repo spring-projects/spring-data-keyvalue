@@ -21,8 +21,6 @@ import org.springframework.aot.hint.MemberCategory;
 import org.springframework.aot.hint.RuntimeHints;
 import org.springframework.aot.hint.RuntimeHintsRegistrar;
 import org.springframework.aot.hint.TypeReference;
-import org.springframework.aot.hint.support.RuntimeHintsUtils;
-import org.springframework.data.keyvalue.annotation.KeySpace;
 import org.springframework.data.keyvalue.repository.query.KeyValuePartTreeQuery;
 import org.springframework.lang.Nullable;
 
@@ -43,8 +41,5 @@ class KeyValueRuntimeHints implements RuntimeHintsRegistrar {
 						TypeReference.of(org.springframework.data.keyvalue.repository.support.SimpleKeyValueRepository.class),
 						TypeReference.of(KeyValuePartTreeQuery.class)),
 				hint -> hint.withMembers(MemberCategory.INVOKE_DECLARED_CONSTRUCTORS, MemberCategory.INVOKE_DECLARED_METHODS));
-
-		// PROXIES
-		RuntimeHintsUtils.registerAnnotation(hints, KeySpace.class);
 	}
 }
