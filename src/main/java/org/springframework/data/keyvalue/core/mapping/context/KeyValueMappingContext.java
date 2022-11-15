@@ -39,7 +39,7 @@ import org.springframework.lang.Nullable;
 public class KeyValueMappingContext<E extends KeyValuePersistentEntity<?, P>, P extends KeyValuePersistentProperty<P>>
 		extends AbstractMappingContext<E, P> {
 
-	private @Nullable KeySpaceResolver fallbackKeySpaceResolver;
+	private @Nullable KeySpaceResolver keySpaceResolver;
 
 	public KeyValueMappingContext() {
 		setSimpleTypeHolder(new KeyValueSimpleTypeHolder());
@@ -49,24 +49,37 @@ public class KeyValueMappingContext<E extends KeyValuePersistentEntity<?, P>, P 
 	 * Configures the {@link KeySpaceResolver} to be used if not explicit key space is annotated to the domain type.
 	 *
 	 * @param fallbackKeySpaceResolver can be {@literal null}.
+	 * @deprecated since 3.0, use {@link KeySpaceResolver} instead.
 	 */
+	@Deprecated(since = "3.0")
 	public void setFallbackKeySpaceResolver(KeySpaceResolver fallbackKeySpaceResolver) {
-		this.fallbackKeySpaceResolver = fallbackKeySpaceResolver;
+		setKeySpaceResolver(fallbackKeySpaceResolver);
 	}
 
 	/**
-	 * @return the current fallback KeySpaceResolver. Can be {@literal null}.
+	 * Configures the {@link KeySpaceResolver} to be used. Configuring a {@link KeySpaceResolver} disables SpEL evaluation
+	 * abilities.
+	 *
+	 * @param keySpaceResolver can be {@literal null}.
+	 * @since 3.0
+	 */
+	public void setKeySpaceResolver(KeySpaceResolver keySpaceResolver) {
+		this.keySpaceResolver = keySpaceResolver;
+	}
+
+	/**
+	 * @return the current {@link KeySpaceResolver}. Can be {@literal null}.
 	 * @since 3.0
 	 */
 	@Nullable
-	public KeySpaceResolver getFallbackKeySpaceResolver() {
-		return fallbackKeySpaceResolver;
+	public KeySpaceResolver getKeySpaceResolver() {
+		return keySpaceResolver;
 	}
 
 	@Override
 	@SuppressWarnings("unchecked")
 	protected <T> E createPersistentEntity(TypeInformation<T> typeInformation) {
-		return (E) new BasicKeyValuePersistentEntity<T, P>(typeInformation, getFallbackKeySpaceResolver());
+		return (E) new BasicKeyValuePersistentEntity<T, P>(typeInformation, getKeySpaceResolver());
 	}
 
 	@Override

@@ -19,7 +19,7 @@ import org.springframework.lang.Nullable;
 
 /**
  * {@link KeySpaceResolver} determines the {@literal keyspace} a given type is assigned to. A keyspace in this context
- * is a specific region/collection/grouping of elements sharing a common keyrange. <br />
+ * is a specific region/collection/grouping of elements sharing a common keyrange.
  *
  * @author Christoph Strobl
  * @author Mark Paluch
