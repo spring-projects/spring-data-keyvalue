@@ -24,7 +24,6 @@ import java.util.Map;
 import org.junit.jupiter.api.Test;
 import org.springframework.data.keyvalue.annotation.KeySpace;
 import org.springframework.data.keyvalue.core.mapping.context.KeyValueMappingContext;
-import org.springframework.data.mapping.context.MappingContext;
 import org.springframework.data.spel.ExtensionAwareEvaluationContextProvider;
 import org.springframework.data.spel.spi.EvaluationContextExtension;
 
@@ -35,7 +34,7 @@ import org.springframework.data.spel.spi.EvaluationContextExtension;
  */
 class BasicKeyValuePersistentEntityUnitTests {
 
-	private MappingContext<? extends KeyValuePersistentEntity<?, ?>, ? extends KeyValuePersistentProperty<?>> mappingContext = new KeyValueMappingContext<>();
+	private KeyValueMappingContext<? extends KeyValuePersistentEntity<?, ?>, ? extends KeyValuePersistentProperty<?>> mappingContext = new KeyValueMappingContext<>();
 
 	@Test // DATAKV-268
 	void shouldDeriveKeyspaceFromClassName() {
@@ -60,6 +59,24 @@ class BasicKeyValuePersistentEntityUnitTests {
 		KeyValuePersistentEntity<?, ?> persistentEntity = mappingContext.getPersistentEntity(NoKeyspaceEntity.class);
 		persistentEntity.setEvaluationContextProvider(
 				new ExtensionAwareEvaluationContextProvider(Collections.singletonList(new SampleExtension())));
+
+		assertThat(persistentEntity.getKeySpace()).isEqualTo(NoKeyspaceEntity.class.getName());
+	}
+
+	@Test // GH-461
+	void shouldApplyKeySpaceResolver() {
+
+		mappingContext.setKeySpaceResolver(new PrefixKeyspaceResolver("foo", ClassNameKeySpaceResolver.INSTANCE));
+		KeyValuePersistentEntity<?, ?> persistentEntity = mappingContext.getPersistentEntity(NoKeyspaceEntity.class);
+
+		assertThat(persistentEntity.getKeySpace()).isEqualTo("foo" + NoKeyspaceEntity.class.getName());
+	}
+
+	@Test // GH-461
+	void shouldFallBackToDefaultsIfKeySpaceResolverReturnsNull() {
+
+		mappingContext.setKeySpaceResolver(it -> null);
+		KeyValuePersistentEntity<?, ?> persistentEntity = mappingContext.getPersistentEntity(NoKeyspaceEntity.class);
 
 		assertThat(persistentEntity.getKeySpace()).isEqualTo(NoKeyspaceEntity.class.getName());
 	}

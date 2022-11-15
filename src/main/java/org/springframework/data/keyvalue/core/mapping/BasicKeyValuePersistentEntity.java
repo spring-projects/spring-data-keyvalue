@@ -25,7 +25,7 @@ import org.springframework.lang.Nullable;
 import org.springframework.util.StringUtils;
 
 /**
- * {@link KeyValuePersistentEntity} implementation that adds specific meta-data such as the {@literal keySpace}..
+ * {@link KeyValuePersistentEntity} implementation that adds specific meta-data such as the {@literal keySpace}.
  *
  * @author Christoph Strobl
  * @author Oliver Gierke
@@ -37,31 +37,47 @@ public class BasicKeyValuePersistentEntity<T, P extends KeyValuePersistentProper
 
 	private static final SpelExpressionParser PARSER = new SpelExpressionParser();
 
-	private static final KeySpaceResolver DEFAULT_FALLBACK_RESOLVER = ClassNameKeySpaceResolver.INSTANCE;
-
 	private final @Nullable Expression keyspaceExpression;
 	private final @Nullable String keyspace;
 
 	/**
 	 * @param information must not be {@literal null}.
-	 * @param fallbackKeySpaceResolver can be {@literal null}.
+	 * @since 3.1
 	 */
-	public BasicKeyValuePersistentEntity(TypeInformation<T> information,
-			@Nullable KeySpaceResolver fallbackKeySpaceResolver) {
+	public BasicKeyValuePersistentEntity(TypeInformation<T> information) {
+		this(information, (String) null);
+	}
+
+	/**
+	 * @param information must not be {@literal null}.
+	 * @param keySpaceResolver can be {@literal null}.
+	 */
+	public BasicKeyValuePersistentEntity(TypeInformation<T> information, @Nullable KeySpaceResolver keySpaceResolver) {
+		this(information, keySpaceResolver != null ? keySpaceResolver.resolveKeySpace(information.getType()) : null);
+	}
+
+	private BasicKeyValuePersistentEntity(TypeInformation<T> information, @Nullable String keyspace) {
 
 		super(information);
 
-		Class<T> type = information.getType();
-		String keySpace = AnnotationBasedKeySpaceResolver.INSTANCE.resolveKeySpace(type);
+		if (StringUtils.hasText(keyspace)) {
 
-		if (StringUtils.hasText(keySpace)) {
-
-			this.keyspace = keySpace;
-			this.keyspaceExpression = detectExpression(keySpace);
+			this.keyspace = keyspace;
+			this.keyspaceExpression = null;
 		} else {
 
-			this.keyspace = resolveKeyspace(fallbackKeySpaceResolver, type);
-			this.keyspaceExpression = null;
+			Class<T> type = information.getType();
+			String detectedKeyspace = AnnotationBasedKeySpaceResolver.INSTANCE.resolveKeySpace(type);
+
+			if (StringUtils.hasText(detectedKeyspace)) {
+
+				this.keyspace = detectedKeyspace;
+				this.keyspaceExpression = detectExpression(detectedKeyspace);
+			} else {
+
+				this.keyspace = ClassNameKeySpaceResolver.INSTANCE.resolveKeySpace(type);
+				this.keyspaceExpression = null;
+			}
 		}
 	}
 
@@ -77,12 +93,6 @@ public class BasicKeyValuePersistentEntity<T, P extends KeyValuePersistentProper
 
 		Expression expression = PARSER.parseExpression(potentialExpression, ParserContext.TEMPLATE_EXPRESSION);
 		return expression instanceof LiteralExpression ? null : expression;
-	}
-
-	@Nullable
-	private static String resolveKeyspace(@Nullable KeySpaceResolver fallbackKeySpaceResolver, Class<?> type) {
-		return (fallbackKeySpaceResolver == null ? DEFAULT_FALLBACK_RESOLVER : fallbackKeySpaceResolver)
-				.resolveKeySpace(type);
 	}
 
 	@Override

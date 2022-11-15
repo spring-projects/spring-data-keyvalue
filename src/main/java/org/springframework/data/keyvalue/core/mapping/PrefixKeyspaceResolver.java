@@ -22,7 +22,7 @@ import org.springframework.util.Assert;
  * delegate {@link KeySpaceResolver}.
  *
  * @author Mark Paluch
- * @since 3.0
+ * @since 3.1
  */
 public class PrefixKeyspaceResolver implements KeySpaceResolver {
 
