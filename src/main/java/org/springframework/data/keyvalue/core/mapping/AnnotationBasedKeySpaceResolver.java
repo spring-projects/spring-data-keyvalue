@@ -31,7 +31,7 @@ import org.springframework.util.ClassUtils;
  * @author Oliver Gierke
  * @author Mark Paluch
  */
-enum AnnotationBasedKeySpaceResolver implements KeySpaceResolver {
+public enum AnnotationBasedKeySpaceResolver implements KeySpaceResolver {
 
 	INSTANCE;
 
