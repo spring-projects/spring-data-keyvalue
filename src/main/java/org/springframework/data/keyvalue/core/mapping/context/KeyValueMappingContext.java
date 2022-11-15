@@ -54,10 +54,19 @@ public class KeyValueMappingContext<E extends KeyValuePersistentEntity<?, P>, P 
 		this.fallbackKeySpaceResolver = fallbackKeySpaceResolver;
 	}
 
+	/**
+	 * @return the current fallback KeySpaceResolver. Can be {@literal null}.
+	 * @since 3.0
+	 */
+	@Nullable
+	public KeySpaceResolver getFallbackKeySpaceResolver() {
+		return fallbackKeySpaceResolver;
+	}
+
 	@Override
 	@SuppressWarnings("unchecked")
 	protected <T> E createPersistentEntity(TypeInformation<T> typeInformation) {
-		return (E) new BasicKeyValuePersistentEntity<T, P>(typeInformation, fallbackKeySpaceResolver);
+		return (E) new BasicKeyValuePersistentEntity<T, P>(typeInformation, getFallbackKeySpaceResolver());
 	}
 
 	@Override
