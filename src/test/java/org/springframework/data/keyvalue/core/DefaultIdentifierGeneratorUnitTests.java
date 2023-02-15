@@ -21,9 +21,8 @@ import java.util.Date;
 import java.util.UUID;
 
 import org.junit.jupiter.api.Test;
-
 import org.springframework.dao.InvalidDataAccessApiUsageException;
-import org.springframework.data.util.ClassTypeInformation;
+import org.springframework.data.util.TypeInformation;
 
 /**
  * @author Christoph Strobl
@@ -35,13 +34,13 @@ class DefaultIdentifierGeneratorUnitTests {
 	@Test
 	void shouldThrowExceptionForUnsupportedType() {
 		assertThatExceptionOfType(InvalidDataAccessApiUsageException.class)
-				.isThrownBy(() -> generator.generateIdentifierOfType(ClassTypeInformation.from(Date.class)));
+				.isThrownBy(() -> generator.generateIdentifierOfType(TypeInformation.of(Date.class)));
 	}
 
 	@Test // DATAKV-136
 	void shouldGenerateUUIDValueCorrectly() {
 
-		Object value = generator.generateIdentifierOfType(ClassTypeInformation.from(UUID.class));
+		Object value = generator.generateIdentifierOfType(TypeInformation.of(UUID.class));
 
 		assertThat(value).isNotNull().isInstanceOf(UUID.class);
 	}
@@ -49,7 +48,7 @@ class DefaultIdentifierGeneratorUnitTests {
 	@Test // DATAKV-136
 	void shouldGenerateStringValueCorrectly() {
 
-		Object value = generator.generateIdentifierOfType(ClassTypeInformation.from(String.class));
+		Object value = generator.generateIdentifierOfType(TypeInformation.of(String.class));
 
 		assertThat(value).isNotNull().isInstanceOf(String.class);
 	}
@@ -57,7 +56,7 @@ class DefaultIdentifierGeneratorUnitTests {
 	@Test // DATAKV-136
 	void shouldGenerateLongValueCorrectly() {
 
-		Object value = generator.generateIdentifierOfType(ClassTypeInformation.from(Long.class));
+		Object value = generator.generateIdentifierOfType(TypeInformation.of(Long.class));
 
 		assertThat(value).isNotNull().isInstanceOf(Long.class);
 	}
@@ -65,7 +64,7 @@ class DefaultIdentifierGeneratorUnitTests {
 	@Test // DATAKV-136
 	void shouldGenerateIntValueCorrectly() {
 
-		Object value = generator.generateIdentifierOfType(ClassTypeInformation.from(Integer.class));
+		Object value = generator.generateIdentifierOfType(TypeInformation.of(Integer.class));
 
 		assertThat(value).isNotNull().isInstanceOf(Integer.class);
 	}

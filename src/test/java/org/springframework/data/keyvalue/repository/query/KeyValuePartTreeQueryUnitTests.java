@@ -36,7 +36,6 @@ import org.springframework.data.projection.ProjectionFactory;
 import org.springframework.data.repository.core.RepositoryMetadata;
 import org.springframework.data.repository.query.QueryMethod;
 import org.springframework.data.repository.query.QueryMethodEvaluationContextProvider;
-import org.springframework.data.util.ClassTypeInformation;
 import org.springframework.data.util.TypeInformation;
 
 /**
@@ -56,8 +55,7 @@ class KeyValuePartTreeQueryUnitTests {
 
 		when(metadataMock.getDomainType()).thenReturn((Class) Person.class);
 		when(metadataMock.getDomainTypeInformation()).thenReturn((TypeInformation) TypeInformation.of(Person.class));
-		when(metadataMock.getReturnType(any(Method.class)))
-				.thenReturn((TypeInformation) ClassTypeInformation.from(List.class));
+		when(metadataMock.getReturnType(any(Method.class))).thenReturn((TypeInformation) TypeInformation.of(List.class));
 		when(metadataMock.getReturnedDomainClass(any(Method.class))).thenReturn((Class) Person.class);
 
 		QueryMethod qm = new QueryMethod(Repo.class.getMethod("findByFirstname", String.class), metadataMock,
@@ -80,8 +78,7 @@ class KeyValuePartTreeQueryUnitTests {
 
 		when(metadataMock.getDomainType()).thenReturn((Class) Person.class);
 		when(metadataMock.getDomainTypeInformation()).thenReturn((TypeInformation) TypeInformation.of(Person.class));
-		when(metadataMock.getReturnType(any(Method.class)))
-				.thenReturn((TypeInformation) ClassTypeInformation.from(List.class));
+		when(metadataMock.getReturnType(any(Method.class))).thenReturn((TypeInformation) TypeInformation.of(List.class));
 		when(metadataMock.getReturnedDomainClass(any(Method.class))).thenReturn((Class) Person.class);
 
 		QueryMethod qm = new QueryMethod(Repo.class.getMethod("findBy", Pageable.class), metadataMock,
@@ -102,8 +99,7 @@ class KeyValuePartTreeQueryUnitTests {
 
 		when(metadataMock.getDomainType()).thenReturn((Class) Person.class);
 		when(metadataMock.getDomainTypeInformation()).thenReturn((TypeInformation) TypeInformation.of(Person.class));
-		when(metadataMock.getReturnType(any(Method.class)))
-				.thenReturn((TypeInformation) ClassTypeInformation.from(List.class));
+		when(metadataMock.getReturnType(any(Method.class))).thenReturn((TypeInformation) TypeInformation.of(List.class));
 		when(metadataMock.getReturnedDomainClass(any(Method.class))).thenReturn((Class) Person.class);
 
 		QueryMethod qm = new QueryMethod(Repo.class.getMethod("findTop3By"), metadataMock, projectionFactoryMock);
@@ -122,8 +118,7 @@ class KeyValuePartTreeQueryUnitTests {
 
 		when(metadataMock.getDomainType()).thenReturn((Class) Person.class);
 		when(metadataMock.getDomainTypeInformation()).thenReturn((TypeInformation) TypeInformation.of(Person.class));
-		when(metadataMock.getReturnType(any(Method.class)))
-				.thenReturn((TypeInformation) ClassTypeInformation.from(List.class));
+		when(metadataMock.getReturnType(any(Method.class))).thenReturn((TypeInformation) TypeInformation.of(List.class));
 		when(metadataMock.getReturnedDomainClass(any(Method.class))).thenReturn((Class) Person.class);
 
 		QueryMethod qm = new QueryMethod(Repo.class.getMethod("findTop3ByFirstname", String.class), metadataMock,
@@ -145,8 +140,7 @@ class KeyValuePartTreeQueryUnitTests {
 
 		when(metadataMock.getDomainType()).thenReturn((Class) Person.class);
 		when(metadataMock.getDomainTypeInformation()).thenReturn((TypeInformation) TypeInformation.of(Person.class));
-		when(metadataMock.getReturnType(any(Method.class)))
-				.thenReturn((TypeInformation) ClassTypeInformation.from(Boolean.class));
+		when(metadataMock.getReturnType(any(Method.class))).thenReturn((TypeInformation) TypeInformation.of(Boolean.class));
 		when(metadataMock.getReturnedDomainClass(any(Method.class))).thenReturn((Class) Boolean.class);
 
 		QueryMethod qm = new QueryMethod(Repo.class.getMethod("existsByFirstname", String.class), metadataMock,
