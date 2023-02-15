@@ -27,7 +27,6 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-
 import org.springframework.data.keyvalue.Person;
 import org.springframework.data.keyvalue.core.KeyValueOperations;
 import org.springframework.data.keyvalue.core.SpelCriteria;
@@ -35,7 +34,7 @@ import org.springframework.data.projection.ProjectionFactory;
 import org.springframework.data.repository.core.RepositoryMetadata;
 import org.springframework.data.repository.query.QueryMethod;
 import org.springframework.data.repository.query.QueryMethodEvaluationContextProvider;
-import org.springframework.data.util.ClassTypeInformation;
+import org.springframework.data.util.TypeInformation;
 
 /**
  * Unit tests for {@link CachingKeyValuePartTreeQuery}.
@@ -54,8 +53,9 @@ class CachingKeyValuePartTreeQueryUnitTests {
 	void setUp() throws Exception {
 
 		when(metadataMock.getDomainType()).thenReturn((Class) Person.class);
+		when(metadataMock.getDomainTypeInformation()).thenReturn((TypeInformation) TypeInformation.of(Person.class));
 		when(metadataMock.getReturnedDomainClass(any(Method.class))).thenReturn((Class) Person.class);
-		when(metadataMock.getReturnType(any(Method.class))).thenReturn(ClassTypeInformation.from((Class) List.class));
+		when(metadataMock.getReturnType(any(Method.class))).thenReturn(TypeInformation.of((Class) List.class));
 	}
 
 	@Test // DATAKV-137
