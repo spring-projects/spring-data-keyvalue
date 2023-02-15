@@ -40,7 +40,6 @@ import org.springframework.data.repository.core.RepositoryMetadata;
 import org.springframework.data.repository.query.ParametersParameterAccessor;
 import org.springframework.data.repository.query.QueryMethod;
 import org.springframework.data.repository.query.parser.PartTree;
-import org.springframework.data.util.ClassTypeInformation;
 import org.springframework.data.util.TypeInformation;
 import org.springframework.expression.spel.standard.SpelExpression;
 import org.springframework.expression.spel.support.SimpleEvaluationContext;
@@ -57,12 +56,10 @@ public class SpelQueryCreatorUnitTests {
 
 	private static final Person RICKON = new Person("rickon", 4);
 	private static final Person BRAN = new Person("bran", 9)//
-			.skinChanger(true)
-			.bornAt(Date.from(ZonedDateTime.parse("2013-01-31T06:00:00Z", FORMATTER).toInstant()));
+			.skinChanger(true).bornAt(Date.from(ZonedDateTime.parse("2013-01-31T06:00:00Z", FORMATTER).toInstant()));
 	private static final Person ARYA = new Person("arya", 13);
 	private static final Person ROBB = new Person("robb", 16)//
-			.named("stark")
-			.bornAt(Date.from(ZonedDateTime.parse("2010-09-20T06:00:00Z", FORMATTER).toInstant()));
+			.named("stark").bornAt(Date.from(ZonedDateTime.parse("2010-09-20T06:00:00Z", FORMATTER).toInstant()));
 	private static final Person JON = new Person("jon", 17).named("snow");
 
 	@Mock RepositoryMetadata metadataMock;
@@ -339,7 +336,7 @@ public class SpelQueryCreatorUnitTests {
 		Method method = PersonRepository.class.getMethod(methodName, argTypes);
 		doReturn(Person.class).when(metadataMock).getReturnedDomainClass(method);
 		doReturn(TypeInformation.of(Person.class)).when(metadataMock).getDomainTypeInformation();
-		doReturn(ClassTypeInformation.from(Person.class)).when(metadataMock).getReturnType(method);
+		doReturn(TypeInformation.of(Person.class)).when(metadataMock).getReturnType(method);
 
 		PartTree partTree = new PartTree(method.getName(), method.getReturnType());
 		SpelQueryCreator creator = new SpelQueryCreator(partTree, new ParametersParameterAccessor(
