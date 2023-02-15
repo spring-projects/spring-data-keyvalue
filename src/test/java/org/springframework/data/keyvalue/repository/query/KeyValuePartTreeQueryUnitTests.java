@@ -26,7 +26,6 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.keyvalue.Person;
@@ -56,6 +55,7 @@ class KeyValuePartTreeQueryUnitTests {
 	void spelExpressionAndContextShouldNotBeReused() throws NoSuchMethodException, SecurityException {
 
 		when(metadataMock.getDomainType()).thenReturn((Class) Person.class);
+		when(metadataMock.getDomainTypeInformation()).thenReturn((TypeInformation) TypeInformation.of(Person.class));
 		when(metadataMock.getReturnType(any(Method.class)))
 				.thenReturn((TypeInformation) ClassTypeInformation.from(List.class));
 		when(metadataMock.getReturnedDomainClass(any(Method.class))).thenReturn((Class) Person.class);
@@ -79,6 +79,7 @@ class KeyValuePartTreeQueryUnitTests {
 	void shouldApplyPageableParameterToCollectionQuery() throws SecurityException, NoSuchMethodException {
 
 		when(metadataMock.getDomainType()).thenReturn((Class) Person.class);
+		when(metadataMock.getDomainTypeInformation()).thenReturn((TypeInformation) TypeInformation.of(Person.class));
 		when(metadataMock.getReturnType(any(Method.class)))
 				.thenReturn((TypeInformation) ClassTypeInformation.from(List.class));
 		when(metadataMock.getReturnedDomainClass(any(Method.class))).thenReturn((Class) Person.class);
@@ -100,6 +101,7 @@ class KeyValuePartTreeQueryUnitTests {
 	void shouldApplyDerivedMaxResultsToQuery() throws SecurityException, NoSuchMethodException {
 
 		when(metadataMock.getDomainType()).thenReturn((Class) Person.class);
+		when(metadataMock.getDomainTypeInformation()).thenReturn((TypeInformation) TypeInformation.of(Person.class));
 		when(metadataMock.getReturnType(any(Method.class)))
 				.thenReturn((TypeInformation) ClassTypeInformation.from(List.class));
 		when(metadataMock.getReturnedDomainClass(any(Method.class))).thenReturn((Class) Person.class);
@@ -119,6 +121,7 @@ class KeyValuePartTreeQueryUnitTests {
 	void shouldApplyDerivedMaxResultsToQueryWithParameters() throws SecurityException, NoSuchMethodException {
 
 		when(metadataMock.getDomainType()).thenReturn((Class) Person.class);
+		when(metadataMock.getDomainTypeInformation()).thenReturn((TypeInformation) TypeInformation.of(Person.class));
 		when(metadataMock.getReturnType(any(Method.class)))
 				.thenReturn((TypeInformation) ClassTypeInformation.from(List.class));
 		when(metadataMock.getReturnedDomainClass(any(Method.class))).thenReturn((Class) Person.class);
@@ -141,6 +144,7 @@ class KeyValuePartTreeQueryUnitTests {
 	void shouldUseCountForExists() throws NoSuchMethodException {
 
 		when(metadataMock.getDomainType()).thenReturn((Class) Person.class);
+		when(metadataMock.getDomainTypeInformation()).thenReturn((TypeInformation) TypeInformation.of(Person.class));
 		when(metadataMock.getReturnType(any(Method.class)))
 				.thenReturn((TypeInformation) ClassTypeInformation.from(Boolean.class));
 		when(metadataMock.getReturnedDomainClass(any(Method.class))).thenReturn((Class) Boolean.class);

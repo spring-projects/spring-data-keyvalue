@@ -15,9 +15,11 @@
  */
 package org.springframework.data.keyvalue.repository.query;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
-import static org.mockito.Mockito.doReturn;
+import static org.assertj.core.api.Assertions.*;
+import static org.mockito.Mockito.*;
+
+import lombok.Data;
+import lombok.SneakyThrows;
 
 import java.lang.reflect.Method;
 import java.time.ZonedDateTime;
@@ -29,22 +31,20 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-
 import org.springframework.dao.InvalidDataAccessApiUsageException;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.keyvalue.core.query.KeyValueQuery;
 import org.springframework.data.projection.SpelAwareProxyProjectionFactory;
+import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.core.RepositoryMetadata;
 import org.springframework.data.repository.query.ParametersParameterAccessor;
 import org.springframework.data.repository.query.QueryMethod;
 import org.springframework.data.repository.query.parser.PartTree;
 import org.springframework.data.util.ClassTypeInformation;
+import org.springframework.data.util.TypeInformation;
 import org.springframework.expression.spel.standard.SpelExpression;
 import org.springframework.expression.spel.support.SimpleEvaluationContext;
 import org.springframework.util.ObjectUtils;
-
-import lombok.Data;
-import lombok.SneakyThrows;
 
 /**
  * @author Christoph Strobl
@@ -338,6 +338,7 @@ public class SpelQueryCreatorUnitTests {
 
 		Method method = PersonRepository.class.getMethod(methodName, argTypes);
 		doReturn(Person.class).when(metadataMock).getReturnedDomainClass(method);
+		doReturn(TypeInformation.of(Person.class)).when(metadataMock).getDomainTypeInformation();
 		doReturn(ClassTypeInformation.from(Person.class)).when(metadataMock).getReturnType(method);
 
 		PartTree partTree = new PartTree(method.getName(), method.getReturnType());
@@ -352,7 +353,7 @@ public class SpelQueryCreatorUnitTests {
 	}
 
 	@SuppressWarnings("unused")
-	interface PersonRepository {
+	interface PersonRepository extends CrudRepository<Person, String> {
 
 		// No arguments
 		Person findBy();

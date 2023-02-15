@@ -29,7 +29,6 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-
 import org.springframework.data.annotation.Id;
 import org.springframework.data.keyvalue.repository.query.SpelQueryCreator;
 import org.springframework.data.projection.SpelAwareProxyProjectionFactory;
@@ -37,7 +36,7 @@ import org.springframework.data.repository.core.RepositoryMetadata;
 import org.springframework.data.repository.query.ParametersParameterAccessor;
 import org.springframework.data.repository.query.QueryMethod;
 import org.springframework.data.repository.query.parser.PartTree;
-import org.springframework.data.util.ClassTypeInformation;
+import org.springframework.data.util.TypeInformation;
 import org.springframework.expression.spel.support.SimpleEvaluationContext;
 
 /**
@@ -96,7 +95,8 @@ public class SpelQueryEngineUnitTests {
 		Method method = PersonRepository.class.getMethod(methodName, types.toArray(new Class<?>[types.size()]));
 		RepositoryMetadata metadata = mock(RepositoryMetadata.class);
 		doReturn(method.getReturnType()).when(metadata).getReturnedDomainClass(method);
-		doReturn(ClassTypeInformation.fromReturnTypeOf(method)).when(metadata).getReturnType(method);
+		doReturn(TypeInformation.fromReturnTypeOf(method)).when(metadata).getReturnType(method);
+		doReturn(TypeInformation.of(Person.class)).when(metadata).getDomainTypeInformation();
 
 		PartTree partTree = new PartTree(method.getName(), method.getReturnType());
 		SpelQueryCreator creator = new SpelQueryCreator(partTree, new ParametersParameterAccessor(
