@@ -17,13 +17,10 @@ package org.springframework.data.map.repository.config;
 
 import static org.assertj.core.api.Assertions.*;
 
-import lombok.Data;
-
 import java.util.List;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -62,11 +59,26 @@ public class MapRepositoryRegistrarWithTemplateDefinitionIntegrationTests {
 		assertThat(repo).isNotNull();
 	}
 
-	@Data
 	static class Person {
 
 		@Id String id;
 		String firstname;
+
+		public String getId() {
+			return this.id;
+		}
+
+		public String getFirstname() {
+			return this.firstname;
+		}
+
+		public void setId(String id) {
+			this.id = id;
+		}
+
+		public void setFirstname(String firstname) {
+			this.firstname = firstname;
+		}
 	}
 
 	interface PersonRepository extends CrudRepository<Person, String> {

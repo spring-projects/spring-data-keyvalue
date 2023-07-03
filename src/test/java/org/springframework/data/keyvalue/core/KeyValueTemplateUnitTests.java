@@ -18,9 +18,6 @@ package org.springframework.data.keyvalue.core;
 import static org.assertj.core.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
@@ -34,7 +31,6 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.mockito.junit.jupiter.MockitoSettings;
 import org.mockito.quality.Strictness;
-
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.dao.InvalidDataAccessApiUsageException;
@@ -572,24 +568,59 @@ class KeyValueTemplateUnitTests {
 		template.setEventTypesToPublish(new HashSet<>(Arrays.asList(events)));
 	}
 
-	@Data
-	@AllArgsConstructor
 	static class Foo {
 
 		String foo;
+
+		public Foo(String foo) {
+			this.foo = foo;
+		}
+
+		public String getFoo() {
+			return this.foo;
+		}
+
+		public void setFoo(String foo) {
+			this.foo = foo;
+		}
 	}
 
-	@Data
-	@AllArgsConstructor
 	class Bar {
 
 		String bar;
+
+		public Bar(String bar) {
+			this.bar = bar;
+		}
+
+		public String getBar() {
+			return this.bar;
+		}
+
+		public void setBar(String bar) {
+			this.bar = bar;
+		}
 	}
 
-	@Data
 	static class ClassWithStringId {
 
 		@Id String id;
 		String value;
+
+		public String getId() {
+			return this.id;
+		}
+
+		public String getValue() {
+			return this.value;
+		}
+
+		public void setId(String id) {
+			this.id = id;
+		}
+
+		public void setValue(String value) {
+			this.value = value;
+		}
 	}
 }

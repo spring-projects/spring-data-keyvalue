@@ -17,9 +17,6 @@ package org.springframework.data.keyvalue.core;
 
 import static org.assertj.core.api.Assertions.*;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-
 import java.io.Serializable;
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
@@ -30,7 +27,6 @@ import java.util.List;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-
 import org.springframework.core.annotation.AliasFor;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.data.annotation.Id;
@@ -216,31 +212,64 @@ class KeyValueTemplateTests {
 		assertThat((List) operations.findAll(ALIASED.getClass())).contains(ALIASED, SUBCLASS_OF_ALIASED);
 	}
 
-	@Data
-	@AllArgsConstructor
 	static class Foo {
 
 		String foo;
 
+		public Foo(String foo) {
+			this.foo = foo;
+		}
+
+		public String getFoo() {
+			return this.foo;
+		}
+
+		public void setFoo(String foo) {
+			this.foo = foo;
+		}
 	}
 
-	@Data
-	@AllArgsConstructor
 	static class Bar {
 
 		String bar;
+
+		public Bar(String bar) {
+			this.bar = bar;
+		}
+
+		public String getBar() {
+			return this.bar;
+		}
+
+		public void setBar(String bar) {
+			this.bar = bar;
+		}
 	}
 
-	@Data
 	static class ClassWithStringId implements Serializable {
 
 		private static final long serialVersionUID = -7481030649267602830L;
 		@Id String id;
 		String value;
+
+		public String getId() {
+			return id;
+		}
+
+		public void setId(String id) {
+			this.id = id;
+		}
+
+		public String getValue() {
+			return value;
+		}
+
+		public void setValue(String value) {
+			this.value = value;
+		}
 	}
 
 	@ExplicitKeySpace(name = "aliased")
-	@Data
 	static class ClassWithTypeAlias implements Serializable {
 
 		private static final long serialVersionUID = -5921943364908784571L;
@@ -248,6 +277,22 @@ class KeyValueTemplateTests {
 		String name;
 
 		ClassWithTypeAlias(String name) {
+			this.name = name;
+		}
+
+		public String getId() {
+			return this.id;
+		}
+
+		public String getName() {
+			return this.name;
+		}
+
+		public void setId(String id) {
+			this.id = id;
+		}
+
+		public void setName(String name) {
 			this.name = name;
 		}
 	}

@@ -17,8 +17,6 @@ package org.springframework.data.map;
 
 import static org.assertj.core.api.Assertions.*;
 
-import lombok.Data;
-
 import java.util.List;
 import java.util.Optional;
 import java.util.function.Function;
@@ -26,7 +24,6 @@ import java.util.stream.Stream;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-
 import org.springframework.dao.IncorrectResultSizeDataAccessException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -290,10 +287,17 @@ class QuerydslKeyValuePredicateExecutorUnitTests extends AbstractRepositoryUnitT
 		String getFirstname();
 	}
 
-	@Data
 	static class PersonDto {
 
 		String firstname;
+
+		public String getFirstname() {
+			return this.firstname;
+		}
+
+		public void setFirstname(String firstname) {
+			this.firstname = firstname;
+		}
 	}
 
 	@Override
@@ -301,6 +305,6 @@ class QuerydslKeyValuePredicateExecutorUnitTests extends AbstractRepositoryUnitT
 		return factory.getRepository(QPersonRepository.class);
 	}
 
-	static interface QPersonRepository extends org.springframework.data.map.AbstractRepositoryUnitTests.PersonRepository,
+	interface QPersonRepository extends org.springframework.data.map.AbstractRepositoryUnitTests.PersonRepository,
 			QuerydslPredicateExecutor<Person> {}
 }

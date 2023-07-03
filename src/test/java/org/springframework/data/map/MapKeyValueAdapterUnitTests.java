@@ -17,14 +17,11 @@ package org.springframework.data.map;
 
 import static org.assertj.core.api.Assertions.*;
 
-import lombok.Data;
-
 import java.util.AbstractMap;
 import java.util.Map;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-
 import org.springframework.data.util.CloseableIterator;
 
 /**
@@ -169,7 +166,6 @@ class MapKeyValueAdapterUnitTests {
 		assertThat(iterator.hasNext()).isFalse();
 	}
 
-	@Data
 	static class SimpleObject {
 
 		protected String stringValue;
@@ -178,6 +174,14 @@ class MapKeyValueAdapterUnitTests {
 
 		SimpleObject(String value) {
 			this.stringValue = value;
+		}
+
+		public String getStringValue() {
+			return this.stringValue;
+		}
+
+		public void setStringValue(String stringValue) {
+			this.stringValue = stringValue;
 		}
 	}
 

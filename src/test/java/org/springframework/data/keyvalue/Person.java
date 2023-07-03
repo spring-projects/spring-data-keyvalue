@@ -15,8 +15,6 @@
  */
 package org.springframework.data.keyvalue;
 
-import lombok.Data;
-
 import org.springframework.data.annotation.Id;
 
 import com.querydsl.core.annotations.QueryEntity;
@@ -26,7 +24,6 @@ import com.querydsl.core.annotations.QueryEntity;
  * @author Mark Paluch
  */
 @QueryEntity
-@Data
 public class Person {
 
 	private @Id String id;
@@ -36,6 +33,30 @@ public class Person {
 	public Person(String firstname, int age) {
 		super();
 		this.firstname = firstname;
+		this.age = age;
+	}
+
+	public String getId() {
+		return this.id;
+	}
+
+	public String getFirstname() {
+		return this.firstname;
+	}
+
+	public int getAge() {
+		return this.age;
+	}
+
+	public void setId(String id) {
+		this.id = id;
+	}
+
+	public void setFirstname(String firstname) {
+		this.firstname = firstname;
+	}
+
+	public void setAge(int age) {
 		this.age = age;
 	}
 }

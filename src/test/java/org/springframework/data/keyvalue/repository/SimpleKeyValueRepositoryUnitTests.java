@@ -19,9 +19,6 @@ import static org.assertj.core.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.*;
 
-import lombok.Data;
-import lombok.NoArgsConstructor;
-
 import java.util.Arrays;
 import java.util.Optional;
 
@@ -30,7 +27,6 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-
 import org.springframework.data.annotation.Id;
 import org.springframework.data.annotation.Persistent;
 import org.springframework.data.domain.PageRequest;
@@ -197,8 +193,6 @@ class SimpleKeyValueRepositoryUnitTests {
 		return new PersistentEntityInformation<>(requiredPersistentEntity);
 	}
 
-	@Data
-	@NoArgsConstructor
 	static class Foo {
 
 		private @Id String id;
@@ -209,12 +203,53 @@ class SimpleKeyValueRepositoryUnitTests {
 		Foo(String name) {
 			this.name = name;
 		}
+
+		public Foo() {}
+
+		public String getId() {
+			return this.id;
+		}
+
+		public Long getLongValue() {
+			return this.longValue;
+		}
+
+		public String getName() {
+			return this.name;
+		}
+
+		public Bar getBar() {
+			return this.bar;
+		}
+
+		public void setId(String id) {
+			this.id = id;
+		}
+
+		public void setLongValue(Long longValue) {
+			this.longValue = longValue;
+		}
+
+		public void setName(String name) {
+			this.name = name;
+		}
+
+		public void setBar(Bar bar) {
+			this.bar = bar;
+		}
 	}
 
-	@Data
 	private static class Bar {
 
 		private String bar;
+
+		public String getBar() {
+			return this.bar;
+		}
+
+		public void setBar(String bar) {
+			this.bar = bar;
+		}
 	}
 
 	@Persistent

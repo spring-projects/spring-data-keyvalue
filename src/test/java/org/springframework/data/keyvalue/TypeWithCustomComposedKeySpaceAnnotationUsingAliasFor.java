@@ -15,8 +15,6 @@
  */
 package org.springframework.data.keyvalue;
 
-import lombok.Data;
-
 import org.springframework.data.annotation.Id;
 import org.springframework.data.annotation.Persistent;
 
@@ -27,13 +25,28 @@ import org.springframework.data.annotation.Persistent;
  * @author Mark Paluch
  */
 @CustomKeySpaceAnnotationWithAliasFor(name = "aliased")
-@Data
 public class TypeWithCustomComposedKeySpaceAnnotationUsingAliasFor {
 
 	@Id String id;
 	String name;
 
 	public TypeWithCustomComposedKeySpaceAnnotationUsingAliasFor(String name) {
+		this.name = name;
+	}
+
+	public String getId() {
+		return this.id;
+	}
+
+	public String getName() {
+		return this.name;
+	}
+
+	public void setId(String id) {
+		this.id = id;
+	}
+
+	public void setName(String name) {
 		this.name = name;
 	}
 }

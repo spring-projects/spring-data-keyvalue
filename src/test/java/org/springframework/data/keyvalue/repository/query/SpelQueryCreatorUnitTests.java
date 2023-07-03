@@ -18,9 +18,6 @@ package org.springframework.data.keyvalue.repository.query;
 import static org.assertj.core.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
-import lombok.Data;
-import lombok.SneakyThrows;
-
 import java.lang.reflect.Method;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
@@ -317,9 +314,12 @@ public class SpelQueryCreatorUnitTests {
 		assertThat(evaluate("findBy").against(null)).isTrue();
 	}
 
-	@SneakyThrows
 	private Evaluation evaluate(String methodName, Object... args) {
-		return new Evaluation(createQueryForMethodWithArgs(methodName, args).getCriteria());
+		try {
+			return new Evaluation(createQueryForMethodWithArgs(methodName, args).getCriteria());
+		} catch (ReflectiveOperationException e) {
+			throw new RuntimeException(e);
+		}
 	}
 
 	private KeyValueQuery<SpelExpression> createQueryForMethodWithArgs(String methodName, Object... args)
@@ -434,7 +434,6 @@ public class SpelQueryCreatorUnitTests {
 		}
 	}
 
-	@Data
 	public static class Person {
 
 		private @Id String id;
@@ -464,6 +463,54 @@ public class SpelQueryCreatorUnitTests {
 		Person bornAt(Date date) {
 			this.birthday = date;
 			return this;
+		}
+
+		public String getId() {
+			return this.id;
+		}
+
+		public String getFirstname() {
+			return this.firstname;
+		}
+
+		public String getLastname() {
+			return this.lastname;
+		}
+
+		public int getAge() {
+			return this.age;
+		}
+
+		public boolean isSkinChanger() {
+			return this.isSkinChanger;
+		}
+
+		public Date getBirthday() {
+			return this.birthday;
+		}
+
+		public void setId(String id) {
+			this.id = id;
+		}
+
+		public void setFirstname(String firstname) {
+			this.firstname = firstname;
+		}
+
+		public void setLastname(String lastname) {
+			this.lastname = lastname;
+		}
+
+		public void setAge(int age) {
+			this.age = age;
+		}
+
+		public void setSkinChanger(boolean isSkinChanger) {
+			this.isSkinChanger = isSkinChanger;
+		}
+
+		public void setBirthday(Date birthday) {
+			this.birthday = birthday;
 		}
 	}
 }

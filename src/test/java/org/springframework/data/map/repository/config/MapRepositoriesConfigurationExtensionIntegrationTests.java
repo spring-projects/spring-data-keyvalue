@@ -18,14 +18,11 @@ package org.springframework.data.map.repository.config;
 import static org.assertj.core.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
-import lombok.Data;
-
 import java.util.Arrays;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentSkipListMap;
 
 import org.junit.jupiter.api.Test;
-
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
@@ -153,9 +150,24 @@ class MapRepositoriesConfigurationExtensionIntegrationTests {
 
 	}
 
-	@Data
 	static class Person {
 		@Id String id;
 		String name;
+
+		public String getId() {
+			return this.id;
+		}
+
+		public String getName() {
+			return this.name;
+		}
+
+		public void setId(String id) {
+			this.id = id;
+		}
+
+		public void setName(String name) {
+			this.name = name;
+		}
 	}
 }
