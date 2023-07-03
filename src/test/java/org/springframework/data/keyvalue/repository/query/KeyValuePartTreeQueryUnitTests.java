@@ -26,7 +26,6 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.keyvalue.Person;
@@ -141,6 +140,7 @@ class KeyValuePartTreeQueryUnitTests {
 	void shouldUseCountForExists() throws NoSuchMethodException {
 
 		when(metadataMock.getDomainType()).thenReturn((Class) Person.class);
+		when(metadataMock.getDomainTypeInformation()).thenReturn(ClassTypeInformation.from((Class) Person.class));
 		when(metadataMock.getReturnType(any(Method.class)))
 				.thenReturn((TypeInformation) ClassTypeInformation.from(Boolean.class));
 		when(metadataMock.getReturnedDomainClass(any(Method.class))).thenReturn((Class) Boolean.class);
