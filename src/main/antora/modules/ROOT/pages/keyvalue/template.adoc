@@ -1,57 +1,16 @@
-:spring-framework-docs: https://docs.spring.io/spring-framework/docs/{springVersion}/spring-framework-reference/
-
-[[key-value]]
-= Key-Value Repositories
-
-This chapter explains concepts and usage patterns you need to know when working with the key-value abstraction and the `java.util.Map` based implementation provided by Spring Data Key Value.
-
-[[key-value.core-concepts]]
-== Core Concepts
-
-The key-value abstraction within Spring Data Key Value requires an `Adapter` that shields the native store implementation, freeing up `KeyValueTemplate` to work on top of any key-value pair-like structure. Keys are distributed across <<key-value.keyspaces>>. Unless otherwise specified, the class name is used as the default keyspace for an entity. The following interface definition shows the `KeyValueOperations` interface, which is the heart of Spring Data Key-Value:
-
-====
-[source, java]
-----
-interface KeyValueOperations {
-
-    <T> T insert(T objectToInsert);                               <1>
-
-    void update(Object objectToUpdate);                           <2>
-
-    void delete(Class<?> type);                                   <3>
-
-    <T> T findById(Object id, Class<T> type);                     <4>
-
-    <T> Iterable<T> findAllOf(Class<T> type);                     <5>
-
-    <T> Iterable<T> find(KeyValueQuery<?> query, Class<T> type);  <6>
-
-    //... more functionality omitted.
-
-}
-----
-<1> Inserts the given entity and assigns an ID (if required).
-<2> Updates the given entity.
-<3> Removes all entities of the matching type.
-<4> Returns the entity of the given type with its matching ID.
-<5> Returns all entities of the matching type.
-<6> Returns a `List` of all entities of the given type that match the criteria of the query.
-====
-
-[[key-value.template-configuration]]
-== Configuring The `KeyValueTemplate`
+[[key-value.template]]
+= KeyValueTemplate
 
 In its very basic shape, the `KeyValueTemplate` uses a `MapAdapter` that wraps a `ConcurrentHashMap` and that uses link:{spring-framework-docs}core.html#expressions[Spring Expression Language] to run queries and sorting.
 
-NOTE: The used `KeyValueAdapter` does the heavy lifting when it comes to storing and retrieving data. The data structure influences performance and multi-threading behavior.
+NOTE: The used `KeyValueAdapter` does the heavy lifting when it comes to storing and retrieving data.
+The data structure influences performance and multi-threading behavior.
 
 You can use a different type or pre-initialize the adapter with some values, and you can do so by using various constructors on `MapKeyValueAdapter`, as the following example shows:
 
 ====
 [source, java]
 ----
-@EnableMapRepositories
 @Configuration
 class MyConfiguration {
 
@@ -66,15 +25,14 @@ class MyConfiguration {
   }
 }
 ----
-<1> Defines a custom `KeyValueOperations` bean using the default bean name. See documentation and properties of {spring-data-keyvalue-docs}org/springframework/data/map/repository/config/EnableMapRepositories.html[`@EnableMapRepositories`] for further customization.
+<1> Defines a custom `KeyValueOperations` bean using the default bean name. See documentation and properties of `@EnableMapRepositories` for further customization.
 <2> Defines a custom `KeyValueAdapter` bean using a `ConcurrentHashMap` as storage that is used by `KeyValueTemplate`.
 ====
 
 [[key-value.keyspaces]]
 == Keyspaces
 
-Keyspaces define the part of the data structure in which the entity should be kept.This concept is similar to collections in MongoDB and Elasticsearch, cores in Solr, and tables in JPA.
-By default, the keyspace of an entity is extracted from its type, but you can also store entities of different types within one keyspace.In that case, any find operation type-checks the results.The following example shows a keyspace for a repository of `Person` objects:
+The following example shows a keyspace for a repository of `Person` objects:
 
 ====
 [source, java]
@@ -99,8 +57,6 @@ template.findAllOf(User.class);   <2>
 ====
 
 TIP: `@KeySpace` supports https://docs.spring.io/spring/docs/{springVersion}/spring-framework-reference/core.html#expressions[SpEL] expressions allowing dynamic keyspace configuration.
-
-5.2.0.M3
 
 [[key-value.keyspaces-custom]]
 === Custom KeySpace Annotation
@@ -169,21 +125,3 @@ List<Person> targaryens = template.find(query, Person.class);
 ====
 
 IMPORTANT: Please note that you need to have getters and setters present to sort using SpEL.
-
-[[key-value.repositories.map]]
-== Map Repositories
-
-Map repositories reside on top of the `KeyValueTemplate`. Using the default `SpelQueryCreator` allows deriving query and sort expressions from the given method name, as the following example shows:
-
-[source, java]
-----
-@Configuration
-@EnableMapRepositories
-class KeyValueConfig {
-
-}
-
-interface PersonRepository implements CrudRepository<Person, String> {
-    List<Person> findByLastname(String lastname);
-}
-----

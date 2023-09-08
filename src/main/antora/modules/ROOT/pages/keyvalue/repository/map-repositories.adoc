@@ -1,0 +1,18 @@
+[[key-value.repositories.map]]
+= Map Repositories
+
+Map repositories reside on top of the `KeyValueTemplate`.
+Using the default `SpelQueryCreator` allows deriving query and sort expressions from the given method name, as the following example shows:
+
+[source, java]
+----
+@Configuration
+@EnableMapRepositories
+class KeyValueConfig {
+
+}
+
+interface PersonRepository implements CrudRepository<Person, String> {
+    List<Person> findByLastname(String lastname);
+}
+----

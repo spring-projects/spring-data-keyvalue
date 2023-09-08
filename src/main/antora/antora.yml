@@ -1,0 +1,12 @@
+name: data-keyvalue
+version: true
+title: Spring Data KeyValue
+nav:
+  - modules/ROOT/nav.adoc
+ext:
+  collector:
+    - run:
+        command: ./mvnw validate process-resources -Pantora-process-resources
+        local: true
+      scan:
+        dir: target/classes/

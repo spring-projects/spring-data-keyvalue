@@ -8,3 +8,7 @@ target/
 *.ipr
 *.iws
 /.idea/
+node_modules
+node
+package.json
+package-lock.json

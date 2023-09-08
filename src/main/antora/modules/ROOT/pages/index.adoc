@@ -1,0 +1,19 @@
+[[spring-data-key-value-reference-guide]]
+= Spring Data Key-Value
+:revnumber: {version}
+:revdate: {localdate}
+:feature-scroll: true
+
+Spring Data KeyValue provides connectivity and repository support for the in memory map structures.
+It eases development of applications with a consistent programming model that need to access key based storage and servers as foundation for custom adapters._
+
+[horizontal]
+xref:keyvalue.adoc[Key/Value Storage] :: Support for built in key-value structures
+xref:repositories.adoc[Repositories] :: KeyValue Repositories
+https://github.com/spring-projects/spring-data-commons/wiki[Wiki] :: What's New, Upgrade Notes, Supported Versions, additional cross-version information.
+
+Oliver Gierke; Thomas Darimont; Christoph Strobl; Jay Bryant; Mark Paluch
+
+(C) 2008-{copyright-year} VMware, Inc.
+
+Copies of this document may be made for your own use and for distribution to others, provided that you do not charge any fee for such copies and further provided that each copy contains this Copyright Notice, whether distributed in print or electronically.
