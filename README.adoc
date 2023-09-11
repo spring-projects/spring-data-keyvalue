@@ -85,7 +85,7 @@ If you'd rather like the latest snapshots of the upcoming major version, use our
 <dependency>
   <groupId>org.springframework.data</groupId>
   <artifactId>spring-data-keyvalue</artifactId>
-  <version>${version}.BUILD-SNAPSHOT</version>
+  <version>${version}-SNAPSHOT</version>
 </dependency>
 
 <repository>
@@ -100,10 +100,10 @@ If you'd rather like the latest snapshots of the upcoming major version, use our
 Having trouble with Spring Data? We’d love to help!
 
 * Check the
-https://docs.spring.io/spring-data/keyvalue/docs/current/reference/html/[reference documentation], and https://docs.spring.io/spring-data/keyvalue/docs/current/api/[Javadocs].
+https://docs.spring.io/spring-data/keyvalue/reference/[reference documentation], and https://docs.spring.io/spring-data/keyvalue/docs/current/api/[Javadocs].
 * Learn the Spring basics – Spring Data builds on Spring Framework, check the https://spring.io[spring.io] web-site for a wealth of reference documentation.
 If you are just starting out with Spring, try one of the https://spring.io/guides[guides].
-* If you are upgrading, check out the https://docs.spring.io/spring-data/keyvalue/docs/current/changelog.txt[changelog] for "`new and noteworthy`" features.
+* If you are upgrading, check out the https://github.com/spring-projects/spring-data-commons/wiki#release-notes[release notes] for "`new and noteworthy`" features.
 * Ask a question - we monitor https://stackoverflow.com[stackoverflow.com] for questions tagged with https://stackoverflow.com/tags/spring-data[`spring-data-keyvalue`].
 You can also chat with the community on https://gitter.im/spring-projects/spring-data[Gitter].
 * Report bugs with Spring Data KeyValue via https://github.com/spring-projects/spring-data-keyvalue/issues[Github].
@@ -122,7 +122,7 @@ If you want to raise an issue, please follow the recommendations below:
 == Building from Source
 
 You don’t need to build from source to use Spring Data (binaries in https://repo.spring.io[repo.spring.io]), but if you want to try out the latest and greatest, Spring Data can be easily built with the https://github.com/takari/maven-wrapper[maven wrapper].
-You also need JDK 1.8.
+You also need JDK 17.
 
 [source,bash]
 ----
@@ -142,7 +142,7 @@ Building the documentation builds also the project without running tests.
  $ ./mvnw clean install -Pantora
 ----
 
-The generated documentation is available from `target/antora/site/data-keyvalue/index.html`.
+The generated documentation is available from `target/antora/site/index.html`.
 
 == Examples
 

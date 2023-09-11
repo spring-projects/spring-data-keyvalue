@@ -5,10 +5,10 @@ antora:
   extensions:
     - '@antora/collector-extension'
     - require: '@springio/antora-extensions/root-component-extension'
-      root_component_name: 'data-redis'
+      root_component_name: 'data-keyvalue'
 site:
   title: Spring Data KeyValue
-  url: https://docs.spring.io/spring-data-keyvalue/reference/
+  url: https://docs.spring.io/spring-data/keyvalue/reference/
 content:
   sources:
     - url: ./../../..

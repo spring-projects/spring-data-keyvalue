@@ -1,6 +1,6 @@
-* xref:index.adoc[]
+* xref:index.adoc[Overview]
 * xref:keyvalue.adoc[]
-** xref:keyvalue/template.adoc[]
+* xref:keyvalue/template.adoc[]
 
 * xref:repositories.adoc[]
 ** xref:repositories/core-concepts.adoc[]

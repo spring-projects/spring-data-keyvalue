@@ -3,7 +3,7 @@ prerelease: ${antora-component.prerelease}
 
 asciidoc:
   attributes:
-    copyright-year: 2023
+    copyright-year: ${current.year}
     version: ${project.version}
     springversionshort: ${spring.short}
     springversion: ${spring}
