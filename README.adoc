@@ -22,42 +22,42 @@ Here is a quick teaser of an application using Spring Data Repositories in Java:
 ----
 public interface PersonRepository extends CrudRepository<Person, Long> {
 
-  List<Person> findByLastname(String lastname);
+    List<Person> findByLastname(String lastname);
 
-  List<Person> findByFirstnameLike(String firstname);
+    List<Person> findByFirstnameLike(String firstname);
 }
 
 @Service
 public class MyService {
 
-  private final PersonRepository repository;
+    private final PersonRepository repository;
 
-  public MyService(PersonRepository repository) {
-    this.repository = repository;
-  }
+    public MyService(PersonRepository repository) {
+        this.repository = repository;
+    }
 
-  public void doWork() {
+    public void doWork() {
 
-    repository.deleteAll();
+        repository.deleteAll();
 
-    Person person = new Person();
-    person.setFirstname("Oliver");
-    person.setLastname("Gierke");
-    repository.save(person);
+        Person person = new Person();
+        person.setFirstname("Oliver");
+        person.setLastname("Gierke");
+        repository.save(person);
 
-    List<Person> lastNameResults = repository.findByLastname("Gierke");
-    List<Person> firstNameResults = repository.findByFirstnameLike("Oli*");
- }
+        List<Person> lastNameResults = repository.findByLastname("Gierke");
+        List<Person> firstNameResults = repository.findByFirstnameLike("Oli*");
+    }
 }
 
 @KeySpace("person")
 class Person {
 
-  @Id String uuid;
-  String firstname;
-	String lastname;
+    @Id String uuid;
+    String firstname;
+    String lastname;
 
-	// getters and setters omitted for brevity
+    // getters and setters omitted for brevity
 }
 
 @Configuration
@@ -72,9 +72,9 @@ Add the Maven dependency:
 [source,xml]
 ----
 <dependency>
-  <groupId>org.springframework.data</groupId>
-  <artifactId>spring-data-keyvalue</artifactId>
-  <version>${version}.RELEASE</version>
+    <groupId>org.springframework.data</groupId>
+    <artifactId>spring-data-keyvalue</artifactId>
+    <version>${version}.RELEASE</version>
 </dependency>
 ----
 
@@ -83,15 +83,15 @@ If you'd rather like the latest snapshots of the upcoming major version, use our
 [source,xml]
 ----
 <dependency>
-  <groupId>org.springframework.data</groupId>
-  <artifactId>spring-data-keyvalue</artifactId>
-  <version>${version}.BUILD-SNAPSHOT</version>
+    <groupId>org.springframework.data</groupId>
+    <artifactId>spring-data-keyvalue</artifactId>
+    <version>${version}.BUILD-SNAPSHOT</version>
 </dependency>
 
 <repository>
-  <id>spring-snapshot</id>
-  <name>Spring Snapshot Repository</name>
-  <url>https://repo.spring.io/snapshot</url>
+    <id>spring-snapshot</id>
+    <name>Spring Snapshot Repository</name>
+    <url>https://repo.spring.io/snapshot</url>
 </repository>
 ----
 
