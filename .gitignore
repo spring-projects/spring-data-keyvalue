@@ -13,3 +13,4 @@ node
 package.json
 package-lock.json
 build/
+.mvn/.gradle-enterprise
