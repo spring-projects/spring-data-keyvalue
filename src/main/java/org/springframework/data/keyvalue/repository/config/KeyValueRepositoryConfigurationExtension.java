@@ -62,7 +62,7 @@ public abstract class KeyValueRepositoryConfigurationExtension extends Repositor
 
 	@Override
 	protected String getModulePrefix() {
-		return "keyvalue";
+		return getModuleIdentifier();
 	}
 
 	@Override
