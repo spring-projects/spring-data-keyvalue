@@ -15,6 +15,7 @@
  */
 package org.springframework.data.keyvalue.core.mapping;
 
+import org.springframework.core.env.PropertyResolver;
 import org.springframework.data.mapping.model.BasicPersistentEntity;
 import org.springframework.data.util.TypeInformation;
 import org.springframework.expression.Expression;
@@ -30,6 +31,7 @@ import org.springframework.util.StringUtils;
  * @author Christoph Strobl
  * @author Oliver Gierke
  * @author Mark Paluch
+ * @author Tim Sazon
  * @param <T>
  */
 public class BasicKeyValuePersistentEntity<T, P extends KeyValuePersistentProperty<P>>
@@ -91,8 +93,17 @@ public class BasicKeyValuePersistentEntity<T, P extends KeyValuePersistentProper
 	 */
 	@Override
 	public String getKeySpace() {
-		return keyspaceExpression == null //
+		String keySpace = keyspaceExpression == null //
 				? keyspace //
 				: keyspaceExpression.getValue(getEvaluationContext(null), String.class);
+
+		if (keySpace != null) {
+			PropertyResolver propertyResolver = getPropertyResolver();
+			if (propertyResolver != null) {
+				return propertyResolver.resolvePlaceholders(keySpace);
+			}
+		}
+
+		return keySpace;
 	}
 }
