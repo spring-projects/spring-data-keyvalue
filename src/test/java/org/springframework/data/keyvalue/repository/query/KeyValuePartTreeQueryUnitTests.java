@@ -93,6 +93,27 @@ class KeyValuePartTreeQueryUnitTests {
 		assertThat(query.getRows()).isEqualTo(3);
 	}
 
+	@Test // GH-563
+	@SuppressWarnings({ "unchecked", "rawtypes" })
+	void shouldAllowProjectionQueries() throws SecurityException, NoSuchMethodException {
+
+		when(metadataMock.getDomainType()).thenReturn((Class) Person.class);
+		when(metadataMock.getDomainTypeInformation()).thenReturn((TypeInformation) TypeInformation.of(Person.class));
+		when(metadataMock.getReturnType(any(Method.class))).thenReturn((TypeInformation) TypeInformation.of(List.class));
+		when(metadataMock.getReturnedDomainClass(any(Method.class))).thenReturn((Class) Person.class);
+
+		QueryMethod qm = new QueryMethod(Repo.class.getMethod("findProjectionByFirstname",String.class), metadataMock,
+				projectionFactoryMock);
+
+		KeyValuePartTreeQuery partTreeQuery = new KeyValuePartTreeQuery(qm, QueryMethodEvaluationContextProvider.DEFAULT,
+				kvOpsMock, SpelQueryCreator.class);
+
+		KeyValueQuery<?> query = partTreeQuery.prepareQuery(new Object[] { "firstname" });
+		partTreeQuery.doExecute(new Object[] { "firstname" }, query);
+
+		verify(kvOpsMock).find(eq(query), eq(Person.class));
+	}
+
 	@Test // DATAKV-142
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	void shouldApplyDerivedMaxResultsToQuery() throws SecurityException, NoSuchMethodException {
@@ -166,5 +187,11 @@ class KeyValuePartTreeQueryUnitTests {
 		List<Person> findTop3By();
 
 		List<Person> findTop3ByFirstname(String firstname);
+
+		PersonProjection findProjectionByFirstname(String firstname);
+	}
+
+	interface PersonProjection {
+		String getFirstname();
 	}
 }
