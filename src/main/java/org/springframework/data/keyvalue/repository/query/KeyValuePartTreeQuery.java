@@ -134,15 +134,13 @@ public class KeyValuePartTreeQuery implements RepositoryQuery {
 		} else if (queryMethod.isCollectionQuery()) {
 
 			return this.keyValueOperations.find(query, queryMethod.getEntityInformation().getJavaType());
-		} else if (queryMethod.isQueryForEntity()) {
+		} else if (partTree.get().isExistsProjection()) {
+			return keyValueOperations.exists(query, queryMethod.getEntityInformation().getJavaType());
+		} else {
 
 			Iterable<?> result = this.keyValueOperations.find(query, queryMethod.getEntityInformation().getJavaType());
 			return result.iterator().hasNext() ? result.iterator().next() : null;
-		} else if (partTree.get().isExistsProjection()) {
-			return keyValueOperations.exists(query, queryMethod.getEntityInformation().getJavaType());
 		}
-
-		throw new UnsupportedOperationException("Query method not supported");
 	}
 
 	protected KeyValueQuery<?> prepareQuery(Object[] parameters) {
