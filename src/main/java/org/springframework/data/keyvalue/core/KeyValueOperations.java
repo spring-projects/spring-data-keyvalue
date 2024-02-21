@@ -194,7 +194,7 @@ public interface KeyValueOperations extends DisposableBean {
 
 	/**
 	 * @return {@link KeyValueAdapter} in use.
-	 * @since 3.2.4
+	 * @since 3.1.10
 	 */
 	KeyValueAdapter getKeyValueAdapter();
 }
