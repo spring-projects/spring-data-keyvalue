@@ -87,7 +87,7 @@ public class KeyValueRepositoryFactoryBean<T extends Repository<S, ID>, S, ID>
 	 */
 	public void setQueryType(Class<? extends RepositoryQuery> repositoryQueryType) {
 
-		Assert.notNull(queryCreator, "Query creator type must not be null");
+		Assert.notNull(repositoryQueryType, "Query creator type must not be null");
 
 		this.repositoryQueryType = repositoryQueryType;
 
