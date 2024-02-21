@@ -388,6 +388,11 @@ public class KeyValueTemplate implements KeyValueOperations, ApplicationEventPub
 	}
 
 	@Override
+	public KeyValueAdapter getKeyValueAdapter() {
+		return adapter;
+	}
+
+	@Override
 	public void destroy() throws Exception {
 		this.adapter.clear();
 	}

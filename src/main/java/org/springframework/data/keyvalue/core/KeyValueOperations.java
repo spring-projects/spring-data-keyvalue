@@ -191,4 +191,10 @@ public interface KeyValueOperations extends DisposableBean {
 	 * @return mapping context in use.
 	 */
 	MappingContext<?, ?> getMappingContext();
+
+	/**
+	 * @return {@link KeyValueAdapter} in use.
+	 * @since 3.2.4
+	 */
+	KeyValueAdapter getKeyValueAdapter();
 }
