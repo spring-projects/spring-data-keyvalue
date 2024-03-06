@@ -19,8 +19,10 @@ import java.util.Comparator;
 
 import org.springframework.expression.spel.standard.SpelExpression;
 import org.springframework.expression.spel.standard.SpelExpressionParser;
+import org.springframework.expression.spel.support.SimpleEvaluationContext;
 import org.springframework.lang.Nullable;
 import org.springframework.util.Assert;
+import org.springframework.util.comparator.NullSafeComparator;
 
 /**
  * {@link Comparator} implementation using {@link SpelExpression}.
@@ -115,9 +117,8 @@ public class SpelPropertyComparator<T> implements Comparator<T> {
 	 */
 	protected String buildExpressionForPath() {
 
-		String rawExpression = String.format(
-				"new org.springframework.util.comparator.NullSafeComparator(new org.springframework.util.comparator.ComparableComparator(), %s).compare(#arg1?.%s,#arg2?.%s)",
-				Boolean.toString(this.nullsFirst), path.replace(".", "?."), path.replace(".", "?."));
+		String rawExpression = String.format("#comparator.compare(#arg1?.%s,#arg2?.%s)", path.replace(".", "?."),
+				path.replace(".", "?."));
 
 		return rawExpression;
 	}
@@ -127,8 +128,12 @@ public class SpelPropertyComparator<T> implements Comparator<T> {
 
 		SpelExpression expressionToUse = getExpression();
 
-		expressionToUse.getEvaluationContext().setVariable("arg1", arg1);
-		expressionToUse.getEvaluationContext().setVariable("arg2", arg2);
+		SimpleEvaluationContext ctx = SimpleEvaluationContext.forReadOnlyDataBinding().withInstanceMethods().build();
+		ctx.setVariable("comparator", new NullSafeComparator(Comparator.naturalOrder(), this.nullsFirst));
+		ctx.setVariable("arg1", arg1);
+		ctx.setVariable("arg2", arg2);
+
+		expressionToUse.setEvaluationContext(ctx);
 
 		return expressionToUse.getValue(Integer.class) * (asc ? 1 : -1);
 	}
