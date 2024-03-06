@@ -16,7 +16,9 @@
 package org.springframework.data.keyvalue.aot;
 
 import java.util.Arrays;
+import java.util.List;
 
+import org.springframework.aot.hint.ExecutableMode;
 import org.springframework.aot.hint.MemberCategory;
 import org.springframework.aot.hint.RuntimeHints;
 import org.springframework.aot.hint.RuntimeHintsRegistrar;
@@ -41,5 +43,9 @@ class KeyValueRuntimeHints implements RuntimeHintsRegistrar {
 						TypeReference.of(org.springframework.data.keyvalue.repository.support.SimpleKeyValueRepository.class),
 						TypeReference.of(KeyValuePartTreeQuery.class)),
 				hint -> hint.withMembers(MemberCategory.INVOKE_DECLARED_CONSTRUCTORS, MemberCategory.INVOKE_DECLARED_METHODS));
+
+		hints.reflection().registerType(org.springframework.util.comparator.NullSafeComparator.class,
+				builder -> builder.withMethod("compare",
+						List.of(TypeReference.of(Object.class), TypeReference.of(Object.class)), ExecutableMode.INVOKE));
 	}
 }
