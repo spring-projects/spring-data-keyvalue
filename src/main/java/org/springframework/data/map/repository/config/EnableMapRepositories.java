@@ -30,6 +30,7 @@ import org.springframework.context.annotation.ComponentScan.Filter;
 import org.springframework.context.annotation.Import;
 import org.springframework.data.keyvalue.core.KeyValueOperations;
 import org.springframework.data.keyvalue.core.KeyValueTemplate;
+import org.springframework.data.keyvalue.core.SortAccessor;
 import org.springframework.data.keyvalue.repository.config.QueryCreatorType;
 import org.springframework.data.keyvalue.repository.query.CachingKeyValuePartTreeQuery;
 import org.springframework.data.keyvalue.repository.query.SpelQueryCreator;
@@ -143,4 +144,12 @@ public @interface EnableMapRepositories {
 	 */
 	@SuppressWarnings("rawtypes")
 	Class<? extends Map> mapType() default ConcurrentHashMap.class;
+
+	/**
+	 * Configures the {@link SortAccessor accessor} for sorting results.
+	 *
+	 * @return {@link SortAccessor} to indicate usage of default implementation.
+	 * @since 3.1.10
+	 */
+	Class<? extends SortAccessor> sortAccessor() default SortAccessor.class;
 }
