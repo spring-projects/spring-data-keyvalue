@@ -44,7 +44,16 @@ class SpelQueryEngine extends QueryEngine<KeyValueAdapter, SpelCriteria, Compara
 	 * Creates a new {@link SpelQueryEngine}.
 	 */
 	public SpelQueryEngine() {
-		super(new SpelCriteriaAccessor(PARSER), new SpelSortAccessor(PARSER));
+		this(new SpelSortAccessor(PARSER));
+	}
+
+	/**
+	 * Creates a new query engine using provided {@link SortAccessor accessor} for sorting results.
+	 *
+	 * @since 3.1.10
+	 */
+	public SpelQueryEngine(SortAccessor<Comparator<?>> sortAccessor) {
+		super(new SpelCriteriaAccessor(PARSER), sortAccessor);
 	}
 
 	@Override

@@ -24,6 +24,7 @@ import java.util.Arrays;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentSkipListMap;
 
+import org.assertj.core.api.InstanceOfAssertFactories;
 import org.junit.jupiter.api.Test;
 
 import org.springframework.context.ApplicationContext;
@@ -37,6 +38,7 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.keyvalue.core.KeyValueAdapter;
 import org.springframework.data.keyvalue.core.KeyValueOperations;
 import org.springframework.data.keyvalue.core.KeyValueTemplate;
+import org.springframework.data.keyvalue.core.PathSortAccessor;
 import org.springframework.data.keyvalue.repository.KeyValueRepository;
 import org.springframework.data.map.MapKeyValueAdapter;
 import org.springframework.test.util.ReflectionTestUtils;
@@ -96,6 +98,12 @@ class MapRepositoriesConfigurationExtensionIntegrationTests {
 				ConfigWithCustomizedMapTypeAndExplicitDefinitionOfKeyValueTemplate.class));
 	}
 
+	@Test // GH-565
+	void considersSortAccessorConfiguredOnAnnotation() {
+		assertKeyValueTemplateWithSortAccessorFor(PathSortAccessor.class,
+				new AnnotationConfigApplicationContext(ConfigWithCustomizedSortAccessor.class));
+	}
+
 	private static void assertKeyValueTemplateWithAdapterFor(Class<?> mapType, ApplicationContext context) {
 
 		KeyValueTemplate template = context.getBean(KeyValueTemplate.class);
@@ -103,6 +111,19 @@ class MapRepositoriesConfigurationExtensionIntegrationTests {
 
 		assertThat(adapter).isInstanceOf(MapKeyValueAdapter.class);
 		assertThat(ReflectionTestUtils.getField(adapter, "store")).isInstanceOf(mapType);
+	}
+
+	private static void assertKeyValueTemplateWithSortAccessorFor(Class<?> sortAccessorType, ApplicationContext context) {
+
+		KeyValueTemplate template = context.getBean(KeyValueTemplate.class);
+		Object adapter = ReflectionTestUtils.getField(template, "adapter");
+
+		assertThat(adapter).isInstanceOf(MapKeyValueAdapter.class);
+
+		Object engine = ReflectionTestUtils.getField(adapter, "engine");
+		Object sortAccessor = ReflectionTestUtils.getField(engine, "sortAccessor");
+
+		assertThat(sortAccessor).asInstanceOf(InstanceOfAssertFactories.OPTIONAL).containsInstanceOf(sortAccessorType);
 	}
 
 	@Configuration
@@ -148,6 +169,9 @@ class MapRepositoriesConfigurationExtensionIntegrationTests {
 			return new KeyValueTemplate(new MapKeyValueAdapter());
 		}
 	}
+
+	@EnableMapRepositories(sortAccessor = PathSortAccessor.class)
+	static class ConfigWithCustomizedSortAccessor {}
 
 	interface PersonRepository extends KeyValueRepository<Person, String> {
 
