@@ -16,6 +16,7 @@
 package org.springframework.data.keyvalue.core;
 
 import java.util.Collection;
+import java.util.Comparator;
 
 import org.springframework.data.keyvalue.core.query.KeyValueQuery;
 import org.springframework.lang.Nullable;
@@ -35,7 +36,17 @@ public abstract class AbstractKeyValueAdapter implements KeyValueAdapter {
 	 * Creates new {@link AbstractKeyValueAdapter} with using the default query engine.
 	 */
 	protected AbstractKeyValueAdapter() {
-		this(null);
+		this((QueryEngine<? extends KeyValueAdapter, ?, ?>) null);
+	}
+
+	/**
+	 * Creates new {@link AbstractKeyValueAdapter} with using the default query engine and provided comparator for sorting.
+	 *
+	 * @param sortAccessor must not be {@literal null}.
+	 * @since 3.1.10
+	 */
+	protected AbstractKeyValueAdapter(SortAccessor<Comparator<?>> sortAccessor) {
+		this(new SpelQueryEngine(sortAccessor));
 	}
 
 	/**

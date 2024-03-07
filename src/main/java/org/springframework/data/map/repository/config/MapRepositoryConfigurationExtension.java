@@ -17,15 +17,18 @@ package org.springframework.data.map.repository.config;
 
 import java.util.Map;
 
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.beans.factory.support.AbstractBeanDefinition;
 import org.springframework.beans.factory.support.BeanDefinitionBuilder;
 import org.springframework.core.type.AnnotationMetadata;
 import org.springframework.data.config.ParsingUtils;
 import org.springframework.data.keyvalue.core.KeyValueTemplate;
+import org.springframework.data.keyvalue.core.SortAccessor;
 import org.springframework.data.keyvalue.repository.config.KeyValueRepositoryConfigurationExtension;
 import org.springframework.data.map.MapKeyValueAdapter;
 import org.springframework.data.repository.config.RepositoryConfigurationSource;
+import org.springframework.lang.Nullable;
 
 /**
  * @author Christoph Strobl
@@ -54,6 +57,11 @@ public class MapRepositoryConfigurationExtension extends KeyValueRepositoryConfi
 		BeanDefinitionBuilder adapterBuilder = BeanDefinitionBuilder.rootBeanDefinition(MapKeyValueAdapter.class);
 		adapterBuilder.addConstructorArgValue(getMapTypeToUse(configurationSource));
 
+		SortAccessor<?> sortAccessor = getSortAccessor(configurationSource);
+		if(sortAccessor != null) {
+			adapterBuilder.addConstructorArgValue(sortAccessor);
+		}
+
 		BeanDefinitionBuilder builder = BeanDefinitionBuilder.rootBeanDefinition(KeyValueTemplate.class);
 		builder
 				.addConstructorArgValue(ParsingUtils.getSourceBeanDefinition(adapterBuilder, configurationSource.getSource()));
@@ -67,5 +75,18 @@ public class MapRepositoryConfigurationExtension extends KeyValueRepositoryConfi
 
 		return (Class<? extends Map>) ((AnnotationMetadata) source.getSource()).getAnnotationAttributes(
 				EnableMapRepositories.class.getName()).get("mapType");
+	}
+
+	@Nullable
+	private static SortAccessor<?> getSortAccessor(RepositoryConfigurationSource source) {
+
+		Class<? extends SortAccessor<?>> sortAccessorType = (Class<? extends SortAccessor<?>>) ((AnnotationMetadata) source.getSource()).getAnnotationAttributes(
+				EnableMapRepositories.class.getName()).get("sortAccessor");
+
+		if(sortAccessorType != null && !sortAccessorType.isInterface()) {
+			return BeanUtils.instantiateClass(sortAccessorType);
+		}
+
+		return null;
 	}
 }

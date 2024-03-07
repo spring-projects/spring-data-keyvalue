@@ -16,6 +16,7 @@
 package org.springframework.data.map;
 
 import java.util.Collection;
+import java.util.Comparator;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.concurrent.ConcurrentHashMap;
@@ -25,6 +26,7 @@ import org.springframework.data.keyvalue.core.AbstractKeyValueAdapter;
 import org.springframework.data.keyvalue.core.ForwardingCloseableIterator;
 import org.springframework.data.keyvalue.core.KeyValueAdapter;
 import org.springframework.data.keyvalue.core.QueryEngine;
+import org.springframework.data.keyvalue.core.SortAccessor;
 import org.springframework.data.util.CloseableIterator;
 import org.springframework.util.Assert;
 import org.springframework.util.ClassUtils;
@@ -67,6 +69,23 @@ public class MapKeyValueAdapter extends AbstractKeyValueAdapter {
 	@SuppressWarnings("rawtypes")
 	public MapKeyValueAdapter(Class<? extends Map> mapType) {
 		this(CollectionFactory.createMap(mapType, 100), mapType, null);
+	}
+
+	/**
+	 * Creates a new {@link MapKeyValueAdapter} using the given {@link Map} as backing store.
+	 *
+	 * @param mapType must not be {@literal null}.
+	 * @param sortAccessor accessor granting access to sorting implementation
+	 * @since 3.1.10
+	 */
+	public MapKeyValueAdapter(Class<? extends Map> mapType, SortAccessor<Comparator<?>> sortAccessor) {
+
+		super(sortAccessor);
+
+		Assert.notNull(mapType, "Store must not be null");
+
+		this.store = CollectionFactory.createMap(mapType, 100);
+		this.keySpaceMapType = (Class<? extends Map>) ClassUtils.getUserClass(store);
 	}
 
 	/**
