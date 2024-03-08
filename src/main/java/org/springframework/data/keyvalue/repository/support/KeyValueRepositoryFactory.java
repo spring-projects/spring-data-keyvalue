@@ -26,7 +26,7 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.dao.InvalidDataAccessApiUsageException;
 import org.springframework.data.keyvalue.core.KeyValueOperations;
 import org.springframework.data.keyvalue.repository.query.KeyValuePartTreeQuery;
-import org.springframework.data.keyvalue.repository.query.SpelQueryCreator;
+import org.springframework.data.keyvalue.repository.query.PredicateQueryCreator;
 import org.springframework.data.mapping.PersistentEntity;
 import org.springframework.data.mapping.context.MappingContext;
 import org.springframework.data.projection.ProjectionFactory;
@@ -58,7 +58,7 @@ import org.springframework.util.ClassUtils;
  */
 public class KeyValueRepositoryFactory extends RepositoryFactorySupport {
 
-	private static final Class<SpelQueryCreator> DEFAULT_QUERY_CREATOR = SpelQueryCreator.class;
+	private static final Class<PredicateQueryCreator> DEFAULT_QUERY_CREATOR = PredicateQueryCreator.class;
 
 	private final KeyValueOperations keyValueOperations;
 	private final MappingContext<?, ?> context;

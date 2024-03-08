@@ -23,6 +23,7 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 import java.util.List;
+import java.util.function.Predicate;
 
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -48,7 +49,8 @@ class KeyValueTemplateTests {
 	private static final Bar BAR_ONE = new Bar("one");
 	private static final ClassWithTypeAlias ALIASED = new ClassWithTypeAlias("super");
 	private static final SubclassOfAliasedType SUBCLASS_OF_ALIASED = new SubclassOfAliasedType("sub");
-	private static final KeyValueQuery<String> STRING_QUERY = new KeyValueQuery<>("foo == 'two'");
+
+	private static final KeyValueQuery<Predicate<Foo>> STRING_QUERY = new KeyValueQuery<>((Predicate<Foo>) foo -> foo.getFoo().equals("two"));
 
 	private KeyValueTemplate operations;
 

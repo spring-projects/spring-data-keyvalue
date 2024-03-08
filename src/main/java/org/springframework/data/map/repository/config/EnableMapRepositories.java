@@ -32,8 +32,8 @@ import org.springframework.data.keyvalue.core.KeyValueOperations;
 import org.springframework.data.keyvalue.core.KeyValueTemplate;
 import org.springframework.data.keyvalue.core.SortAccessor;
 import org.springframework.data.keyvalue.repository.config.QueryCreatorType;
-import org.springframework.data.keyvalue.repository.query.CachingKeyValuePartTreeQuery;
-import org.springframework.data.keyvalue.repository.query.SpelQueryCreator;
+import org.springframework.data.keyvalue.repository.query.KeyValuePartTreeQuery;
+import org.springframework.data.keyvalue.repository.query.PredicateQueryCreator;
 import org.springframework.data.keyvalue.repository.support.KeyValueRepositoryFactoryBean;
 import org.springframework.data.repository.config.DefaultRepositoryBaseClass;
 import org.springframework.data.repository.query.QueryLookupStrategy;
@@ -51,7 +51,7 @@ import org.springframework.data.repository.query.QueryLookupStrategy.Key;
 @Documented
 @Inherited
 @Import(MapRepositoriesRegistrar.class)
-@QueryCreatorType(value = SpelQueryCreator.class, repositoryQueryType = CachingKeyValuePartTreeQuery.class)
+@QueryCreatorType(value = PredicateQueryCreator.class, repositoryQueryType = KeyValuePartTreeQuery.class)
 public @interface EnableMapRepositories {
 
 	/**

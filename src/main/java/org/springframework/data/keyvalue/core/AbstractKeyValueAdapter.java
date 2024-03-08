@@ -46,7 +46,7 @@ public abstract class AbstractKeyValueAdapter implements KeyValueAdapter {
 	 * @since 3.1.10
 	 */
 	protected AbstractKeyValueAdapter(SortAccessor<Comparator<?>> sortAccessor) {
-		this(new SpelQueryEngine(sortAccessor));
+		this(new PredicateQueryEngine(sortAccessor));
 	}
 
 	/**
@@ -56,7 +56,7 @@ public abstract class AbstractKeyValueAdapter implements KeyValueAdapter {
 	 */
 	protected AbstractKeyValueAdapter(@Nullable QueryEngine<? extends KeyValueAdapter, ?, ?> engine) {
 
-		this.engine = engine != null ? engine : new SpelQueryEngine();
+		this.engine = engine != null ? engine : new PredicateQueryEngine();
 		this.engine.registerAdapter(this);
 	}
 

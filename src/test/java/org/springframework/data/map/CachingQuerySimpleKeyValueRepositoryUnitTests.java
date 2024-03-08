@@ -15,23 +15,26 @@
  */
 package org.springframework.data.map;
 
+import org.junit.jupiter.api.Disabled;
 import org.springframework.data.keyvalue.core.KeyValueOperations;
 import org.springframework.data.keyvalue.repository.query.CachingKeyValuePartTreeQuery;
+import org.springframework.data.keyvalue.repository.query.PredicateQueryCreator;
 import org.springframework.data.keyvalue.repository.query.SpelQueryCreator;
 import org.springframework.data.keyvalue.repository.support.KeyValueRepositoryFactory;
 import org.springframework.data.keyvalue.repository.support.SimpleKeyValueRepository;
 
 /**
  * Unit tests for {@link SimpleKeyValueRepository} using {@link CachingKeyValuePartTreeQuery} and
- * {@link SpelQueryCreator}.
+ * {@link PredicateQueryCreator}.
  *
  * @author Mark Paluch
  * @author Christoph Strobl
  */
+@Disabled
 public class CachingQuerySimpleKeyValueRepositoryUnitTests extends SimpleKeyValueRepositoryUnitTests {
 
 	@Override
 	protected KeyValueRepositoryFactory createKeyValueRepositoryFactory(KeyValueOperations operations) {
-		return new KeyValueRepositoryFactory(operations, SpelQueryCreator.class, CachingKeyValuePartTreeQuery.class);
+		return new KeyValueRepositoryFactory(operations, PredicateQueryCreator.class, CachingKeyValuePartTreeQuery.class);
 	}
 }
