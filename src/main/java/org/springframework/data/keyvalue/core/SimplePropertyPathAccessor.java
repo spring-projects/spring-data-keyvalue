@@ -23,7 +23,7 @@ import org.springframework.data.util.DirectFieldAccessFallbackBeanWrapper;
  * @author Christoph Strobl
  * @since 3.1.10
  */
-class SimplePropertyPathAccessor<T> {
+public class SimplePropertyPathAccessor<T> {
 
 	private final Object root;
 
@@ -31,7 +31,7 @@ class SimplePropertyPathAccessor<T> {
 		this.root = source;
 	}
 
-	Object getValue(PropertyPath path) {
+	public Object getValue(PropertyPath path) {
 
 		Object currentValue = root;
 		for (PropertyPath current : path) {
