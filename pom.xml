@@ -12,12 +12,12 @@
 	<parent>
 		<groupId>org.springframework.data.build</groupId>
 		<artifactId>spring-data-parent</artifactId>
-		<version>3.3.0-SNAPSHOT</version>
+		<version>3.3.0-RC1</version>
 		<relativePath/>
 	</parent>
 
 	<properties>
-		<springdata.commons>3.3.0-SNAPSHOT</springdata.commons>
+		<springdata.commons>3.3.0-RC1</springdata.commons>
 		<java-module-name>spring.data.keyvalue</java-module-name>
 	</properties>
 
@@ -108,16 +108,6 @@
 	</profiles>
 
 	<repositories>
-		<repository>
-			<id>spring-snapshot</id>
-			<url>https://repo.spring.io/snapshot</url>
-			<snapshots>
-				<enabled>true</enabled>
-			</snapshots>
-			<releases>
-				<enabled>false</enabled>
-			</releases>
-		</repository>
 		<repository>
 			<id>spring-milestone</id>
 			<url>https://repo.spring.io/milestone</url>
