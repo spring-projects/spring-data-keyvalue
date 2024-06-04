@@ -32,7 +32,7 @@ import org.springframework.expression.spel.standard.SpelExpressionParser;
 import org.springframework.util.StringUtils;
 
 /**
- * {@link AbstractQueryCreator} to create {@link SpelExpression} based {@link KeyValueQuery}s.
+ * {@link AbstractQueryCreator} to create {@link SpelExpression}-based {@link KeyValueQuery}s.
  *
  * @author Christoph Strobl
  * @author Oliver Gierke
@@ -180,8 +180,8 @@ public class SpelQueryCreator extends AbstractQueryCreator<KeyValueQuery<SpelExp
 					case NEGATING_SIMPLE_PROPERTY:
 					case EXISTS:
 					default:
-						throw new InvalidDataAccessApiUsageException(String.format("Found invalid part '%s' in query",
-								part.getType()));
+						throw new InvalidDataAccessApiUsageException(
+								String.format("Found invalid part '%s' in query", part.getType()));
 				}
 
 				if (partIter.hasNext()) {

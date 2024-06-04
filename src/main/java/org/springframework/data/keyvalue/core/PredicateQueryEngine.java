@@ -32,7 +32,7 @@ import org.springframework.lang.Nullable;
  * @author Christoph Strobl
  * @since 3.3
  */
-class PredicateQueryEngine extends QueryEngine<KeyValueAdapter, Predicate<?>, Comparator<?>> {
+public class PredicateQueryEngine extends QueryEngine<KeyValueAdapter, Predicate<?>, Comparator<?>> {
 
 	/**
 	 * Creates a new {@link PredicateQueryEngine}.
