@@ -38,6 +38,8 @@ import org.springframework.util.ObjectUtils;
 import org.springframework.util.comparator.NullSafeComparator;
 
 /**
+ * {@link AbstractQueryCreator} to create {@link Predicate}-based {@link KeyValueQuery}s.
+ *
  * @author Christoph Strobl
  * @since 3.3
  */

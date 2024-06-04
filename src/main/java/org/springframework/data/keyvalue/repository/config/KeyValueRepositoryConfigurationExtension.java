@@ -25,6 +25,7 @@ import org.springframework.beans.factory.support.BeanDefinitionBuilder;
 import org.springframework.beans.factory.support.BeanDefinitionRegistry;
 import org.springframework.beans.factory.support.RootBeanDefinition;
 import org.springframework.core.annotation.AnnotationAttributes;
+import org.springframework.core.annotation.MergedAnnotation;
 import org.springframework.core.type.AnnotationMetadata;
 import org.springframework.data.keyvalue.core.mapping.context.KeyValueMappingContext;
 import org.springframework.data.keyvalue.repository.KeyValueRepository;
@@ -36,7 +37,6 @@ import org.springframework.data.repository.config.RepositoryConfigurationExtensi
 import org.springframework.data.repository.config.RepositoryConfigurationExtensionSupport;
 import org.springframework.data.repository.config.RepositoryConfigurationSource;
 import org.springframework.lang.Nullable;
-import org.springframework.util.CollectionUtils;
 
 /**
  * {@link RepositoryConfigurationExtension} for {@link KeyValueRepository}.
@@ -90,17 +90,15 @@ public abstract class KeyValueRepositoryConfigurationExtension extends Repositor
 	 */
 	private static Class<?> getQueryCreatorType(AnnotationRepositoryConfigurationSource config) {
 
-		AnnotationMetadata metadata = config.getEnableAnnotationMetadata();
+		AnnotationMetadata amd = (AnnotationMetadata) config.getSource();
+		MergedAnnotation<QueryCreatorType> queryCreator = amd.getAnnotations().get(QueryCreatorType.class);
+		Class<?> queryCreatorType = queryCreator.isPresent() ? queryCreator.getClass("value") : Class.class;
 
-		Map<String, Object> queryCreatorAnnotationAttributes = metadata
-				.getAnnotationAttributes(QueryCreatorType.class.getName());
-
-		if (CollectionUtils.isEmpty(queryCreatorAnnotationAttributes)) {
+		if (queryCreatorType == Class.class) {
 			return SpelQueryCreator.class;
 		}
 
-		AnnotationAttributes queryCreatorAttributes = new AnnotationAttributes(queryCreatorAnnotationAttributes);
-		return queryCreatorAttributes.getClass("value");
+		return queryCreatorType;
 	}
 
 	/**
@@ -132,10 +130,10 @@ public abstract class KeyValueRepositoryConfigurationExtension extends Repositor
 
 		registerIfNotAlreadyRegistered(() -> {
 
-			RootBeanDefinition definitionefinition = new RootBeanDefinition(KeyValueMappingContext.class);
-			definitionefinition.setSource(configurationSource.getSource());
+			RootBeanDefinition mappingContext = new RootBeanDefinition(KeyValueMappingContext.class);
+			mappingContext.setSource(configurationSource.getSource());
 
-			return definitionefinition;
+			return mappingContext;
 
 		}, registry, getMappingContextBeanRef(), configurationSource);
 

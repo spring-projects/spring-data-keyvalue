@@ -28,16 +28,18 @@ import org.springframework.beans.factory.FactoryBean;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.ComponentScan.Filter;
 import org.springframework.context.annotation.Import;
+import org.springframework.core.annotation.AliasFor;
 import org.springframework.data.keyvalue.core.KeyValueOperations;
 import org.springframework.data.keyvalue.core.KeyValueTemplate;
+import org.springframework.data.keyvalue.core.QueryEngineFactory;
 import org.springframework.data.keyvalue.core.SortAccessor;
 import org.springframework.data.keyvalue.repository.config.QueryCreatorType;
-import org.springframework.data.keyvalue.repository.query.KeyValuePartTreeQuery;
 import org.springframework.data.keyvalue.repository.query.PredicateQueryCreator;
 import org.springframework.data.keyvalue.repository.support.KeyValueRepositoryFactoryBean;
 import org.springframework.data.repository.config.DefaultRepositoryBaseClass;
 import org.springframework.data.repository.query.QueryLookupStrategy;
 import org.springframework.data.repository.query.QueryLookupStrategy.Key;
+import org.springframework.data.repository.query.parser.AbstractQueryCreator;
 
 /**
  * Annotation to activate Map repositories. If no base package is configured through either {@link #value()},
@@ -45,13 +47,14 @@ import org.springframework.data.repository.query.QueryLookupStrategy.Key;
  *
  * @author Christoph Strobl
  * @author Oliver Gierke
+ * @author Mark Paluch
  */
 @Target(ElementType.TYPE)
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
 @Inherited
 @Import(MapRepositoriesRegistrar.class)
-@QueryCreatorType(value = PredicateQueryCreator.class, repositoryQueryType = KeyValuePartTreeQuery.class)
+@QueryCreatorType(PredicateQueryCreator.class)
 public @interface EnableMapRepositories {
 
 	/**
@@ -146,9 +149,28 @@ public @interface EnableMapRepositories {
 	Class<? extends Map> mapType() default ConcurrentHashMap.class;
 
 	/**
+	 * Configures the {@link QueryEngineFactory} to create the QueryEngine. When both, the query engine and sort accessors
+	 * are configured, the query engine is instantiated using the configured sort accessor.
+	 *
+	 * @return {@link QueryEngineFactory} to configure the QueryEngine.
+	 * @since 3.3.1
+	 */
+	Class<? extends QueryEngineFactory> queryEngineFactory() default QueryEngineFactory.class;
+
+	/**
+	 * Configures the {@code QueryCreator} to create Part-Tree queries. The QueryCreator must create queries supported by
+	 * the underlying {@code QueryEngine}.
+	 *
+	 * @return {@link AbstractQueryCreator}
+	 * @since 3.3.1
+	 */
+	@AliasFor(annotation = QueryCreatorType.class, value = "value")
+	Class<? extends AbstractQueryCreator<?, ?>> queryCreator() default PredicateQueryCreator.class;
+
+	/**
 	 * Configures the {@link SortAccessor accessor} for sorting results.
 	 *
-	 * @return {@link SortAccessor} to indicate usage of default implementation.
+	 * @return the configured {@link SortAccessor}.
 	 * @since 3.1.10
 	 */
 	Class<? extends SortAccessor> sortAccessor() default SortAccessor.class;

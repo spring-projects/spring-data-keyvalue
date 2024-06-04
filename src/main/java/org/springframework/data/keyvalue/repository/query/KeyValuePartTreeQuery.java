@@ -89,7 +89,7 @@ public class KeyValuePartTreeQuery implements RepositoryQuery {
 			QueryCreatorFactory<AbstractQueryCreator<KeyValueQuery<?>, ?>> queryCreatorFactory) {
 
 		Assert.notNull(queryMethod, "Query method must not be null");
-		Assert.notNull(evaluationContextProvider, "EvaluationContextprovider must not be null");
+		Assert.notNull(evaluationContextProvider, "EvaluationContextProvider must not be null");
 		Assert.notNull(keyValueOperations, "KeyValueOperations must not be null");
 		Assert.notNull(queryCreatorFactory, "QueryCreatorFactory type must not be null");
 
