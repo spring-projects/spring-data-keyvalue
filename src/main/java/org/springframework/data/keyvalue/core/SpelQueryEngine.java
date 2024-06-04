@@ -34,9 +34,8 @@ import org.springframework.lang.Nullable;
  * @author Christoph Strobl
  * @author Oliver Gierke
  * @author Mark Paluch
- * @param <T>
  */
-class SpelQueryEngine extends QueryEngine<KeyValueAdapter, SpelCriteria, Comparator<?>> {
+public class SpelQueryEngine extends QueryEngine<KeyValueAdapter, SpelCriteria, Comparator<?>> {
 
 	private static final SpelExpressionParser PARSER = new SpelExpressionParser();
 
