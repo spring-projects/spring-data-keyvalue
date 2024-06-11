@@ -109,20 +109,19 @@ public class MapRepositoryConfigurationExtension extends KeyValueRepositoryConfi
 		Class<? extends QueryEngineFactory> queryEngineFactoryType = (Class<? extends QueryEngineFactory>) getAnnotationAttributes(
 				source).get("queryEngineFactory");
 
-		if (queryEngineFactoryType != null && !queryEngineFactoryType.isInterface()) {
-
-			if (sortAccessor != null) {
-				Constructor<? extends QueryEngineFactory> constructor = ClassUtils
-						.getConstructorIfAvailable(queryEngineFactoryType, SortAccessor.class);
-				if (constructor != null) {
-					return BeanUtils.instantiateClass(constructor, sortAccessor).create();
-				}
-			}
-
-			return BeanUtils.instantiateClass(queryEngineFactoryType).create();
+		if(queryEngineFactoryType == null || queryEngineFactoryType.isInterface()) {
+			return null;
 		}
 
-		return null;
+		if (sortAccessor != null) {
+			Constructor<? extends QueryEngineFactory> constructor = ClassUtils
+					.getConstructorIfAvailable(queryEngineFactoryType, SortAccessor.class);
+			if (constructor != null) {
+				return BeanUtils.instantiateClass(constructor, sortAccessor).create();
+			}
+		}
+
+		return BeanUtils.instantiateClass(queryEngineFactoryType).create();
 	}
 
 	private static Map<String, Object> getAnnotationAttributes(RepositoryConfigurationSource source) {
