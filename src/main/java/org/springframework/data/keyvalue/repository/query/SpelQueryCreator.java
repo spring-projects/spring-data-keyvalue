@@ -181,7 +181,7 @@ public class SpelQueryCreator extends AbstractQueryCreator<KeyValueQuery<SpelExp
 					case EXISTS:
 					default:
 						throw new InvalidDataAccessApiUsageException(
-								String.format("Found invalid part '%s' in query", part.getType()));
+								"Found invalid part '%s' in query".formatted(part.getType()));
 				}
 
 				if (partIter.hasNext()) {
