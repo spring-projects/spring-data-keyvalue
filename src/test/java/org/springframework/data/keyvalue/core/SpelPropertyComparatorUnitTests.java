@@ -28,8 +28,9 @@ import org.springframework.expression.spel.standard.SpelExpressionParser;
  *
  * @author Christoph Strobl
  * @author Oliver Gierke
+ * @author Artur Ciocanu
  */
-class SpelPropertyComperatorUnitTests {
+class SpelPropertyComparatorUnitTests {
 
 	private static final SpelExpressionParser PARSER = new SpelExpressionParser();
 
