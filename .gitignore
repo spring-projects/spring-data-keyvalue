@@ -12,4 +12,4 @@ node_modules
 node
 package-lock.json
 build/
-.mvn/.gradle-enterprise
+.mvn/.develocity
