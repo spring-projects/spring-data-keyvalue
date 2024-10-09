@@ -37,9 +37,9 @@ pipeline {
 			steps {
 				script {
 					docker.withRegistry(p['docker.proxy.registry'], p['docker.proxy.credentials']) {
-						docker.image(p['docker.java.main.image']).inside(p['docker.java.inside.basic']) {
+						docker.image(p['docker.java.main.image']).inside(p['docker.java.inside.docker']) {
 							sh 'MAVEN_OPTS="-Duser.name=' + "${p['jenkins.user.name']}" + ' -Duser.home=/tmp/jenkins-home" ' +
-								'./mvnw -s settings.xml clean dependency:list test -Dsort -U -B'
+								'./mvnw -s settings.xml -Ddevelocity.storage.directory=/tmp/jenkins-home/.develocity-root -Dmaven.repo.local=/tmp/jenkins-home/.m2/spring-data-keyvalue clean dependency:list test -Dsort -U -B'
 						}
 					}
 				}
@@ -67,9 +67,9 @@ pipeline {
 					steps {
 						script {
 							docker.withRegistry(p['docker.proxy.registry'], p['docker.proxy.credentials']) {
-								docker.image(p['docker.java.next.image']).inside(p['docker.java.inside.basic']) {
+								docker.image(p['docker.java.next.image']).inside(p['docker.java.inside.docker']) {
 									sh 'MAVEN_OPTS="-Duser.name=' + "${p['jenkins.user.name']}" + ' -Duser.home=/tmp/jenkins-home" ' +
-										'./mvnw -s settings.xml clean dependency:list test -Dsort -U -B'
+										'./mvnw -s settings.xml -Ddevelocity.storage.directory=/tmp/jenkins-home/.develocity-root -Dmaven.repo.local=/tmp/jenkins-home/.m2/spring-data-keyvalue clean dependency:list test -Dsort -U -B'
 								}
 							}
 						}
@@ -97,15 +97,17 @@ pipeline {
 			steps {
 				script {
 					docker.withRegistry(p['docker.proxy.registry'], p['docker.proxy.credentials']) {
-						docker.image(p['docker.java.main.image']).inside(p['docker.java.inside.basic']) {
+						docker.image(p['docker.java.main.image']).inside(p['docker.java.inside.docker']) {
 							sh 'MAVEN_OPTS="-Duser.name=' + "${p['jenkins.user.name']}" + ' -Duser.home=/tmp/jenkins-home" ' +
 									"./mvnw -s settings.xml -Pci,artifactory " +
+									"-Ddevelocity.storage.directory=/tmp/jenkins-home/.develocity-root " +
 									"-Dartifactory.server=${p['artifactory.url']} " +
 									"-Dartifactory.username=${ARTIFACTORY_USR} " +
 									"-Dartifactory.password=${ARTIFACTORY_PSW} " +
 									"-Dartifactory.staging-repository=${p['artifactory.repository.snapshot']} " +
 									"-Dartifactory.build-name=spring-data-keyvalue " +
 									"-Dartifactory.build-number=spring-data-keyvalue-${BRANCH_NAME}-build-${BUILD_NUMBER} " +
+									"-Dmaven.repo.local=/tmp/jenkins-home/.m2/spring-data-keyvalue " +
 									'-Dmaven.test.skip=true clean deploy -U -B'
 						}
 					}
