@@ -43,6 +43,7 @@ import org.springframework.util.ObjectUtils;
 
 /**
  * @author Christoph Strobl
+ * @author Tom Van Wemmel
  */
 @ExtendWith(MockitoExtension.class)
 public abstract class AbstractQueryCreatorTestBase<QUERY_CREATOR extends AbstractQueryCreator<KeyValueQuery<CRITERIA>, ?>, CRITERIA> {
@@ -68,6 +69,17 @@ public abstract class AbstractQueryCreatorTestBase<QUERY_CREATOR extends Abstrac
 	@Test // DATACMNS-525
 	void equalsReturnsFalseWhenNotMatching() {
 		assertThat(evaluate("findByFirstname", BRAN.firstname).against(RICKON)).isFalse();
+	}
+
+	@Test
+	// GH-603
+	void notEqualsReturnsTrueWhenMatching() {
+		assertThat(evaluate("findByFirstnameNot", BRAN.firstname).against(RICKON)).isTrue();
+	}
+
+	@Test // GH-603
+	void notEqualsReturnsFalseWhenNotMatching() {
+		assertThat(evaluate("findByFirstnameNot", BRAN.firstname).against(BRAN)).isFalse();
 	}
 
 	@Test // DATACMNS-525
@@ -128,6 +140,16 @@ public abstract class AbstractQueryCreatorTestBase<QUERY_CREATOR extends Abstrac
 	@Test // DATACMNS-525
 	void likeReturnsFalseWhenNotMatching() {
 		assertThat(evaluate("findByFirstnameLike", "ra").against(ROBB)).isFalse();
+	}
+
+	@Test // GH-603
+	void notLikeReturnsTrueWhenMatching() {
+		assertThat(evaluate("findByFirstnameNotLike", "ra").against(ROBB)).isTrue();
+	}
+
+	@Test // GH-603
+	void notLikeReturnsFalseWhenNotMatching() {
+		assertThat(evaluate("findByFirstnameNotLike", "ob").against(ROBB)).isFalse();
 	}
 
 	@Test // DATACMNS-525
@@ -310,6 +332,53 @@ public abstract class AbstractQueryCreatorTestBase<QUERY_CREATOR extends Abstrac
 				.isTrue();
 	}
 
+	@Test // GH-603
+	void notInReturnsMatchCorrectly() {
+
+		ArrayList<String> list = new ArrayList<>();
+		list.add(ROBB.firstname);
+
+		assertThat(evaluate("findByFirstnameNotIn", list).against(JON)).isTrue();
+	}
+
+	@Test // GH-603
+	void notInNotMatchingReturnsCorrectly() {
+
+		ArrayList<String> list = new ArrayList<>();
+		list.add(ROBB.firstname);
+
+		assertThat(evaluate("findByFirstnameNotIn", list).against(ROBB)).isFalse();
+	}
+
+	@Test // GH-603
+	void notInWithNullCompareValuesCorrectly() {
+
+		ArrayList<String> list = new ArrayList<>();
+		list.add(null);
+
+		assertThat(evaluate("findByFirstnameNotIn", list).against(JON)).isTrue();
+	}
+
+	@Test // GH-603
+	void notInWithNullSourceValuesMatchesCorrectly() {
+
+		ArrayList<String> list = new ArrayList<>();
+		list.add(ROBB.firstname);
+
+		assertThat(evaluate("findByFirstnameNotIn", list).against(new PredicateQueryCreatorUnitTests.Person(null, 10)))
+				.isTrue();
+	}
+
+	@Test // GH-603
+	void notInMatchesNullValuesCorrectly() {
+
+		ArrayList<String> list = new ArrayList<>();
+		list.add(null);
+
+		assertThat(evaluate("findByFirstnameNotIn", list).against(new PredicateQueryCreatorUnitTests.Person(null, 10)))
+				.isFalse();
+	}
+
 	@Test // DATAKV-185
 	void noDerivedQueryArgumentsMatchesAlways() {
 
@@ -363,6 +432,9 @@ public abstract class AbstractQueryCreatorTestBase<QUERY_CREATOR extends Abstrac
 		// Type.SIMPLE_PROPERTY
 		Person findByFirstname(String firstname);
 
+		// Type.NEGATING_SIMPLE_PROPERTY
+		Person findByFirstnameNot(String firstname);
+
 		// Type.TRUE
 		Person findBySkinChangerIsTrue();
 
@@ -404,6 +476,9 @@ public abstract class AbstractQueryCreatorTestBase<QUERY_CREATOR extends Abstrac
 		// Type.LIKE
 		Person findByFirstnameLike(String firstname);
 
+		// Type.NOT_LIKE
+		Person findByFirstnameNotLike(String firstname);
+
 		// Type.ENDING_WITH
 		Person findByFirstnameEndingWith(String firstname);
 
@@ -416,6 +491,9 @@ public abstract class AbstractQueryCreatorTestBase<QUERY_CREATOR extends Abstrac
 
 		// Type.IN
 		Person findByFirstnameIn(ArrayList<String> in);
+
+		// Type.NOT_IN
+		Person findByFirstnameNotIn(ArrayList<String> in);
 
 	}
 
