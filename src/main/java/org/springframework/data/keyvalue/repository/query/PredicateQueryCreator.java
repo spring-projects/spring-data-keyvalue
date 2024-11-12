@@ -41,6 +41,7 @@ import org.springframework.util.ObjectUtils;
  * {@link AbstractQueryCreator} to create {@link Predicate}-based {@link KeyValueQuery}s.
  *
  * @author Christoph Strobl
+ * @author Tom Van Wemmel
  * @since 3.3
  */
 public class PredicateQueryCreator extends AbstractQueryCreator<KeyValueQuery<Predicate<?>>, Predicate<?>> {
@@ -61,12 +62,16 @@ public class PredicateQueryCreator extends AbstractQueryCreator<KeyValueQuery<Pr
 				return PredicateBuilder.propertyValueOf(part).isFalse();
 			case SIMPLE_PROPERTY:
 				return PredicateBuilder.propertyValueOf(part).isEqualTo(iterator.next());
+			case NEGATING_SIMPLE_PROPERTY:
+				return PredicateBuilder.propertyValueOf(part).isEqualTo(iterator.next()).negate();
 			case IS_NULL:
 				return PredicateBuilder.propertyValueOf(part).isNull();
 			case IS_NOT_NULL:
 				return PredicateBuilder.propertyValueOf(part).isNotNull();
 			case LIKE:
 				return PredicateBuilder.propertyValueOf(part).contains(iterator.next());
+			case NOT_LIKE:
+				return PredicateBuilder.propertyValueOf(part).contains(iterator.next()).negate();
 			case STARTING_WITH:
 				return PredicateBuilder.propertyValueOf(part).startsWith(iterator.next());
 			case AFTER:
@@ -88,6 +93,8 @@ public class PredicateQueryCreator extends AbstractQueryCreator<KeyValueQuery<Pr
 				return PredicateBuilder.propertyValueOf(part).matches(iterator.next());
 			case IN:
 				return PredicateBuilder.propertyValueOf(part).in(iterator.next());
+			case NOT_IN:
+				return PredicateBuilder.propertyValueOf(part).in(iterator.next()).negate();
 			default:
 				throw new InvalidDataAccessApiUsageException(String.format("Found invalid part '%s' in query", part.getType()));
 
