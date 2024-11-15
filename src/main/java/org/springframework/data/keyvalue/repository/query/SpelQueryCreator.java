@@ -37,6 +37,7 @@ import org.springframework.util.StringUtils;
  * @author Christoph Strobl
  * @author Oliver Gierke
  * @author Mark Paluch
+ * @author Tom Van Wemmel
  */
 public class SpelQueryCreator extends AbstractQueryCreator<KeyValueQuery<SpelExpression>, String> {
 
@@ -120,6 +121,9 @@ public class SpelQueryCreator extends AbstractQueryCreator<KeyValueQuery<SpelExp
 					case SIMPLE_PROPERTY:
 						partBuilder.append("?.equals(").append("[").append(parameterIndex++).append("])");
 						break;
+					case NEGATING_SIMPLE_PROPERTY:
+						partBuilder.append("?.equals(").append("[").append(parameterIndex++).append("]) == false");
+						break;
 					case IS_NULL:
 						partBuilder.append(" == null");
 						break;
@@ -128,6 +132,9 @@ public class SpelQueryCreator extends AbstractQueryCreator<KeyValueQuery<SpelExp
 						break;
 					case LIKE:
 						partBuilder.append("?.contains(").append("[").append(parameterIndex++).append("])");
+						break;
+					case NOT_LIKE:
+						partBuilder.append("?.contains(").append("[").append(parameterIndex++).append("]) == false");
 						break;
 					case STARTING_WITH:
 						partBuilder.append("?.startsWith(").append("[").append(parameterIndex++).append("])");
@@ -175,9 +182,16 @@ public class SpelQueryCreator extends AbstractQueryCreator<KeyValueQuery<SpelExp
 						partBuilder.append(")");
 						break;
 
+					case NOT_IN:
+
+						partBuilder.append("[").append(parameterIndex++).append("].contains(");
+						partBuilder.append("#it?.");
+						partBuilder.append(part.getProperty().toDotPath().replace(".", "?."));
+						partBuilder.append(") == false");
+						break;
+
 					case CONTAINING:
 					case NOT_CONTAINING:
-					case NEGATING_SIMPLE_PROPERTY:
 					case EXISTS:
 					default:
 						throw new InvalidDataAccessApiUsageException(
@@ -206,6 +220,6 @@ public class SpelQueryCreator extends AbstractQueryCreator<KeyValueQuery<SpelExp
 	}
 
 	private static boolean requiresInverseLookup(Part part) {
-		return part.getType() == Type.IN;
+		return part.getType() == Type.IN || part.getType() == Type.NOT_IN;
 	}
 }
