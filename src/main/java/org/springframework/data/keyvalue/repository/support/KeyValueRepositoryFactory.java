@@ -41,8 +41,8 @@ import org.springframework.data.repository.core.support.RepositoryFactorySupport
 import org.springframework.data.repository.query.QueryLookupStrategy;
 import org.springframework.data.repository.query.QueryLookupStrategy.Key;
 import org.springframework.data.repository.query.QueryMethod;
-import org.springframework.data.repository.query.QueryMethodEvaluationContextProvider;
 import org.springframework.data.repository.query.RepositoryQuery;
+import org.springframework.data.repository.query.ValueExpressionDelegate;
 import org.springframework.data.repository.query.parser.AbstractQueryCreator;
 import org.springframework.lang.Nullable;
 import org.springframework.util.Assert;
@@ -175,8 +175,8 @@ public class KeyValueRepositoryFactory extends RepositoryFactorySupport {
 
 	@Override
 	protected Optional<QueryLookupStrategy> getQueryLookupStrategy(@Nullable Key key,
-			QueryMethodEvaluationContextProvider evaluationContextProvider) {
-		return Optional.of(new KeyValueQueryLookupStrategy(key, evaluationContextProvider, this.keyValueOperations,
+			ValueExpressionDelegate valueExpressionDelegate) {
+		return Optional.of(new KeyValueQueryLookupStrategy(key, valueExpressionDelegate, this.keyValueOperations,
 				this.queryCreator, this.repositoryQueryType));
 	}
 
@@ -186,7 +186,7 @@ public class KeyValueRepositoryFactory extends RepositoryFactorySupport {
 	 */
 	private static class KeyValueQueryLookupStrategy implements QueryLookupStrategy {
 
-		private final QueryMethodEvaluationContextProvider evaluationContextProvider;
+		private final ValueExpressionDelegate valueExpressionDelegate;
 		private final KeyValueOperations keyValueOperations;
 
 		private final Class<? extends AbstractQueryCreator<?, ?>> queryCreator;
@@ -194,22 +194,21 @@ public class KeyValueRepositoryFactory extends RepositoryFactorySupport {
 
 		/**
 		 * @param key
-		 * @param evaluationContextProvider
+		 * @param valueExpressionDelegate
 		 * @param keyValueOperations
 		 * @param queryCreator
 		 * @since 1.1
 		 */
-		public KeyValueQueryLookupStrategy(@Nullable Key key,
-				QueryMethodEvaluationContextProvider evaluationContextProvider, KeyValueOperations keyValueOperations,
-				Class<? extends AbstractQueryCreator<?, ?>> queryCreator,
+		public KeyValueQueryLookupStrategy(@Nullable Key key, ValueExpressionDelegate valueExpressionDelegate,
+				KeyValueOperations keyValueOperations, Class<? extends AbstractQueryCreator<?, ?>> queryCreator,
 				Class<? extends RepositoryQuery> repositoryQueryType) {
 
-			Assert.notNull(evaluationContextProvider, "EvaluationContextProvider must not be null");
+			Assert.notNull(valueExpressionDelegate, "ValueExpressionDelegate must not be null");
 			Assert.notNull(keyValueOperations, "KeyValueOperations must not be null");
 			Assert.notNull(queryCreator, "Query creator type must not be null");
 			Assert.notNull(repositoryQueryType, "RepositoryQueryType type must not be null");
 
-			this.evaluationContextProvider = evaluationContextProvider;
+			this.valueExpressionDelegate = valueExpressionDelegate;
 			this.keyValueOperations = keyValueOperations;
 			this.queryCreator = queryCreator;
 			this.repositoryQueryType = repositoryQueryType;
@@ -223,15 +222,15 @@ public class KeyValueRepositoryFactory extends RepositoryFactorySupport {
 			QueryMethod queryMethod = new QueryMethod(method, metadata, factory);
 
 			Constructor<? extends KeyValuePartTreeQuery> constructor = (Constructor<? extends KeyValuePartTreeQuery>) ClassUtils
-					.getConstructorIfAvailable(this.repositoryQueryType, QueryMethod.class,
-							QueryMethodEvaluationContextProvider.class, KeyValueOperations.class, Class.class);
+					.getConstructorIfAvailable(this.repositoryQueryType, QueryMethod.class, ValueExpressionDelegate.class,
+							KeyValueOperations.class, Class.class);
 
 			Assert.state(constructor != null,
 					String.format(
 							"Constructor %s(QueryMethod, EvaluationContextProvider, KeyValueOperations, Class) not available",
 							ClassUtils.getShortName(this.repositoryQueryType)));
 
-			return BeanUtils.instantiateClass(constructor, queryMethod, evaluationContextProvider, this.keyValueOperations,
+			return BeanUtils.instantiateClass(constructor, queryMethod, valueExpressionDelegate, this.keyValueOperations,
 					this.queryCreator);
 		}
 	}

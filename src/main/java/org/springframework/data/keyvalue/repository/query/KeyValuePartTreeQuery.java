@@ -21,6 +21,8 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.data.expression.ValueEvaluationContext;
+import org.springframework.data.expression.ValueEvaluationContextProvider;
 import org.springframework.data.keyvalue.core.IterableConverter;
 import org.springframework.data.keyvalue.core.KeyValueOperations;
 import org.springframework.data.keyvalue.core.SpelCriteria;
@@ -28,14 +30,13 @@ import org.springframework.data.keyvalue.core.query.KeyValueQuery;
 import org.springframework.data.repository.query.ParameterAccessor;
 import org.springframework.data.repository.query.ParametersParameterAccessor;
 import org.springframework.data.repository.query.QueryMethod;
-import org.springframework.data.repository.query.QueryMethodEvaluationContextProvider;
 import org.springframework.data.repository.query.RepositoryQuery;
 import org.springframework.data.repository.query.ResultProcessor;
+import org.springframework.data.repository.query.ValueExpressionDelegate;
 import org.springframework.data.repository.query.parser.AbstractQueryCreator;
 import org.springframework.data.repository.query.parser.PartTree;
 import org.springframework.data.spel.EvaluationContextProvider;
 import org.springframework.data.util.Lazy;
-import org.springframework.expression.EvaluationContext;
 import org.springframework.expression.spel.standard.SpelExpression;
 import org.springframework.lang.Nullable;
 import org.springframework.util.Assert;
@@ -54,22 +55,23 @@ public class KeyValuePartTreeQuery implements RepositoryQuery {
 	private final Lazy<PartTree> partTree;
 	private final QueryMethod queryMethod;
 	private final KeyValueOperations keyValueOperations;
-	private final QueryMethodEvaluationContextProvider evaluationContextProvider;
+	private final ValueExpressionDelegate valueExpressionDelegate;
 	private final QueryCreatorFactory<AbstractQueryCreator<KeyValueQuery<?>, ?>> queryCreatorFactory;
+	private final ValueEvaluationContextProvider evaluationContextProvider;
 
 	/**
 	 * Creates a new {@link KeyValuePartTreeQuery} for the given {@link QueryMethod}, {@link EvaluationContextProvider},
 	 * {@link KeyValueOperations} and query creator type.
 	 *
 	 * @param queryMethod must not be {@literal null}.
-	 * @param evaluationContextProvider must not be {@literal null}.
+	 * @param valueExpressionDelegate must not be {@literal null}.
 	 * @param keyValueOperations must not be {@literal null}.
 	 * @param queryCreator must not be {@literal null}.
 	 */
-	public KeyValuePartTreeQuery(QueryMethod queryMethod, QueryMethodEvaluationContextProvider evaluationContextProvider,
+	public KeyValuePartTreeQuery(QueryMethod queryMethod, ValueExpressionDelegate valueExpressionDelegate,
 			KeyValueOperations keyValueOperations, Class<? extends AbstractQueryCreator<?, ?>> queryCreator) {
 
-		this(queryMethod, evaluationContextProvider, keyValueOperations,
+		this(queryMethod, valueExpressionDelegate, keyValueOperations,
 				new ConstructorCachingQueryCreatorFactory(queryCreator));
 	}
 
@@ -79,17 +81,17 @@ public class KeyValuePartTreeQuery implements RepositoryQuery {
 	 * in charge of altering the query.
 	 *
 	 * @param queryMethod must not be {@literal null}.
-	 * @param evaluationContextProvider must not be {@literal null}.
+	 * @param valueExpressionDelegate must not be {@literal null}.
 	 * @param keyValueOperations must not be {@literal null}.
 	 * @param queryCreatorFactory must not be {@literal null}.
 	 * @since 2.0
 	 */
-	public KeyValuePartTreeQuery(QueryMethod queryMethod, QueryMethodEvaluationContextProvider evaluationContextProvider,
+	public KeyValuePartTreeQuery(QueryMethod queryMethod, ValueExpressionDelegate valueExpressionDelegate,
 			KeyValueOperations keyValueOperations,
 			QueryCreatorFactory<AbstractQueryCreator<KeyValueQuery<?>, ?>> queryCreatorFactory) {
 
 		Assert.notNull(queryMethod, "Query method must not be null");
-		Assert.notNull(evaluationContextProvider, "EvaluationContextProvider must not be null");
+		Assert.notNull(valueExpressionDelegate, "ValueExpressionDelegate must not be null");
 		Assert.notNull(keyValueOperations, "KeyValueOperations must not be null");
 		Assert.notNull(queryCreatorFactory, "QueryCreatorFactory type must not be null");
 
@@ -97,8 +99,9 @@ public class KeyValuePartTreeQuery implements RepositoryQuery {
 				.of(() -> new PartTree(queryMethod.getName(), queryMethod.getEntityInformation().getJavaType()));
 		this.queryMethod = queryMethod;
 		this.keyValueOperations = keyValueOperations;
-		this.evaluationContextProvider = evaluationContextProvider;
+		this.valueExpressionDelegate = valueExpressionDelegate;
 		this.queryCreatorFactory = queryCreatorFactory;
+		this.evaluationContextProvider = valueExpressionDelegate.createValueContextProvider(queryMethod.getParameters());
 	}
 
 	@Override
@@ -160,9 +163,8 @@ public class KeyValuePartTreeQuery implements RepositoryQuery {
 		if (criteria instanceof SpelCriteria || criteria instanceof SpelExpression) {
 
 			SpelExpression spelExpression = getSpelExpression(criteria);
-			EvaluationContext context = this.evaluationContextProvider.getEvaluationContext(getQueryMethod().getParameters(),
-					parameters);
-			criteria = new SpelCriteria(spelExpression, context);
+			ValueEvaluationContext context = this.evaluationContextProvider.getEvaluationContext(parameters);
+			criteria = new SpelCriteria(spelExpression, context.getRequiredEvaluationContext());
 		}
 
 		KeyValueQuery<?> query = new KeyValueQuery(criteria);
