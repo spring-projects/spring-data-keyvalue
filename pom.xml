@@ -12,12 +12,12 @@
 	<parent>
 		<groupId>org.springframework.data.build</groupId>
 		<artifactId>spring-data-parent</artifactId>
-		<version>3.5.0-SNAPSHOT</version>
+		<version>4.0.0-SNAPSHOT</version>
 		<relativePath/>
 	</parent>
 
 	<properties>
-		<springdata.commons>3.5.0-SNAPSHOT</springdata.commons>
+		<springdata.commons>4.0.0-SNAPSHOT</springdata.commons>
 		<java-module-name>spring.data.keyvalue</java-module-name>
 	</properties>
 
