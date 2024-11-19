@@ -33,7 +33,7 @@ import org.springframework.data.keyvalue.core.SpelCriteria;
 import org.springframework.data.projection.ProjectionFactory;
 import org.springframework.data.repository.core.RepositoryMetadata;
 import org.springframework.data.repository.query.QueryMethod;
-import org.springframework.data.repository.query.QueryMethodEvaluationContextProvider;
+import org.springframework.data.repository.query.ValueExpressionDelegate;
 import org.springframework.data.util.TypeInformation;
 
 /**
@@ -64,8 +64,8 @@ class CachingKeyValuePartTreeQueryUnitTests {
 		QueryMethod qm = new QueryMethod(Repo.class.getMethod("findByFirstname", String.class), metadataMock,
 				projectionFactoryMock);
 
-		KeyValuePartTreeQuery query = new CachingKeyValuePartTreeQuery(qm, QueryMethodEvaluationContextProvider.DEFAULT,
-				kvOpsMock, SpelQueryCreator.class);
+		KeyValuePartTreeQuery query = new CachingKeyValuePartTreeQuery(qm, ValueExpressionDelegate.create(), kvOpsMock,
+				SpelQueryCreator.class);
 
 		Object[] args = new Object[] { "foo" };
 
