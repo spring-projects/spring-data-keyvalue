@@ -26,6 +26,7 @@ import org.springframework.data.keyvalue.annotation.KeySpace;
 import org.springframework.data.keyvalue.core.mapping.context.KeyValueMappingContext;
 import org.springframework.data.spel.ExtensionAwareEvaluationContextProvider;
 import org.springframework.data.spel.spi.EvaluationContextExtension;
+import org.springframework.mock.env.MockEnvironment;
 
 /**
  * Unit tests for {@link BasicKeyValuePersistentEntity}.
@@ -43,14 +44,17 @@ class BasicKeyValuePersistentEntityUnitTests {
 				.isEqualTo(KeyspaceEntity.class.getName());
 	}
 
-	@Test // DATAKV-268
+	@Test // DATAKV-268, GH-613
 	void shouldEvaluateKeyspaceExpression() {
+
+		MockEnvironment environment = new MockEnvironment().withProperty("my.property", "foo");
+		mappingContext.setEnvironment(environment);
 
 		KeyValuePersistentEntity<?, ?> persistentEntity = mappingContext.getPersistentEntity(ExpressionEntity.class);
 		persistentEntity.setEvaluationContextProvider(
 				new ExtensionAwareEvaluationContextProvider(Collections.singletonList(new SampleExtension())));
 
-		assertThat(persistentEntity.getKeySpace()).isEqualTo("some");
+		assertThat(persistentEntity.getKeySpace()).isEqualTo("some_foo");
 	}
 
 	@Test // DATAKV-268
@@ -81,7 +85,7 @@ class BasicKeyValuePersistentEntityUnitTests {
 		assertThat(persistentEntity.getKeySpace()).isEqualTo(NoKeyspaceEntity.class.getName());
 	}
 
-	@KeySpace("#{myProperty}")
+	@KeySpace("#{myProperty}_${my.property}")
 	private static class ExpressionEntity {}
 
 	@KeySpace

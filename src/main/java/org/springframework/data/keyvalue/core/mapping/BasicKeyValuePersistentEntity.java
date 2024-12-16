@@ -15,13 +15,15 @@
  */
 package org.springframework.data.keyvalue.core.mapping;
 
+import org.springframework.data.expression.ValueExpression;
+import org.springframework.data.expression.ValueExpressionParser;
 import org.springframework.data.mapping.model.BasicPersistentEntity;
 import org.springframework.data.util.TypeInformation;
 import org.springframework.expression.Expression;
-import org.springframework.expression.ParserContext;
 import org.springframework.expression.common.LiteralExpression;
 import org.springframework.expression.spel.standard.SpelExpressionParser;
 import org.springframework.lang.Nullable;
+import org.springframework.util.ObjectUtils;
 import org.springframework.util.StringUtils;
 
 /**
@@ -35,9 +37,9 @@ import org.springframework.util.StringUtils;
 public class BasicKeyValuePersistentEntity<T, P extends KeyValuePersistentProperty<P>>
 		extends BasicPersistentEntity<T, P> implements KeyValuePersistentEntity<T, P> {
 
-	private static final SpelExpressionParser PARSER = new SpelExpressionParser();
+	private static final ValueExpressionParser PARSER = ValueExpressionParser.create(SpelExpressionParser::new);
 
-	private final @Nullable Expression keyspaceExpression;
+	private final @Nullable ValueExpression keyspaceExpression;
 	private final @Nullable String keyspace;
 
 	/**
@@ -89,16 +91,16 @@ public class BasicKeyValuePersistentEntity<T, P extends KeyValuePersistentProper
 	 * @return the parsed {@link Expression} or {@literal null}.
 	 */
 	@Nullable
-	private static Expression detectExpression(String potentialExpression) {
+	private static ValueExpression detectExpression(String potentialExpression) {
 
-		Expression expression = PARSER.parseExpression(potentialExpression, ParserContext.TEMPLATE_EXPRESSION);
-		return expression instanceof LiteralExpression ? null : expression;
+		ValueExpression expression = PARSER.parse(potentialExpression);
+		return expression.isLiteral() ? null : expression;
 	}
 
 	@Override
 	public String getKeySpace() {
 		return keyspaceExpression == null //
 				? keyspace //
-				: keyspaceExpression.getValue(getEvaluationContext(null), String.class);
+				: ObjectUtils.nullSafeToString(keyspaceExpression.evaluate(getValueEvaluationContext(null)));
 	}
 }

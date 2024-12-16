@@ -7,6 +7,7 @@
 ** xref:repositories/definition.adoc[]
 ** xref:repositories/create-instances.adoc[]
 ** xref:keyvalue/repository/map-repositories.adoc[]
+** xref:keyvalue/value-expressions.adoc[]
 ** xref:repositories/query-keywords-reference.adoc[]
 ** xref:repositories/query-return-types-reference.adoc[]
 
