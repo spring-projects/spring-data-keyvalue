@@ -42,6 +42,7 @@ import org.springframework.util.ObjectUtils;
  *
  * @author Christoph Strobl
  * @author Tom Van Wemmel
+ * @author Mark Paluch
  * @since 3.3
  */
 public class PredicateQueryCreator extends AbstractQueryCreator<KeyValueQuery<Predicate<?>>, Predicate<?>> {
@@ -55,68 +56,47 @@ public class PredicateQueryCreator extends AbstractQueryCreator<KeyValueQuery<Pr
 	@Override
 	protected Predicate<?> create(Part part, Iterator<Object> iterator) {
 
-		switch (part.getType()) {
-			case TRUE:
-				return PredicateBuilder.propertyValueOf(part).isTrue();
-			case FALSE:
-				return PredicateBuilder.propertyValueOf(part).isFalse();
-			case SIMPLE_PROPERTY:
-				return PredicateBuilder.propertyValueOf(part).isEqualTo(iterator.next());
-			case NEGATING_SIMPLE_PROPERTY:
-				return PredicateBuilder.propertyValueOf(part).isEqualTo(iterator.next()).negate();
-			case IS_NULL:
-				return PredicateBuilder.propertyValueOf(part).isNull();
-			case IS_NOT_NULL:
-				return PredicateBuilder.propertyValueOf(part).isNotNull();
-			case LIKE:
-				return PredicateBuilder.propertyValueOf(part).contains(iterator.next());
-			case NOT_LIKE:
-				return PredicateBuilder.propertyValueOf(part).contains(iterator.next()).negate();
-			case STARTING_WITH:
-				return PredicateBuilder.propertyValueOf(part).startsWith(iterator.next());
-			case AFTER:
-			case GREATER_THAN:
-				return PredicateBuilder.propertyValueOf(part).isGreaterThan(iterator.next());
-			case GREATER_THAN_EQUAL:
-				return PredicateBuilder.propertyValueOf(part).isGreaterThanEqual(iterator.next());
-			case BEFORE:
-			case LESS_THAN:
-				return PredicateBuilder.propertyValueOf(part).isLessThan(iterator.next());
-			case LESS_THAN_EQUAL:
-				return PredicateBuilder.propertyValueOf(part).isLessThanEqual(iterator.next());
-			case ENDING_WITH:
-				return PredicateBuilder.propertyValueOf(part).endsWith(iterator.next());
-			case BETWEEN:
-				return PredicateBuilder.propertyValueOf(part).isGreaterThan(iterator.next())
-						.and(PredicateBuilder.propertyValueOf(part).isLessThan(iterator.next()));
-			case REGEX:
-				return PredicateBuilder.propertyValueOf(part).matches(iterator.next());
-			case IN:
-				return PredicateBuilder.propertyValueOf(part).in(iterator.next());
-			case NOT_IN:
-				return PredicateBuilder.propertyValueOf(part).in(iterator.next()).negate();
-			default:
-				throw new InvalidDataAccessApiUsageException(String.format("Found invalid part '%s' in query", part.getType()));
+		PredicateBuilder builder = PredicateBuilder.propertyValueOf(part);
 
-		}
+		return switch (part.getType()) {
+			case TRUE -> builder.isTrue();
+			case FALSE -> builder.isFalse();
+			case SIMPLE_PROPERTY -> builder.isEqualTo(iterator.next());
+			case NEGATING_SIMPLE_PROPERTY -> builder.isEqualTo(iterator.next()).negate();
+			case IS_NULL -> builder.isNull();
+			case IS_NOT_NULL -> builder.isNotNull();
+			case LIKE -> builder.contains(iterator.next());
+			case NOT_LIKE -> builder.contains(iterator.next()).negate();
+			case STARTING_WITH -> builder.startsWith(iterator.next());
+			case AFTER, GREATER_THAN -> builder.isGreaterThan(iterator.next());
+			case GREATER_THAN_EQUAL -> builder.isGreaterThanEqual(iterator.next());
+			case BEFORE, LESS_THAN -> builder.isLessThan(iterator.next());
+			case LESS_THAN_EQUAL -> builder.isLessThanEqual(iterator.next());
+			case ENDING_WITH -> builder.endsWith(iterator.next());
+			case BETWEEN -> builder.isGreaterThan(iterator.next()).and(builder.isLessThan(iterator.next()));
+			case REGEX -> builder.matches(iterator.next());
+			case IN -> builder.in(iterator.next());
+			case NOT_IN -> builder.in(iterator.next()).negate();
+			default ->
+				throw new InvalidDataAccessApiUsageException(String.format("Found invalid part '%s' in query", part.getType()));
+		};
 	}
 
 	@Override
+	@SuppressWarnings({ "unchecked", "rawtypes" })
 	protected Predicate<?> and(Part part, Predicate<?> base, Iterator<Object> iterator) {
 		return base.and((Predicate) create(part, iterator));
 	}
 
 	@Override
+	@SuppressWarnings({ "unchecked", "rawtypes" })
 	protected Predicate<?> or(Predicate<?> base, Predicate<?> criteria) {
 		return base.or((Predicate) criteria);
 	}
 
 	@Override
 	protected KeyValueQuery<Predicate<?>> complete(@Nullable Predicate<?> criteria, Sort sort) {
-		if (criteria == null) {
-			return new KeyValueQuery<>(it -> true, sort);
-		}
-		return new KeyValueQuery<>(criteria, sort);
+		return criteria == null ? new KeyValueQuery<>(it -> true, sort) : new KeyValueQuery<>(criteria, sort);
 	}
 
 	static class PredicateBuilder {
@@ -127,6 +107,7 @@ public class PredicateQueryCreator extends AbstractQueryCreator<KeyValueQuery<Pr
 			this.part = part;
 		}
 
+		@SuppressWarnings("unchecked")
 		static <T> Comparator<T> comparator() {
 			return (Comparator<T>) COMPARATOR;
 		}
@@ -165,19 +146,19 @@ public class PredicateQueryCreator extends AbstractQueryCreator<KeyValueQuery<Pr
 		}
 
 		public Predicate<Object> isLessThan(Object value) {
-			return new ValueComparingPredicate(part.getProperty(), o -> comparator().compare(o, value) == -1 ? true : false);
+			return new ValueComparingPredicate(part.getProperty(), o -> comparator().compare(o, value) < 0);
 		}
 
 		public Predicate<Object> isLessThanEqual(Object value) {
-			return new ValueComparingPredicate(part.getProperty(), o -> comparator().compare(o, value) <= 0 ? true : false);
+			return new ValueComparingPredicate(part.getProperty(), o -> comparator().compare(o, value) <= 0);
 		}
 
 		public Predicate<Object> isGreaterThan(Object value) {
-			return new ValueComparingPredicate(part.getProperty(), o -> comparator().compare(o, value) == 1 ? true : false);
+			return new ValueComparingPredicate(part.getProperty(), o -> comparator().compare(o, value) > 0);
 		}
 
 		public Predicate<Object> isGreaterThanEqual(Object value) {
-			return new ValueComparingPredicate(part.getProperty(), o -> comparator().compare(o, value) >= 0 ? true : false);
+			return new ValueComparingPredicate(part.getProperty(), o -> comparator().compare(o, value) >= 0);
 		}
 
 		public Predicate<Object> matches(Pattern pattern) {
@@ -217,8 +198,9 @@ public class PredicateQueryCreator extends AbstractQueryCreator<KeyValueQuery<Pr
 				if (value instanceof Collection<?> collection) {
 
 					if (o instanceof Collection<?> subSet) {
-						collection.containsAll(subSet);
+						return collection.containsAll(subSet);
 					}
+
 					return collection.contains(o);
 				}
 				if (ObjectUtils.isArray(value)) {
@@ -246,7 +228,7 @@ public class PredicateQueryCreator extends AbstractQueryCreator<KeyValueQuery<Pr
 				}
 
 				if (o instanceof Map<?, ?> map) {
-					return map.values().contains(value);
+					return map.containsValue(value);
 				}
 
 				if (value == null) {

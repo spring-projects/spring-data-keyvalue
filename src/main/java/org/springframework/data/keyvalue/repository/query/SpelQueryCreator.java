@@ -119,10 +119,14 @@ public class SpelQueryCreator extends AbstractQueryCreator<KeyValueQuery<SpelExp
 						partBuilder.append("?.equals(false)");
 						break;
 					case SIMPLE_PROPERTY:
-						partBuilder.append("?.equals(").append("[").append(parameterIndex++).append("])");
-						break;
 					case NEGATING_SIMPLE_PROPERTY:
-						partBuilder.append("?.equals(").append("[").append(parameterIndex++).append("]) == false");
+
+						partBuilder.append("?.equals(").append("[").append(parameterIndex++).append("])");
+
+						if (part.getType() == Type.NEGATING_SIMPLE_PROPERTY) {
+							partBuilder.append(" == false");
+						}
+
 						break;
 					case IS_NULL:
 						partBuilder.append(" == null");
@@ -131,10 +135,14 @@ public class SpelQueryCreator extends AbstractQueryCreator<KeyValueQuery<SpelExp
 						partBuilder.append(" != null");
 						break;
 					case LIKE:
-						partBuilder.append("?.contains(").append("[").append(parameterIndex++).append("])");
-						break;
 					case NOT_LIKE:
-						partBuilder.append("?.contains(").append("[").append(parameterIndex++).append("]) == false");
+
+						partBuilder.append("?.contains(").append("[").append(parameterIndex++).append("])");
+
+						if (part.getType() == Type.NOT_LIKE) {
+							partBuilder.append(" == false");
+						}
+
 						break;
 					case STARTING_WITH:
 						partBuilder.append("?.startsWith(").append("[").append(parameterIndex++).append("])");
@@ -174,32 +182,30 @@ public class SpelQueryCreator extends AbstractQueryCreator<KeyValueQuery<SpelExp
 
 						partBuilder.append(" matches ").append("[").append(parameterIndex++).append("]");
 						break;
+
+					case NOT_IN:
 					case IN:
 
 						partBuilder.append("[").append(parameterIndex++).append("].contains(");
 						partBuilder.append("#it?.");
 						partBuilder.append(part.getProperty().toDotPath().replace(".", "?."));
 						partBuilder.append(")");
-						break;
 
-					case NOT_IN:
+						if (part.getType() == Type.NOT_IN) {
+							partBuilder.append(" == false");
+						}
 
-						partBuilder.append("[").append(parameterIndex++).append("].contains(");
-						partBuilder.append("#it?.");
-						partBuilder.append(part.getProperty().toDotPath().replace(".", "?."));
-						partBuilder.append(") == false");
 						break;
 
 					case CONTAINING:
 					case NOT_CONTAINING:
 					case EXISTS:
 					default:
-						throw new InvalidDataAccessApiUsageException(
-								"Found invalid part '%s' in query".formatted(part.getType()));
+						throw new InvalidDataAccessApiUsageException("Found invalid part '%s' in query".formatted(part.getType()));
 				}
 
 				if (partIter.hasNext()) {
-					partBuilder.append("&&");
+					partBuilder.append(" && ");
 				}
 
 				partCnt++;
@@ -212,7 +218,7 @@ public class SpelQueryCreator extends AbstractQueryCreator<KeyValueQuery<SpelExp
 			}
 
 			if (orPartIter.hasNext()) {
-				sb.append("||");
+				sb.append(" || ");
 			}
 		}
 
