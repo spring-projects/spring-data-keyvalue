@@ -18,6 +18,7 @@ package org.springframework.data.map;
 import static org.assertj.core.api.Assertions.*;
 
 import java.util.AbstractMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 import org.junit.jupiter.api.BeforeEach;
@@ -25,7 +26,10 @@ import org.junit.jupiter.api.Test;
 import org.springframework.data.util.CloseableIterator;
 
 /**
+ * Unit tests for {@link MapKeyValueAdapter}.
+ *
  * @author Christoph Strobl
+ * @author Mark Paluch
  */
 class MapKeyValueAdapterUnitTests {
 
@@ -40,7 +44,7 @@ class MapKeyValueAdapterUnitTests {
 
 	@BeforeEach
 	void setUp() {
-		this.adapter = new MapKeyValueAdapter();
+		this.adapter = new MapKeyValueAdapter(LinkedHashMap.class);
 	}
 
 	@Test // DATACMNS-525
