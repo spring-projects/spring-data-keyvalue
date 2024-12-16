@@ -16,6 +16,7 @@
 package org.springframework.data.keyvalue.repository.query;
 
 import java.util.Collection;
+import java.util.Comparator;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Objects;
@@ -35,7 +36,6 @@ import org.springframework.data.repository.query.parser.Part.IgnoreCaseType;
 import org.springframework.data.repository.query.parser.PartTree;
 import org.springframework.lang.Nullable;
 import org.springframework.util.ObjectUtils;
-import org.springframework.util.comparator.NullSafeComparator;
 
 /**
  * {@link AbstractQueryCreator} to create {@link Predicate}-based {@link KeyValueQuery}s.
@@ -44,6 +44,8 @@ import org.springframework.util.comparator.NullSafeComparator;
  * @since 3.3
  */
 public class PredicateQueryCreator extends AbstractQueryCreator<KeyValueQuery<Predicate<?>>, Predicate<?>> {
+
+	private static final Comparator<?> COMPARATOR = Comparator.nullsFirst(Comparator.naturalOrder());
 
 	public PredicateQueryCreator(PartTree tree, ParameterAccessor parameters) {
 		super(tree, parameters);
@@ -118,6 +120,10 @@ public class PredicateQueryCreator extends AbstractQueryCreator<KeyValueQuery<Pr
 			this.part = part;
 		}
 
+		static <T> Comparator<T> comparator() {
+			return (Comparator<T>) COMPARATOR;
+		}
+
 		static PredicateBuilder propertyValueOf(Part part) {
 			return new PredicateBuilder(part);
 		}
@@ -152,23 +158,19 @@ public class PredicateQueryCreator extends AbstractQueryCreator<KeyValueQuery<Pr
 		}
 
 		public Predicate<Object> isLessThan(Object value) {
-			return new ValueComparingPredicate(part.getProperty(),
-					o -> NullSafeComparator.NULLS_HIGH.compare(o, value) == -1 ? true : false);
+			return new ValueComparingPredicate(part.getProperty(), o -> comparator().compare(o, value) == -1 ? true : false);
 		}
 
 		public Predicate<Object> isLessThanEqual(Object value) {
-			return new ValueComparingPredicate(part.getProperty(),
-					o -> NullSafeComparator.NULLS_HIGH.compare(o, value) <= 0 ? true : false);
+			return new ValueComparingPredicate(part.getProperty(), o -> comparator().compare(o, value) <= 0 ? true : false);
 		}
 
 		public Predicate<Object> isGreaterThan(Object value) {
-			return new ValueComparingPredicate(part.getProperty(),
-					o -> NullSafeComparator.NULLS_HIGH.compare(o, value) == 1 ? true : false);
+			return new ValueComparingPredicate(part.getProperty(), o -> comparator().compare(o, value) == 1 ? true : false);
 		}
 
 		public Predicate<Object> isGreaterThanEqual(Object value) {
-			return new ValueComparingPredicate(part.getProperty(),
-					o -> NullSafeComparator.NULLS_HIGH.compare(o, value) >= 0 ? true : false);
+			return new ValueComparingPredicate(part.getProperty(), o -> comparator().compare(o, value) >= 0 ? true : false);
 		}
 
 		public Predicate<Object> matches(Pattern pattern) {
@@ -271,6 +273,7 @@ public class PredicateQueryCreator extends AbstractQueryCreator<KeyValueQuery<Pr
 		}
 
 		public Predicate<Object> endsWith(Object value) {
+
 			return new ValueComparingPredicate(part.getProperty(), o -> {
 
 				if (!(o instanceof String s)) {
@@ -283,7 +286,6 @@ public class PredicateQueryCreator extends AbstractQueryCreator<KeyValueQuery<Pr
 
 				return s.toLowerCase().endsWith(value.toString().toLowerCase());
 			});
-
 		}
 	}
 

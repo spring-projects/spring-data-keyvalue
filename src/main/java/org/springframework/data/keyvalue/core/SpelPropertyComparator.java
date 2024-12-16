@@ -22,7 +22,6 @@ import org.springframework.expression.spel.standard.SpelExpressionParser;
 import org.springframework.expression.spel.support.SimpleEvaluationContext;
 import org.springframework.lang.Nullable;
 import org.springframework.util.Assert;
-import org.springframework.util.comparator.NullSafeComparator;
 
 /**
  * {@link Comparator} implementation using {@link SpelExpression}.
@@ -33,6 +32,9 @@ import org.springframework.util.comparator.NullSafeComparator;
  * @param <T>
  */
 public class SpelPropertyComparator<T> implements Comparator<T> {
+
+	private static final Comparator<?> NULLS_FIRST = Comparator.nullsFirst(Comparator.naturalOrder());
+	private static final Comparator<?> NULLS_LAST = Comparator.nullsLast(Comparator.naturalOrder());
 
 	private final String path;
 	private final SpelExpressionParser parser;
@@ -129,7 +131,7 @@ public class SpelPropertyComparator<T> implements Comparator<T> {
 		SpelExpression expressionToUse = getExpression();
 
 		SimpleEvaluationContext ctx = SimpleEvaluationContext.forReadOnlyDataBinding().withInstanceMethods().build();
-		ctx.setVariable("comparator", new NullSafeComparator(Comparator.naturalOrder(), this.nullsFirst));
+		ctx.setVariable("comparator", nullsFirst ? NULLS_FIRST : NULLS_LAST);
 		ctx.setVariable("arg1", arg1);
 		ctx.setVariable("arg2", arg2);
 

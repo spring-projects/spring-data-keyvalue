@@ -20,14 +20,21 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.springframework.data.mapping.PropertyPath;
-import org.springframework.data.util.Lazy;
-import org.springframework.util.comparator.NullSafeComparator;
+import org.springframework.lang.Nullable;
 
 /**
+ * {@link Comparator} implementation to compare objects based on a {@link PropertyPath}. This comparator obtains the
+ * value at {@link PropertyPath} from the {@link #compare(Object, Object) given comparison objects} and then performs
+ * the comparison.
+ *
  * @author Christoph Strobl
+ * @author Mark Paluch
  * @since 3.1.10
  */
 public class PropertyPathComparator<T> implements Comparator<T> {
+
+	private static final Comparator<?> NULLS_FIRST = Comparator.nullsFirst(Comparator.naturalOrder());
+	private static final Comparator<?> NULLS_LAST = Comparator.nullsLast(Comparator.naturalOrder());
 
 	private final String path;
 
@@ -35,15 +42,13 @@ public class PropertyPathComparator<T> implements Comparator<T> {
 	private boolean nullsFirst = true;
 
 	private final Map<Class<?>, PropertyPath> pathCache = new HashMap<>(2);
-	private Lazy<Comparator<Object>> comparator = Lazy
-			.of(() -> new NullSafeComparator(Comparator.naturalOrder(), this.nullsFirst));
 
 	public PropertyPathComparator(String path) {
 		this.path = path;
 	}
 
 	@Override
-	public int compare(T o1, T o2) {
+	public int compare(@Nullable T o1, @Nullable T o2) {
 
 		if (o1 == null && o2 == null) {
 			return 0;
@@ -56,10 +61,19 @@ public class PropertyPathComparator<T> implements Comparator<T> {
 		}
 
 		PropertyPath propertyPath = pathCache.computeIfAbsent(o1.getClass(), it -> PropertyPath.from(path, it));
-		Object value1 = new SimplePropertyPathAccessor<>(o1).getValue(propertyPath);
-		Object value2 = new SimplePropertyPathAccessor<>(o2).getValue(propertyPath);
+		Object value1 = getCompareValue(o1, propertyPath);
+		Object value2 = getCompareValue(o2, propertyPath);
 
-		return comparator.get().compare(value1, value2) * (asc ? 1 : -1);
+		return getComparator().compare(value1, value2) * (asc ? 1 : -1);
+	}
+
+	protected <T> Object getCompareValue(T object, PropertyPath propertyPath) {
+		return new SimplePropertyPathAccessor<>(object).getValue(propertyPath);
+	}
+
+	@SuppressWarnings("unchecked")
+	private Comparator<Object> getComparator() {
+		return (Comparator<Object>) (nullsFirst ? NULLS_FIRST : NULLS_LAST);
 	}
 
 	/**

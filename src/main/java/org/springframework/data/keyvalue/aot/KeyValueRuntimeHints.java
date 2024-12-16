@@ -44,7 +44,11 @@ class KeyValueRuntimeHints implements RuntimeHintsRegistrar {
 						TypeReference.of(KeyValuePartTreeQuery.class)),
 				hint -> hint.withMembers(MemberCategory.INVOKE_DECLARED_CONSTRUCTORS, MemberCategory.INVOKE_DECLARED_METHODS));
 
-		hints.reflection().registerType(org.springframework.util.comparator.NullSafeComparator.class,
+		hints.reflection().registerType(TypeReference.of("java.util.Comparators.NaturalOrderComparator"),
+				builder -> builder.withMethod("compare",
+						List.of(TypeReference.of(Object.class), TypeReference.of(Object.class)), ExecutableMode.INVOKE));
+
+		hints.reflection().registerType(TypeReference.of("java.util.Comparators.NullComparator"),
 				builder -> builder.withMethod("compare",
 						List.of(TypeReference.of(Object.class), TypeReference.of(Object.class)), ExecutableMode.INVOKE));
 	}
