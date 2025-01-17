@@ -5,7 +5,7 @@
 
 	<groupId>org.springframework.data</groupId>
 	<artifactId>spring-data-keyvalue</artifactId>
-	<version>3.4.2</version>
+	<version>3.4.3-SNAPSHOT</version>
 
 	<name>Spring Data KeyValue</name>
 
