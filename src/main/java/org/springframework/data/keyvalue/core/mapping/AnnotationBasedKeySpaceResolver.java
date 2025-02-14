@@ -15,11 +15,11 @@
  */
 package org.springframework.data.keyvalue.core.mapping;
 
+import org.jspecify.annotations.Nullable;
 import org.springframework.core.annotation.MergedAnnotation;
 import org.springframework.core.annotation.MergedAnnotations;
 import org.springframework.data.annotation.Persistent;
 import org.springframework.data.keyvalue.annotation.KeySpace;
-import org.springframework.lang.Nullable;
 import org.springframework.util.Assert;
 import org.springframework.util.ClassUtils;
 
@@ -36,8 +36,7 @@ public enum AnnotationBasedKeySpaceResolver implements KeySpaceResolver {
 	INSTANCE;
 
 	@Override
-	@Nullable
-	public String resolveKeySpace(Class<?> type) {
+	public @Nullable String resolveKeySpace(Class<?> type) {
 
 		Assert.notNull(type, "Type for keyspace for null");
 
@@ -47,8 +46,8 @@ public enum AnnotationBasedKeySpaceResolver implements KeySpaceResolver {
 		return keySpace != null ? keySpace.toString() : null;
 	}
 
-	@Nullable
-	private static Object getKeySpace(Class<?> type) {
+
+	private static @Nullable Object getKeySpace(Class<?> type) {
 
 		MergedAnnotation<KeySpace> annotation = MergedAnnotations
 				.from(type, MergedAnnotations.SearchStrategy.TYPE_HIERARCHY).get(KeySpace.class);

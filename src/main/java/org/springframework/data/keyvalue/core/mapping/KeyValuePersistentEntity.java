@@ -15,8 +15,8 @@
  */
 package org.springframework.data.keyvalue.core.mapping;
 
+import org.jspecify.annotations.Nullable;
 import org.springframework.data.mapping.model.MutablePersistentEntity;
-import org.springframework.lang.Nullable;
 
 /**
  * @author Christoph Strobl

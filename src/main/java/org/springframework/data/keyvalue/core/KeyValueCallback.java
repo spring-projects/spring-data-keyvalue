@@ -15,7 +15,7 @@
  */
 package org.springframework.data.keyvalue.core;
 
-import org.springframework.lang.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * Generic callback interface for code that operates on a {@link KeyValueAdapter}. This is particularly useful for

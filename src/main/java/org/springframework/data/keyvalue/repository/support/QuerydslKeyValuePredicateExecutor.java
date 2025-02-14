@@ -25,7 +25,7 @@ import java.util.Optional;
 import java.util.function.Function;
 import java.util.function.Supplier;
 import java.util.stream.Stream;
-
+import org.jspecify.annotations.Nullable;
 import org.springframework.dao.IncorrectResultSizeDataAccessException;
 import org.springframework.data.convert.DtoInstantiatingConverter;
 import org.springframework.data.domain.Page;
@@ -46,7 +46,6 @@ import org.springframework.data.querydsl.QuerydslPredicateExecutor;
 import org.springframework.data.querydsl.SimpleEntityPathResolver;
 import org.springframework.data.repository.core.EntityInformation;
 import org.springframework.data.repository.query.FluentQuery;
-import org.springframework.lang.Nullable;
 import org.springframework.util.Assert;
 
 import com.querydsl.collections.AbstractCollQuery;
@@ -281,7 +280,7 @@ public class QuerydslKeyValuePredicateExecutor<T> implements ListQuerydslPredica
 		}
 
 		@Override
-		public R oneValue() {
+		public @Nullable R oneValue() {
 
 			List<T> results = createQuery().limit(2).fetch();
 
@@ -299,7 +298,7 @@ public class QuerydslKeyValuePredicateExecutor<T> implements ListQuerydslPredica
 		}
 
 		@Override
-		public R firstValue() {
+		public @Nullable R firstValue() {
 
 			List<T> results = createQuery().limit(1).fetch();
 

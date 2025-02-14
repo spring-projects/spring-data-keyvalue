@@ -15,7 +15,7 @@
  */
 package org.springframework.data.keyvalue.core.mapping;
 
-import org.springframework.lang.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * {@link KeySpaceResolver} determines the {@literal keyspace} a given type is assigned to. A keyspace in this context
