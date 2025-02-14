@@ -17,6 +17,7 @@ package org.springframework.data.keyvalue.repository.query;
 
 import java.util.Iterator;
 
+import org.jspecify.annotations.Nullable;
 import org.springframework.dao.InvalidDataAccessApiUsageException;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.keyvalue.core.query.KeyValueQuery;
@@ -74,7 +75,7 @@ public class SpelQueryCreator extends AbstractQueryCreator<KeyValueQuery<SpelExp
 	}
 
 	@Override
-	protected KeyValueQuery<SpelExpression> complete(String criteria, Sort sort) {
+	protected KeyValueQuery<SpelExpression> complete(@Nullable String criteria, Sort sort) {
 
 		KeyValueQuery<SpelExpression> query = new KeyValueQuery<>(this.expression);
 

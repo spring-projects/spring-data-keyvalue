@@ -15,8 +15,8 @@
  */
 package org.springframework.data.keyvalue.core;
 
+import org.jspecify.annotations.Nullable;
 import org.springframework.data.keyvalue.core.query.KeyValueQuery;
-import org.springframework.lang.Nullable;
 
 /**
  * Resolves the criteria object from given {@link KeyValueQuery}.

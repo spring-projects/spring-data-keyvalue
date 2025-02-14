@@ -17,8 +17,8 @@ package org.springframework.data.keyvalue.core;
 
 import java.util.Iterator;
 
+import org.jspecify.annotations.Nullable;
 import org.springframework.data.util.CloseableIterator;
-import org.springframework.lang.Nullable;
 import org.springframework.util.Assert;
 
 /**

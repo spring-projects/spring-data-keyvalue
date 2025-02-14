@@ -15,6 +15,7 @@
  */
 package org.springframework.data.keyvalue.core;
 
+import org.jspecify.annotations.Nullable;
 import org.springframework.data.keyvalue.core.query.KeyValueQuery;
 import org.springframework.expression.spel.standard.SpelExpression;
 import org.springframework.expression.spel.standard.SpelExpressionParser;
@@ -43,7 +44,7 @@ class SpelCriteriaAccessor implements CriteriaAccessor<SpelCriteria> {
 	}
 
 	@Override
-	public SpelCriteria resolve(KeyValueQuery<?> query) {
+	public @Nullable SpelCriteria resolve(KeyValueQuery<?> query) {
 
 		if (query.getCriteria() == null) {
 			return null;

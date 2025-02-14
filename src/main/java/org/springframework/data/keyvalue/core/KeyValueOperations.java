@@ -17,12 +17,12 @@ package org.springframework.data.keyvalue.core;
 
 import java.util.Optional;
 
+import org.jspecify.annotations.Nullable;
 import org.springframework.beans.factory.DisposableBean;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.keyvalue.annotation.KeySpace;
 import org.springframework.data.keyvalue.core.query.KeyValueQuery;
 import org.springframework.data.mapping.context.MappingContext;
-import org.springframework.lang.Nullable;
 
 /**
  * Interface that specifies a basic set of key/value operations. Implemented by {@link KeyValueTemplate}.
@@ -84,8 +84,8 @@ public interface KeyValueOperations extends DisposableBean {
 	 * @param action must not be {@literal null}.
 	 * @return
 	 */
-	@Nullable
-	<T> T execute(KeyValueCallback<T> action);
+
+	<T> @Nullable T execute(KeyValueCallback<T> action);
 
 	/**
 	 * Get all elements matching the given query. <br />
@@ -145,8 +145,7 @@ public interface KeyValueOperations extends DisposableBean {
 	 * @param objectToDelete must not be {@literal null}.
 	 * @return
 	 */
-	@Nullable
-	<T> T delete(T objectToDelete);
+	<T> @Nullable T delete(T objectToDelete);
 
 	/**
 	 * Delete item of type with given id.
@@ -155,8 +154,7 @@ public interface KeyValueOperations extends DisposableBean {
 	 * @param type must not be {@literal null}.
 	 * @return the deleted item or {@literal null} if no match found.
 	 */
-	@Nullable
-	<T> T delete(Object id, Class<T> type);
+	<T> @Nullable T delete(Object id, Class<T> type);
 
 	/**
 	 * Total number of elements with given type available. Respects {@link KeySpace} if present and therefore counts all

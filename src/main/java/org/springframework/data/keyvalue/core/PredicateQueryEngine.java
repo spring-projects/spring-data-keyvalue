@@ -22,8 +22,8 @@ import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import org.jspecify.annotations.Nullable;
 import org.springframework.data.keyvalue.core.query.KeyValueQuery;
-import org.springframework.lang.Nullable;
 
 /**
  * {@link QueryEngine} implementation specific for executing {@link Predicate} based {@link KeyValueQuery} against
@@ -46,9 +46,9 @@ public class PredicateQueryEngine extends QueryEngine<KeyValueAdapter, Predicate
 	 */
 	public PredicateQueryEngine(SortAccessor<Comparator<?>> sortAccessor) {
 		super(new CriteriaAccessor<>() {
-			@Nullable
+
 			@Override
-			public Predicate<?> resolve(KeyValueQuery<?> query) {
+			public @Nullable Predicate<?> resolve(KeyValueQuery<?> query) {
 				return (Predicate<?>) query.getCriteria();
 			}
 		}, sortAccessor);
@@ -78,12 +78,12 @@ public class PredicateQueryEngine extends QueryEngine<KeyValueAdapter, Predicate
 		return filterMatchingRange(tmp, criteria, offset, rows);
 	}
 
-	private static <S> List<S> filterMatchingRange(List<S> source, @Nullable Predicate criteria, long offset, int rows) {
+	private static <S> List<S> filterMatchingRange(List<S> source, @Nullable Predicate<?> criteria, long offset, int rows) {
 
 		Stream<S> stream = source.stream();
 
 		if (criteria != null) {
-			stream = stream.filter(criteria);
+			stream = stream.filter((Predicate<? super S>) criteria);
 		}
 		if (offset > 0) {
 			stream = stream.skip(offset);

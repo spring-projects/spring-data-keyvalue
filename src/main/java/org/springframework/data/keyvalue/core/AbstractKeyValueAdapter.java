@@ -18,8 +18,8 @@ package org.springframework.data.keyvalue.core;
 import java.util.Collection;
 import java.util.Comparator;
 
+import org.jspecify.annotations.Nullable;
 import org.springframework.data.keyvalue.core.query.KeyValueQuery;
-import org.springframework.lang.Nullable;
 
 /**
  * Base implementation of {@link KeyValueAdapter} holds {@link QueryEngine} to delegate {@literal find} and
@@ -69,15 +69,13 @@ public abstract class AbstractKeyValueAdapter implements KeyValueAdapter {
 		return engine;
 	}
 
-	@Nullable
 	@Override
-	public <T> T get(Object id, String keyspace, Class<T> type) {
+	public <T> @Nullable T get(Object id, String keyspace, Class<T> type) {
 		return type.cast(get(id, keyspace));
 	}
 
-	@Nullable
 	@Override
-	public <T> T delete(Object id, String keyspace, Class<T> type) {
+	public <T> @Nullable T delete(Object id, String keyspace, Class<T> type) {
 		return type.cast(delete(id, keyspace));
 	}
 

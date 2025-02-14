@@ -15,8 +15,8 @@
  */
 package org.springframework.data.keyvalue.core.event;
 
+import org.jspecify.annotations.Nullable;
 import org.springframework.context.ApplicationEvent;
-import org.springframework.lang.Nullable;
 
 /**
  * {@link KeyValueEvent} gets published for operations executed by eg.
@@ -235,8 +235,7 @@ public class KeyValueEvent<T> extends ApplicationEvent {
 		 *
 		 * @return
 		 */
-		@Nullable
-		public T getPayload() {
+		public @Nullable T getPayload() {
 			return payload;
 		}
 	}
@@ -336,8 +335,7 @@ public class KeyValueEvent<T> extends ApplicationEvent {
 		 *
 		 * @return
 		 */
-		@Nullable
-		public Object before() {
+		public @Nullable Object before() {
 			return existing;
 		}
 
@@ -346,8 +344,7 @@ public class KeyValueEvent<T> extends ApplicationEvent {
 		 *
 		 * @return can be {@literal null}.
 		 */
-		@Nullable
-		public T after() {
+		public @Nullable T after() {
 			return getPayload();
 		}
 	}

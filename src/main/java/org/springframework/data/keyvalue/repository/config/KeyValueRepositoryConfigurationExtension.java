@@ -20,6 +20,7 @@ import java.util.Collections;
 import java.util.Map;
 import java.util.Optional;
 
+import org.jspecify.annotations.Nullable;
 import org.springframework.beans.factory.support.AbstractBeanDefinition;
 import org.springframework.beans.factory.support.BeanDefinitionBuilder;
 import org.springframework.beans.factory.support.BeanDefinitionRegistry;
@@ -36,7 +37,6 @@ import org.springframework.data.repository.config.AnnotationRepositoryConfigurat
 import org.springframework.data.repository.config.RepositoryConfigurationExtension;
 import org.springframework.data.repository.config.RepositoryConfigurationExtensionSupport;
 import org.springframework.data.repository.config.RepositoryConfigurationSource;
-import org.springframework.lang.Nullable;
 
 /**
  * {@link RepositoryConfigurationExtension} for {@link KeyValueRepository}.
@@ -145,7 +145,7 @@ public abstract class KeyValueRepositoryConfigurationExtension extends Repositor
 
 			AbstractBeanDefinition beanDefinition = getDefaultKeyValueTemplateBeanDefinition(configurationSource);
 
-			if (beanDefinition != null) {
+			if (beanDefinition != null && configurationSource.getSource() != null) {
 				registerIfNotAlreadyRegistered(() -> beanDefinition, registry, keyValueTemplateName.get(),
 						configurationSource.getSource());
 			}
@@ -158,8 +158,7 @@ public abstract class KeyValueRepositoryConfigurationExtension extends Repositor
 	 * @return {@literal null} to explicitly not register a template.
 	 * @see #getDefaultKeyValueTemplateRef()
 	 */
-	@Nullable
-	protected AbstractBeanDefinition getDefaultKeyValueTemplateBeanDefinition(
+	protected @Nullable AbstractBeanDefinition getDefaultKeyValueTemplateBeanDefinition(
 			RepositoryConfigurationSource configurationSource) {
 		return null;
 	}

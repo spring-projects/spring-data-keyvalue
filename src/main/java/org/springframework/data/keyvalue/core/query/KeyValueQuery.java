@@ -15,8 +15,8 @@
  */
 package org.springframework.data.keyvalue.core.query;
 
+import org.jspecify.annotations.Nullable;
 import org.springframework.data.domain.Sort;
-import org.springframework.lang.Nullable;
 import org.springframework.util.Assert;
 
 /**
@@ -76,8 +76,7 @@ public class KeyValueQuery<T> {
 	 * @return
 	 * @since 2.0
 	 */
-	@Nullable
-	public T getCriteria() {
+	public @Nullable T getCriteria() {
 		return criteria;
 	}
 

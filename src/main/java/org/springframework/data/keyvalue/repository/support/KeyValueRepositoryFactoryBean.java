@@ -15,6 +15,7 @@
  */
 package org.springframework.data.keyvalue.repository.support;
 
+import org.jspecify.annotations.Nullable;
 import org.springframework.data.keyvalue.core.KeyValueOperations;
 import org.springframework.data.keyvalue.repository.KeyValueRepository;
 import org.springframework.data.keyvalue.repository.config.QueryCreatorType;
@@ -24,7 +25,6 @@ import org.springframework.data.repository.core.support.RepositoryFactoryBeanSup
 import org.springframework.data.repository.core.support.RepositoryFactorySupport;
 import org.springframework.data.repository.query.RepositoryQuery;
 import org.springframework.data.repository.query.parser.AbstractQueryCreator;
-import org.springframework.lang.Nullable;
 import org.springframework.util.Assert;
 
 /**
@@ -95,6 +95,11 @@ public class KeyValueRepositoryFactoryBean<T extends Repository<S, ID>, S, ID>
 
 	@Override
 	protected final RepositoryFactorySupport createRepositoryFactory() {
+
+		Assert.notNull(operations, "Operations must not be null");
+		Assert.notNull(queryCreator, "QueryCreator must not be null");
+		Assert.notNull(repositoryQueryType, "QueryType must not be null");
+
 		return createRepositoryFactory(operations, queryCreator, repositoryQueryType);
 	}
 

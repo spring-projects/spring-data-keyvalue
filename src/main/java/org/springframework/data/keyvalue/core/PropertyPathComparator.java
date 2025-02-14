@@ -19,8 +19,8 @@ import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.jspecify.annotations.Nullable;
 import org.springframework.data.mapping.PropertyPath;
-import org.springframework.lang.Nullable;
 
 /**
  * {@link Comparator} implementation to compare objects based on a {@link PropertyPath}. This comparator obtains the
@@ -67,12 +67,12 @@ public class PropertyPathComparator<T> implements Comparator<T> {
 		return getComparator().compare(value1, value2) * (asc ? 1 : -1);
 	}
 
-	protected <T> Object getCompareValue(T object, PropertyPath propertyPath) {
+	protected <S> @Nullable Object getCompareValue(S object, PropertyPath propertyPath) {
 		return new SimplePropertyPathAccessor<>(object).getValue(propertyPath);
 	}
 
 	@SuppressWarnings("unchecked")
-	private Comparator<Object> getComparator() {
+	private Comparator<@Nullable Object> getComparator() {
 		return (Comparator<Object>) (nullsFirst ? NULLS_FIRST : NULLS_LAST);
 	}
 
@@ -81,7 +81,7 @@ public class PropertyPathComparator<T> implements Comparator<T> {
 	 *
 	 * @return
 	 */
-	public PropertyPathComparator<T> asc() {
+	public PropertyPathComparator<@Nullable T> asc() {
 		this.asc = true;
 		return this;
 	}
@@ -91,7 +91,7 @@ public class PropertyPathComparator<T> implements Comparator<T> {
 	 *
 	 * @return
 	 */
-	public PropertyPathComparator<T> desc() {
+	public PropertyPathComparator<@Nullable T> desc() {
 		this.asc = false;
 		return this;
 	}
@@ -101,7 +101,7 @@ public class PropertyPathComparator<T> implements Comparator<T> {
 	 *
 	 * @return
 	 */
-	public PropertyPathComparator<T> nullsFirst() {
+	public PropertyPathComparator<@Nullable T> nullsFirst() {
 		this.nullsFirst = true;
 		return this;
 	}
@@ -111,7 +111,7 @@ public class PropertyPathComparator<T> implements Comparator<T> {
 	 *
 	 * @return
 	 */
-	public PropertyPathComparator<T> nullsLast() {
+	public PropertyPathComparator<@Nullable T> nullsLast() {
 		this.nullsFirst = false;
 		return this;
 	}

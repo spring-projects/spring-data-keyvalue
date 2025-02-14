@@ -18,6 +18,7 @@ package org.springframework.data.map.repository.config;
 import java.lang.reflect.Constructor;
 import java.util.Map;
 
+import org.jspecify.annotations.Nullable;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.beans.factory.support.AbstractBeanDefinition;
@@ -32,7 +33,6 @@ import org.springframework.data.keyvalue.repository.config.KeyValueRepositoryCon
 import org.springframework.data.map.MapKeyValueAdapter;
 import org.springframework.data.repository.config.RepositoryConfigurationExtension;
 import org.springframework.data.repository.config.RepositoryConfigurationSource;
-import org.springframework.lang.Nullable;
 import org.springframework.util.ClassUtils;
 
 /**
@@ -83,14 +83,13 @@ public class MapRepositoryConfigurationExtension extends KeyValueRepositoryConfi
 		return ParsingUtils.getSourceBeanDefinition(builder, configurationSource.getSource());
 	}
 
-	@SuppressWarnings({ "unchecked", "rawtypes" })
+	@SuppressWarnings({ "unchecked", "rawtypes", "NullAway" })
 	private static Class<? extends Map> getMapTypeToUse(RepositoryConfigurationSource source) {
 
 		return (Class<? extends Map>) getAnnotationAttributes(source).get("mapType");
 	}
 
-	@Nullable
-	private static SortAccessor<?> getSortAccessor(RepositoryConfigurationSource source) {
+	private static @Nullable SortAccessor<?> getSortAccessor(RepositoryConfigurationSource source) {
 
 		Class<? extends SortAccessor<?>> sortAccessorType = (Class<? extends SortAccessor<?>>) getAnnotationAttributes(
 				source).get("sortAccessor");
@@ -102,8 +101,7 @@ public class MapRepositoryConfigurationExtension extends KeyValueRepositoryConfi
 		return null;
 	}
 
-	@Nullable
-	private static QueryEngine<?, ?, ?> getQueryEngine(@Nullable SortAccessor<?> sortAccessor,
+	private static @Nullable QueryEngine<?, ?, ?> getQueryEngine(@Nullable SortAccessor<?> sortAccessor,
 			RepositoryConfigurationSource source) {
 
 		Class<? extends QueryEngineFactory> queryEngineFactoryType = (Class<? extends QueryEngineFactory>) getAnnotationAttributes(

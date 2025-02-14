@@ -15,6 +15,7 @@
  */
 package org.springframework.data.keyvalue.core;
 
+import org.jspecify.annotations.Nullable;
 import org.springframework.beans.BeanWrapper;
 import org.springframework.data.mapping.PropertyPath;
 import org.springframework.data.util.DirectFieldAccessFallbackBeanWrapper;
@@ -31,7 +32,7 @@ public class SimplePropertyPathAccessor<T> {
 		this.root = source;
 	}
 
-	public Object getValue(PropertyPath path) {
+	public @Nullable Object getValue(PropertyPath path) {
 
 		Object currentValue = root;
 		for (PropertyPath current : path) {

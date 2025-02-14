@@ -15,13 +15,13 @@
  */
 package org.springframework.data.keyvalue.repository.query;
 
+import org.jspecify.annotations.Nullable;
 import org.springframework.data.keyvalue.core.KeyValueOperations;
 import org.springframework.data.keyvalue.core.query.KeyValueQuery;
 import org.springframework.data.repository.query.QueryMethod;
 import org.springframework.data.repository.query.ValueExpressionDelegate;
 import org.springframework.data.repository.query.parser.AbstractQueryCreator;
 import org.springframework.data.repository.query.parser.PartTree;
-import org.springframework.lang.Nullable;
 
 /**
  * {@link KeyValuePartTreeQuery} implementation deriving queries from {@link PartTree} using a predefined

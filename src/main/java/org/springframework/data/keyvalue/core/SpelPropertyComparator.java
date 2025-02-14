@@ -17,10 +17,10 @@ package org.springframework.data.keyvalue.core;
 
 import java.util.Comparator;
 
+import org.jspecify.annotations.Nullable;
 import org.springframework.expression.spel.standard.SpelExpression;
 import org.springframework.expression.spel.standard.SpelExpressionParser;
 import org.springframework.expression.spel.support.SimpleEvaluationContext;
-import org.springframework.lang.Nullable;
 import org.springframework.util.Assert;
 
 /**
@@ -63,7 +63,7 @@ public class SpelPropertyComparator<T> implements Comparator<T> {
 	 *
 	 * @return
 	 */
-	public SpelPropertyComparator<T> asc() {
+	public SpelPropertyComparator<@Nullable T> asc() {
 		this.asc = true;
 		return this;
 	}
@@ -73,7 +73,7 @@ public class SpelPropertyComparator<T> implements Comparator<T> {
 	 *
 	 * @return
 	 */
-	public SpelPropertyComparator<T> desc() {
+	public SpelPropertyComparator<@Nullable T> desc() {
 		this.asc = false;
 		return this;
 	}
@@ -83,7 +83,7 @@ public class SpelPropertyComparator<T> implements Comparator<T> {
 	 *
 	 * @return
 	 */
-	public SpelPropertyComparator<T> nullsFirst() {
+	public SpelPropertyComparator<@Nullable T> nullsFirst() {
 		this.nullsFirst = true;
 		return this;
 	}
@@ -93,7 +93,7 @@ public class SpelPropertyComparator<T> implements Comparator<T> {
 	 *
 	 * @return
 	 */
-	public SpelPropertyComparator<T> nullsLast() {
+	public SpelPropertyComparator<@Nullable T> nullsLast() {
 		this.nullsFirst = false;
 		return this;
 	}
@@ -119,14 +119,12 @@ public class SpelPropertyComparator<T> implements Comparator<T> {
 	 */
 	protected String buildExpressionForPath() {
 
-		String rawExpression = String.format("#comparator.compare(#arg1?.%s,#arg2?.%s)", path.replace(".", "?."),
+		return String.format("#comparator.compare(#arg1?.%s,#arg2?.%s)", path.replace(".", "?."),
 				path.replace(".", "?."));
-
-		return rawExpression;
 	}
 
 	@Override
-	public int compare(T arg1, T arg2) {
+	public int compare(@Nullable T arg1, @Nullable T arg2) {
 
 		SpelExpression expressionToUse = getExpression();
 
@@ -137,7 +135,8 @@ public class SpelPropertyComparator<T> implements Comparator<T> {
 
 		expressionToUse.setEvaluationContext(ctx);
 
-		return expressionToUse.getValue(Integer.class) * (asc ? 1 : -1);
+		Integer value = expressionToUse.getValue(Integer.class);
+		return (value != null ? value : 0) * (asc ? 1 : -1);
 	}
 
 	/**

@@ -15,6 +15,7 @@
  */
 package org.springframework.data.keyvalue.core.mapping;
 
+import org.jspecify.annotations.Nullable;
 import org.springframework.data.expression.ValueExpression;
 import org.springframework.data.expression.ValueExpressionParser;
 import org.springframework.data.mapping.model.BasicPersistentEntity;
@@ -22,7 +23,6 @@ import org.springframework.data.util.TypeInformation;
 import org.springframework.expression.Expression;
 import org.springframework.expression.common.LiteralExpression;
 import org.springframework.expression.spel.standard.SpelExpressionParser;
-import org.springframework.lang.Nullable;
 import org.springframework.util.ObjectUtils;
 import org.springframework.util.StringUtils;
 
@@ -40,7 +40,7 @@ public class BasicKeyValuePersistentEntity<T, P extends KeyValuePersistentProper
 	private static final ValueExpressionParser PARSER = ValueExpressionParser.create(SpelExpressionParser::new);
 
 	private final @Nullable ValueExpression keyspaceExpression;
-	private final @Nullable String keyspace;
+	private final String keyspace;
 
 	/**
 	 * @param information must not be {@literal null}.
@@ -90,8 +90,8 @@ public class BasicKeyValuePersistentEntity<T, P extends KeyValuePersistentProper
 	 * @param potentialExpression must not be {@literal null}
 	 * @return the parsed {@link Expression} or {@literal null}.
 	 */
-	@Nullable
-	private static ValueExpression detectExpression(String potentialExpression) {
+
+	private static @Nullable ValueExpression detectExpression(String potentialExpression) {
 
 		ValueExpression expression = PARSER.parse(potentialExpression);
 		return expression.isLiteral() ? null : expression;

@@ -17,10 +17,10 @@ package org.springframework.data.keyvalue.core;
 
 import java.util.NoSuchElementException;
 
+import org.jspecify.annotations.Nullable;
 import org.springframework.dao.DataAccessException;
 import org.springframework.dao.DataRetrievalFailureException;
 import org.springframework.dao.support.PersistenceExceptionTranslator;
-import org.springframework.lang.Nullable;
 import org.springframework.util.Assert;
 
 /**
@@ -32,9 +32,9 @@ import org.springframework.util.Assert;
  */
 public class KeyValuePersistenceExceptionTranslator implements PersistenceExceptionTranslator {
 
-	@Nullable
 	@Override
-	public DataAccessException translateExceptionIfPossible(RuntimeException exception) {
+	@SuppressWarnings("NullAway")
+	public @Nullable DataAccessException translateExceptionIfPossible(RuntimeException exception) {
 
 		Assert.notNull(exception, "Exception must not be null");
 

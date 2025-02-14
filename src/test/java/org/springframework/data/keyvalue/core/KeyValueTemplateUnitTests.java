@@ -140,7 +140,7 @@ class KeyValueTemplateUnitTests {
 
 	@Test // DATACMNS-525
 	void insertShouldThrowErrorWhenIdCannotBeResolved() {
-		assertThatIllegalArgumentException().isThrownBy(() -> template.insert(FOO_ONE));
+		assertThatIllegalStateException().isThrownBy(() -> template.insert(FOO_ONE));
 	}
 
 	@Test // DATACMNS-525
@@ -281,7 +281,7 @@ class KeyValueTemplateUnitTests {
 
 	@Test // DATACMNS-525
 	void deleteThrowsExceptionWhenIdCannotBeExctracted() {
-		assertThatIllegalArgumentException().isThrownBy(() -> template.delete(FOO_ONE));
+		assertThatIllegalStateException().isThrownBy(() -> template.delete(FOO_ONE));
 	}
 
 	@Test // DATACMNS-525

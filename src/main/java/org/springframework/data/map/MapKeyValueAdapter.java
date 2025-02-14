@@ -21,6 +21,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.concurrent.ConcurrentHashMap;
 
+import org.jspecify.annotations.Nullable;
 import org.springframework.core.CollectionFactory;
 import org.springframework.data.keyvalue.core.AbstractKeyValueAdapter;
 import org.springframework.data.keyvalue.core.ForwardingCloseableIterator;
@@ -131,7 +132,7 @@ public class MapKeyValueAdapter extends AbstractKeyValueAdapter {
 	 * @param engine the query engine.
 	 */
 	@SuppressWarnings("rawtypes")
-	private MapKeyValueAdapter(Map<String, Map<Object, Object>> store, Class<? extends Map> keySpaceMapType, QueryEngine<? extends KeyValueAdapter, ?, ?> engine) {
+	private MapKeyValueAdapter(Map<String, Map<Object, Object>> store, Class<? extends Map> keySpaceMapType, @Nullable QueryEngine<? extends KeyValueAdapter, ?, ?> engine) {
 
 		super(engine);
 
@@ -143,7 +144,7 @@ public class MapKeyValueAdapter extends AbstractKeyValueAdapter {
 	}
 
 	@Override
-	public Object put(Object id, Object item, String keyspace) {
+	public @Nullable Object put(Object id, Object item, String keyspace) {
 
 		Assert.notNull(id, "Cannot add item with null id");
 		Assert.notNull(keyspace, "Cannot add item for null collection");
@@ -162,21 +163,21 @@ public class MapKeyValueAdapter extends AbstractKeyValueAdapter {
 	}
 
 	@Override
-	public Object get(Object id, String keyspace) {
+	public @Nullable Object get(Object id, String keyspace) {
 
 		Assert.notNull(id, "Cannot get item with null id");
 		return getKeySpaceMap(keyspace).get(id);
 	}
 
 	@Override
-	public Object delete(Object id, String keyspace) {
+	public @Nullable Object delete(Object id, String keyspace) {
 
 		Assert.notNull(id, "Cannot delete item with null id");
 		return getKeySpaceMap(keyspace).remove(id);
 	}
 
 	@Override
-	public Collection<?> getAllOf(String keyspace) {
+	public Collection<Object> getAllOf(String keyspace) {
 		return getKeySpaceMap(keyspace).values();
 	}
 

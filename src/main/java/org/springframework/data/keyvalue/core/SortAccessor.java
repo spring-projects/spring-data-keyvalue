@@ -15,9 +15,9 @@
  */
 package org.springframework.data.keyvalue.core;
 
+import org.jspecify.annotations.Nullable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.keyvalue.core.query.KeyValueQuery;
-import org.springframework.lang.Nullable;
 
 /**
  * Resolves the {@link Sort} object from given {@link KeyValueQuery} and potentially converts it into a store specific
