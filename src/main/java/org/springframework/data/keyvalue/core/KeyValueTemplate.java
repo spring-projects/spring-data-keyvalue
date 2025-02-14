@@ -21,6 +21,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
+import org.jspecify.annotations.Nullable;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.ApplicationEventPublisherAware;
 import org.springframework.dao.DataAccessException;
@@ -34,7 +35,6 @@ import org.springframework.data.keyvalue.core.mapping.KeyValuePersistentProperty
 import org.springframework.data.keyvalue.core.mapping.context.KeyValueMappingContext;
 import org.springframework.data.keyvalue.core.query.KeyValueQuery;
 import org.springframework.data.mapping.context.MappingContext;
-import org.springframework.lang.Nullable;
 import org.springframework.util.Assert;
 import org.springframework.util.ClassUtils;
 import org.springframework.util.CollectionUtils;
@@ -143,7 +143,7 @@ public class KeyValueTemplate implements KeyValueOperations, ApplicationEventPub
 		KeyValuePersistentEntity<?, ?> entity = getKeyValuePersistentEntity(objectToInsert);
 
 		GeneratingIdAccessor generatingIdAccessor = new GeneratingIdAccessor(entity.getPropertyAccessor(objectToInsert),
-				entity.getIdProperty(), identifierGenerator);
+				entity.getRequiredIdProperty(), identifierGenerator);
 		Object id = generatingIdAccessor.getOrGenerateIdentifier();
 
 		return insert(id, objectToInsert);
@@ -195,6 +195,7 @@ public class KeyValueTemplate implements KeyValueOperations, ApplicationEventPub
 		Assert.notNull(objectToUpdate, "Object to be updated must not be null");
 
 		String keyspace = resolveKeySpace(objectToUpdate.getClass());
+		Assert.notNull(keyspace, "Keyspace must not be null");
 
 		potentiallyPublishEvent(KeyValueEvent.beforeUpdate(id, keyspace, objectToUpdate.getClass(), objectToUpdate));
 
@@ -213,7 +214,8 @@ public class KeyValueTemplate implements KeyValueOperations, ApplicationEventPub
 
 		return executeRequired(adapter -> {
 
-			Iterable<?> values = adapter.getAllOf(resolveKeySpace(type), type);
+			String keyspace = resolveKeySpace(type);
+			Iterable<?> values = adapter.getAllOf(keyspace, type);
 
 			ArrayList<T> filtered = new ArrayList<>();
 			for (Object candidate : values) {
@@ -233,6 +235,7 @@ public class KeyValueTemplate implements KeyValueOperations, ApplicationEventPub
 		Assert.notNull(type, "Type to fetch must not be null");
 
 		String keyspace = resolveKeySpace(type);
+		Assert.notNull(keyspace, "Keyspace must not be null");
 
 		potentiallyPublishEvent(KeyValueEvent.beforeGet(id, keyspace, type));
 
@@ -258,7 +261,6 @@ public class KeyValueTemplate implements KeyValueOperations, ApplicationEventPub
 		Assert.notNull(type, "Type to delete must not be null");
 
 		String keyspace = resolveKeySpace(type);
-
 		potentiallyPublishEvent(KeyValueEvent.beforeDropKeySpace(keyspace, type));
 
 		execute((KeyValueCallback<Void>) adapter -> {
@@ -272,21 +274,22 @@ public class KeyValueTemplate implements KeyValueOperations, ApplicationEventPub
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public <T> T delete(T objectToDelete) {
+	public <T> @Nullable T delete(T objectToDelete) {
 
 		Class<T> type = (Class<T>) ClassUtils.getUserClass(objectToDelete);
 		KeyValuePersistentEntity<?, ?> entity = getKeyValuePersistentEntity(objectToDelete);
 
-		return delete(entity.getIdentifierAccessor(objectToDelete).getIdentifier(), type);
+		return delete(entity.getIdentifierAccessor(objectToDelete).getRequiredIdentifier(), type);
 	}
 
 	@Override
-	public <T> T delete(Object id, Class<T> type) {
+	public <T> @Nullable T delete(Object id, Class<T> type) {
 
 		Assert.notNull(id, "Id for object to be deleted must not be null");
 		Assert.notNull(type, "Type to delete must not be null");
 
 		String keyspace = resolveKeySpace(type);
+		Assert.notNull(keyspace, "Keyspace must not be null");
 
 		potentiallyPublishEvent(KeyValueEvent.beforeDelete(id, keyspace, type));
 
@@ -301,12 +304,12 @@ public class KeyValueTemplate implements KeyValueOperations, ApplicationEventPub
 	public long count(Class<?> type) {
 
 		Assert.notNull(type, "Type for count must not be null");
-		return adapter.count(resolveKeySpace(type));
+		String keyspace = resolveKeySpace(type);
+		return adapter.count(keyspace);
 	}
 
-	@Nullable
 	@Override
-	public <T> T execute(KeyValueCallback<T> action) {
+	public <T> @Nullable T execute(KeyValueCallback<T> action) {
 
 		Assert.notNull(action, "KeyValueCallback must not be null");
 
@@ -401,8 +404,12 @@ public class KeyValueTemplate implements KeyValueOperations, ApplicationEventPub
 		return this.mappingContext.getRequiredPersistentEntity(ClassUtils.getUserClass(objectToInsert));
 	}
 
-	private String resolveKeySpace(Class<?> type) {
-		return this.mappingContext.getRequiredPersistentEntity(type).getKeySpace();
+
+	private  String resolveKeySpace(Class<?> type) {
+
+		String keyspace = this.mappingContext.getRequiredPersistentEntity(type).getKeySpace();
+		Assert.notNull(keyspace, "Keyspace must not be null");
+		return keyspace;
 	}
 
 	private RuntimeException resolveExceptionIfPossible(RuntimeException e) {

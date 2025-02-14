@@ -197,7 +197,7 @@ class KeyValueTemplateTests {
 
 	@Test // DATACMNS-525
 	void deleteThrowsExceptionWhenIdCannotBeExctracted() {
-		assertThatIllegalArgumentException().isThrownBy(() -> operations.delete(FOO_ONE));
+		assertThatIllegalStateException().isThrownBy(() -> operations.delete(FOO_ONE));
 	}
 
 	@Test // DATACMNS-525

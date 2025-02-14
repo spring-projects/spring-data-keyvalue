@@ -15,6 +15,7 @@
  */
 package org.springframework.data.keyvalue.core;
 
+import org.jspecify.annotations.Nullable;
 import org.springframework.data.mapping.IdentifierAccessor;
 import org.springframework.data.mapping.PersistentProperty;
 import org.springframework.data.mapping.PersistentPropertyAccessor;
@@ -55,7 +56,7 @@ class GeneratingIdAccessor implements IdentifierAccessor {
 	}
 
 	@Override
-	public Object getIdentifier() {
+	public @Nullable Object getIdentifier() {
 		return accessor.getProperty(identifierProperty);
 	}
 

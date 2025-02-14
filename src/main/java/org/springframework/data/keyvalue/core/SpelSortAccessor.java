@@ -18,6 +18,7 @@ package org.springframework.data.keyvalue.core;
 import java.util.Comparator;
 import java.util.Optional;
 
+import org.jspecify.annotations.Nullable;
 import org.springframework.data.domain.Sort.Direction;
 import org.springframework.data.domain.Sort.NullHandling;
 import org.springframework.data.domain.Sort.Order;
@@ -48,7 +49,7 @@ public class SpelSortAccessor implements SortAccessor<Comparator<?>> {
 	}
 
 	@Override
-	public Comparator<?> resolve(KeyValueQuery<?> query) {
+	public @Nullable Comparator<?> resolve(KeyValueQuery<?> query) {
 
 		if (query.getSort().isUnsorted()) {
 			return null;

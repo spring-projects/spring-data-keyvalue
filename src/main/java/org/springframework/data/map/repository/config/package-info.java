@@ -1,6 +1,5 @@
 /**
  * Support infrastructure for the configuration of {@link java.util.Map} repositories.
  */
-@org.springframework.lang.NonNullApi
-@org.springframework.lang.NonNullFields
+@org.jspecify.annotations.NullMarked
 package org.springframework.data.map.repository.config;

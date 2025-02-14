@@ -18,8 +18,8 @@ package org.springframework.data.keyvalue.core;
 import java.util.Collection;
 import java.util.Optional;
 
+import org.jspecify.annotations.Nullable;
 import org.springframework.data.keyvalue.core.query.KeyValueQuery;
-import org.springframework.lang.Nullable;
 
 /**
  * Base implementation for accessing and executing {@link KeyValueQuery} against a {@link KeyValueAdapter}.
@@ -125,8 +125,7 @@ public abstract class QueryEngine<ADAPTER extends KeyValueAdapter, CRITERIA, SOR
 	 *
 	 * @return
 	 */
-	@Nullable
-	protected ADAPTER getAdapter() {
+	protected @Nullable ADAPTER getAdapter() {
 		return this.adapter;
 	}
 
