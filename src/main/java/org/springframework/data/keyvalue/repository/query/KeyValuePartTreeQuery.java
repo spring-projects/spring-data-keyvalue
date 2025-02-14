@@ -17,6 +17,7 @@ package org.springframework.data.keyvalue.repository.query;
 
 import java.lang.reflect.Constructor;
 
+import org.jspecify.annotations.Nullable;
 import org.springframework.beans.BeanUtils;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
@@ -38,7 +39,6 @@ import org.springframework.data.repository.query.parser.PartTree;
 import org.springframework.data.spel.EvaluationContextProvider;
 import org.springframework.data.util.Lazy;
 import org.springframework.expression.spel.standard.SpelExpression;
-import org.springframework.lang.Nullable;
 import org.springframework.util.Assert;
 import org.springframework.util.ClassUtils;
 
@@ -105,7 +105,7 @@ public class KeyValuePartTreeQuery implements RepositoryQuery {
 	}
 
 	@Override
-	public Object execute(Object[] parameters) {
+	public @Nullable Object execute(Object[] parameters) {
 
 		ParameterAccessor accessor = new ParametersParameterAccessor(getQueryMethod().getParameters(), parameters);
 		KeyValueQuery<?> query = prepareQuery(parameters);
@@ -118,9 +118,8 @@ public class KeyValuePartTreeQuery implements RepositoryQuery {
 	 * @param parameters
 	 * @param query
 	 */
-	@Nullable
 	@SuppressWarnings({ "unchecked", "rawtypes" })
-	protected Object doExecute(Object[] parameters, KeyValueQuery<?> query) {
+	protected @Nullable Object doExecute(Object[] parameters, KeyValueQuery<?> query) {
 
 		if (queryMethod.isPageQuery() || queryMethod.isSliceQuery()) {
 
@@ -203,6 +202,7 @@ public class KeyValuePartTreeQuery implements RepositoryQuery {
 	 * @param accessor must not be {@literal null}.
 	 * @return the {@link KeyValueQuery}.
 	 */
+	@SuppressWarnings("NullAway")
 	public KeyValueQuery<?> createQuery(ParameterAccessor accessor) {
 
 		PartTree tree = this.partTree.get();

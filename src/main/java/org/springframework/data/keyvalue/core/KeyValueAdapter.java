@@ -18,10 +18,10 @@ package org.springframework.data.keyvalue.core;
 import java.util.Collection;
 import java.util.Map;
 
+import org.jspecify.annotations.Nullable;
 import org.springframework.beans.factory.DisposableBean;
 import org.springframework.data.keyvalue.core.query.KeyValueQuery;
 import org.springframework.data.util.CloseableIterator;
-import org.springframework.lang.Nullable;
 
 /**
  * {@link KeyValueAdapter} unifies access and shields the underlying key/value specific implementation.
@@ -39,7 +39,7 @@ public interface KeyValueAdapter extends DisposableBean {
 	 * @param keyspace must not be {@literal null}.
 	 * @return the item previously associated with the id.
 	 */
-	Object put(Object id, Object item, String keyspace);
+	@Nullable Object put(Object id, Object item, String keyspace);
 
 	/**
 	 * Check if a object with given id exists in keyspace.
@@ -69,8 +69,7 @@ public interface KeyValueAdapter extends DisposableBean {
 	 * @return {@literal null} in case no matching item exists.
 	 * @since 1.1
 	 */
-	@Nullable
-	<T> T get(Object id, String keyspace, Class<T> type);
+	<T> @Nullable T get(Object id, String keyspace, Class<T> type);
 
 	/**
 	 * Delete and return the object with given type and id.
@@ -91,8 +90,7 @@ public interface KeyValueAdapter extends DisposableBean {
 	 * @return {@literal null} if object could not be found
 	 * @since 1.1
 	 */
-	@Nullable
-	<T> T delete(Object id, String keyspace, Class<T> type);
+	<T> @Nullable T delete(Object id, String keyspace, Class<T> type);
 
 	/**
 	 * Get all elements for given keyspace.
@@ -100,7 +98,7 @@ public interface KeyValueAdapter extends DisposableBean {
 	 * @param keyspace must not be {@literal null}.
 	 * @return empty {@link Collection} if nothing found.
 	 */
-	Iterable<?> getAllOf(String keyspace);
+	Iterable<Object> getAllOf(String keyspace);
 
 	/**
 	 * Get all elements for given keyspace.
@@ -132,7 +130,7 @@ public interface KeyValueAdapter extends DisposableBean {
 	 * @since 2.5
 	 */
 	@SuppressWarnings("unchecked")
-	default <T> CloseableIterator<Map.Entry<Object, T>> entries(String keyspace, Class<T> type) {
+	default <T> CloseableIterator<Map.Entry<Object,T>> entries(String keyspace, Class<T> type) {
 		return (CloseableIterator) entries(keyspace);
 	}
 

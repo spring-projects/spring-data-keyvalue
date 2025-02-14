@@ -21,11 +21,11 @@ import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import org.jspecify.annotations.Nullable;
 import org.springframework.data.keyvalue.core.query.KeyValueQuery;
 import org.springframework.expression.spel.SpelEvaluationException;
 import org.springframework.expression.spel.standard.SpelExpression;
 import org.springframework.expression.spel.standard.SpelExpressionParser;
-import org.springframework.lang.Nullable;
 
 /**
  * {@link QueryEngine} implementation specific for executing {@link SpelExpression} based {@link KeyValueQuery} against
@@ -97,6 +97,7 @@ public class SpelQueryEngine extends QueryEngine<KeyValueAdapter, SpelCriteria, 
 		return stream.collect(Collectors.toList());
 	}
 
+	@SuppressWarnings("NullAway")
 	private static boolean evaluateExpression(SpelCriteria criteria, Object candidate) {
 
 		try {
