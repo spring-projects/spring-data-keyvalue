@@ -21,6 +21,7 @@ import java.util.Map;
 
 import org.jspecify.annotations.Nullable;
 import org.springframework.data.mapping.PropertyPath;
+import org.springframework.lang.Contract;
 
 /**
  * {@link Comparator} implementation to compare objects based on a {@link PropertyPath}. This comparator obtains the
@@ -81,6 +82,7 @@ public class PropertyPathComparator<T> implements Comparator<T> {
 	 *
 	 * @return
 	 */
+	@Contract("-> this")
 	public PropertyPathComparator<@Nullable T> asc() {
 		this.asc = true;
 		return this;
@@ -91,6 +93,7 @@ public class PropertyPathComparator<T> implements Comparator<T> {
 	 *
 	 * @return
 	 */
+	@Contract("-> this")
 	public PropertyPathComparator<@Nullable T> desc() {
 		this.asc = false;
 		return this;
@@ -101,6 +104,7 @@ public class PropertyPathComparator<T> implements Comparator<T> {
 	 *
 	 * @return
 	 */
+	@Contract("-> this")
 	public PropertyPathComparator<@Nullable T> nullsFirst() {
 		this.nullsFirst = true;
 		return this;
@@ -111,6 +115,7 @@ public class PropertyPathComparator<T> implements Comparator<T> {
 	 *
 	 * @return
 	 */
+	@Contract("-> this")
 	public PropertyPathComparator<@Nullable T> nullsLast() {
 		this.nullsFirst = false;
 		return this;
