@@ -20,6 +20,9 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
+import org.jspecify.annotations.Nullable;
+import org.springframework.lang.Contract;
+
 /**
  * Converter capable of transforming a given {@link Iterable} into a collection type.
  *
@@ -36,7 +39,12 @@ public final class IterableConverter {
 	 * @param source
 	 * @return {@link Collections#emptyList()} when source is {@literal null}.
 	 */
-	public static <T> List<T> toList(Iterable<T> source) {
+	@Contract("_ -> !null")
+	public static <T> List<T> toList(@Nullable Iterable<T> source) {
+
+		if(source == null) {
+			return Collections.emptyList();
+		}
 
 		if (source instanceof List) {
 			return (List<T>) source;

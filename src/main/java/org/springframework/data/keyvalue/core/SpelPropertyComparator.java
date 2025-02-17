@@ -21,6 +21,7 @@ import org.jspecify.annotations.Nullable;
 import org.springframework.expression.spel.standard.SpelExpression;
 import org.springframework.expression.spel.standard.SpelExpressionParser;
 import org.springframework.expression.spel.support.SimpleEvaluationContext;
+import org.springframework.lang.Contract;
 import org.springframework.util.Assert;
 
 /**
@@ -63,6 +64,7 @@ public class SpelPropertyComparator<T> implements Comparator<T> {
 	 *
 	 * @return
 	 */
+	@Contract("-> this")
 	public SpelPropertyComparator<@Nullable T> asc() {
 		this.asc = true;
 		return this;
@@ -73,6 +75,7 @@ public class SpelPropertyComparator<T> implements Comparator<T> {
 	 *
 	 * @return
 	 */
+	@Contract("-> this")
 	public SpelPropertyComparator<@Nullable T> desc() {
 		this.asc = false;
 		return this;
@@ -83,6 +86,7 @@ public class SpelPropertyComparator<T> implements Comparator<T> {
 	 *
 	 * @return
 	 */
+	@Contract("-> this")
 	public SpelPropertyComparator<@Nullable T> nullsFirst() {
 		this.nullsFirst = true;
 		return this;
@@ -93,6 +97,7 @@ public class SpelPropertyComparator<T> implements Comparator<T> {
 	 *
 	 * @return
 	 */
+	@Contract("-> this")
 	public SpelPropertyComparator<@Nullable T> nullsLast() {
 		this.nullsFirst = false;
 		return this;
