@@ -22,6 +22,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.domain.Sort.Order;
 import org.springframework.data.mapping.PropertyPath;
 import org.springframework.data.querydsl.QSort;
+import org.springframework.lang.Contract;
 import org.springframework.util.Assert;
 
 import com.querydsl.core.types.Expression;
@@ -52,6 +53,7 @@ abstract class KeyValueQuerydslUtils {
 	 * @param builder must not be {@literal null}.
 	 * @return empty {@code OrderSpecifier<?>[]} when sort is {@literal null}.
 	 */
+	@Contract("!null, !null -> new")
 	static OrderSpecifier<?>[] toOrderSpecifier(Sort sort, PathBuilder<?> builder) {
 
 		Assert.notNull(sort, "Sort must not be null");
