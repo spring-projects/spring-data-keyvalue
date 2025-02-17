@@ -17,6 +17,7 @@ package org.springframework.data.keyvalue.core.query;
 
 import org.jspecify.annotations.Nullable;
 import org.springframework.data.domain.Sort;
+import org.springframework.lang.Contract;
 import org.springframework.util.Assert;
 
 /**
@@ -143,6 +144,7 @@ public class KeyValueQuery<T> {
 	 * @param sort must not be {@literal null}.
 	 * @return
 	 */
+	@Contract("_ -> this")
 	public KeyValueQuery<T> orderBy(Sort sort) {
 
 		Assert.notNull(sort, "Sort must not be null");
@@ -161,6 +163,7 @@ public class KeyValueQuery<T> {
 	 * @param offset
 	 * @return
 	 */
+	@Contract("_ -> this")
 	public KeyValueQuery<T> skip(long offset) {
 
 		setOffset(offset);
@@ -173,6 +176,7 @@ public class KeyValueQuery<T> {
 	 * @param rows
 	 * @return
 	 */
+	@Contract("_ -> this")
 	public KeyValueQuery<T> limit(int rows) {
 		setRows(rows);
 		return this;

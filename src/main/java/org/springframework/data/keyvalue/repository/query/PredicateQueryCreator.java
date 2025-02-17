@@ -35,6 +35,7 @@ import org.springframework.data.repository.query.parser.AbstractQueryCreator;
 import org.springframework.data.repository.query.parser.Part;
 import org.springframework.data.repository.query.parser.Part.IgnoreCaseType;
 import org.springframework.data.repository.query.parser.PartTree;
+import org.springframework.lang.Contract;
 import org.springframework.util.ObjectUtils;
 
 /**
@@ -124,7 +125,8 @@ public class PredicateQueryCreator extends AbstractQueryCreator<KeyValueQuery<Pr
 			return new ValueComparingPredicate(part.getProperty(), false);
 		}
 
-		public Predicate<Object> isEqualTo(Object value) {
+		@Contract("_ -> new")
+		public Predicate<Object> isEqualTo(@Nullable Object value) {
 			return new ValueComparingPredicate(part.getProperty(), o -> {
 
 				if (!ObjectUtils.nullSafeEquals(IgnoreCaseType.NEVER, part.shouldIgnoreCase())) {
@@ -145,22 +147,27 @@ public class PredicateQueryCreator extends AbstractQueryCreator<KeyValueQuery<Pr
 			return isNull().negate();
 		}
 
-		public Predicate<Object> isLessThan(Object value) {
+		@Contract("_ -> new")
+		public Predicate<Object> isLessThan(@Nullable Object value) {
 			return new ValueComparingPredicate(part.getProperty(), o -> comparator().compare(o, value) < 0);
 		}
 
-		public Predicate<Object> isLessThanEqual(Object value) {
+		@Contract("_ -> new")
+		public Predicate<Object> isLessThanEqual(@Nullable Object value) {
 			return new ValueComparingPredicate(part.getProperty(), o -> comparator().compare(o, value) <= 0);
 		}
 
-		public Predicate<Object> isGreaterThan(Object value) {
+		@Contract("_ -> new")
+		public Predicate<Object> isGreaterThan(@Nullable Object value) {
 			return new ValueComparingPredicate(part.getProperty(), o -> comparator().compare(o, value) > 0);
 		}
 
-		public Predicate<Object> isGreaterThanEqual(Object value) {
+		@Contract("_ -> new")
+		public Predicate<Object> isGreaterThanEqual(@Nullable Object value) {
 			return new ValueComparingPredicate(part.getProperty(), o -> comparator().compare(o, value) >= 0);
 		}
 
+		@Contract("!null -> new")
 		public Predicate<Object> matches(Pattern pattern) {
 
 			return new ValueComparingPredicate(part.getProperty(), o -> {
@@ -172,7 +179,8 @@ public class PredicateQueryCreator extends AbstractQueryCreator<KeyValueQuery<Pr
 			});
 		}
 
-		public Predicate<Object> matches(Object value) {
+		@Contract("_ -> new")
+		public Predicate<Object> matches(@Nullable Object value) {
 			return new ValueComparingPredicate(part.getProperty(), o -> {
 
 				if (o == null || value == null) {
@@ -188,10 +196,12 @@ public class PredicateQueryCreator extends AbstractQueryCreator<KeyValueQuery<Pr
 			});
 		}
 
+		@Contract("!null -> new")
 		public Predicate<Object> matches(String regex) {
 			return matches(Pattern.compile(regex));
 		}
 
+		@Contract("!null -> new")
 		public Predicate<Object> in(Object value) {
 			return new ValueComparingPredicate(part.getProperty(), o -> {
 
@@ -207,11 +217,11 @@ public class PredicateQueryCreator extends AbstractQueryCreator<KeyValueQuery<Pr
 					return ObjectUtils.containsElement(ObjectUtils.toObjectArray(value), value);
 				}
 				return false;
-
 			});
 		}
 
-		public Predicate<Object> contains(Object value) {
+		@Contract("_ -> new")
+		public Predicate<Object> contains(@Nullable Object value) {
 
 			return new ValueComparingPredicate(part.getProperty(), o -> {
 
@@ -245,6 +255,7 @@ public class PredicateQueryCreator extends AbstractQueryCreator<KeyValueQuery<Pr
 			});
 		}
 
+		@Contract("!null -> new")
 		public Predicate<Object> startsWith(Object value) {
 			return new ValueComparingPredicate(part.getProperty(), o -> {
 
@@ -261,6 +272,7 @@ public class PredicateQueryCreator extends AbstractQueryCreator<KeyValueQuery<Pr
 
 		}
 
+		@Contract("!null -> new")
 		public Predicate<Object> endsWith(Object value) {
 
 			return new ValueComparingPredicate(part.getProperty(), o -> {
@@ -281,13 +293,13 @@ public class PredicateQueryCreator extends AbstractQueryCreator<KeyValueQuery<Pr
 	static class ValueComparingPredicate implements Predicate<Object> {
 
 		private final PropertyPath path;
-		private final Function<Object, Boolean> check;
+		private final Function<@Nullable Object, Boolean> check;
 
-		public ValueComparingPredicate(PropertyPath path, Object expected) {
+		public ValueComparingPredicate(PropertyPath path, @Nullable Object expected) {
 			this(path, (value) -> ObjectUtils.nullSafeEquals(value, expected));
 		}
 
-		public ValueComparingPredicate(PropertyPath path, Function<Object, Boolean> check) {
+		public ValueComparingPredicate(PropertyPath path, Function<@Nullable Object, Boolean> check) {
 			this.path = path;
 			this.check = check;
 		}
