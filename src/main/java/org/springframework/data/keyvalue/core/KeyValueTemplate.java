@@ -195,7 +195,6 @@ public class KeyValueTemplate implements KeyValueOperations, ApplicationEventPub
 		Assert.notNull(objectToUpdate, "Object to be updated must not be null");
 
 		String keyspace = resolveKeySpace(objectToUpdate.getClass());
-		Assert.notNull(keyspace, "Keyspace must not be null");
 
 		potentiallyPublishEvent(KeyValueEvent.beforeUpdate(id, keyspace, objectToUpdate.getClass(), objectToUpdate));
 
@@ -235,7 +234,6 @@ public class KeyValueTemplate implements KeyValueOperations, ApplicationEventPub
 		Assert.notNull(type, "Type to fetch must not be null");
 
 		String keyspace = resolveKeySpace(type);
-		Assert.notNull(keyspace, "Keyspace must not be null");
 
 		potentiallyPublishEvent(KeyValueEvent.beforeGet(id, keyspace, type));
 
@@ -289,7 +287,6 @@ public class KeyValueTemplate implements KeyValueOperations, ApplicationEventPub
 		Assert.notNull(type, "Type to delete must not be null");
 
 		String keyspace = resolveKeySpace(type);
-		Assert.notNull(keyspace, "Keyspace must not be null");
 
 		potentiallyPublishEvent(KeyValueEvent.beforeDelete(id, keyspace, type));
 

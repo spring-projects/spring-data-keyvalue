@@ -24,7 +24,6 @@ import java.util.stream.Stream;
 
 import org.jspecify.annotations.Nullable;
 import org.springframework.data.keyvalue.core.query.KeyValueQuery;
-import org.springframework.lang.Contract;
 
 /**
  * {@link QueryEngine} implementation specific for executing {@link Predicate} based {@link KeyValueQuery} against
@@ -79,7 +78,6 @@ public class PredicateQueryEngine extends QueryEngine<KeyValueAdapter, Predicate
 		return filterMatchingRange(tmp, criteria, offset, rows);
 	}
 
-	@Contract("!null, _, _, _ -> !null")
 	private static <S> List<S> filterMatchingRange(List<S> source, @Nullable Predicate<?> criteria, long offset, int rows) {
 
 		Stream<S> stream = source.stream();
