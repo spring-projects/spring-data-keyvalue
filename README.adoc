@@ -1,4 +1,4 @@
-= Spring Data KeyValue image:https://jenkins.spring.io/buildStatus/icon?job=spring-data-keyvalue%2Fmain&subject=Build[link=https://jenkins.spring.io/view/SpringData/job/spring-data-keyvalue/] https://gitter.im/spring-projects/spring-data[image:https://badges.gitter.im/spring-projects/spring-data.svg[Gitter]] image:https://img.shields.io/badge/Revved%20up%20by-Develocity-06A0CE?logo=Gradle&labelColor=02303A["Revved up by Develocity", link="https://ge.spring.io/scans?search.rootProjectNames=Spring Data KeyValue"]
+= Spring Data KeyValue image:https://jenkins.spring.io/buildStatus/icon?job=spring-data-keyvalue%2Fmain&subject=Build[link=https://jenkins.spring.io/view/SpringData/job/spring-data-keyvalue/] image:https://img.shields.io/badge/Revved%20up%20by-Develocity-06A0CE?logo=Gradle&labelColor=02303A["Revved up by Develocity", link="https://ge.spring.io/scans?search.rootProjectNames=Spring Data KeyValue"]
 
 The primary goal of the https://projects.spring.io/spring-data[Spring Data] project is to make it easier to build Spring-powered applications that use new data access technologies such as non-relational databases, map-reduce frameworks, and cloud based data services.
 
@@ -105,7 +105,6 @@ https://docs.spring.io/spring-data/keyvalue/reference/[reference documentation],
 If you are just starting out with Spring, try one of the https://spring.io/guides[guides].
 * If you are upgrading, check out the https://github.com/spring-projects/spring-data-commons/wiki#release-notes[release notes] for "`new and noteworthy`" features.
 * Ask a question - we monitor https://stackoverflow.com[stackoverflow.com] for questions tagged with https://stackoverflow.com/tags/spring-data[`spring-data-keyvalue`].
-You can also chat with the community on https://gitter.im/spring-projects/spring-data[Gitter].
 * Report bugs with Spring Data KeyValue via https://github.com/spring-projects/spring-data-keyvalue/issues[Github].
 
 == Reporting Issues
