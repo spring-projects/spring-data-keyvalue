@@ -16,10 +16,15 @@
 package org.springframework.data.keyvalue.core.mapping;
 
 import org.jspecify.annotations.Nullable;
+
+import org.springframework.data.mapping.PersistentEntity;
 import org.springframework.data.mapping.model.MutablePersistentEntity;
 
 /**
+ * KeyValue-specific extension of {@link PersistentEntity} declaring a {@literal keySpace}.
+ *
  * @author Christoph Strobl
+ * @author Mark Paluch
  * @param <T>
  */
 public interface KeyValuePersistentEntity<T, P extends KeyValuePersistentProperty<P>>
@@ -32,4 +37,24 @@ public interface KeyValuePersistentEntity<T, P extends KeyValuePersistentPropert
 	 */
 	@Nullable
 	String getKeySpace();
+
+	/**
+	 * Returns the required {@literal keySpace} or throws an {@link IllegalStateException} if the {@literal keySpace} is
+	 * not defined.
+	 *
+	 * @return the {@literal keySpace} property of this {@link PersistentEntity}.
+	 * @throws IllegalStateException if the {@literal keySpace} is not defined.
+	 * @since 4.0
+	 */
+	default String getRequiredKeySpace() {
+
+		String keySpace = getKeySpace();
+
+		if (keySpace != null) {
+			return keySpace;
+		}
+
+		throw new IllegalStateException(String.format("Required keySpace not defined for %s", getType()));
+	}
+
 }

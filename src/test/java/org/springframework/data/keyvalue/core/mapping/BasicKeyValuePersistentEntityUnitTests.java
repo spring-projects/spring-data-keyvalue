@@ -35,12 +35,12 @@ import org.springframework.mock.env.MockEnvironment;
  */
 class BasicKeyValuePersistentEntityUnitTests {
 
-	private KeyValueMappingContext<? extends KeyValuePersistentEntity<?, ?>, ? extends KeyValuePersistentProperty<?>> mappingContext = new KeyValueMappingContext<>();
+	KeyValueMappingContext<? extends KeyValuePersistentEntity<?, ?>, ? extends KeyValuePersistentProperty<?>> mappingContext = new KeyValueMappingContext<>();
 
 	@Test // DATAKV-268
 	void shouldDeriveKeyspaceFromClassName() {
 
-		assertThat(mappingContext.getPersistentEntity(KeyspaceEntity.class).getKeySpace())
+		assertThat(mappingContext.getPersistentEntity(KeyspaceEntity.class).getRequiredKeySpace())
 				.isEqualTo(KeyspaceEntity.class.getName());
 	}
 
@@ -54,7 +54,7 @@ class BasicKeyValuePersistentEntityUnitTests {
 		persistentEntity.setEvaluationContextProvider(
 				new ExtensionAwareEvaluationContextProvider(Collections.singletonList(new SampleExtension())));
 
-		assertThat(persistentEntity.getKeySpace()).isEqualTo("some_foo");
+		assertThat(persistentEntity.getRequiredKeySpace()).isEqualTo("some_foo");
 	}
 
 	@Test // DATAKV-268
@@ -64,7 +64,7 @@ class BasicKeyValuePersistentEntityUnitTests {
 		persistentEntity.setEvaluationContextProvider(
 				new ExtensionAwareEvaluationContextProvider(Collections.singletonList(new SampleExtension())));
 
-		assertThat(persistentEntity.getKeySpace()).isEqualTo(NoKeyspaceEntity.class.getName());
+		assertThat(persistentEntity.getRequiredKeySpace()).isEqualTo(NoKeyspaceEntity.class.getName());
 	}
 
 	@Test // GH-461
