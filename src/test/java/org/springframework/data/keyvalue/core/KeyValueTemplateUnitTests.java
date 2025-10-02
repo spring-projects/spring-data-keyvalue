@@ -47,6 +47,7 @@ import org.springframework.data.keyvalue.core.event.KeyValueEvent.BeforeDeleteEv
 import org.springframework.data.keyvalue.core.event.KeyValueEvent.BeforeGetEvent;
 import org.springframework.data.keyvalue.core.event.KeyValueEvent.BeforeInsertEvent;
 import org.springframework.data.keyvalue.core.event.KeyValueEvent.BeforeUpdateEvent;
+import org.springframework.data.keyvalue.core.mapping.context.KeyValueMappingContext;
 import org.springframework.data.keyvalue.core.query.KeyValueQuery;
 
 /**
@@ -73,6 +74,7 @@ class KeyValueTemplateUnitTests {
 
 	@BeforeEach
 	void setUp() {
+		when(adapterMock.getMappingContext()).thenReturn(new KeyValueMappingContext());
 		this.template = new KeyValueTemplate(adapterMock);
 		this.template.setApplicationEventPublisher(publisherMock);
 	}
