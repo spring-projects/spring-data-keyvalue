@@ -39,6 +39,8 @@ import org.springframework.data.repository.query.ValueExpressionDelegate;
 import org.springframework.data.util.TypeInformation;
 
 /**
+ * Unit tests for {@link KeyValuePartTreeQuery}.
+ *
  * @author Christoph Strobl
  * @author Mark Paluch
  */
@@ -175,11 +177,33 @@ class KeyValuePartTreeQueryUnitTests {
 		verify(kvOpsMock).exists(eq(query), eq(Person.class));
 	}
 
+	@Test // GH-71
+	void shouldUseCountForCount() throws NoSuchMethodException {
+
+		when(metadataMock.getDomainType()).thenReturn((Class) Person.class);
+		when(metadataMock.getDomainTypeInformation()).thenReturn((TypeInformation) TypeInformation.of(Person.class));
+		when(metadataMock.getReturnType(any(Method.class))).thenReturn((TypeInformation) TypeInformation.of(Boolean.class));
+		when(metadataMock.getReturnedDomainClass(any(Method.class))).thenReturn((Class) Boolean.class);
+
+		QueryMethod qm = new QueryMethod(Repo.class.getMethod("countByFirstname", String.class), metadataMock,
+				projectionFactoryMock);
+
+		KeyValuePartTreeQuery partTreeQuery = new KeyValuePartTreeQuery(qm, ValueExpressionDelegate.create(), kvOpsMock,
+				SpelQueryCreator.class);
+
+		KeyValueQuery<?> query = partTreeQuery.prepareQuery(new Object[] { "firstname" });
+		partTreeQuery.doExecute(new Object[] { "firstname" }, query);
+
+		verify(kvOpsMock).count(eq(query), eq(Person.class));
+	}
+
 	interface Repo {
 
 		List<Person> findByFirstname(String firstname);
 
 		boolean existsByFirstname(String firstname);
+
+		int countByFirstname(String firstname);
 
 		List<Person> findBy(Pageable page);
 

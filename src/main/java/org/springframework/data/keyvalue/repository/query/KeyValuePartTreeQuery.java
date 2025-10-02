@@ -134,10 +134,11 @@ public class KeyValuePartTreeQuery implements RepositoryQuery {
 
 			return new PageImpl(IterableConverter.toList(result), page, count);
 		} else if (queryMethod.isCollectionQuery()) {
-
 			return this.keyValueOperations.find(query, queryMethod.getEntityInformation().getJavaType());
 		} else if (partTree.get().isExistsProjection()) {
 			return keyValueOperations.exists(query, queryMethod.getEntityInformation().getJavaType());
+		} else if (partTree.get().isCountProjection()) {
+			return keyValueOperations.count(query, queryMethod.getEntityInformation().getJavaType());
 		} else {
 
 			Iterable<?> result = this.keyValueOperations.find(query, queryMethod.getEntityInformation().getJavaType());
