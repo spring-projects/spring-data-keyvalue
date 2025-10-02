@@ -100,7 +100,7 @@ public class KeyValueMappingContext<E extends KeyValuePersistentEntity<?, P>, P 
 		@Override
 		public boolean isSimpleType(Class<?> type) {
 
-			if (type.getName().startsWith("java.math.") || type.getName().startsWith("java.util.")) {
+			if (type.getName().startsWith("java.") || type.getName().startsWith("javax.")) {
 				return true;
 			}
 
