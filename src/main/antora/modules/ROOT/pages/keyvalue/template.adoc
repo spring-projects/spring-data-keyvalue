@@ -1,7 +1,7 @@
 [[key-value.template]]
 = KeyValueTemplate
 
-In its very basic shape, the `KeyValueTemplate` uses a `MapAdapter` that wraps a `ConcurrentHashMap` and that uses link:{spring-framework-docs}core.html#expressions[Spring Expression Language] to run queries and sorting.
+In its very basic shape, the `KeyValueTemplate` uses a `MapAdapter` that wraps a `ConcurrentHashMap` and that uses link:{spring-framework-docs}/core/expressions.html[Spring Expression Language] to run queries and sorting.
 
 NOTE: The used `KeyValueAdapter` does the heavy lifting when it comes to storing and retrieving data.
 The data structure influences performance and multi-threading behavior.
@@ -94,7 +94,7 @@ Running queries is managed by a `QueryEngine`.
 As mentioned earlier, you can instruct the `KeyValueAdapter` to use an implementation-specific `QueryEngine` that allows access to native functionality.
 When used without further customization, queries can be run by using `SpELQueryEngine`.
 
-NOTE: For performance reasons, we highly recommend to have at least Spring Framework 4.1.2 or better to make use of link:{spring-framework-docs}core.html#expressions-spel-compilation[compiled SpEL Expressions].
+NOTE: For performance reasons, we highly recommend to make use of link:{spring-framework-docs}/core/expressions/evaluation.html#expressions-compiler-configuration[compiled SpEL Expressions].
 ("`SpEL`" is short for "`Spring Expression Language`".) You can use the `-Dspring.expression.compiler.mode=IMMEDIATE` switch to enable it.
 
 The following example shows a query that uses the SpEL:
