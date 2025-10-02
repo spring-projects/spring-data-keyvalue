@@ -15,6 +15,8 @@
  */
 package org.springframework.data.keyvalue;
 
+import java.net.URL;
+
 import org.springframework.data.annotation.Id;
 
 import com.querydsl.core.annotations.QueryEntity;
@@ -29,6 +31,7 @@ public class Person {
 	private @Id String id;
 	private String firstname;
 	private int age;
+	private URL homepage;
 
 	public Person(String firstname, int age) {
 		super();
@@ -58,5 +61,13 @@ public class Person {
 
 	public void setAge(int age) {
 		this.age = age;
+	}
+
+	public URL getHomepage() {
+		return homepage;
+	}
+
+	public void setHomepage(URL homepage) {
+		this.homepage = homepage;
 	}
 }
