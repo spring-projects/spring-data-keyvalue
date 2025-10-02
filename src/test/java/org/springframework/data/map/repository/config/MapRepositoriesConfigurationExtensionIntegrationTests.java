@@ -48,6 +48,7 @@ import org.springframework.data.keyvalue.core.query.KeyValueQuery;
 import org.springframework.data.keyvalue.repository.KeyValueRepository;
 import org.springframework.data.keyvalue.repository.query.PredicateQueryCreator;
 import org.springframework.data.keyvalue.repository.support.KeyValueRepositoryFactoryBean;
+import org.springframework.data.map.KeySpaceStore;
 import org.springframework.data.map.MapKeyValueAdapter;
 import org.springframework.data.repository.query.ParameterAccessor;
 import org.springframework.data.repository.query.parser.AbstractQueryCreator;
@@ -158,7 +159,9 @@ class MapRepositoriesConfigurationExtensionIntegrationTests {
 		Object adapter = ReflectionTestUtils.getField(template, "adapter");
 
 		assertThat(adapter).isInstanceOf(MapKeyValueAdapter.class);
-		assertThat(ReflectionTestUtils.getField(adapter, "store")).isInstanceOf(mapType);
+
+		KeySpaceStore store = (KeySpaceStore) ReflectionTestUtils.getField(adapter, "store");
+		assertThat(ReflectionTestUtils.getField(store, "store")).isInstanceOf(mapType);
 	}
 
 	private static void assertKeyValueTemplateWithSortAccessorFor(Class<?> sortAccessorType, ApplicationContext context) {

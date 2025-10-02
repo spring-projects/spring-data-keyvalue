@@ -22,15 +22,15 @@ import java.util.Map.Entry;
 import java.util.concurrent.ConcurrentHashMap;
 
 import org.jspecify.annotations.Nullable;
-import org.springframework.core.CollectionFactory;
+
 import org.springframework.data.keyvalue.core.AbstractKeyValueAdapter;
 import org.springframework.data.keyvalue.core.ForwardingCloseableIterator;
 import org.springframework.data.keyvalue.core.KeyValueAdapter;
+import org.springframework.data.keyvalue.core.PredicateQueryEngine;
 import org.springframework.data.keyvalue.core.QueryEngine;
 import org.springframework.data.keyvalue.core.SortAccessor;
 import org.springframework.data.util.CloseableIterator;
 import org.springframework.util.Assert;
-import org.springframework.util.ClassUtils;
 
 /**
  * {@link KeyValueAdapter} implementation for {@link Map}.
@@ -41,15 +41,13 @@ import org.springframework.util.ClassUtils;
  */
 public class MapKeyValueAdapter extends AbstractKeyValueAdapter {
 
-	@SuppressWarnings("rawtypes") //
-	private final Class<? extends Map> keySpaceMapType;
-	private final Map<String, Map<Object, Object>> store;
+	private final KeySpaceStore store;
 
 	/**
 	 * Create new {@link MapKeyValueAdapter} using {@link ConcurrentHashMap} as backing store type.
 	 */
 	public MapKeyValueAdapter() {
-		this(ConcurrentHashMap.class);
+		this(MapKeySpaceStore.create());
 	}
 
 	/**
@@ -59,7 +57,7 @@ public class MapKeyValueAdapter extends AbstractKeyValueAdapter {
 	 * @since 2.4
 	 */
 	public MapKeyValueAdapter(QueryEngine<? extends KeyValueAdapter, ?, ?> engine) {
-		this(ConcurrentHashMap.class, engine);
+		this(MapKeySpaceStore.create(), engine);
 	}
 
 	/**
@@ -69,7 +67,7 @@ public class MapKeyValueAdapter extends AbstractKeyValueAdapter {
 	 */
 	@SuppressWarnings("rawtypes")
 	public MapKeyValueAdapter(Class<? extends Map> mapType) {
-		this(CollectionFactory.createMap(mapType, 100), mapType, null);
+		this(MapKeySpaceStore.of(mapType));
 	}
 
 	/**
@@ -79,14 +77,9 @@ public class MapKeyValueAdapter extends AbstractKeyValueAdapter {
 	 * @param sortAccessor accessor granting access to sorting implementation
 	 * @since 3.1.10
 	 */
+	@SuppressWarnings("rawtypes")
 	public MapKeyValueAdapter(Class<? extends Map> mapType, SortAccessor<Comparator<?>> sortAccessor) {
-
-		super(sortAccessor);
-
-		Assert.notNull(mapType, "Store must not be null");
-
-		this.store = CollectionFactory.createMap(mapType, 100);
-		this.keySpaceMapType = (Class<? extends Map>) ClassUtils.getUserClass(store);
+		this(MapKeySpaceStore.of(mapType), new PredicateQueryEngine(sortAccessor));
 	}
 
 	/**
@@ -98,7 +91,7 @@ public class MapKeyValueAdapter extends AbstractKeyValueAdapter {
 	 */
 	@SuppressWarnings("rawtypes")
 	public MapKeyValueAdapter(Class<? extends Map> mapType, QueryEngine<? extends KeyValueAdapter, ?, ?> engine) {
-		this(CollectionFactory.createMap(mapType, 100), mapType, engine);
+		this(MapKeySpaceStore.of(mapType), engine);
 	}
 
 	/**
@@ -106,9 +99,8 @@ public class MapKeyValueAdapter extends AbstractKeyValueAdapter {
 	 *
 	 * @param store must not be {@literal null}.
 	 */
-	@SuppressWarnings({ "rawtypes", "unchecked" })
 	public MapKeyValueAdapter(Map<String, Map<Object, Object>> store) {
-		this(store, (Class<? extends Map>) ClassUtils.getUserClass(store), null);
+		this(MapKeySpaceStore.of(store));
 	}
 
 	/**
@@ -118,9 +110,17 @@ public class MapKeyValueAdapter extends AbstractKeyValueAdapter {
 	 * @param engine the query engine.
 	 * @since 2.4
 	 */
-	@SuppressWarnings({ "rawtypes", "unchecked" })
 	public MapKeyValueAdapter(Map<String, Map<Object, Object>> store, QueryEngine<? extends KeyValueAdapter, ?, ?> engine) {
-		this(store, (Class<? extends Map>) ClassUtils.getUserClass(store), engine);
+		this(MapKeySpaceStore.of(store), engine);
+	}
+
+	/**
+	 * Create new instance of {@link MapKeyValueAdapter} using given dataStore for persistence.
+	 *
+	 * @param store must not be {@literal null}.
+	 */
+	public MapKeyValueAdapter(KeySpaceStore store) {
+		this(store, new PredicateQueryEngine());
 	}
 
 	/**
@@ -128,19 +128,14 @@ public class MapKeyValueAdapter extends AbstractKeyValueAdapter {
 	 * query engine.
 	 *
 	 * @param store must not be {@literal null}.
-	 * @param keySpaceMapType must not be {@literal null}.
 	 * @param engine the query engine.
 	 */
-	@SuppressWarnings("rawtypes")
-	private MapKeyValueAdapter(Map<String, Map<Object, Object>> store, Class<? extends Map> keySpaceMapType, @Nullable QueryEngine<? extends KeyValueAdapter, ?, ?> engine) {
+	public MapKeyValueAdapter(KeySpaceStore store, @Nullable QueryEngine<? extends KeyValueAdapter, ?, ?> engine) {
 
 		super(engine);
 
-		Assert.notNull(store, "Store must not be null");
-		Assert.notNull(keySpaceMapType, "Map type to be used for key spaces must not be null");
-
+		Assert.notNull(store, "KeyspaceStore must not be null");
 		this.store = store;
-		this.keySpaceMapType = keySpaceMapType;
 	}
 
 	@Override
@@ -210,7 +205,7 @@ public class MapKeyValueAdapter extends AbstractKeyValueAdapter {
 	protected Map<Object, Object> getKeySpaceMap(String keyspace) {
 
 		Assert.notNull(keyspace, "Collection must not be null for lookup");
-		return store.computeIfAbsent(keyspace, k -> CollectionFactory.createMap(keySpaceMapType,  1000));
+		return store.getKeySpace(keyspace);
 	}
 
 }

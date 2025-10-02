@@ -149,12 +149,22 @@ public @interface EnableMapRepositories {
 
 	/**
 	 * Configures the {@link Map} structure used for data storage. Defaults to {@link ConcurrentHashMap}. Will be ignored
-	 * in case an explicit bean for the {@link KeyValueTemplate} is available in the {@link ApplicationContext}.
+	 * in case an explicit bean for the {@link KeyValueTemplate} is available in the {@link ApplicationContext} or
+	 * {@link #keySpaceStoreRef()} is configured.
 	 *
 	 * @see #keyValueTemplateRef()
 	 */
 	@SuppressWarnings("rawtypes")
 	Class<? extends Map> mapType() default ConcurrentHashMap.class;
+
+	/**
+	 * Configures the name to a {@link org.springframework.data.map.KeySpaceStore} bean to be used as database for all
+	 * keyspaces.
+	 *
+	 * @since 4.0
+	 * @see org.springframework.data.map.KeySpaceStore
+	 */
+	String keySpaceStoreRef() default "";
 
 	/**
 	 * Configures the {@link QueryEngineFactory} to create the QueryEngine. When both, the query engine and sort accessors
@@ -182,4 +192,5 @@ public @interface EnableMapRepositories {
 	 * @since 3.1.10
 	 */
 	Class<? extends SortAccessor> sortAccessor() default SortAccessor.class;
+
 }
