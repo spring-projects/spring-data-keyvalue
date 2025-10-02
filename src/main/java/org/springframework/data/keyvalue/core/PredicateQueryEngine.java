@@ -35,6 +35,8 @@ import org.springframework.lang.Contract;
  */
 public class PredicateQueryEngine extends QueryEngine<KeyValueAdapter, Predicate<?>, Comparator<?>> {
 
+	public static final PredicateQueryEngine INSTANCE = new PredicateQueryEngine();
+
 	/**
 	 * Creates a new {@link PredicateQueryEngine}.
 	 */
