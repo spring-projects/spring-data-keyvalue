@@ -16,8 +16,8 @@
 package org.springframework.data.map.repository.config;
 
 import java.lang.reflect.Constructor;
-import java.util.Map;
 import java.util.Optional;
+import java.util.function.Predicate;
 
 import org.jspecify.annotations.Nullable;
 
@@ -26,7 +26,6 @@ import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.beans.factory.config.RuntimeBeanReference;
 import org.springframework.beans.factory.support.AbstractBeanDefinition;
 import org.springframework.beans.factory.support.BeanDefinitionBuilder;
-import org.springframework.core.type.AnnotationMetadata;
 import org.springframework.data.config.ParsingUtils;
 import org.springframework.data.keyvalue.core.KeyValueTemplate;
 import org.springframework.data.keyvalue.core.QueryEngine;
@@ -38,7 +37,6 @@ import org.springframework.data.map.MapKeyValueAdapter;
 import org.springframework.data.repository.config.RepositoryConfigurationExtension;
 import org.springframework.data.repository.config.RepositoryConfigurationSource;
 import org.springframework.util.ClassUtils;
-import org.springframework.util.StringUtils;
 
 /**
  * {@link RepositoryConfigurationExtension} for Map-based repositories.
@@ -92,32 +90,28 @@ public class MapRepositoryConfigurationExtension extends KeyValueRepositoryConfi
 
 		Optional<String> keySpaceStoreRef = source.getAttribute("keySpaceStoreRef", String.class);
 
-		return keySpaceStoreRef.filter(StringUtils::hasText)
-				.map(beanName -> new RuntimeBeanReference(beanName, KeySpaceStore.class)).map(Object.class::cast)
-				.orElseGet(() -> {
-					return getAnnotationAttributes(source).get("mapType");
-				});
+		return keySpaceStoreRef.map(beanName -> new RuntimeBeanReference(beanName, KeySpaceStore.class)) //
+				.map(Object.class::cast) //
+				.orElseGet(() -> source.getRequiredAttribute("mapType", Class.class));
 	}
 
 	private static @Nullable SortAccessor<?> getSortAccessor(RepositoryConfigurationSource source) {
 
-		Class<? extends SortAccessor<?>> sortAccessorType = (Class<? extends SortAccessor<?>>) getAnnotationAttributes(
-				source).get("sortAccessor");
+		Class<? extends SortAccessor<?>> sortAccessorType = getClassAttribute(source, "sortAccessor");
 
-		if (sortAccessorType != null && !sortAccessorType.isInterface()) {
-			return BeanUtils.instantiateClass(sortAccessorType);
+		if (sortAccessorType == null) {
+			return null;
 		}
 
-		return null;
+		return BeanUtils.instantiateClass(sortAccessorType);
 	}
 
 	private static @Nullable QueryEngine<?, ?, ?> getQueryEngine(@Nullable SortAccessor<?> sortAccessor,
 			RepositoryConfigurationSource source) {
 
-		Class<? extends QueryEngineFactory> queryEngineFactoryType = (Class<? extends QueryEngineFactory>) getAnnotationAttributes(
-				source).get("queryEngineFactory");
+		Class<? extends QueryEngineFactory> queryEngineFactoryType = getClassAttribute(source, "queryEngineFactory");
 
-		if(queryEngineFactoryType == null || queryEngineFactoryType.isInterface()) {
+		if (queryEngineFactoryType == null) {
 			return null;
 		}
 
@@ -132,21 +126,8 @@ public class MapRepositoryConfigurationExtension extends KeyValueRepositoryConfi
 		return BeanUtils.instantiateClass(queryEngineFactoryType).create();
 	}
 
-	private static Map<String, Object> getAnnotationAttributes(RepositoryConfigurationSource source) {
-
-		AnnotationMetadata annotationSource = (AnnotationMetadata) source.getSource();
-
-		if (annotationSource == null) {
-			throw new IllegalArgumentException("AnnotationSource not available");
-		}
-
-		Map<String, Object> annotationAttributes = annotationSource
-				.getAnnotationAttributes(EnableMapRepositories.class.getName());
-
-		if (annotationAttributes == null) {
-			throw new IllegalStateException("No annotation attributes for @EnableMapRepositories");
-		}
-
-		return annotationAttributes;
+	private static <T> @Nullable Class<T> getClassAttribute(RepositoryConfigurationSource source, String attributeName) {
+		return source.getAttribute(attributeName, Class.class).filter(Predicate.not(Class::isInterface)).orElse(null);
 	}
+
 }
