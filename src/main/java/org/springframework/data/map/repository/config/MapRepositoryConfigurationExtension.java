@@ -17,10 +17,13 @@ package org.springframework.data.map.repository.config;
 
 import java.lang.reflect.Constructor;
 import java.util.Map;
+import java.util.Optional;
 
 import org.jspecify.annotations.Nullable;
+
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.config.BeanDefinition;
+import org.springframework.beans.factory.config.RuntimeBeanReference;
 import org.springframework.beans.factory.support.AbstractBeanDefinition;
 import org.springframework.beans.factory.support.BeanDefinitionBuilder;
 import org.springframework.core.type.AnnotationMetadata;
@@ -30,10 +33,12 @@ import org.springframework.data.keyvalue.core.QueryEngine;
 import org.springframework.data.keyvalue.core.QueryEngineFactory;
 import org.springframework.data.keyvalue.core.SortAccessor;
 import org.springframework.data.keyvalue.repository.config.KeyValueRepositoryConfigurationExtension;
+import org.springframework.data.map.KeySpaceStore;
 import org.springframework.data.map.MapKeyValueAdapter;
 import org.springframework.data.repository.config.RepositoryConfigurationExtension;
 import org.springframework.data.repository.config.RepositoryConfigurationSource;
 import org.springframework.util.ClassUtils;
+import org.springframework.util.StringUtils;
 
 /**
  * {@link RepositoryConfigurationExtension} for Map-based repositories.
@@ -64,7 +69,7 @@ public class MapRepositoryConfigurationExtension extends KeyValueRepositoryConfi
 			RepositoryConfigurationSource configurationSource) {
 
 		BeanDefinitionBuilder adapterBuilder = BeanDefinitionBuilder.rootBeanDefinition(MapKeyValueAdapter.class);
-		adapterBuilder.addConstructorArgValue(getMapTypeToUse(configurationSource));
+		adapterBuilder.addConstructorArgValue(getKeySpaceStore(configurationSource));
 
 		SortAccessor<?> sortAccessor = getSortAccessor(configurationSource);
 		QueryEngine<?, ?, ?> queryEngine = getQueryEngine(sortAccessor, configurationSource);
@@ -83,10 +88,15 @@ public class MapRepositoryConfigurationExtension extends KeyValueRepositoryConfi
 		return ParsingUtils.getSourceBeanDefinition(builder, configurationSource.getSource());
 	}
 
-	@SuppressWarnings({ "unchecked", "rawtypes", "NullAway" })
-	private static Class<? extends Map> getMapTypeToUse(RepositoryConfigurationSource source) {
+	private static Object getKeySpaceStore(RepositoryConfigurationSource source) {
 
-		return (Class<? extends Map>) getAnnotationAttributes(source).get("mapType");
+		Optional<String> keySpaceStoreRef = source.getAttribute("keySpaceStoreRef", String.class);
+
+		return keySpaceStoreRef.filter(StringUtils::hasText)
+				.map(beanName -> new RuntimeBeanReference(beanName, KeySpaceStore.class)).map(Object.class::cast)
+				.orElseGet(() -> {
+					return getAnnotationAttributes(source).get("mapType");
+				});
 	}
 
 	private static @Nullable SortAccessor<?> getSortAccessor(RepositoryConfigurationSource source) {

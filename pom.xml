@@ -18,6 +18,7 @@
 
 	<properties>
 		<springdata.commons>4.0.0-SNAPSHOT</springdata.commons>
+		<mapdb>3.1.0</mapdb>
 		<java-module-name>spring.data.keyvalue</java-module-name>
 	</properties>
 
@@ -45,6 +46,14 @@
 			<version>${querydsl}</version>
 			<optional>true</optional>
 		</dependency>
+
+		<dependency>
+			<groupId>org.mapdb</groupId>
+			<artifactId>mapdb</artifactId>
+			<version>${mapdb}</version>
+			<scope>test</scope>
+		</dependency>
+
 	</dependencies>
 
 	<build>
