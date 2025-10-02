@@ -1,5 +1,5 @@
 [[key-value.template]]
-= KeyValueTemplate
+= Template API
 
 In its very basic shape, the `KeyValueTemplate` uses a `MapAdapter` that wraps a `ConcurrentHashMap` and that uses link:{spring-framework-docs}/core/expressions.html[Spring Expression Language] to run queries and sorting.
 
