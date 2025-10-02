@@ -44,6 +44,7 @@ import org.springframework.data.keyvalue.core.QueryEngine;
 import org.springframework.data.keyvalue.core.QueryEngineFactory;
 import org.springframework.data.keyvalue.core.SortAccessor;
 import org.springframework.data.keyvalue.core.SpelQueryEngine;
+import org.springframework.data.keyvalue.core.mapping.context.KeyValueMappingContext;
 import org.springframework.data.keyvalue.core.query.KeyValueQuery;
 import org.springframework.data.keyvalue.repository.KeyValueRepository;
 import org.springframework.data.keyvalue.repository.query.PredicateQueryCreator;
@@ -220,7 +221,7 @@ class MapRepositoriesConfigurationExtensionIntegrationTests {
 		public KeyValueAdapter keyValueAdapter() {
 
 			KeyValueAdapter mock = mock(KeyValueAdapter.class);
-
+			when(mock.getMappingContext()).thenReturn(new KeyValueMappingContext());
 			when(mock.get(any(), anyString(), any())).thenThrow(new IllegalStateException("Mock"));
 
 			return mock;

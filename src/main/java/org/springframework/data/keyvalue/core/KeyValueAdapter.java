@@ -20,7 +20,10 @@ import java.util.Map;
 
 import org.jspecify.annotations.Nullable;
 import org.springframework.beans.factory.DisposableBean;
+import org.springframework.data.keyvalue.core.mapping.KeyValuePersistentEntity;
+import org.springframework.data.keyvalue.core.mapping.KeyValuePersistentProperty;
 import org.springframework.data.keyvalue.core.query.KeyValueQuery;
+import org.springframework.data.mapping.context.MappingContext;
 import org.springframework.data.util.CloseableIterator;
 
 /**
@@ -31,6 +34,14 @@ import org.springframework.data.util.CloseableIterator;
  * @author Mark Paluch
  */
 public interface KeyValueAdapter extends DisposableBean {
+
+	/**
+	 * Expose the {@link MappingContext} to obtain mapping metadata.
+	 *
+	 * @return the used mapping context.
+	 * @since 4.0
+	 */
+	MappingContext<? extends KeyValuePersistentEntity<?, ?>, ? extends KeyValuePersistentProperty<?>> getMappingContext();
 
 	/**
 	 * Add object with given id to keyspace.

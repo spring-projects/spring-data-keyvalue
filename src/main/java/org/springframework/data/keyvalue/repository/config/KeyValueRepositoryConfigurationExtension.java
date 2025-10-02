@@ -21,6 +21,7 @@ import java.util.Map;
 import java.util.Optional;
 
 import org.jspecify.annotations.Nullable;
+
 import org.springframework.beans.factory.support.AbstractBeanDefinition;
 import org.springframework.beans.factory.support.BeanDefinitionBuilder;
 import org.springframework.beans.factory.support.BeanDefinitionRegistry;
@@ -28,7 +29,6 @@ import org.springframework.beans.factory.support.RootBeanDefinition;
 import org.springframework.core.annotation.AnnotationAttributes;
 import org.springframework.core.annotation.MergedAnnotation;
 import org.springframework.core.type.AnnotationMetadata;
-import org.springframework.data.keyvalue.core.mapping.context.KeyValueMappingContext;
 import org.springframework.data.keyvalue.repository.KeyValueRepository;
 import org.springframework.data.keyvalue.repository.query.KeyValuePartTreeQuery;
 import org.springframework.data.keyvalue.repository.query.SpelQueryCreator;
@@ -47,7 +47,6 @@ import org.springframework.data.repository.config.RepositoryConfigurationSource;
  */
 public abstract class KeyValueRepositoryConfigurationExtension extends RepositoryConfigurationExtensionSupport {
 
-	protected static final String MAPPING_CONTEXT_BEAN_NAME = "keyValueMappingContext";
 	protected static final String KEY_VALUE_TEMPLATE_BEAN_REF_ATTRIBUTE = "keyValueTemplateRef";
 
 	@Override
@@ -78,7 +77,6 @@ public abstract class KeyValueRepositoryConfigurationExtension extends Repositor
 		builder.addPropertyReference("keyValueOperations", attributes.getString(KEY_VALUE_TEMPLATE_BEAN_REF_ATTRIBUTE));
 		builder.addPropertyValue("queryCreator", getQueryCreatorType(config));
 		builder.addPropertyValue("queryType", getQueryType(config));
-		builder.addPropertyReference("mappingContext", getMappingContextBeanRef());
 	}
 
 	/**
@@ -128,15 +126,6 @@ public abstract class KeyValueRepositoryConfigurationExtension extends Repositor
 
 		super.registerBeansForRoot(registry, configurationSource);
 
-		registerIfNotAlreadyRegistered(() -> {
-
-			RootBeanDefinition mappingContext = new RootBeanDefinition(KeyValueMappingContext.class);
-			mappingContext.setSource(configurationSource.getSource());
-
-			return mappingContext;
-
-		}, registry, getMappingContextBeanRef(), configurationSource);
-
 		Optional<String> keyValueTemplateName = configurationSource.getAttribute(KEY_VALUE_TEMPLATE_BEAN_REF_ATTRIBUTE);
 
 		// No custom template reference configured and no matching bean definition found
@@ -174,15 +163,4 @@ public abstract class KeyValueRepositoryConfigurationExtension extends Repositor
 	 */
 	protected abstract String getDefaultKeyValueTemplateRef();
 
-	/**
-	 * Returns the {@link org.springframework.data.mapping.context.MappingContext} bean name to potentially register a
-	 * default mapping context bean if no bean is registered with the returned name. Defaults to
-	 * {@link MAPPING_CONTEXT_BEAN_NAME}.
-	 *
-	 * @return the {@link org.springframework.data.mapping.context.MappingContext} bean name. Never {@literal null}.
-	 * @since 2.0
-	 */
-	protected String getMappingContextBeanRef() {
-		return MAPPING_CONTEXT_BEAN_NAME;
-	}
 }

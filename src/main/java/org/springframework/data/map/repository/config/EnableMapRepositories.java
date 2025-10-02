@@ -60,13 +60,25 @@ public @interface EnableMapRepositories {
 
 	/**
 	 * Alias for the {@link #basePackages()} attribute. Allows for more concise annotation declarations e.g.:
-	 * {@code @EnableJpaRepositories("org.my.pkg")} instead of {@code @EnableJpaRepositories(basePackages="org.my.pkg")}.
+	 * {@code @EnableMapRepositories("org.my.pkg")} instead of {@code @EnableMapRepositories(basePackages="org.my.pkg")}.
 	 */
 	String[] value() default {};
 
 	/**
-	 * Base packages to scan for annotated components. {@link #value()} is an alias for (and mutually exclusive with) this
-	 * attribute. Use {@link #basePackageClasses()} for a type-safe alternative to String-based package names.
+	 * Base packages to scan for annotated components.
+	 * <p>
+	 * {@link #value} is an alias for (and mutually exclusive with) this attribute.
+	 * <p>
+	 * Supports {@code ${…}} placeholders which are resolved against the {@link org.springframework.core.env.Environment
+	 * Environment} as well as Ant-style package patterns &mdash; for example, {@code "org.example.**"}.
+	 * <p>
+	 * Multiple packages or patterns may be specified, either separately or within a single {@code String} &mdash; for
+	 * example, {@code {"org.example.config", "org.example.service.**"}} or
+	 * {@code "org.example.config, org.example.service.**"}.
+	 * <p>
+	 * Use {@link #basePackageClasses} for a type-safe alternative to String-based package names.
+	 *
+	 * @see org.springframework.context.ConfigurableApplicationContext#CONFIG_LOCATION_DELIMITERS
 	 */
 	String[] basePackages() default {};
 

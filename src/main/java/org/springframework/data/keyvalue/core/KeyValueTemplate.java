@@ -70,38 +70,24 @@ public class KeyValueTemplate implements KeyValueOperations, ApplicationEventPub
 	 * @param adapter must not be {@literal null}.
 	 */
 	public KeyValueTemplate(KeyValueAdapter adapter) {
-		this(adapter, new KeyValueMappingContext<>());
+		this(adapter, DefaultIdentifierGenerator.INSTANCE);
 	}
 
 	/**
-	 * Create new {@link KeyValueTemplate} using the given {@link KeyValueAdapter} and {@link MappingContext}.
+	 * Create new {@link KeyValueTemplate} using the given {@link KeyValueAdapter} and {@link IdentifierGenerator}.
 	 *
 	 * @param adapter must not be {@literal null}.
-	 * @param mappingContext must not be {@literal null}.
-	 */
-	public KeyValueTemplate(KeyValueAdapter adapter,
-			MappingContext<? extends KeyValuePersistentEntity<?, ?>, ? extends KeyValuePersistentProperty<?>> mappingContext) {
-		this(adapter, mappingContext, DefaultIdentifierGenerator.INSTANCE);
-	}
-
-	/**
-	 * Create new {@link KeyValueTemplate} using the given {@link KeyValueAdapter} and {@link MappingContext}.
-	 *
-	 * @param adapter must not be {@literal null}.
-	 * @param mappingContext must not be {@literal null}.
 	 * @param identifierGenerator must not be {@literal null}.
-	 * @since 2.4
+	 * @since 4.0
 	 */
 	public KeyValueTemplate(KeyValueAdapter adapter,
-			MappingContext<? extends KeyValuePersistentEntity<?, ?>, ? extends KeyValuePersistentProperty<?>> mappingContext,
 			IdentifierGenerator identifierGenerator) {
 
 		Assert.notNull(adapter, "Adapter must not be null");
-		Assert.notNull(mappingContext, "MappingContext must not be null");
 		Assert.notNull(identifierGenerator, "IdentifierGenerator must not be null");
 
 		this.adapter = adapter;
-		this.mappingContext = mappingContext;
+		this.mappingContext = adapter.getMappingContext();
 		this.identifierGenerator = identifierGenerator;
 	}
 

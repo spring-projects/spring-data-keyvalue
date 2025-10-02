@@ -28,6 +28,9 @@ import org.springframework.data.keyvalue.core.ForwardingCloseableIterator;
 import org.springframework.data.keyvalue.core.KeyValueAdapter;
 import org.springframework.data.keyvalue.core.QueryEngine;
 import org.springframework.data.keyvalue.core.SortAccessor;
+import org.springframework.data.keyvalue.core.mapping.KeyValuePersistentEntity;
+import org.springframework.data.keyvalue.core.mapping.KeyValuePersistentProperty;
+import org.springframework.data.keyvalue.core.mapping.context.KeyValueMappingContext;
 import org.springframework.data.util.CloseableIterator;
 import org.springframework.util.Assert;
 import org.springframework.util.ClassUtils;
@@ -38,12 +41,14 @@ import org.springframework.util.ClassUtils;
  * @author Christoph Strobl
  * @author Derek Cochran
  * @author Marcel Overdijk
+ * @author Mark Paluch
  */
 public class MapKeyValueAdapter extends AbstractKeyValueAdapter {
 
 	@SuppressWarnings("rawtypes") //
 	private final Class<? extends Map> keySpaceMapType;
 	private final Map<String, Map<Object, Object>> store;
+	private KeyValueMappingContext<? extends KeyValuePersistentEntity<?, ?>, ? extends KeyValuePersistentProperty<?>> mappingContext = new KeyValueMappingContext<>();
 
 	/**
 	 * Create new {@link MapKeyValueAdapter} using {@link ConcurrentHashMap} as backing store type.
@@ -141,6 +146,16 @@ public class MapKeyValueAdapter extends AbstractKeyValueAdapter {
 
 		this.store = store;
 		this.keySpaceMapType = keySpaceMapType;
+	}
+
+	@Override
+	public KeyValueMappingContext<? extends KeyValuePersistentEntity<?, ?>, ? extends KeyValuePersistentProperty<?>> getMappingContext() {
+		return mappingContext;
+	}
+
+	public void setMappingContext(
+			KeyValueMappingContext<? extends KeyValuePersistentEntity<?, ?>, ? extends KeyValuePersistentProperty<?>> mappingContext) {
+		this.mappingContext = mappingContext;
 	}
 
 	@Override
