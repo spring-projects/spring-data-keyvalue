@@ -25,11 +25,12 @@ import java.util.function.Predicate;
 import java.util.regex.Pattern;
 
 import org.jspecify.annotations.Nullable;
+
 import org.springframework.dao.InvalidDataAccessApiUsageException;
+import org.springframework.data.core.PropertyPath;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.keyvalue.core.SimplePropertyPathAccessor;
 import org.springframework.data.keyvalue.core.query.KeyValueQuery;
-import org.springframework.data.mapping.PropertyPath;
 import org.springframework.data.repository.query.ParameterAccessor;
 import org.springframework.data.repository.query.parser.AbstractQueryCreator;
 import org.springframework.data.repository.query.parser.Part;

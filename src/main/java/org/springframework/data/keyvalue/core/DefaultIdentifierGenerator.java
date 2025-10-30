@@ -23,7 +23,7 @@ import java.util.UUID;
 import java.util.concurrent.atomic.AtomicReference;
 
 import org.springframework.dao.InvalidDataAccessApiUsageException;
-import org.springframework.data.util.TypeInformation;
+import org.springframework.data.core.TypeInformation;
 import org.springframework.util.ClassUtils;
 import org.springframework.util.StringUtils;
 

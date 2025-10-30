@@ -15,7 +15,7 @@
  */
 package org.springframework.data.keyvalue.core;
 
-import org.springframework.data.util.TypeInformation;
+import org.springframework.data.core.TypeInformation;
 
 /**
  * API for components generating identifiers.

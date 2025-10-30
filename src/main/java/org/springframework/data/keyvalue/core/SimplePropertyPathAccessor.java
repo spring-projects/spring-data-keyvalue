@@ -17,7 +17,7 @@ package org.springframework.data.keyvalue.core;
 
 import org.jspecify.annotations.Nullable;
 import org.springframework.beans.BeanWrapper;
-import org.springframework.data.mapping.PropertyPath;
+import org.springframework.data.core.PropertyPath;
 import org.springframework.data.util.DirectFieldAccessFallbackBeanWrapper;
 
 /**
