@@ -123,25 +123,29 @@ public class SpelPropertyComparator<T> implements Comparator<T> {
 	 * @return
 	 */
 	protected String buildExpressionForPath() {
-
-		return String.format("#comparator.compare(#arg1?.%s,#arg2?.%s)", path.replace(".", "?."),
-				path.replace(".", "?."));
+		return String.format("#arg1?.%s", path.replace(".", "?."));
 	}
 
 	@Override
+	@SuppressWarnings("unchecked")
 	public int compare(@Nullable T arg1, @Nullable T arg2) {
+
+		Object value1 = getValue(arg1);
+		Object value2 = getValue(arg2);
+
+		return ((Comparator<Object>) (nullsFirst ? NULLS_FIRST : NULLS_LAST)).compare(value1, value2) * (asc ? 1 : -1);
+	}
+
+	private @Nullable Object getValue(@Nullable T arg) {
 
 		SpelExpression expressionToUse = getExpression();
 
-		SimpleEvaluationContext ctx = SimpleEvaluationContext.forReadOnlyDataBinding().withInstanceMethods().build();
-		ctx.setVariable("comparator", nullsFirst ? NULLS_FIRST : NULLS_LAST);
-		ctx.setVariable("arg1", arg1);
-		ctx.setVariable("arg2", arg2);
+		SimpleEvaluationContext ctx = SimpleEvaluationContext.forReadOnlyDataBinding().build();
+		ctx.setVariable("arg1", arg);
 
 		expressionToUse.setEvaluationContext(ctx);
 
-		Integer value = expressionToUse.getValue(Integer.class);
-		return (value != null ? value : 0) * (asc ? 1 : -1);
+		return expressionToUse.getValue();
 	}
 
 	/**
