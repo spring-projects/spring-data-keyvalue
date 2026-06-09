@@ -5,19 +5,19 @@
 
 	<groupId>org.springframework.data</groupId>
 	<artifactId>spring-data-keyvalue</artifactId>
-	<version>4.1.0</version>
+	<version>4.1.1-SNAPSHOT</version>
 
 	<name>Spring Data KeyValue</name>
 
 	<parent>
 		<groupId>org.springframework.data.build</groupId>
 		<artifactId>spring-data-parent</artifactId>
-		<version>4.1.0</version>
+		<version>4.1.1-SNAPSHOT</version>
 		<relativePath/>
 	</parent>
 
 	<properties>
-		<springdata.commons>4.1.0</springdata.commons>
+		<springdata.commons>4.1.1-SNAPSHOT</springdata.commons>
 		<mapdb>3.1.0</mapdb>
 		<java-module-name>spring.data.keyvalue</java-module-name>
 	</properties>
@@ -115,8 +115,20 @@
 	</profiles>
 
 	<repositories>
-		
-		
+		<repository>
+			<id>spring-snapshot</id>
+			<url>https://repo.spring.io/snapshot</url>
+			<snapshots>
+				<enabled>true</enabled>
+			</snapshots>
+			<releases>
+				<enabled>false</enabled>
+			</releases>
+		</repository>
+		<repository>
+			<id>spring-milestone</id>
+			<url>https://repo.spring.io/milestone</url>
+		</repository>
 	</repositories>
 
 </project>
