@@ -5,19 +5,19 @@
 
 	<groupId>org.springframework.data</groupId>
 	<artifactId>spring-data-keyvalue</artifactId>
-	<version>4.0.6-SNAPSHOT</version>
+	<version>4.0.6</version>
 
 	<name>Spring Data KeyValue</name>
 
 	<parent>
 		<groupId>org.springframework.data.build</groupId>
 		<artifactId>spring-data-parent</artifactId>
-		<version>4.0.6-SNAPSHOT</version>
+		<version>4.0.6</version>
 		<relativePath/>
 	</parent>
 
 	<properties>
-		<springdata.commons>4.0.6-SNAPSHOT</springdata.commons>
+		<springdata.commons>4.0.6</springdata.commons>
 		<mapdb>3.1.0</mapdb>
 		<java-module-name>spring.data.keyvalue</java-module-name>
 	</properties>
@@ -70,8 +70,7 @@
 							<goal>test-process</goal>
 						</goals>
 						<configuration>
-							<outputDirectory>target/generated-test-sources
-							</outputDirectory>
+							<outputDirectory>target/generated-test-sources</outputDirectory>
 							<processor>com.querydsl.apt.QuerydslAnnotationProcessor</processor>
 						</configuration>
 					</execution>
@@ -116,20 +115,8 @@
 	</profiles>
 
 	<repositories>
-		<repository>
-			<id>spring-snapshot</id>
-			<url>https://repo.spring.io/snapshot</url>
-			<snapshots>
-				<enabled>true</enabled>
-			</snapshots>
-			<releases>
-				<enabled>false</enabled>
-			</releases>
-		</repository>
-		<repository>
-			<id>spring-milestone</id>
-			<url>https://repo.spring.io/milestone</url>
-		</repository>
+		
+		
 	</repositories>
 
 </project>
