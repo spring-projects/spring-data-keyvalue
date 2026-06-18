@@ -143,9 +143,7 @@ public class SpelPropertyComparator<T> implements Comparator<T> {
 		SimpleEvaluationContext ctx = SimpleEvaluationContext.forReadOnlyDataBinding().build();
 		ctx.setVariable("arg1", arg);
 
-		expressionToUse.setEvaluationContext(ctx);
-
-		return expressionToUse.getValue();
+		return expressionToUse.getValue(ctx);
 	}
 
 	/**
