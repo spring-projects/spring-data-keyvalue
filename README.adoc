@@ -7,7 +7,7 @@ This module provides infrastructure components to build repository abstractions 
 == Features
 
 * Infrastructure for building repositories on top of key/value implementations.
-* Dynamic SpEL query generation from query method names.
+* `java.util.function.Predicate` based query generation from query method names.
 * Possibility to integrate custom repository code.
 
 include::https://raw.githubusercontent.com/spring-projects/spring-data-build/refs/heads/main/etc/readme/code-of-conduct.adoc[]
