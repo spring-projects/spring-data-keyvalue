@@ -40,6 +40,7 @@ import org.springframework.data.map.MapKeyValueAdapter;
  * @author Christoph Strobl
  * @author Oliver Gierke
  * @author Mark Paluch
+ * @author Lee Jiwon
  */
 class KeyValueTemplateTests {
 
@@ -133,6 +134,15 @@ class KeyValueTemplateTests {
 
 		operations.insert("1", FOO_ONE);
 		assertThat(operations.findById("1", Bar.class)).isEmpty();
+	}
+
+	@Test // GH-655
+	void findAllByIdShouldReturnExistingEntitiesInRequestOrderSkippingMissingOnes() {
+
+		operations.insert("1", FOO_ONE);
+		operations.insert("2", FOO_TWO);
+
+		assertThat(operations.findAllById(List.of("2", "missing", "1"), Foo.class)).containsExactly(FOO_TWO, FOO_ONE);
 	}
 
 	@Test // DATACMNS-525
