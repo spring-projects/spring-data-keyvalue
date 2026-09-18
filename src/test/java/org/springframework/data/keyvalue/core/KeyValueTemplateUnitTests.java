@@ -22,11 +22,13 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;
+import org.mockito.InOrder;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.mockito.junit.jupiter.MockitoSettings;
@@ -54,6 +56,7 @@ import org.springframework.data.keyvalue.core.query.KeyValueQuery;
  * @author Thomas Darimont
  * @author Oliver Gierke
  * @author Mark Paluch
+ * @author Lee Jiwon
  */
 @ExtendWith(MockitoExtension.class)
 @MockitoSettings(strictness = Strictness.LENIENT)
@@ -179,6 +182,145 @@ class KeyValueTemplateUnitTests {
 	@Test // DATACMNS-525, DATAKV-187
 	void findByIdShouldThrowExceptionWhenGivenNullId() {
 		assertThatIllegalArgumentException().isThrownBy(() -> template.findById(null, Foo.class));
+	}
+
+	@Test // GH-655
+	void findAllByIdShouldDelegateToAdapterBatchGet() {
+
+		when(adapterMock.getAll(Arrays.asList("1", "2"), Foo.class.getName(), Foo.class))
+				.thenReturn(Arrays.asList(null, null));
+
+		template.findAllById(Arrays.asList("1", "2"), Foo.class);
+
+		verify(adapterMock, times(1)).getAll(Arrays.asList("1", "2"), Foo.class.getName(), Foo.class);
+	}
+
+	@Test // GH-655
+	void findAllByIdShouldSkipMissingIds() {
+
+		when(adapterMock.getAll(Arrays.asList("1", "2"), Foo.class.getName(), Foo.class))
+				.thenReturn(Arrays.asList(FOO_ONE, null));
+
+		assertThat(template.findAllById(Arrays.asList("1", "2"), Foo.class)).containsExactly(FOO_ONE);
+	}
+
+	@Test // GH-655
+	void findAllByIdShouldRetainDuplicateIds() {
+
+		when(adapterMock.getAll(Arrays.asList("1", "1", "2"), Foo.class.getName(), Foo.class))
+				.thenReturn(Arrays.asList(FOO_ONE, FOO_ONE, FOO_TWO));
+
+		assertThat(template.findAllById(Arrays.asList("1", "1", "2"), Foo.class)).containsExactly(FOO_ONE, FOO_ONE,
+				FOO_TWO);
+	}
+
+	@Test // GH-655
+	void findAllByIdShouldUseIdsOnlyOnce() {
+
+		when(adapterMock.getAll(any(), eq(Foo.class.getName()), eq(Foo.class))).thenReturn(Arrays.asList(FOO_ONE, FOO_TWO));
+
+		assertThat(template.findAllById(singleUseIterable("1", "2"), Foo.class)).containsExactly(FOO_ONE, FOO_TWO);
+
+		verify(adapterMock, times(1)).getAll(Arrays.asList("1", "2"), Foo.class.getName(), Foo.class);
+	}
+
+	@Test // GH-655
+	void findAllByIdShouldThrowExceptionWhenAdapterReturnsMismatchingSize() {
+
+		when(adapterMock.getAll(Arrays.asList("1", "2"), Foo.class.getName(), Foo.class))
+				.thenReturn(Arrays.asList(FOO_ONE));
+
+		assertThatIllegalStateException().isThrownBy(() -> template.findAllById(Arrays.asList("1", "2"), Foo.class));
+	}
+
+	@Test // GH-655
+	void findAllByIdShouldThrowExceptionWhenGivenNullIds() {
+		assertThatIllegalArgumentException().isThrownBy(() -> template.findAllById(null, Foo.class));
+	}
+
+	@Test // GH-655
+	void findAllByIdShouldThrowExceptionWhenGivenNullId() {
+
+		assertThatIllegalArgumentException().isThrownBy(() -> template.findAllById(Arrays.asList("1", null), Foo.class));
+
+		verifyNoInteractions(publisherMock);
+	}
+
+	@Test // GH-655
+	void findAllByIdShouldReturnEmptyWithoutAccessingAdapterWhenGivenNoIds() {
+
+		assertThat(template.findAllById(Collections.emptyList(), Foo.class)).isEmpty();
+
+		verifyNoInteractions(adapterMock, publisherMock);
+	}
+
+	@Test // GH-655
+	@SuppressWarnings({ "unchecked", "rawtypes" })
+	void findAllByIdShouldSkipTypeMismatchingValues() {
+
+		doReturn(Arrays.asList(ALIASED_USING_ALIAS_FOR)).when(adapterMock).getAll(any(), anyString(), any(Class.class));
+
+		assertThat((Iterable) template.findAllById(Arrays.asList("1"), SUBCLASS_OF_ALIASED_USING_ALIAS_FOR.getClass()))
+				.isEmpty();
+	}
+
+	@Test // GH-655
+	@SuppressWarnings({ "rawtypes" })
+	void findAllByIdShouldPublishBeforeGetEventPerId() {
+
+		setEventsToPublish(BeforeGetEvent.class);
+
+		when(adapterMock.getAll(Arrays.asList("1", "2"), Foo.class.getName(), Foo.class))
+				.thenReturn(Arrays.asList(FOO_ONE, null));
+
+		template.findAllById(Arrays.asList("1", "2"), Foo.class);
+
+		ArgumentCaptor<BeforeGetEvent> captor = ArgumentCaptor.forClass(BeforeGetEvent.class);
+
+		verify(publisherMock, times(2)).publishEvent(captor.capture());
+		verifyNoMoreInteractions(publisherMock);
+
+		assertThat(captor.getAllValues().get(0).getKey()).isEqualTo("1");
+		assertThat(captor.getAllValues().get(1).getKey()).isEqualTo("2");
+	}
+
+	@Test // GH-655
+	@SuppressWarnings({ "rawtypes" })
+	void findAllByIdShouldPublishAfterGetEventPerId() {
+
+		setEventsToPublish(AfterGetEvent.class);
+
+		when(adapterMock.getAll(Arrays.asList("1", "2"), Foo.class.getName(), Foo.class))
+				.thenReturn(Arrays.asList(FOO_ONE, null));
+
+		template.findAllById(Arrays.asList("1", "2"), Foo.class);
+
+		ArgumentCaptor<AfterGetEvent> captor = ArgumentCaptor.forClass(AfterGetEvent.class);
+
+		verify(publisherMock, times(2)).publishEvent(captor.capture());
+		verifyNoMoreInteractions(publisherMock);
+
+		assertThat(captor.getAllValues().get(0).getKey()).isEqualTo("1");
+		assertThat(captor.getAllValues().get(0).getPayload()).isEqualTo(FOO_ONE);
+		assertThat(captor.getAllValues().get(1).getKey()).isEqualTo("2");
+		assertThat(captor.getAllValues().get(1).getPayload()).isNull();
+	}
+
+	@Test // GH-655
+	void findAllByIdShouldPublishBeforeGetEventsAheadOfBatchGetAndAfterGetEventsAfterwards() {
+
+		setEventsToPublish(BeforeGetEvent.class, AfterGetEvent.class);
+
+		when(adapterMock.getAll(Arrays.asList("1", "2"), Foo.class.getName(), Foo.class))
+				.thenReturn(Arrays.asList(FOO_ONE, FOO_TWO));
+
+		template.findAllById(Arrays.asList("1", "2"), Foo.class);
+
+		InOrder inOrder = inOrder(publisherMock, adapterMock);
+
+		inOrder.verify(publisherMock, times(2)).publishEvent(any(BeforeGetEvent.class));
+		inOrder.verify(adapterMock).getAll(Arrays.asList("1", "2"), Foo.class.getName(), Foo.class);
+		inOrder.verify(publisherMock, times(2)).publishEvent(any(AfterGetEvent.class));
 	}
 
 	@Test // DATACMNS-525
@@ -566,6 +708,20 @@ class KeyValueTemplateUnitTests {
 	@SuppressWarnings("rawtypes")
 	private final void setEventsToPublish(Class<? extends KeyValueEvent>... events) {
 		template.setEventTypesToPublish(new HashSet<>(Arrays.asList(events)));
+	}
+
+	@SafeVarargs
+	private static <T> Iterable<T> singleUseIterable(T... values) {
+
+		AtomicBoolean consumed = new AtomicBoolean();
+		return () -> {
+
+			if (consumed.getAndSet(true)) {
+				throw new IllegalStateException("Iterable must not be consumed twice");
+			}
+
+			return Arrays.asList(values).iterator();
+		};
 	}
 
 	static class Foo {

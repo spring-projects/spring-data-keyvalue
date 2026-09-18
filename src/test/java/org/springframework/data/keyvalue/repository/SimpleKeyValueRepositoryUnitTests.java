@@ -20,6 +20,7 @@ import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.*;
 
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.Optional;
 
 import org.junit.jupiter.api.BeforeEach;
@@ -44,6 +45,7 @@ import org.springframework.data.repository.core.support.PersistentEntityInformat
  * @author Eugene Nikiforov
  * @author Jens Schauder
  * @author Mark Paluch
+ * @author Lee Jiwon
  */
 @ExtendWith(MockitoExtension.class)
 class SimpleKeyValueRepositoryUnitTests {
@@ -133,14 +135,14 @@ class SimpleKeyValueRepositoryUnitTests {
 		verify(opsMock, times(1)).delete(eq(Foo.class));
 	}
 
-	@Test // DATACMNS-525
+	@Test // DATACMNS-525, GH-655
 	@SuppressWarnings("unchecked")
 	void findAllIds() {
 
-		when(opsMock.findById(any(), any(Class.class))).thenReturn(Optional.empty());
+		when(opsMock.findAllById(any(Iterable.class), any(Class.class))).thenReturn(Collections.emptyList());
 		repo.findAllById(Arrays.asList("one", "two", "three"));
 
-		verify(opsMock, times(3)).findById(anyString(), eq(Foo.class));
+		verify(opsMock, times(1)).findAllById(eq(Arrays.asList("one", "two", "three")), eq(Foo.class));
 	}
 
 	@Test // DATAKV-186
