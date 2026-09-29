@@ -20,7 +20,6 @@ import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.*;
 
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.Optional;
 
 import org.junit.jupiter.api.BeforeEach;
@@ -136,13 +135,19 @@ class SimpleKeyValueRepositoryUnitTests {
 	}
 
 	@Test // DATACMNS-525, GH-655
-	@SuppressWarnings("unchecked")
 	void findAllIds() {
 
-		when(opsMock.findAllById(any(Iterable.class), any(Class.class))).thenReturn(Collections.emptyList());
-		repo.findAllById(Arrays.asList("one", "two", "three"));
+		Foo one = new Foo("one");
+		Foo two = new Foo("two");
+		Iterable<String> ids = Arrays.asList("one", "two", "three");
+		Iterable<Foo> entities = () -> Arrays.asList(one, two).iterator();
 
-		verify(opsMock, times(1)).findAllById(eq(Arrays.asList("one", "two", "three")), eq(Foo.class));
+		when(opsMock.findAllById(ids, Foo.class)).thenReturn(entities);
+
+		assertThat(repo.findAllById(ids)).containsExactly(one, two);
+
+		verify(opsMock, times(1)).findAllById(ids, Foo.class);
+		verify(opsMock, never()).findById(any(), any(Class.class));
 	}
 
 	@Test // DATAKV-186

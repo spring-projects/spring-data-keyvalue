@@ -137,12 +137,13 @@ class KeyValueTemplateTests {
 	}
 
 	@Test // GH-655
-	void findAllByIdShouldReturnExistingEntitiesInRequestOrderSkippingMissingOnes() {
+	void findAllByIdShouldPreserveOrderAndDuplicatesWhileSkippingMissingIds() {
 
 		operations.insert("1", FOO_ONE);
 		operations.insert("2", FOO_TWO);
 
-		assertThat(operations.findAllById(List.of("2", "missing", "1"), Foo.class)).containsExactly(FOO_TWO, FOO_ONE);
+		assertThat(operations.findAllById(List.of("2", "missing", "1", "2", "1"), Foo.class)).containsExactly(FOO_TWO,
+				FOO_ONE, FOO_TWO, FOO_ONE);
 	}
 
 	@Test // DATACMNS-525
