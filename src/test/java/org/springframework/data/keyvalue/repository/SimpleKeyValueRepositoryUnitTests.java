@@ -135,7 +135,7 @@ class SimpleKeyValueRepositoryUnitTests {
 	}
 
 	@Test // DATACMNS-525, GH-655
-	void findAllIds() {
+	void findAllByIdShouldDelegateToOperationsAndReturnResult() {
 
 		Foo one = new Foo("one");
 		Foo two = new Foo("two");

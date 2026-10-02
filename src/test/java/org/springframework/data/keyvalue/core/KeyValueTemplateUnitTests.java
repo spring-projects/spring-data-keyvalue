@@ -259,10 +259,12 @@ class KeyValueTemplateUnitTests {
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	void findAllByIdShouldSkipTypeMismatchingValues() {
 
-		doReturn(Arrays.asList(ALIASED_USING_ALIAS_FOR)).when(adapterMock).getAll(any(), eq("aliased"), any(Class.class));
+		doReturn(Arrays.asList(ALIASED_USING_ALIAS_FOR)).when(adapterMock).getAll(any(), anyString(), any(Class.class));
 
 		assertThat((Iterable) template.findAllById(Arrays.asList("1"), SUBCLASS_OF_ALIASED_USING_ALIAS_FOR.getClass()))
 				.isEmpty();
+
+		verify(adapterMock).getAll(any(), eq("aliased"), any(Class.class));
 	}
 
 	@Test // GH-655
