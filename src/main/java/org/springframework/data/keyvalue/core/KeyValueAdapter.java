@@ -15,7 +15,9 @@
  */
 package org.springframework.data.keyvalue.core;
 
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 import java.util.Map;
 
 import org.jspecify.annotations.Nullable;
@@ -29,6 +31,7 @@ import org.springframework.data.util.CloseableIterator;
  * @author Christoph Strobl
  * @author Thomas Darimont
  * @author Mark Paluch
+ * @author Lee Jiwon
  */
 public interface KeyValueAdapter extends DisposableBean {
 
@@ -70,6 +73,26 @@ public interface KeyValueAdapter extends DisposableBean {
 	 * @since 1.1
 	 */
 	<T> @Nullable T get(Object id, String keyspace, Class<T> type);
+
+	/**
+	 * Get the objects with the given ids from keyspace. The resulting {@link List} contains the value for each given id
+	 * in the same order, with {@literal null} for ids without a matching entry.
+	 *
+	 * @param ids must not be {@literal null} nor contain any {@literal null} values.
+	 * @param keyspace must not be {@literal null}.
+	 * @param type must not be {@literal null}.
+	 * @return a {@link List} aligned with the order of the given ids.
+	 * @since 4.2
+	 */
+	default <T> List<@Nullable T> getAll(Iterable<?> ids, String keyspace, Class<T> type) {
+
+		List<@Nullable T> result = ids instanceof Collection<?> collection ? new ArrayList<>(collection.size())
+				: new ArrayList<>();
+		for (Object id : ids) {
+			result.add(get(id, keyspace, type));
+		}
+		return result;
+	}
 
 	/**
 	 * Delete and return the object with given type and id.
