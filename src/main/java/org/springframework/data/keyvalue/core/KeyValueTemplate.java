@@ -16,7 +16,9 @@
 package org.springframework.data.keyvalue.core;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -48,6 +50,7 @@ import org.springframework.util.CollectionUtils;
  * @author Mark Paluch
  * @author Mert Zeybekler
  * @author Adeyemi Abass
+ * @author Lee Jiwon
  */
 public class KeyValueTemplate implements KeyValueOperations, ApplicationEventPublisherAware {
 
@@ -251,6 +254,52 @@ public class KeyValueTemplate implements KeyValueOperations, ApplicationEventPub
 		potentiallyPublishEvent(KeyValueEvent.afterGet(id, keyspace, type, result));
 
 		return Optional.ofNullable(result);
+	}
+
+	@Override
+	public <T> Iterable<T> findAllById(Iterable<?> ids, Class<T> type) {
+
+		Assert.notNull(ids, "Ids for objects to be found must not be null");
+		Assert.notNull(type, "Type to fetch must not be null");
+
+		List<Object> idsToLookup = ids instanceof Collection<?> collection ? new ArrayList<>(collection.size())
+				: new ArrayList<>();
+
+		for (Object id : ids) {
+			Assert.notNull(id, "Id for object to be found must not be null");
+			idsToLookup.add(id);
+		}
+
+		String keyspace = resolveKeySpace(type);
+
+		if (idsToLookup.isEmpty()) {
+			return new ArrayList<>();
+		}
+
+		for (Object id : idsToLookup) {
+			potentiallyPublishEvent(KeyValueEvent.beforeGet(id, keyspace, type));
+		}
+
+		List<@Nullable T> values = executeRequired(adapter -> adapter.getAll(idsToLookup, keyspace, type));
+
+		Assert.state(values.size() == idsToLookup.size(), "KeyValueAdapter.getAll must return one element per given id");
+
+		List<T> result = new ArrayList<>(values.size());
+		Iterator<@Nullable T> valueIterator = values.iterator();
+
+		for (Object id : idsToLookup) {
+
+			T value = valueIterator.next();
+			T element = value != null && typeCheck(type, value) ? type.cast(value) : null;
+
+			potentiallyPublishEvent(KeyValueEvent.afterGet(id, keyspace, type, element));
+
+			if (element != null) {
+				result.add(element);
+			}
+		}
+
+		return result;
 	}
 
 	@Override

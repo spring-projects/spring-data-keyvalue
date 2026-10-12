@@ -29,6 +29,7 @@ import org.springframework.data.mapping.context.MappingContext;
  *
  * @author Christoph Strobl
  * @author Mark Paluch
+ * @author Lee Jiwon
  */
 public interface KeyValueOperations extends DisposableBean {
 
@@ -77,6 +78,19 @@ public interface KeyValueOperations extends DisposableBean {
 	 * @return {@link Optional#empty()} if not found.
 	 */
 	<T> Optional<T> findById(Object id, Class<T> type);
+
+	/**
+	 * Get all elements of given type with the given ids. Respects {@link KeySpace} if present and therefore returns all
+	 * elements that can be assigned to requested type. Elements are returned in the order of the given ids, ids without a
+	 * matching element are skipped.
+	 *
+	 * @param ids must not be {@literal null} nor contain any {@literal null} values.
+	 * @param type must not be {@literal null}.
+	 * @return empty iterable if no elements found.
+	 * @throws IllegalArgumentException in case the given {@link Iterable ids} or one of its items is {@literal null}.
+	 * @since 4.2
+	 */
+	<T> Iterable<T> findAllById(Iterable<?> ids, Class<T> type);
 
 	/**
 	 * Execute operation against underlying store.
