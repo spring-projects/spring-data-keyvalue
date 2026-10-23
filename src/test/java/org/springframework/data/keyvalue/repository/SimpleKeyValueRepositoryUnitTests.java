@@ -44,6 +44,7 @@ import org.springframework.data.repository.core.support.PersistentEntityInformat
  * @author Eugene Nikiforov
  * @author Jens Schauder
  * @author Mark Paluch
+ * @author Lee Jiwon
  */
 @ExtendWith(MockitoExtension.class)
 class SimpleKeyValueRepositoryUnitTests {
@@ -133,14 +134,20 @@ class SimpleKeyValueRepositoryUnitTests {
 		verify(opsMock, times(1)).delete(eq(Foo.class));
 	}
 
-	@Test // DATACMNS-525
-	@SuppressWarnings("unchecked")
-	void findAllIds() {
+	@Test // DATACMNS-525, GH-655
+	void findAllByIdShouldDelegateToOperationsAndReturnResult() {
 
-		when(opsMock.findById(any(), any(Class.class))).thenReturn(Optional.empty());
-		repo.findAllById(Arrays.asList("one", "two", "three"));
+		Foo one = new Foo("one");
+		Foo two = new Foo("two");
+		Iterable<String> ids = Arrays.asList("one", "two", "three");
+		Iterable<Foo> entities = () -> Arrays.asList(one, two).iterator();
 
-		verify(opsMock, times(3)).findById(anyString(), eq(Foo.class));
+		when(opsMock.findAllById(ids, Foo.class)).thenReturn(entities);
+
+		assertThat(repo.findAllById(ids)).containsExactly(one, two);
+
+		verify(opsMock, times(1)).findAllById(ids, Foo.class);
+		verify(opsMock, never()).findById(any(), any(Class.class));
 	}
 
 	@Test // DATAKV-186
