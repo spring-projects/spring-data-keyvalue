@@ -125,7 +125,7 @@ Spring Data uses GitHub as issue tracking system to record bugs and feature requ
 https://github.com/spring-projects/spring-data-keyvalue/issues[issue tracker] to see if someone has already reported the problem.
 * If the issue doesn’t already exist, https://github.com/spring-projects/spring-data-keyvalue/issues/new[create a new issue].
 * Please provide as much information as possible with the issue report, we like to know the version of Spring Data that you are using and JVM version.
-* If you need to paste code, or include a stack trace use Markdown +++```+++ escapes before and after your text.
+* If you need to paste code, or include a stack trace, use Markdown +++```+++ escapes before and after your text.
 * Please create a test-case or project that replicates the issue. Attach a link to your code or a compressed file containing your code.
 
 [[examples]]
@@ -153,7 +153,7 @@ For additional details, please refer to the blog post https://spring.io/blog/202
 [[building-documentation]]
 === Building reference documentation
 
-Building the documentation builds also the project without running tests.
+Building the documentation also builds the project without running tests.
 
 [source,bash]
 ----
