@@ -36,6 +36,7 @@ import org.springframework.util.Assert;
  * @author Oliver Gierke
  * @author Mark Paluch
  * @author Eugene Nikiforov
+ * @author Lee Jiwon
  * @param <T>
  * @param <ID>
  */
@@ -113,11 +114,7 @@ public class SimpleKeyValueRepository<T, ID> implements KeyValueRepository<T, ID
 
 		Assert.notNull(ids, "The given Iterable of id's must not be null");
 
-		List<T> result = new ArrayList<>();
-
-		ids.forEach(id -> findById(id).ifPresent(result::add));
-
-		return result;
+		return IterableConverter.toList(operations.findAllById(ids, entityInformation.getJavaType()));
 	}
 
 	@Override
